@@ -1,0 +1,13 @@
+
+Default protection suite of priority 65507
+        encryption algorithm:   AES - Advanced Encryption Standard (128 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Rivest-Shamir-Adleman Signature
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               86400 seconds, no volume limit 
+Default protection suite of priority 65508
+        encryption algorithm:   AES - Advanced Encryption Standard (128 bit keys).
+        hash algorithm:         Secure Hash Standard
+        authentication method:  Pre-Shared Key
+        Diffie-Hellman group:   #5 (1536 bit)
+        lifetime:               86400 seconds, no volume limit

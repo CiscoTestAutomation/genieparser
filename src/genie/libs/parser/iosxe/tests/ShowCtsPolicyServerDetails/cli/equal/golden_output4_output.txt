@@ -1,0 +1,11 @@
+show cts policy-server details name CTS-HTTP-IPV4-1
+Server Name   : CTS-HTTP-IPV4-1
+Server Status : Inactive
+  IPv4 Address     : 10.89.119.126 (Reachable)
+  Domain-name      : CTS-HTTP-IPV4-1.cisco.com (Reachable)
+  Trustpoint       : CTS-HTTP-IPV4-1
+  Port-num         : 9063
+  Retransmit count : 5
+  Timeout          : 5
+  App Content type : JSON
+  Trustpoint chain : NOT CONFIGURED

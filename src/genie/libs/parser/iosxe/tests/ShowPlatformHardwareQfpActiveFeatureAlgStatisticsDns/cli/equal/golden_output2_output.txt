@@ -1,0 +1,20 @@
+show platform hardware qfp active feature alg statistics dns clear
+DNS info pool used chunk entries number: 0
+dns query:                             0
+dns response:                          0
+other msg:                             0
+
+create chunk:                          0
+del_chunk:                             0
+
+format err:                            0
+chunk allocfail:                       0
+find name end err:                     0
+create txt tokenerr:                   0
+create binary token err:               0
+parse error:                           0
+name overwritten after free:           0
+invalid protocol:                      0
+add alg state fail:                    0
+
+DNS ALG counters cleared after display.

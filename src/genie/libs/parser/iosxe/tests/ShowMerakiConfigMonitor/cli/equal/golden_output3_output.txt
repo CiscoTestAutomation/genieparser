@@ -1,0 +1,118 @@
+Config Monitor
+------------------------------------
+  Current state:                Ready
+
+Local config changes:
+------------------------------------
+1.  Config change (UTC): 2025-04-02 08:03:05
+  Total number of xpaths seen: 6
+  Displaying only first 6 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+    XPATH: /ios:native/ios:errdisable/ios:detect/ios:cause/ios:loopdetect
+    Operation: Delete
+    XPATH: /ios:native/ios:radius/ios-aaa:server[ios-aaa:id='10.24.42.72_1812_0']/ios-aaa:tls/ios-aaa:port
+    Operation: Delete
+    XPATH: /ios:native/ios:aaa/ios-aaa:accounting/ios-aaa:jitter/ios-aaa:maximum
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv4/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv6/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+2.  Config change (UTC): 2025-04-01 22:22:38
+  Total number of xpaths seen: 59
+  Displaying only first 10 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/1']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/10']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/11']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/12']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/13']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/14']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/15']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/16']
+    Operation: Create
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='3/0/17']
+    Operation: Create
+3.  Config change (UTC): 2025-04-01 22:21:08
+  Total number of xpaths seen: 8
+  Displaying only first 8 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+    XPATH: /ios:native/ios:errdisable/ios:detect/ios:cause/ios:loopdetect
+    Operation: Delete
+    XPATH: /ios:native/ios:radius/ios-aaa:server[ios-aaa:id='10.24.42.72_1812_0']/ios-aaa:tls/ios-aaa:port
+    Operation: Delete
+    XPATH: /ios:native/ios:policy/ios-policy:policy-map[ios-policy:name='qos_egress']/ios-policy:class
+    Operation: Replace
+    XPATH: /ios:native/ios:aaa/ios-aaa:accounting/ios-aaa:jitter/ios-aaa:maximum
+    Operation: Delete
+    XPATH: /ios:native/ios:flow/ios-flow:file-export/ios-flow:default/ios-flow:file/ios-flow:max-count
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv4/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv6/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+4.  Config change (UTC): 2025-04-01 17:48:33
+  Total number of xpaths seen: 1
+  Displaying only first 1 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios:shutdown
+    Operation: Create
+5.  Config change (UTC): 2025-04-01 17:48:22
+  Total number of xpaths seen: 4
+  Displaying only first 4 XPaths
+    XPATH: /ios:native/ios:line/ios:vty[ios:first='0']/ios:exec-timeout/ios:minutes
+    Operation: Replace
+    XPATH: /ios:native/ios:line/ios:vty[ios:first='0']/ios:exec-timeout/ios:seconds
+    Operation: Replace
+    XPATH: /ios:native/ios:line/ios:console[ios:first='0']/ios:exec-timeout/ios:minutes
+    Operation: Replace
+    XPATH: /ios:native/ios:line/ios:console[ios:first='0']/ios:exec-timeout/ios:seconds
+    Operation: Replace
+6.  Config change (UTC): 2025-04-01 17:30:44
+  Total number of xpaths seen: 6
+  Displaying only first 6 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+    XPATH: /ios:native/ios:errdisable/ios:detect/ios:cause/ios:loopdetect
+    Operation: Delete
+    XPATH: /ios:native/ios:radius/ios-aaa:server[ios-aaa:id='10.24.42.72_1812_0']/ios-aaa:tls/ios-aaa:port
+    Operation: Delete
+    XPATH: /ios:native/ios:aaa/ios-aaa:accounting/ios-aaa:jitter/ios-aaa:maximum
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv4/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv6/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+7.  Config change (UTC): 2025-04-01 17:29:41
+  Total number of xpaths seen: 10
+  Displaying only first 10 XPaths
+    XPATH: /ios:native/ios:interface/ios:GigabitEthernet[ios:name='0/0']/ios-eth:negotiation/ios-eth:auto
+    Operation: Delete
+    XPATH: /ios:native/ios:errdisable/ios:detect/ios:cause/ios:loopdetect
+    Operation: Delete
+    XPATH: /ios:native/ios:logging/ios:console-config/ios:console
+    Operation: Replace
+    XPATH: /ios:native/ios:snmp-server/ios-snmp:community-config[ios-snmp:name='ikarem']/ios-snmp:permission
+    Operation: Replace
+    XPATH: /ios:native/ios:radius/ios-aaa:server[ios-aaa:id='10.24.42.72_1812_0']/ios-aaa:tls/ios-aaa:port
+    Operation: Delete
+    XPATH: /ios:native/ios:policy/ios-policy:policy-map[ios-policy:name='qos_egress']/ios-policy:class
+    Operation: Replace
+    XPATH: /ios:native/ios:aaa/ios-aaa:accounting/ios-aaa:jitter/ios-aaa:maximum
+    Operation: Delete
+    XPATH: /ios:native/ios:flow/ios-flow:file-export/ios-flow:default/ios-flow:file/ios-flow:max-count
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv4/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+    XPATH: /ios:native/ios-uac:uplink/ios-uac:ipv6/ios-uac:interface/ios-uac:vlan
+    Operation: Delete
+    

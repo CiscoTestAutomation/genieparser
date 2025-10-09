@@ -1,0 +1,13 @@
+sh cts provisioning queue
+Server: 10.77.128.95, Type: Radius, Provisioned: YES >>>>>>>
+AID: 1695af86d38b22dc7c9500408e2dd35d
+
+Server: 10.77.128.95, Type: CTS Server-list, Provisioned: YES (sh cts policy server)
+AID: 1695af86d38b22dc7c9500408e2dd35d
+
+Server: 10.10.10.10, Type: CTS Server-list, Provisioned: YES
+AID: 1695af86d38b22dc7c9500408e2dd35d
+
+Server: 11.11.11.11, Type: CTS Server-list, Provisioned: YES
+AID: 1695af86d38b22dc7c9500408e2dd35d
+

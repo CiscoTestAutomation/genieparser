@@ -1,0 +1,5 @@
+Interface                 Routemap
+Vlan901                   pbr_green_1_v6
+Vlan2002                  pbr_green_1_v6
+Vlan102                   pbr_green_1_v6
+Vlan101                   pbr_green_1_v6

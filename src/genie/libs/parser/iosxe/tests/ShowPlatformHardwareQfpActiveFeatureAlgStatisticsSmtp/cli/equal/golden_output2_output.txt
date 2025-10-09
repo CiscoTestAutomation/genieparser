@@ -1,0 +1,30 @@
+show platform hardware qfp active feature alg statistics smtp clear
+
+=== SMTP AIC ucode info ===
+
+Total packts parsed:
+   request: 0
+   response: 0
+
+Total packets policy-inspected:
+   request: 0
+   response: 0
+
+Memory management:
+   scb - alloc: 0, free: 0, low mem req: 0, alloc fail: 0
+   command element - alloc: 0, free: 0, low mem req: 0
+   log element - alloc: 0, free: 0, low mem req: 0
+   mask element - alloc: 0, free: 0, low mem req: 0
+
+Reset session:
+   CLI match: 0
+   no smtp engine: 0
+   failover detect: 0
+   sw error: 0
+   dirty-bit - new session: 0, exist session: 0, after parse: 0, after match: 0
+
+Abort inspection info:
+   policy not-exist: 0
+   retransmit packet: 0
+
+SMTP counters cleared

@@ -1,0 +1,85 @@
+DSP  DSP                DSPWARE CURR  BOOT                         PAK     TX/RX
+TYPE NUM CH CODEC       VERSION STATE STATE   RST AI VOICEPORT TS ABORT  PACK COUNT
+==== === == ======== ========== ===== ======= === == ========= == ===== ============
+
+------------------------------- FLEX VOICE CARD 0/1 -------------------------------------
+                           *DSP VOICE CHANNELS*
+
+CURR STATE : (busy)inuse (b-out)busy out (bpend)busyout pending
+LEGEND     : (bad)bad    (shut)shutdown  (dpend)download pending
+
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+                           *DSP SIGNALING CHANNELS*
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+---------------------------- END OF FLEX VOICE CARD 0/1 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 0/2 -------------------------------------
+                           *DSP VOICE CHANNELS*
+
+CURR STATE : (busy)inuse (b-out)busy out (bpend)busyout pending
+LEGEND     : (bad)bad    (shut)shutdown  (dpend)download pending
+
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+                           *DSP SIGNALING CHANNELS*
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+---------------------------- END OF FLEX VOICE CARD 0/2 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 0/3 -------------------------------------
+                           *DSP VOICE CHANNELS*
+
+CURR STATE : (busy)inuse (b-out)busy out (bpend)busyout pending
+LEGEND     : (bad)bad    (shut)shutdown  (dpend)download pending
+
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+                           *DSP SIGNALING CHANNELS*
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+---------------------------- END OF FLEX VOICE CARD 0/3 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 0/4 -------------------------------------
+                           *DSP VOICE CHANNELS*
+
+CURR STATE : (busy)inuse (b-out)busy out (bpend)busyout pending
+LEGEND     : (bad)bad    (shut)shutdown  (dpend)download pending
+
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+                           *DSP SIGNALING CHANNELS*
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+---------------------------- END OF FLEX VOICE CARD 0/4 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 1/0 -------------------------------------
+                           *DSP VOICE CHANNELS*
+
+CURR STATE : (busy)inuse (b-out)busy out (bpend)busyout pending
+LEGEND     : (bad)bad    (shut)shutdown  (dpend)download pending
+
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+                           *DSP SIGNALING CHANNELS*
+DSP    DSP                 DSPWARE CURR  BOOT                         PAK   TX/RX
+TYPE   NUM CH CODEC        VERSION STATE STATE   RST AI VOICEPORT TS ABRT PACK COUNT
+====== === == ========= ========== ===== ======= === == ========= == ==== ============
+DM8147 001 01 {flex}        64.3.1 alloc idle      0  0 1/0/0     00    0          5/0
+DM8147 001 02 {flex}        64.3.1 alloc idle      0  0 1/0/1     00    0          5/0
+DM8147 001 03 {flex}        64.3.1 alloc idle      0  0 1/0/2     00    0          7/0
+DM8147 001 04 {flex}        64.3.1 alloc idle      0  0 1/0/3     00    0          7/0
+DM8147 001 05 {flex}        64.3.1 alloc idle      0  0 1/0/4     00    0          8/0
+DM8147 001 06 {flex}        64.3.1 alloc idle      0  0 1/0/5     00    0          7/0
+---------------------------- END OF FLEX VOICE CARD 1/0 ---------------------------------
+

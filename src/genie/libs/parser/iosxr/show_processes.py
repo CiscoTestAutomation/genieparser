@@ -1,7 +1,11 @@
 '''
 IOSXR parsers for the following commands:
-    * show processes isis
+    * show processes
+    * show processes {process}
+    * show processes location {location}
+    * show processes {process} location {location}
     * show processes cpu
+    * show processes blocked
 '''
 
 # Python
@@ -15,6 +19,8 @@ class ShowProcessesSchema(MetaParser):
     ''' Schema for commands:
         * show processes 
         * show processes {process}
+        * show processes location {location}
+        * show processes {process} location {location}
     '''
     schema = {
         'job_id': {
@@ -22,7 +28,7 @@ class ShowProcessesSchema(MetaParser):
                 Optional('pid'): int,
                 Optional('process_name'): str,
                 Optional('executable_path'): str,
-                Optional('instance'): str,
+                Optional('instance'): int,
                 Optional('version_id'): str,
                 Optional('respawn'): str,
                 Optional('respawn_count'): int,
@@ -34,6 +40,8 @@ class ShowProcessesSchema(MetaParser):
                 Optional('core'): str,
                 Optional('registered_item'): str,
                 Optional('max_core'): int,
+                Optional('level'): int,
+                Optional('mandatory'): str,
                 Optional('placement'): str,
                 Optional('startup_path'): str,
                 Optional('ready'): str,
@@ -60,18 +68,27 @@ class ShowProcesses(ShowProcessesSchema):
     ''' Parser for:
         * 'show processes'
         * 'show processes {process}'
+        * 'show processes location {location}'
+        * 'show processes {process} location {location}'
     '''
 
-    cli_command = ['show processes {process}',
-                   'show processes']
+    cli_command = ['show processes',
+                   'show processes {process}',
+                   'show processes location {location}',
+                   'show processes {process} location {location}'
+                   ]
 
-    def cli(self, process=None, output=None):
+    def cli(self, process=None, location=None, output=None):
 
         if output is None:
-            if process:
-                output = self.device.execute(self.cli_command[0].format(process=process))
+            if process and location:
+                output = self.device.execute(self.cli_command[3].format(process=process, location=location))
+            elif process:
+                output = self.device.execute(self.cli_command[1].format(process=process))
+            elif location:
+                output = self.device.execute(self.cli_command[2].format(location=location))
             else:
-                output = self.device.execute(self.cli_command[1])
+                output = self.device.execute(self.cli_command[0])
 
         parsed_output = {}
 
@@ -110,7 +127,7 @@ class ShowProcesses(ShowProcessesSchema):
 
         # Started on config: cfg/gl/isis/instance/test/ord_A/running
         r12 = re.compile(r'Started\s+on\s+config\s*:\s*'
-                          '(?P<started_on_config>\S+)')
+                          r'(?P<started_on_config>\S+)')
 
         # Process group: v4-routing
         r13 = re.compile(r'Process\s+group\s*:\s*(?P<process_group>\S+)')
@@ -120,6 +137,12 @@ class ShowProcesses(ShowProcessesSchema):
 
         # Max. core: 0
         r15 = re.compile(r'Max\.\s+core\s*:\s*(?P<max_core>\d+)')
+
+        # Level: 14
+        r23 = re.compile(r'Level\s*:\s*(?P<level>\d+)')
+
+        # Mandatory: ON
+        r24 = re.compile(r'Mandatory\s*:\s*(?P<mandatory>(ON|OFF))')
 
         # Placement: Placeable
         r16 = re.compile(r'Placement\s*:\s*(?P<placement>.+)')
@@ -135,8 +158,8 @@ class ShowProcesses(ShowProcessesSchema):
 
         # Process cpu time: 2.690 user, 0.640 kernel, 3.330 total
         r20 = re.compile(r'Process\s+cpu\s+time\s*:\s*(?P<cpu_time_user>\S+)'
-                          '\s+user,\s+(?P<cpu_time_kernel>\S+)\s+kernel,\s+'
-                          '(?P<cpu_time_total>\S+)\s+total')
+                          r'\s+user,\s+(?P<cpu_time_kernel>\S+)\s+kernel,\s+'
+                          r'(?P<cpu_time_total>\S+)\s+total')
 
         #Registered item(s): cfg/gl/isis/instance/.*/ord_A/
         r21 = re.compile(r'Registered\s+item\(s\)\s*:\s*(?P<registered_item>.+)')
@@ -149,8 +172,8 @@ class ShowProcesses(ShowProcessesSchema):
         # 1011   22494    0K  20   Sleeping     telemetry_evtli  0
         # 1011   22487    0K  20   Sleeping     lspv_lib ISIS    0
         r22 = re.compile(r'(?P<jid>\d+)\s+(?P<tid>\d+)\s+(?P<stack>\S+)\s+'
-                          '(?P<pri>\d+)\s+(?P<state>\S+)\s+\s'
-                          '(?P<name>[\sa-zA-Z\_\-\.]+)\s+(?P<rt_pri>\d+)')
+                          r'(?P<pri>\d+)\s+(?P<state>\S+)\s+\s'
+                          r'(?P<name>[\sa-zA-Z\_\-\.]+)\s+(?P<rt_pri>\d+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -197,7 +220,7 @@ class ShowProcesses(ShowProcessesSchema):
             result = r5.match(line)
             if result:
                 group = result.groupdict()
-                instance_number = group['instance_number']
+                instance_number = int(group['instance_number'])
                 job_dict['instance'] = instance_number
 
                 continue
@@ -289,6 +312,24 @@ class ShowProcesses(ShowProcessesSchema):
                 group = result.groupdict()
                 max_core = int(group['max_core'])
                 job_dict['max_core'] = max_core
+
+                continue
+
+            # Level: 14
+            result = r23.match(line)
+            if result:
+                group = result.groupdict()
+                level = int(group['level'])
+                job_dict['level'] = level
+
+                continue
+
+            # Mandatory: ON
+            result = r24.match(line)
+            if result:
+                group = result.groupdict()
+                mandatory = group['mandatory']
+                job_dict['mandatory'] = mandatory
 
                 continue
 
@@ -481,5 +522,82 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
                         ret_dict['location'][location].setdefault(
                             'index', {}).setdefault(index, {}).update({k: v})
                 continue
+
+        return ret_dict
+
+
+class ShowProcessesBlockedSchema(MetaParser):
+    """
+    Schema for 'show processes blocked'
+    """
+
+    schema = {
+        'jid': {
+            Any(): {
+                'pid': int,
+                'process_name': str,
+                'tid': {
+                    Any(): {
+                        'state': str,
+                        'time_in_state': str,
+                        'blocked_on': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowProcessesBlocked(ShowProcessesBlockedSchema):
+    """
+    Parser for 'show processes blocked'
+
+    Thu May  1 03:40:06.214 UTC
+    Jid       Pid Tid          ProcessName        State   TimeInState    Blocked-on
+    122     13635 47914         pm_collector        Reply 0000:00:00.0005    7321 sysdb_mc
+    122     13635 47910         pm_collector        Reply 0000:00:00.0005    7321 sysdb_mc
+    206     11833 11963              lpts_fm        Reply 0017:08:12.0626    9035 lpts_pa
+    """
+
+    cli_command = ['show processes blocked']
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        #   Jid       Pid Tid          ProcessName        State   TimeInState    Blocked-on
+        #   193     10985 11144              lpts_fm        Reply 0003:27:24.0579    8532 lpts_pa
+        p1 = re.compile(
+            r'^(\s+)?(?P<jid>\d+)'
+            r'\s+(?P<pid>\d+)'
+            r'\s+(?P<tid>\d+)'
+            r'\s+(?P<process_name>\w+)'
+            r'\s+(?P<state>\w+)'
+            r'\s+(?P<time_in_state>[\d:.\w]+)'
+            r'\s+(?P<blocked_on>\d+\s+\w+)'
+            )
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  193     10985 11144              lpts_fm        Reply 0003:27:24.0579    8532 lpts_pa
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                jid_dict = ret_dict.setdefault('jid', {}).setdefault(int(group['jid']), {})
+                jid_dict['pid'] = int(group['pid'])
+                jid_dict['process_name'] = group['process_name']
+
+                tid_dict = jid_dict.setdefault('tid', {}).setdefault(int(group['tid']), {})
+                tid_dict['state'] = group['state']
+                tid_dict['time_in_state'] = group['time_in_state']
+                tid_dict['blocked_on'] = group['blocked_on']
 
         return ret_dict

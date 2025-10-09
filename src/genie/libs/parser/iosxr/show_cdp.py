@@ -63,7 +63,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
             r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
             r'(?P<platform>\S+)'
-            '(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
+            r'(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
 
         # No platform
         p2 = re.compile(
@@ -71,14 +71,14 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
             r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+)'
             r'(?: +(?P<platform>[\w\-]+) )? +'
-            '(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+            r'(?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # device6 Gig 0 157 R S I C887VA-W-W Gi 0
         p3 = re.compile(
             r'^(?P<device_id>\S+) +'
             r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
             r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-            '(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
+            r'(?P<platform>\S+) (?P<port_id>[a-zA-Z0-9\/\s]+)$')
 
         # p4 and p5 for two-line output, where device id is on a separate line
         p4 = re.compile(r'^(?P<device_id>\S+)$')
@@ -212,23 +212,23 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         # SysName:R3_nx
         system_name_re = re.compile(r''
-                                    'SysName\s*:\s*(?P<system_name>\S+)')
+                                    r'SysName\s*:\s*(?P<system_name>\S+)')
 
         # Entry address(es):
         entry_address_re = re.compile(
             r''
-            'Entry\s*address\s*\(\w+\)\s*\:\s*')
+            r'Entry\s*address\s*\(\w+\)\s*\:\s*')
 
         # IPv4 address: 172.16.1.204
         ipv4_address_re = re.compile(
             r'\S*IPv4\s*'
-            'address:\s*(?P<ip_address>\S*)')
+            r'address:\s*(?P<ip_address>\S*)')
 
         # Platform: N9K-9000v,  Capabilities: Router Switch
         platf_cap_re = re.compile(
             r'Platform:\s*(?P<platform>[a-zA-Z\d +\-\/]+)'
             r'\s*\,\s*Capabilities:\s*'
-            '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
+            r'(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
 
         # Interface: GigabitEthernet0/0/0/5
         interface_re = re.compile(
@@ -253,11 +253,11 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         # advertisement version: 2
         advertver_re = re.compile(r'advertisement\s*version:\s*'
-                                  '(?P<advertisement_ver>\d+)')
+                                  r'(?P<advertisement_ver>\d+)')
 
         # Native VLAN: 42
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
-                                    '(?P<native_vlan>\d+)')
+                                    r'(?P<native_vlan>\d+)')
 
         # Duplex: full
         # Duplex Mode: half

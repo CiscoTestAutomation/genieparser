@@ -1,0 +1,10 @@
+Meraki Mode Migration Status
+-------------------------------------------
+  Current Booted Mode:              C9K-M
+  Migration in Progress:            NO
+  Mode Migrating To:                C9K-C [Monitoring]
+  Migration Status:                 Migration failed compatibility check. Run "show meraki compatibility"
+  Migration Start Time:             2025-04-09 20:54:10
+  Compatibility Failed Reasons:
+				Install Incompatible
+        

@@ -528,10 +528,10 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
         # Source Address   Uptime    Expires   Fwd  Flags
         # 192.168.1.18     00:04:55  00:01:28  Yes  Remote
         p8 = re.compile(r'^(?P<source>[\d\.\:]+) +'
-                             '(?P<up_time>[\w\.\:]+) +'
-                             '(?P<expire>[\w\:]+) +'
-                             '(?P<forward>\w+)? +'
-                             '(?P<flags>\w+)?$')
+                             r'(?P<up_time>[\w\.\:]+) +'
+                             r'(?P<expire>[\w\:]+) +'
+                             r'(?P<forward>\w+)? +'
+                             r'(?P<flags>\w+)?$')
         
         for line in out.splitlines():
             line = line.strip()

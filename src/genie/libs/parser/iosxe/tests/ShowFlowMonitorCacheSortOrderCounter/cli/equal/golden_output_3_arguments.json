@@ -1,0 +1,7 @@
+{
+    "name": "m2i",
+    "counter_type": "bytes",
+    "value": 15,
+    "layer2": true,
+    "order": "highest"
+}

@@ -103,19 +103,19 @@ class ShowVpc(ShowVpcSchema):
         # Configuration consistency status  : success
         # Configuration consistency status: success
         p4 = re.compile(r'^Configuration +consistency +status\s*: '
-            '+(?P<config_status>[\S\s]+)$')
+            r'+(?P<config_status>[\S\s]+)$')
 
         # Configuration consistency reason: vPC type-1 configuration incompatible - STP interface port type inconsistent
         p5 = re.compile(r'^Configuration +consistency +reason\s*: '
-            '+(?P<config_status_reason>[\S\s]+)$')
+            r'+(?P<config_status_reason>[\S\s]+)$')
 
         # Per-vlan consistency status       : success 
         p6 = re.compile(r'^Per-vlan +consistency +status\s*: '
-            '+(?P<per_vlan_status>[\S\s]+)$')
+            r'+(?P<per_vlan_status>[\S\s]+)$')
 
         # Type-2 consistency status         : success 
         p7 = re.compile(r'^Type-2 +consistency +status\s*: '
-            '+(?P<type_2_status>[\S\s]+)$')
+            r'+(?P<type_2_status>[\S\s]+)$')
 
         # vPC role                          : primary  
         p8 = re.compile(r'^vPC +role\s*: +(?P<vpc_role>[\S\s]+)$')
@@ -128,27 +128,27 @@ class ShowVpc(ShowVpcSchema):
 
         # Dual-active excluded VLANs        : -       
         p11 = re.compile(r'^Dual-active +excluded +VLANs\s*: '
-            '+(?P<dual_active_excluded_vlan>[\S\s]+)$')
+            r'+(?P<dual_active_excluded_vlan>[\S\s]+)$')
 
         # Graceful Consistency Check        : Enabled
         p12 = re.compile(r'^Graceful +Consistency +Check\s*: '
-            '+(?P<graceful_check>[\S\s]+)$')
+            r'+(?P<graceful_check>[\S\s]+)$')
 
         # Auto-recovery status              : Enabled, timer is off.(timeout = 240s)
         p13 = re.compile(r'^Auto-recovery +status\s*: '
-            '+(?P<auto_recovery_status>[\S\s]+)$')
+            r'+(?P<auto_recovery_status>[\S\s]+)$')
 
         # Delay-restore status              : Timer is off.(timeout = 30s)
         p14 = re.compile(r'^Delay-restore +status\s*: '
-            '+(?P<delay_recovery_status>[\S\s]+)$')
+            r'+(?P<delay_recovery_status>[\S\s]+)$')
 
         # Delay-restore SVI status          : Timer is off.(timeout = 10s)
         p15 = re.compile(r'^Delay-restore +SVI +status\s*: '
-            '+(?P<delay_svi_recovery_status>[\S\s]+)$')
+            r'+(?P<delay_svi_recovery_status>[\S\s]+)$')
 
         # Operational Layer3 Peer-router    : Disabled
         p16 = re.compile(r'^Operational +Layer3 +Peer-router\s*: '
-            '+(?P<layer3_peer_router>[\S\s]+)$')
+            r'+(?P<layer3_peer_router>[\S\s]+)$')
 
         # Track object : 12
         p17 = re.compile(r'^Track +object\s*: +(?P<track_object>\d+)$')
@@ -168,10 +168,10 @@ class ShowVpc(ShowVpcSchema):
         # 1 Po1 down success success -
         # 11 Po11 up success success 1,10-28,30-5 DF: Partial
         p19 = re.compile(r'^(?P<vpc_id>\d+) +(?P<vpc_ifindex>\S+) '
-            '+(?P<vpc_port_state>\S+) +(?P<vpc_consistency>\S+) '
-            '+(?P<vpc_consistency_status>success|[\S\s]+) '
-            '+(?P<up_vlan_bitset>[\d\,\-]+)'
-            '(?: +(?P<vpc_plus_attrib>(.*)+))?$')
+            r'+(?P<vpc_port_state>\S+) +(?P<vpc_consistency>\S+) '
+            r'+(?P<vpc_consistency_status>success|[\S\s]+) '
+            r'+(?P<up_vlan_bitset>[\d\,\-]+)'
+            r'(?: +(?P<vpc_plus_attrib>(.*)+))?$')
         # vPC Peer-link status
         p20 = re.compile(r'^vPC +(p|P)eer-link +status$')
 
@@ -228,7 +228,7 @@ class ShowVpc(ShowVpcSchema):
         p36 = re.compile(r'^(?P<additional_vlan>[\d\-\,]+) (?P<additional_vpc_plus_attrib>[\S\-\,\s\.\:]+)$')
         # Virtual-peerlink mode    : Disabled
         p37 = re.compile(r'^Virtual-peerlink +mode\s*: '
-            '+(?P<peerlink_mode>[\S\s]+)$')
+            r'+(?P<peerlink_mode>[\S\s]+)$')
 
         for line in output.splitlines():
             line = line.strip()

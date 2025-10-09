@@ -1,0 +1,25 @@
+Wed Mar 12 21:53:01.223 UTC
+
+Cisco IOS XR Software, Version 6.5.1.34I[Default]
+Copyright (c) 2018 by Cisco Systems, Inc.
+
+ROM: System Bootstrap, Version 2.04(20140227:092320) [ASR9K ROMMON],  
+
+C2 uptime is 28 weeks, 3 days, 14 hours, 39 minutes
+System image file is "bootflash:disk0/asr9k-os-mbi-6.5.1.34I/0x100000/mbiasr9k-rp.vm"
+
+cisco ASR9K Series (P4040) processor with 8388608K bytes of memory.
+P4040 processor at 1500MHz, Revision 2.0
+ASR 9006 4 Line Card Slot Chassis
+
+2 Management Ethernet
+20 GigabitEthernet
+4 TenGigE
+4 DWDM controller(s)
+4 WANPHY controller(s)
+219k bytes of non-volatile configuration memory.
+2868M bytes of hard disk.
+3915760k bytes of disk0: (Sector size 512 bytes).
+
+Configuration register on node 0/RSP0/CPU0 is 0x102
+Boot device on node 0/RSP0/CPU0 is disk0:

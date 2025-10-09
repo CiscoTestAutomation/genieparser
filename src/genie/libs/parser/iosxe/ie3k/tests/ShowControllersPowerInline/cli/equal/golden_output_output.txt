@@ -1,0 +1,2 @@
+For PoE controller registers refer to /flash/poe_controller_regs_sw1*
+For PoE firmware logs refer to /flash/poe_fw_logs_sw1*

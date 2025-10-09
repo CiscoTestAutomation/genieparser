@@ -1,0 +1,4 @@
+Vlan1199                  KVTC_TEST_SU_KLAIDA                 31  --
+Vlan1999                  KVTC_TEST_SU_KLAIDA                 31  --
+Vlan3959                  KVTC_TEST_SU_KLAIDA                 31  --
+Vlan3960                  KVTC_TEST_SU_KLAIDA                 31  --

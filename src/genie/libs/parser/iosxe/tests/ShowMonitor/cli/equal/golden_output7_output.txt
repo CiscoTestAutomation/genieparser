@@ -1,0 +1,19 @@
+Session 10
+----------
+Type                     : ERSPAN Source Session
+Status                   : Admin Enabled
+Source Ports             :
+    Both                 : Gi0/0/1
+Destination IP Address   : 10.1.1.1
+MTU                      : 1464
+Destination ERSPAN ID    : 10
+Origin IP Address        : 100.1.1.1
+
+
+Session 20
+----------
+Type                     : ERSPAN Destination Session
+Status                   : Admin Enabled
+Destination Ports        : Gi0/1/3
+Source IP Address        : 10.1.1.1
+Source ERSPAN ID         : 10

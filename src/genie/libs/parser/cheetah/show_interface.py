@@ -294,73 +294,73 @@ class ShowInterfacesDot11radioSchema(MetaParser):
                 'txqueuelen':int,
                 'rx_bytes': int,
                 'tx_bytes': int,
-                'interrupt': int,
-                'memory': str,
+                Optional('interrupt'): int,
+                Optional('memory'): str,
                 'ml_type': {
                     Any(description='Placeholder for ml/non_ml type'): { # ML_TYPE: NON_ML	DOT11 Statistics / ML_TYPE: ML	DOT11 Statistics
                         'statistics': {
                             Any(description='Placeholder for cumulative_total/last_five_seconds'): {
-                                'host_rx_k_bytes': int,
-                                'host_tx_k_bytes': int,
-                                'unicast_rx': int,
-                                'unicast_tx': int,
-                                'broadcasts_rx': int,
-                                'broadcasts_tx': int,
-                                'beacons_rx': int,
-                                'beacons_tx': int,
-                                'probes_rx': int,
-                                'probes_tx': int,
-                                'multicast_rx': int,
-                                'multicast_tx': int,
-                                'mgmt_pkts_rx': int,
-                                'mgmt_pkts_tx': int,
-                                'ctrl_frame_rx': int,
-                                'ctrl_frame_tx': int,
-                                'rts_received':int,
-                                'rts_transmitted':int,
-                                'duplicate_frames': int,
-                                'cts_not_received': int,
-                                'mic_err': int,
-                                'wep_err': int,
-                                'fcs_error': int,
-                                'retries': int,
-                                'key_index_err': int,
-                                'tx_failures': int,
-                                'tx_drops': int
+                                Optional('host_rx_k_bytes'): int,
+                                Optional('host_tx_k_bytes'): int,
+                                Optional('unicast_rx'): int,
+                                Optional('unicast_tx'): int,
+                                Optional('broadcasts_rx'): int,
+                                Optional('broadcasts_tx'): int,
+                                Optional('beacons_rx'): int,
+                                Optional('beacons_tx'): int,
+                                Optional('probes_rx'): int,
+                                Optional('probes_tx'): int,
+                                Optional('multicast_rx'): int,
+                                Optional('multicast_tx'): int,
+                                Optional('mgmt_pkts_rx'): int,
+                                Optional('mgmt_pkts_tx'): int,
+                                Optional('ctrl_frame_rx'): int,
+                                Optional('ctrl_frame_tx'): int,
+                                Optional('rts_received'):int,
+                                Optional('rts_transmitted'):int,
+                                Optional('duplicate_frames'): int,
+                                Optional('cts_not_received'): int,
+                                Optional('mic_err'): int,
+                                Optional('wep_err'): int,
+                                Optional('fcs_error'): int,
+                                Optional('retries'): int,
+                                Optional('key_index_err'): int,
+                                Optional('tx_failures'): int,
+                                Optional('tx_drops'): int
                             }
                         }
                     }
                 },
-                'beacons_missed': {
+                Optional('beacons_missed'): {
                     '0-30s': int,
                     '31-60s': int,
                     '61-90s': int,
                     '90s+': int
                 },
                 Optional('vap_rx_statistics'): {
-                    'vap': int,
-                    'ssid': str,
-                    'mgmt': str,
-                    'data': str,
-                    'bk': str,
-                    'be': str,
-                    'vi': str,
-                    'vo':str,
-                    'data_bytes': str
+                    Optional('vap'): int,
+                    Optional('ssid'): str,
+                    Optional('mgmt'): str,
+                    Optional('data'): str,
+                    Optional('bk'): str,
+                    Optional('be'): str,
+                    Optional('vi'): str,
+                    Optional('vo'):str,
+                    Optional('data_bytes'): str
                 },
                 Optional('vap_tx_statistics'): {
-                    'vap': int,
-                    'ssid': str,
-                    'mgmt': str,
-                    'beacon': str,
-                    'data': str,
-                    'bk': str,
-                    'be': str,
-                    'vi': str,
-                    'vo':str,
-                    'data_bytes': str,
-                    'qos_retries': str,
-                    'amdpu_subframe_retries': str
+                    Optional('vap'): int,
+                    Optional('ssid'): str,
+                    Optional('mgmt'): str,
+                    Optional('beacon'): str,
+                    Optional('data'): str,
+                    Optional('bk'): str,
+                    Optional('be'): str,
+                    Optional('vi'): str,
+                    Optional('vo'):str,
+                    Optional('data_bytes'): str,
+                    Optional('qos_retries'): str,
+                    Optional('amdpu_subframe_retries'): str
                 }
             }
         }
@@ -399,10 +399,10 @@ class ShowInterfacesDot11radio(ShowInterfacesDot11radioSchema):
         p1_4 = re.compile(r'^(?P<attributes>[\w\s]+)?\s+MTU:(?P<mtu>\d+)\s+Metric:(?P<metric>\d+)$')
 
         # RX packets:26749820 errors:0 dropped:0 overruns:0 frame:0
-        p1_5 = re.compile('^RX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) frame:(?P<frame>\d+)$')
+        p1_5 = re.compile(r'^RX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) frame:(?P<frame>\d+)$')
 
         # TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-        p1_6 = re.compile('^TX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) carrier:(?P<carrier>\d+)$')
+        p1_6 = re.compile(r'^TX packets:(?P<packets>\d+) errors:(?P<error>\d+) dropped:(?P<drop>\d+) overruns:(?P<overrun>\d+) carrier:(?P<carrier>\d+)$')
 
         # collisions:0 txqueuelen:1000
         p1_7 = re.compile(r'^collisions:(?P<collisions>\d+) txqueuelen:(?P<txqueuelen>\d+)$')

@@ -5,6 +5,7 @@ IOSXE parsers for the following show commands:
     * 'show controller VDSL {interface}'
     * 'show controller ethernet-controller {interface}'
     * 'show controller ethernet-controller'
+    * 'show controller {controller_name}'
 '''
 
 import re
@@ -12,7 +13,6 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
-
 
 class ShowControllerVDSLSchema(MetaParser):
     """Schema for show controller VDSL {interface}"""
@@ -1125,8 +1125,7 @@ class ShowControllersEthernetControllersPhyDetail(ShowControllersEthernetControl
 
         #  0000 : 1140                  Control Register :  0001 0001 0100 0000
         #  0001 : 796d                    Control STATUS :  0111 1001 0110 1101
-        registers_reg = re.compile(
-            r'(?P<register_number>\S{4})\s\:\s(?P<hex_bit_value>\S{4})\s+(?P<register_name>.*)\s\:\s+(?P<bits>.*)')
+        registers_reg = re.compile(r'(?P<register_number>\S+)\s+\:\s+(?P<hex_bit_value>\S{4})\s+(?P<register_name>.*?)\s+\:\s+(?P<bits>.*)')
 
         # --------------------------------------------------------------
         # Build the parsed output
@@ -1173,7 +1172,7 @@ class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
             'mpp_port_details': {
                     Any():Or(int,str),
             },
-            'autoneg_details':{
+            Optional('autoneg_details'):{
                     Any():Or(int,str),
             },
             'autoneg_status': {
@@ -1186,7 +1185,8 @@ class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
         'port': int,
         'cmd': str,
         'rc': str,
-        'rsn': str,
+        Optional('slot'): int,
+        Optional('rsn'): str,         
         'phy_link_status':{
             'phy_configuration':{
                     Any():Or(int,str),
@@ -1240,8 +1240,11 @@ class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControlle
         #Genral - Speed:         speed_gbps1
         p8 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
 
-        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
-        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
+        
+        
+        # Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
+        # Port = 3 Slot = 1 cmd = (port_diag unit 0 port 2 slot 0) rc = 0x0 reason = success
+        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +(Slot +\= +(?P<slot>\d+) +)?cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +(rsn|reason) +\= +(?P<rsn>\w+)$')
 
         #PHY LINK STATUS
         p10 = re.compile(r'^\*+\s*PHY +LINK +STATUS\s*\*+$')
@@ -1325,15 +1328,18 @@ class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControlle
                     root_dict.update({key: group['value']})
                 continue
 
-            #Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
+            # Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
+            # Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 reason = success
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['port'] = int(group['port'])
+                if (slot := group.get("slot")):
+                    ret_dict['slot'] = int(slot)
                 ret_dict['cmd'] = group['cmd']
                 ret_dict['rc'] = group['rc']
                 ret_dict['rsn'] = group['rsn']
-                continue
+                continue 
 
             #******* PHY LINK STATUS ************
             m = p10.match(line)
@@ -1354,201 +1360,1880 @@ class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControlle
                 continue
 
         return ret_dict
-
-
-
-class ShowControllerEthernetControllerLinkstatusSchema(MetaParser):
-    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
-
+       
+class ShowControllersEthernetControllerPortInfoSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller tenGigabitEthernet {interface} port-info'
+    """
     schema = {
-        'interface':{
-            'interface_name': str,
-            'if_id': int,
-        },
-        'mac_link_status':{
-            'mpp_port_details': {
-                    Any():Or(int,str),
-            },
-            'autoneg_details':{
-                    Any():Or(int,str),
-            },
-            'autoneg_status': {
-                    Any():Or(int,str),
-            },
-            'mib_counters': {
-                    Any(): int,
-            },
-        },
-        'port': int,
-        'cmd': str,
-        'rc': str,
-        'rsn': str,
-        'phy_link_status':{
-            'phy_configuration':{
-                    Any():Or(int,str),
-            },
-            'phy_status':{
-                    Any():Or(int,str),
-            },
-        },
- }
+        'interface': str,
+        'if_id': int,
+        'port_context_information': {
+            'lpn': int,
+            'asic_num': int,
+            Optional('asic_port'): Or(int, str),
+            'is_init': int,
+            'context_name': str,
+            'is_disabled': int,
+            'is_bc_inserted': int,
+            'is_bc_forced': int,
+            'is_qsa_module': int,
+            'admin_link_state': int,
+            'default_speed': int,
+            'duplex': int,
+            'speed': int,
+            'max_speed': int,
+            'flowcontrol': int,
+            'fec_mode': int,
+            'poll_link_status': int,
+        }
+    }
 
 
-
-class ShowControllerEthernetControllerLinkstatus(ShowControllerEthernetControllerLinkstatusSchema):
-    """
-    ShowPlatformSoftwareCpmSwitchActiveB0CountersInterfaceIsis
-    """
-
-    cli_command = 'show controllers ethernet-controller {interface} link-status'
-
+class ShowControllersEthernetControllerPortInfo(ShowControllersEthernetControllerPortInfoSchema):
+    """Parser for 'show controllers ethernet-controller {interface} port-info'"""
+    
+    cli_command = 'show controllers ethernet-controller {interface} port-info'
+    
     def cli(self, interface, output=None):
-
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
-
+        else:
+            output = output
+        
         ret_dict = {}
-
-        #Gi1/0/5 (if_id: 1036)
-        p0 = re.compile(r'^(?P<name>\S+) +\(if\_id\: +(?P<if_id>\d+)\)$')
-
-        #******* MAC LINK STATUS ************
-        p1 = re.compile(r'^\*+\s*MAC +LINK +STATUS\s*\*+$')
-
-        #MPP PORT DETAILS
-        p2 =  re.compile(r'^MPP +PORT +DETAILS$')
-
-        #link_state: 1 pcs_status: 0  high_ber: 0
-        p3 = re.compile(r'^link_state\: +(?P<link_state>\d+) +pcs_status\: +(?P<pcs_status>\d+) +high_ber\: +(?P<high_ber>\d+)$')
-
-        #get_state = LINK_UP
-        p4 = re.compile(r'^get_state +\= +(?P<get_state>.*)$')
-
-        # Autoneg Details
-        p5 = re.compile(r'^Autoneg +Details$')
-
-        #Autoneg Status
-        p6 = re.compile(r'^Autoneg +Status$')
-
-        #MIB counters
-        p7 = re.compile(r'^MIB +counters$')
-
-        #Genral - Speed:         speed_gbps1
-        p8 = re.compile(r'^(?P<key>[\s*\w]+.*)\: +(?P<value>[\S\s]+.*)$')
-
-        #Port = 22 cmd = (port_diag unit 0 port 22 slot 0) rc = 0x0 rsn = success
-        p9 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +\((?P<cmd>[\s*\w]+)\) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>\w+)$')
-
-        #PHY LINK STATUS
-        p10 = re.compile(r'^\*+\s*PHY +LINK +STATUS\s*\*+$')
-
-        #Phy Configuration :
-        p11 = re.compile(r'^Phy +Configuration +\:$')
-
-        #Phy Status :
-        p12 = re.compile(r'^Phy +Status +\:$')
-
+        
+        # Te1/0/13 (if_id: 1043)
+        p1 = re.compile(r'^(?P<interface>\S+) +\(if_id\: +(?P<if_id>\d+)\)$')
+        
+        # Port Context Information
+        p2  = re.compile(r'^Port +Context +Information$')
+        
+        # Lpn ........................ [13]
+        p3 = re.compile(r'^Lpn\s+\.+\s+\[(?P<lpn>\d+)\]$')
+        
+        # AsicNum .................... [1]
+        p4 = re.compile(r'^AsicNum\s+\.+\s+\[(?P<asic_num>\d+)\]$')
+        
+        # AsicPort ................... [-604733568]
+        p5 = re.compile(r'^AsicPort.*\[\s*(?P<asic_port>[^\]]+)\]')
+        
+        # IsInit ..................... [1]
+        p6 = re.compile(r'^IsInit\s+\.+\s+\[(?P<is_init>\d+)\]$')
+        
+        # ContextName ................ [Te1/0/13]
+        p7 = re.compile(r'^ContextName\s+\.+\s+\[(?P<context_name>\S+)\]$')
+        
+        # IsDisabled ................. [0]
+        p8 = re.compile(r'^IsDisabled\s+\.+\s+\[(?P<is_disabled>\d+)\]$')
+        
+        # IsBc Inserted .............. [0]
+        p9 = re.compile(r'^IsBc Inserted\s+\.+\s+\[(?P<is_bc_inserted>\d+)\]$')
+        
+        # IsBc Forced ................ [0]
+        p10 = re.compile(r'^IsBc Forced\s+\.+\s+\[(?P<is_bc_forced>\d+)\]$')
+        
+        # IsQsa Module ............... [0]
+        p11 = re.compile(r'^IsQsa Module\s+\.+\s+\[(?P<is_qsa_module>\d+)\]$')
+        
+        # Admin link state ........... [1]
+        p12 = re.compile(r'^Admin link state\s+\.+\s+\[(?P<admin_link_state>\d+)\]$')
+        
+        # default_speed .............. [10000000]
+        p13 = re.compile(r'^default_speed\s+\.+\s+\[(?P<default_speed>\d+)\]$')
+        
+        # duplex ..................... [2]
+        p14 = re.compile(r'^duplex\s+\.+\s+\[(?P<duplex>\d+)\]$')
+        
+        # speed ...................... [1000000]
+        p15 = re.compile(r'^speed\s+\.+\s+\[(?P<speed>\d+)\]$')
+        
+        # max speed .................. [10000000]
+        p16 = re.compile(r'^max speed\s+\.+\s+\[(?P<max_speed>\d+)\]$')
+        
+        # Flowcontrol ................ [2]
+        p17 = re.compile(r'^Flowcontrol\s+\.+\s+\[(?P<flowcontrol>\d+)\]$')
+        
+        # fec mode ................... [0]
+        p18 = re.compile(r'^fec mode\s+\.+\s+\[(?P<fec_mode>\d+)\]$')
+        
+        # Poll link status ........... [1]
+        p19 = re.compile(r'^Poll link status\s+\.+\s+\[(?P<poll_link_status>\d+)\]$')
+        
         for line in output.splitlines():
             line = line.strip()
-
-
-            #Gi1/0/5 (if_id: 1036)
-            m = p0.match(line)
-            if m:
-                group = m.groupdict()
-                root_dict = ret_dict.setdefault('interface', {})
-                root_dict['interface_name'] = group['name']
-                root_dict['if_id'] = int(group['if_id'])
-                continue
-
-
-            #******* MAC LINK STATUS ************
+            
+            # Te1/0/13 (if_id: 1043)
             m = p1.match(line)
             if m:
-                root_dict =  ret_dict.setdefault('mac_link_status', {})
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                ret_dict['interface'] = interface_name
+                ret_dict['if_id'] = int(group['if_id'])                
                 continue
-
-            #MPP PORT DETAILS
+            
+            #Port Context Information
             m = p2.match(line)
             if m:
-                root_dict =  ret_dict.setdefault('mac_link_status', {}).setdefault('mpp_port_details', {})
-                continue
-
-
-            ##link_state: 1 pcs_status: 0  high_ber: 0'
+                curr_dict = ret_dict.setdefault('port_context_information', {})
+                continue 
+            
+            #Lpn ........................ [13]
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                root_dict['link_state'] = int(group['link_state'])
-                root_dict['pcs_status'] = int(group['pcs_status'])
-                root_dict['high_ber'] = int(group['high_ber'])
+                curr_dict['lpn'] = int(group['lpn'])
                 continue
-
-            #get_state = LINK_UP
+            
+            # AsicNum .................... [1]
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                root_dict['get_state'] = group['get_state'].strip()
+                curr_dict['asic_num'] = int(group['asic_num'])
                 continue
-
-            #Autoneg Details
+            
             m = p5.match(line)
             if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_details', {})
+                val = m.group('asic_port').strip().upper()
+                try:
+                    curr_dict['asic_port'] = int(val)
+                except ValueError:
+                    curr_dict['asic_port'] = val  # keep as string, e.g., "NA"
                 continue
-
-            #Autoneg Status
+            
+            # IsInit ..................... [1]
             m = p6.match(line)
             if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('autoneg_status', {})
+                group = m.groupdict()
+                curr_dict['is_init'] = int(group['is_init'])
                 continue
-
-            #MIB counters
+                
+            # ContextName ................ [Te1/0/13]    
             m = p7.match(line)
             if m:
-                root_dict = ret_dict.setdefault('mac_link_status', {}).setdefault('mib_counters', {})
+                group = m.groupdict()
+                curr_dict['context_name'] = group['context_name']
                 continue
-
-
-            #Genral - Speed:         speed_gbps1
+                
+            # IsDisabled ................. [0]    
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                key = group['key'].strip().lower().replace(":","").replace("-",'_').replace(" ",'_')
-                if group['value'].isdigit():
-                    root_dict.update({key: int(group['value'])})
-                else:
-                    root_dict.update({key: group['value']})
+                curr_dict['is_disabled'] = int(group['is_disabled'])
                 continue
-
-            #Port = 3 cmd = (port_diag unit 0 port 3 slot 0) rc = 0x0 rsn = success
+                
+            # IsBc Inserted .............. [0]    
             m = p9.match(line)
             if m:
                 group = m.groupdict()
+                curr_dict['is_bc_inserted'] = int(group['is_bc_inserted'])
+                continue            
+            
+            # IsBc Forced ................ [0]
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_bc_forced'] = int(group['is_bc_forced'])
+                continue
+            
+            # IsQsa Module ............... [0]
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['is_qsa_module'] = int(group['is_qsa_module'])
+                continue
+            
+            # Admin link state ........... [1]
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['admin_link_state'] = int(group['admin_link_state'])
+                continue
+            
+            # default_speed .............. [10000000]
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['default_speed'] = int(group['default_speed'])
+                continue
+            
+            # duplex ..................... [2]  
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['duplex'] = int(group['duplex'])
+                continue
+            
+            # speed ...................... [1000000] 
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['speed'] = int(group['speed'])
+                continue
+            
+            # max speed .................. [10000000]  
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['max_speed'] = int(group['max_speed'])
+                continue
+            
+            # Flowcontrol ................ [2]
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['flowcontrol'] = int(group['flowcontrol'])
+                continue
+            
+            # fec mode ................... [0] 
+            m = p18.match(line)            
+            if m:
+                group = m.groupdict()
+                curr_dict['fec_mode'] = int(group['fec_mode'])
+                continue
+            
+            # Poll link status ........... [1] 
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['poll_link_status'] = int(group['poll_link_status'])
+                continue
+        
+        return ret_dict
+        
+class ShowControllerEthernetControllerInterfaceMacSchema(MetaParser):
+    """Schema for show  platform  hardware fed  switch  active  npu  slot  1  port 23 link_status"""
+    
+    schema = {
+        'npu_pdsf_procagent_get_eye_common':str,
+        'mpp_port_detai1': {
+            Any(): {
+                'mac_state_histogram': {
+                    Any(): Or(int,str),
+                },
+                'mac_port_config': {
+                   Any(): Or(int,str),
+                },                    
+                'mac_port_status': {
+                    Any(): Or(int,str),
+                },
+                'mib_counters': {
+                    Any(): Or(int,str),
+                },     
+                Optional('state_transition_history'): {
+                    Any():{
+                       'state': str,
+                       'timestamp': str,
+                    },    
+                },    
+            },
+        },
+        'multiport_detail': {
+            Any(): {
+                Optional('save_state_timestamp'): str,
+                'device_info': {
+                    Any(): str,
+                },
+                'mac_state_histogram':{
+                    Any(): Or(int,str),
+                    'serdes_0': {
+                        Any(): Or(int,str),
+                    },
+                },
+                'mac_port_config': {
+                    Any(): Or(int,str),
+                    'serdes_info': {
+                        Any(): Or(int,str),
+                    },
+                },
+                'mac_port_status': {
+                    'am_lock': {
+                        Any(): str,
+                    },    
+                    Any(): Or(int,str),
+                    'mac_pcs_lane_mapping': {
+                        Any(): Or(int,str),
+                    },
+                },                    
+                'mac_port_soft_state': {
+                    Any(): Or(int,str),
+                },
+                'mib_counters': {
+                    Any(): Or(int,str),
+                    Optional('tx_mac_tc_fc_frames_ok'): {
+                        Any(): Or(int,str),
+                    },
+                    Optional('tx_xoff_state_duration'): {
+                        Any(): Or(int,str),
+                    },
+                    Optional('rx_mac_tc_fc_frames_ok'): {
+                        Any(): Or(int,str),
+                    },
+                    Optional('rx_xoff_state_duration'): {
+                        Any(): Or(int,str),
+                    },                 
+                },
+                'test_mode': {
+                    Any(): Or(int,str),
+                },
+                'state_transition_history': {
+                    Any():{
+                       'state': str,
+                       'timestamp': str,
+                    },    
+                },
+                'serdes_parameters': {
+                    'index_0': {
+                        Any(): Or(int,str),
+                    },
+                },
+                'serdes_config':{
+                    'serdes_settings': {
+                        'rx_settings': {
+                            Any(): Or(int,str),
+                            'targ_shadow':{
+                                Any(): Or(int,str),
+                            }    
+                        },
+                        'tx_settings': {
+                            Any(): Or(int,str),
+                            'tx_fir': {
+                                Any(): Or(int,str),
+                            },    
+                        },
+                        'flow_chart_settings': {
+                            Any(): Or(int,str),
+                        },
+                    },    
+                },
+                'serdes_status':{
+                    'firmware_version': {
+                        Any(): str,
+                    },
+                    'rx_status': {
+                        Any(): Or(int,str),
+                        'firs': {
+                            Any(): Or(int,str),
+                        }    
+                    },
+                    'fw_rx_status': {
+                        Any(): Or(int,str),
+                    },
+                    'fir_shadow': {
+                        Any(): Or(int,str),
+                    },    
+                },    
+                'eye_capture':{
+                    'veye_data': {
+                        Any(): Or(int,str),
+                        'veye_values': {
+                            Any(): Or(int,str),
+                        },   
+                    },
+                },
+                'reg_dump':{
+                    'quad_reg':{
+                        Any(): Or(int,str),
+                    },
+                    'p_reg':{
+                        Any(): Or(int,str),
+                    },
+                    's_reg':{
+                        Any(): Or(int,str),
+                    },
+                    'rxdtop':{
+                        Any(): Or(int,str),
+                    },
+                    'txdtop':{
+                        Any(): Or(int,str),
+                    },
+                    'autoneg':{
+                        Any(): Or(int,str),
+                    },
+                    'linktraining':{
+                        Any(): Or(int,str),
+                    },
+                    'rx_sts':{
+                        Any():Or(int,str),
+                    },
+                    'an_debug_1':{
+                        Any(): Or(int,str),
+                    },
+                    'an_debug_2':{
+                        Any(): Or(int,str),
+                    },
+                    'lt_debug_1':{
+                        Any(): Or(int,str),
+                    },
+                    'lt_debug_2':{
+                        Any(): Or(int,str),
+                    },
+                },    
+            },
+        },
+        'mac_port_link_down': {
+            Any():{
+                Any(): Or(int,str),
+                'rx_deskew_fifo_overflow_count': {
+                    Any(): Or(int,str),
+                },
+                'rx_pma_sig_ok_loss_interrupt_register_count': {
+                    Any(): Or(int,str),
+                },  
+            },        
+        },
+        'mac_port_link_error': { 
+            Any(): {
+                Any(): Or(int,str),  
+            },
+        },
+        'mac_port_link_debounce': {
+            Any(): {
+                Any(): Or(int,str), 
+            },    
+        }, 
+        'port': int,
+        Optional('slot'): int,
+        'cmd': str,
+        'rc': str,
+        Optional('rsn'): str, 
+        Optional('reason'): str,               
+    }
+         
+    
+
+class ShowControllerEthernetControllerInterfaceMac(ShowControllerEthernetControllerInterfaceMacSchema):
+    """
+    ShowControllerEthernetControllerInterfaceMac
+    """
+    
+    cli_command = 'show controllers ethernet-controller {interface} mac'        
+
+    def cli(self, interface, output=None): 
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))         
+
+        ret_dict = {} 
+        
+        #npu_pdsf_procagent_get_eye_common : asic inst 0 port 14 link 32 command 8
+        p1 = re.compile(r'^npu_pdsf_procagent_get_eye_common\s*\: +(?P<npu_pdsf_procagent_get_eye_common>[\S\s]+.*)$')
+        
+        
+        #"mpp_port_0_0_36:7": {
+        p2  =  re.compile(r'^\"(?P<key>mpp_port_\d+_\d+_\d+\:\d+)\"\:\s*\{$')        
+       
+        #"mac_state_histogram": {
+        p2_1  =  re.compile(r'^\"mac_state_histogram\"\:\s*\{$')        
+       
+        #"mac_port_status": { 
+        p2_2 = re.compile(r'^\"mac_port_status\"\:\s*\{$')
+        
+        #"mib_counters": {
+        p2_3 = re.compile(r'^\"mib_counters\"\:\s*\{$')
+        
+        #"tx_mac_tc_fc_frames_ok": [ 
+        p2_3_1 = re.compile(r'^\"tx_mac_tc_fc_frames_ok\"\:\s*\[$')
+        
+        #"tx_xoff_state_duration": [
+        p2_3_2 = re.compile(r'^\"tx_xoff_state_duration\"\:\s*\[$')
+        
+        #"rx_mac_tc_fc_frames_ok": [
+        p2_3_3 = re.compile(r'^\"rx_mac_tc_fc_frames_ok\"\:\s*\[$')
+        
+        #"rx_xoff_state_duration": [
+        p2_3_4 = re.compile(r'^\"rx_xoff_state_duration\"\:\s*\[$')
+        
+        #"multiport_phy_0_0_36": { 
+        p3 = re.compile(r'^\"(?P<key>multiport_phy_\d+_\d+_\d+)\"\: +\{$')
+        
+        #"device_info": {
+        p3_1 = re.compile(r'^\"device_info\"\:\s*\{$')
+        
+        # "serdes_0": { 
+        p3_1_1 = re.compile(r'^\"serdes_\d+\"\:\s*\{$')        
+        
+        #"mac_port_config": {
+        p3_2 =  re.compile(r'^\"mac_port_config\"\:\s*\{$')
+        
+        #"serdes_info_36": { 
+        p3_2_1 = re.compile(r'^\"serdes_info_\d+\"\:\s*\{$')        
+       
+        #am_lock": [ 
+        p3_3_1 = re.compile(r'^\"am_lock\"\:\s*\[$')        
+       
+        #"mac_pcs_lane_mapping": [ 
+        p3_3_2 =  re.compile(r'^\"mac_pcs_lane_mapping\"\:\s*\[$') 
+        
+        #"mac_port_soft_state": {
+        p3_4  = re.compile(r'^\"mac_port_soft_state\"\:\s*\{$')
+        
+        #"test_mode": {
+        p3_5 = re.compile(r'^\"test_mode\"\:\s*\{$')        
+        
+        #"state_transition_history": [ 
+        p3_6 = re.compile(r'^\"state_transition_history\"\:\s*\[$')
+        
+        #"serdes_parameters": {
+        p3_7 = re.compile(r'^\"serdes_parameters\"\:\s*\{$')
+        
+        #"index_0": {
+        p3_7_1 = re.compile(r'^\"index_0\"\:\s*\{$')
+        
+        #"serdes_config": {
+        p3_8 = re.compile(r'^\"serdes_config\"\:\s*\{$')
+        
+        #"serdes_settings": [ 
+        p3_8_1 = re.compile(r'^\"serdes_settings\"\:\s*\[$')
+        
+        #"rx_settings": { 
+        p3_8_1_1 = re.compile(r'^\"rx_settings\"\:\s*\{$')
+        
+        #"targ_shadow": [ 
+        p3_8_1_1_1 =  re.compile(r'^\"targ_shadow\"\:\s*\[$')
+        
+        #"tx_settings": {
+        p3_8_1_2  =  re.compile(r'^\"tx_settings\"\:\s*\{$')
+        
+        #"tx_fir": [
+        p3_8_1_2_1 = re.compile(r'^\"tx_fir\"\:\s*\[$')
+        
+        #"flow_chart_settings": { 
+        p3_8_1_3 =  re.compile(r'^\"flow_chart_settings\"\:\s*\{$')
+        
+        #"serdes_status": {
+        p3_9 = re.compile(r'^\"serdes_status\"\:\s*\{$')
+        
+        #"Firmware_Version": { 
+        p3_9_1 =  re.compile(r'^\"Firmware_Version\"\:\s*\{$')
+        
+        #"rx_status": [
+        p3_9_2 = re.compile(r'^\"rx_status\"\:\s*\[$')
+        
+        #"firs": [
+        p3_9_2_1 = re.compile(r'^\"firs\":\s*\[$')
+        
+        #"fw_rx_status": [
+        p3_9_3 = re.compile(r'^\"fw_rx_status\"\:\s*\[$')
+        
+        # "fir_shadow": [ 
+        p3_9_4 =  re.compile(r'^\"fir_shadow\"\:\s*\[$')
+        
+        #"eye_capture": {
+        p3_10 = re.compile (r'^\"eye_capture\"\:\s*\{$')
+        
+        #"veye_data": [
+        p3_10_1 = re.compile(r'^\"veye_data\"\:\s*\[$')
+        
+        #"veye_values": [
+        p3_10_1_1 = re.compile(r'^\"veye_values\"\:\s*\[$')
+        
+        #"reg_dump": {
+        p3_11 = re.compile(r'^\"reg_dump\"\:\s*\{$')
+        
+        #"Quad_Reg": [
+        p3_11_1 = re.compile(r'^\"Quad_Reg\"\:\s*\[$')        
+
+        #"P_Reg": [ 
+        p3_11_2 = re.compile(r'^\"P_Reg\"\:\s*\[$')
+        
+        #"S_reg": [
+        p3_11_3 = re.compile(r'^\"S_reg\"\:\s*\[$')
+        
+        #"RXDTOP": [
+        p3_11_4 = re.compile(r'^\"RXDTOP\"\:\s*\[$')
+        
+        #"TXDTOP": [
+        p3_11_5 = re.compile(r'^\"TXDTOP\"\:\s*\[$')
+        
+        #"AutoNeg": [
+        p3_11_6 = re.compile(r'^\"AutoNeg\"\:\s*\[$')
+        
+        #"LinkTraining": [
+        p3_11_7 = re.compile(r'^\"LinkTraining\"\:\s*\[$')
+        
+        #"RX_STS": [
+        p3_11_8 = re.compile(r'^\"RX_STS\"\:\s*\[$')
+        
+        #"an_debug_1": [
+        p3_11_9 = re.compile(r'^\"an_debug_1\"\:\s*\[$')
+        
+        #""an_debug_2": [
+        p3_11_10 = re.compile(r'^\"an_debug_2\"\:\s*\[$')
+        
+        #"lt_debug_1": [
+        p3_11_11 = re.compile(r'^\"lt_debug_1\"\:\s*\[$')
+        
+        #"lt_debug_2": [
+        p3_11_12 = re.compile(r'^\"lt_debug_2\"\:\s*\[$')
+        
+        #"mac_port_0_0_36.link_down_histogram": {
+        p4= re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_down_histogram)\"\:\s*\{$')        
+        
+        #"rx_deskew_fifo_overflow_count": [
+        p4_1 = re.compile(r'^\"rx_deskew_fifo_overflow_count\"\:\s*\[$')
+        
+        #"rx_pma_sig_ok_loss_interrupt_register_count": [ 
+        p4_2 = re.compile(r'^\"rx_pma_sig_ok_loss_interrupt_register_count\"\:\s*\[$')
+        
+        #"mac_port_0_0_36.link_error_histogram": {
+        p5 =  re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+\.link_error_histogram)\"\:\s*\{$')
+        
+        #"mac_port_0_0_36.link_debounce_state": {
+        p6 = re.compile(r'^\"(?P<key>mac_port_\d+_\d+_\d+.link_debounce_state)\"\:\s*\{$')
+        
+        # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+        p7 = re.compile(r'^Port +\= +(?P<port>\d+) +Slot +\= +(?P<slot>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +reason(?P<reason>.*)$')
+        
+        # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+        p7_1 = re.compile(r'^Port +\= +(?P<port>\d+) +cmd +\= +(?P<cmd>\([\s*\S]*\)) +rc +\= +(?P<rc>\w+) +rsn +\= +(?P<rsn>.*)$')
+               
+        
+        # "PRE_INIT": 0,
+        p8 = re.compile(r'^\"(?P<key>\w+)\"\:\s*(?P<value>.*)$')        
+        
+        #false 
+        p8_1 = re.compile(r'^(?P<value>\w+)$')
+        
+        #0
+        p8_2 =  re.compile(r'^(?P<value>[-]?\d+)$')
+        
+        #64,
+        p8_3 = re.compile(r'^(?P<value>[-]?\d+)\,$')
+        
+        #], 
+        p8_4 =  re.compile(r'^\]\,$')
+        
+         #], 
+        p8_5 =  re.compile(r'^\]$')
+        
+        cnt = index_flag = stat_cnt = 0
+        
+        for line in output.splitlines():
+            line = line.strip() 
+            
+            #npu_pdsf_procagent_get_eye_common : asic inst 0 port 14 link 32 command 8
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['npu_pdsf_procagent_get_eye_common'] =  group['npu_pdsf_procagent_get_eye_common']
+                continue
+                
+            #"mpp_port_0_0_36:7": {    
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port  =  group['key']
+                curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(group['key'], {})
+                continue
+                
+            #"mac_state_histogram": {
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})
+                else:    
+                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_state_histogram', {})                
+                continue
+                
+            #"mac_port_status": { 
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
+                else:    
+                    curr_dict =  ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_status', {})                
+                continue
+            
+            #"mib_counters": {
+            m = p2_3.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                else:    
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mib_counters', {})                
+                continue
+            
+            #"tx_mac_tc_fc_frames_ok": [     
+            m = p2_3_1.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('tx_mac_tc_fc_frames_ok', {})
+                continue   
+
+            #"tx_xoff_state_duration": [
+            m = p2_3_2.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('tx_xoff_state_duration', {})
+                continue 
+                
+            #"rx_mac_tc_fc_frames_ok": [
+            m = p2_3_3.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('rx_mac_tc_fc_frames_ok', {})
+                continue     
+                
+            #"rx_xoff_state_duration": [    
+            m = p2_3_4.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mib_counters', {}).setdefault('rx_xoff_state_duration', {})
+                continue
+            
+            #"multiport_phy_0_0_36": { 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port  =  group['key']
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {})
+                continue
+                
+            #"device_info": {
+            m = p3_1.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('device_info', {})
+                continue
+                
+            # "serdes_0": { 
+            m = p3_1_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_state_histogram', {}).setdefault('serdes_0', {})
+                continue
+                
+            #"mac_port_config": {
+            m = p3_2.match(line)
+            if m:
+                group = m.groupdict()
+                if  ret_dict.get('multiport_detail'):                    
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_config', {})
+                else:
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('mac_port_config', {})
+                continue
+                
+            #"serdes_info_36": {
+            m = p3_2_1.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_config', {}).setdefault('serdes_info', {})
+                continue
+                
+            #am_lock": [
+            m = p3_3_1.match(line)
+            if m:
+                index_flag  =  1
+                group = m.groupdict()
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {}).setdefault('am_lock', {})
+                continue
+                
+            #"mac_pcs_lane_mapping": [
+            m = p3_3_2.match(line)
+            if m:
+                index_flag = 1
+                group = m.groupdict()
+                handle_dict  = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_status', {}).setdefault('mac_pcs_lane_mapping', {})
+                continue
+                
+            #"mac_port_soft_state": {
+            m = p3_4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('mac_port_soft_state', {})
+                continue
+                
+            #"test_mode": {
+            m = p3_5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('test_mode', {})
+                continue
+                
+            #"state_transition_history": [
+            m = p3_6.match(line)
+            if m:
+                group = m.groupdict()   
+                index_flag = 1
+                if  ret_dict.get('multiport_detail'):                    
+                    curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('state_transition_history', {})
+                else:
+                    curr_dict = ret_dict.setdefault('mpp_port_detai1', {}).setdefault(port, {}).setdefault('state_transition_history', {})
+                handle_dict  =  curr_dict 
+                continue
+                
+            #"serdes_parameters": {
+            m = p3_7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_parameters', {})
+                continue
+                
+            #"index_0": {
+            m = p3_7_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_parameters', {}).setdefault('index_0', {})
+                continue
+            
+            #"serdes_config": {
+            m = p3_8.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {})
+                continue
+                
+            #"serdes_settings": [
+            m = p3_8_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {})                
+                continue
+                
+            #"rx_settings": { 
+            m = p3_8_1_1.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})                
+                continue
+                
+            #"targ_shadow": [
+            m = p3_8_1_1_1.match(line)    
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('rx_settings', {}).setdefault('targ_shadow', {})
+                continue    
+                
+            #"tx_settings": {
+            m = p3_8_1_2.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})                
+                continue
+                
+            #"tx_fir": [
+            m = p3_8_1_2_1.match(line)
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('tx_settings', {}).setdefault('tx_fir', {})                
+                continue
+                
+            #"flow_chart_settings": {
+            m = p3_8_1_3.match(line)
+            if  m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_config', {}).setdefault('serdes_settings', {}).setdefault('flow_chart_settings', {}) 
+                continue
+                
+            #"serdes_status": {
+            m = p3_9.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {})
+                continue
+            
+            #"Firmware_Version": { 
+            m = p3_9_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('firmware_version', {})                
+                continue
+                
+            #"rx_status": [
+            m = p3_9_2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})                
+                continue
+                
+            #"firs": [
+            m = p3_9_2_1.match(line)
+            if m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('rx_status', {}).setdefault('firs',{})                
+                continue
+               
+            #"fw_rx_status": [
+            m = p3_9_3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fw_rx_status', {})                
+                continue   
+            
+            # "fir_shadow": [ 
+            m = p3_9_4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('serdes_status', {}).setdefault('fir_shadow', {})                
+                continue  
+            
+            #"eye_capture": {
+            m = p3_10.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {})                
+                continue  
+            
+            #"veye_data": [
+            m = p3_10_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})                
+                continue  
+            
+            #"veye_values": [
+            m = p3_10_1_1.match(line)
+            if m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict  = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{})
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('eye_capture', {}).setdefault('veye_data',{}).setdefault('veye_values', {})                
+                continue  
+                
+            #"reg_dump": {
+            m = p3_11.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {})                
+                continue  
+             
+            #"Quad_Reg": [
+            m = p3_11_1.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('quad_reg',{})                
+                continue
+            
+            #"P_Reg": [ 
+            m = p3_11_2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('p_reg',{})                
+                continue
+            
+            #"S_reg": [
+            m = p3_11_3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('s_reg',{})                
+                continue 
+
+            #"RXDTOP": [
+            m = p3_11_4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rxdtop',{})                
+                continue
+            
+            #"TXDTOP": [
+            m = p3_11_5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('txdtop',{})                
+                continue
+            
+            #"AutoNeg": [
+            m = p3_11_6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('autoneg',{})                
+                continue
+                
+            #"LinkTraining": [
+            m = p3_11_7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('linktraining',{})                
+                continue
+
+            #"RX_STS": [
+            m = p3_11_8.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('rx_sts',{})                
+                continue
+                
+            #"an_debug_1": [
+            m = p3_11_9.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_1',{})                
+                continue
+                
+            #""an_debug_2": [
+            m = p3_11_10.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('an_debug_2',{})                
+                continue
+                
+            #"lt_debug_1": [
+            m = p3_11_11.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_1',{})                
+                continue
+                
+            #"lt_debug_2": [
+            m = p3_11_12.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict = ret_dict.setdefault('multiport_detail', {}).setdefault(port, {}).setdefault('reg_dump', {}).setdefault('lt_debug_2',{})                
+                continue
+                
+            #"mac_port_0_0_36.link_down_histogram": {   
+            m = p4.match(line)
+            if  m:
+                group = m.groupdict()
+                port = group['key']
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(group['key'], {})                
+                continue 
+                
+            #"rx_deskew_fifo_overflow_count": [
+            m = p4_1.match(line)
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {})
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_deskew_fifo_overflow_count',{})               
+                continue 
+                
+            #"rx_pma_sig_ok_loss_interrupt_register_count": [ 
+            m = p4_2.match(line)
+            if  m:
+                group = m.groupdict()
+                index_flag = 1
+                handle_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {})
+                curr_dict = ret_dict.setdefault('mac_port_link_down', {}).setdefault(port, {}).setdefault('rx_pma_sig_ok_loss_interrupt_register_count',{})               
+                continue 
+            
+            #"mac_port_0_0_36.link_error_histogram": {
+            m = p5.match(line)
+            if  m:
+                group = m.groupdict()
+                port = group['key']
+                curr_dict = ret_dict.setdefault('mac_port_link_error', {}).setdefault(group['key'], {})                
+                continue  
+                
+            #"mac_port_0_0_36.link_debounce_state": {
+            m = p6.match(line)
+            if  m:
+                group = m.groupdict()
+                port = group['key']
+                curr_dict = ret_dict.setdefault('mac_port_link_debounce', {}).setdefault(group['key'], {})                
+                continue
+
+            # Port = 40 Slot = 1 cmd = () rc = 0x16 reason = (null)
+            m = p7.match(line)
+            if  m:
+                group = m.groupdict()
                 ret_dict['port'] = int(group['port'])
+                ret_dict['slot'] = int(group['slot'])                
+                ret_dict['cmd'] = group['cmd']
+                ret_dict['rc'] = group['rc']
+                ret_dict['reason'] = group['reason']
+                continue
+            
+            # Port = 39 cmd = (prbs_stop unit 0 port 39 slot 1 serdes_level 1 polynomial 31) rc = 0x0 rsn = success
+            m = p7_1.match(line)
+            if  m:
+                group = m.groupdict()
+                ret_dict['port'] = int(group['port'])                
                 ret_dict['cmd'] = group['cmd']
                 ret_dict['rc'] = group['rc']
                 ret_dict['rsn'] = group['rsn']
                 continue
+            
+            # "PRE_INIT": 0,
+            m = p8.match(line)            
+            if m:
+                group = m.groupdict()
+                if  group['value'] == '{' or  group['value'] == '[':
+                    continue
+                elif group['key'] == 'new_state':
+                    stat_cnt = stat_cnt + 1
+                    curr_dict = curr_dict.setdefault(stat_cnt,{})                    
+                    curr_dict.update({'state': group['value']})
+                    continue
+                elif group['key'] == 'timestamp':
+                    curr_dict.update({'timestamp': group['value']})
+                    curr_dict = handle_dict
+                    continue
+                else:
+                    group['key'] = group['key'].lower()
+                    group['value'] = group['value'].strip(',').strip('"')
+                    try:
+                        group['value'] = int(group['value'])
+                    except:
+                        #If it is a word, do not convert it to int.
+                        pass     
+                    curr_dict.update({group['key']: group['value']})
+                    continue
+                    
+            #false 
+            m = p8_1.match(line)            
+            if  m:
+                group = m.groupdict()
+                cnt  = cnt + 1
+                key = cnt
+                curr_dict.update({key: group['value']})
+                continue
+            
+            #64,   
+            m = p8_3.match(line)
+            if m:
+                group = m.groupdict()
+                cnt  = cnt + 1
+                key  = cnt 
+                curr_dict.update({key: group['value']})
+                continue
+                
+            #], 
+            m = p8_4.match(line)                             
+            if  m:                
+                if  index_flag == 1:
+                    curr_dict  = handle_dict
+                    index_flag = 0   
+                    cnt = 0
+                continue
+                
+            #], 
+            m = p8_5.match(line)                             
+            if  m:                
+                if  index_flag == 1:
+                    curr_dict  = handle_dict
+                    index_flag = 0   
+                    cnt = 0
+                    stat_cnt  =0
+                continue    
+          
+        return ret_dict               
+                  
+class ShowControllersEthernetControllerPreemptionHandshakeSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller {interface} preemption handshake'
+    """
+    schema = {
+        'interface': str,
+        'handshake_frame_counters': {
+            'verify_rx': int,
+            'verify_tx': int,
+            'respond_rx': int,
+            'respond_tx': int,
+        }
+    }
 
-            #******* PHY LINK STATUS ************
+class ShowControllersEthernetControllerPreemptionHandshake(ShowControllersEthernetControllerPreemptionHandshakeSchema):
+    """Parser for 'show controllers ethernet-controller {interface} preemption handshake
+    show controllers ethernet-controller gi1/4 preemption handshake
+
+    Gi1/4
+    ----------------------------------------------------------------
+    Handshake frame counters
+        Verify Rx........................ [13]
+        Verify Tx........................ [1]
+        Respond Rx....................... [1]
+        Respond Tx....................... [1]
+
+    """
+    
+    cli_command = 'show controllers ethernet-controller {interface} preemption handshake'
+    
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        ret_dict = {}
+        
+        ## Gig1/4 (Interface name)
+        p1 = re.compile(r'(?P<interface>^[A-Za-z]+\d+/\d+)$')
+
+        # Handshake frame counters
+        p2  = re.compile(r'^Handshake +frame +counters$')
+                
+        # Verify Rx ........................ [13]
+        p3 = re.compile(r'^Verify\s+Rx\.+\s+\[(?P<verify_rx>\d+)\]$')
+                
+        # Verify Tx .................... [1]
+        p4 = re.compile(r'^Verify\s+Tx\.+\s+\[(?P<verify_tx>\d+)\]$')
+                
+        # Respond Rx ................... [1]
+        p5 = re.compile(r'^Respond\s+Rx\.+\s+\[(?P<respond_rx>\d+)\]$')
+                
+        # Respond Tx..................... [1]
+        p6 = re.compile(r'^Respond\s+Tx\.+\s+\[(?P<respond_tx>\d+)\]$')
+                
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Gig1/4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                ret_dict['interface'] = interface_name     
+                continue
+                    
+            #Handshake frame counters
+            m = p2.match(line)
+            if m:
+                curr_dict = ret_dict.setdefault('handshake_frame_counters', {})
+                continue 
+                    
+            #Verify Rx ........................ [13]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['verify_rx'] = int(group['verify_rx'])
+                continue
+                    
+            # Verify Tx ........................ [13]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['verify_tx'] = int(group['verify_tx'])
+                continue
+                    
+            # Respond Rx ................... [1]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['respond_rx'] = int(group['respond_rx'])
+                continue
+                    
+            # Respond Tx ................... [1]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['respond_tx'] = int(group['respond_tx'])
+                continue     
+        return ret_dict                
+        
+
+class ShowControllersEthernetControllerPreemptionDropsSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller {interface} preemption drops'
+    """
+    schema = {
+        'interface': str,
+        'preemption_frame_drops': {
+            'express_tx_drops': int,
+            'express_rx_drops': int,
+            'preemptable_tx_drops': int,
+            'preemptable_rx_drops': int,
+            'fragment_drops': int,
+        }
+    }             
+
+class ShowControllersEthernetControllerPreemptionDrops(ShowControllersEthernetControllerPreemptionDropsSchema):
+    """Parser for 'show controllers ethernet-controller {interface} preemption drops
+    show controllers ethernet-controller gi1/4 preemption drops    
+    Gi1/4
+    ---------------------------------------------------------------------
+    Port Preemption Frame Drops
+        Express Tx Drops....................... [13]
+        Express Rx Drops....................... [1]
+        Preemptable Tx Drops................... [1]
+        Preemptable Rx Drops................... [1]
+        Fragment Drops......................... [1]
+    """
+    
+    cli_command = 'show controllers ethernet-controller {interface} preemption drops'
+    
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+        
+        ret_dict = {}
+        
+        # Gi1/4 (Interface name)
+        p1 = re.compile(r'(?P<interface>^[A-Za-z]+\d+/\d+)$')
+
+        # Port Preemption Frame Drops
+        p2  = re.compile(r'^Port\s+Preemption\s+Frame\s+Drops$')
+                        
+        # Express Tx Drops ........................ [13]
+        p3 = re.compile(r'^Express\s+Tx\s+Drops\.+\s+\[(?P<express_tx_drops>\d+)\]$')
+                        
+        # Express Rx Drops .................... [1]
+        p4 = re.compile(r'^Express\s+Rx\s+Drops\.+\s+\[(?P<express_rx_drops>\d+)\]$')
+                        
+        # Preemptable Tx Drops ................... [1]
+        p5 = re.compile(r'^Preemptable\s+Tx\s+Drops\.+\s+\[(?P<preemptable_tx_drops>\d+)\]$')
+                        
+        # Preemptable Rx Drops..................... [1]
+        p6 = re.compile(r'^Preemptable\s+Rx\s+Drops\.+\s+\[(?P<preemptable_rx_drops>\d+)\]$')
+
+        # Fragment Drops..................... [1]
+        p7 = re.compile(r'^Fragment\s+Drops\.+\s+\[(?P<fragment_drops>\d+)\]$')
+            
+        for line in output.splitlines():
+            line = line.strip()
+                        
+            # Gig1/4
+            m = p1.match(line)
+            
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                ret_dict['interface'] = interface_name     
+                continue
+                            
+            # Port Preemption Frame Drops
+            m = p2.match(line)
+            if m:
+                curr_dict = ret_dict.setdefault('preemption_frame_drops', {})
+                continue 
+                            
+            # Express Tx Drops ........................ [13]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['express_tx_drops'] = int(group['express_tx_drops'])
+                continue
+                            
+            # Express Rx Drops .................... [1]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['express_rx_drops'] = int(group['express_rx_drops'])
+                continue
+                            
+            # Preemptable Tx Drops ................... [1]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['preemptable_tx_drops'] = int(group['preemptable_tx_drops'])
+                continue
+                            
+            # Preemptable Rx Drops................... [1]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['preemptable_rx_drops'] = int(group['preemptable_rx_drops'])
+                continue     
+                    
+            # Fragment Drops..................... [1]
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                curr_dict['fragment_drops'] = int(group['fragment_drops'])
+                continue     
+        
+        return ret_dict
+    
+class ShowControllersEthernetControllerPreemptionStatsSchema(MetaParser):
+    """
+    Schema for 'show controllers ethernet-controller {interface} preemption stats'
+    """
+    schema = {
+        'interface': str,
+        'express_counters': {
+            'rx_counters': {
+                'total_frames_recvd': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int,  
+                'init_fragment_frame_count': str,
+                'contd_fragment_frame_count': str,
+            },
+            'tx_counters': {
+                'total_frames_transmitted': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int,  
+                'init_fragment_frame_count': str,
+                'contd_fragment_frame_count': str,
+            }
+        },
+        'preemptable_counters': {
+            'rx_counters': {
+                'total_frames_recvd': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int, 
+                'init_fragment_frame_count': int,
+                'contd_fragment_frame_count': int,
+            },
+            'tx_counters': {
+                'total_frames_transmitted': int,
+                '64_byte_frames': int,
+                '65_127_byte_frames': int,
+                '128_255_byte_frames': int,
+                '256_511_byte_frames': int,
+                '512_1023_byte_frames': int,
+                '1024_1518_byte_frames': int,
+                '1519_2047_byte_frames': int,
+                '2048_4095_byte_frames': int,
+                '4096_8191_byte_frames': int,
+                '8192_16383_byte_frames': int,
+                '16384_32767_byte_frames': int,
+                '32768_mtu_byte_frames': int,  
+                'init_fragment_frame_count': int,
+                'contd_fragment_frame_count': int,
+            }
+        }
+    }
+
+
+class ShowControllersEthernetControllerPreemptionStats(ShowControllersEthernetControllerPreemptionStatsSchema):
+    """Parser for 'show controllers ethernet-controller {interface} preemption stats
+    show controllers ethernet-controller gi1/4 preemption 
+        Gi1/4
+    -----------------------------------------------------------------------------
+                                        Express counters     Preemptable counters
+    -----------------------------------------------------------------------------
+    Total frames received               0                    0                   
+    64 byte frames                      0                    0                   
+    65 to 127 byte frames               0                    0                   
+    128 to 255 byte frames              0                    0                   
+    256 to 511 byte frames              0                    0                   
+    512 to 1023 byte frames             0                    0                   
+    1024 to 1518 byte frames            0                    0                   
+    1519 to 2047 byte frames            0                    0                   
+    2048 to 4095 byte frames            0                    0                   
+    4096 to 8191 byte frames            0                    0                   
+    8192 to 16383 byte frames           0                    0                   
+    16384 to 32767 byte frames          0                    0                   
+    32768 to Mtu byte frames            0                    0                   
+
+    Total frames transmitted            0                    0                   
+    64 byte frames                      0                    0                   
+    65 to 127 byte frames               0                    0                   
+    128 to 255 byte frames              0                    0                   
+    256 to 511 byte frames              0                    0                   
+    512 to 1023 byte frames             0                    0                   
+    1024 to 1518 byte frames            0                    0                   
+    1519 to 2047 byte frames            0                    0                   
+    2048 to 4095 byte frames            0                    0                   
+    4096 to 8191 byte frames            0                    0                   
+    8192 to 16383 byte frames           0                    0                   
+    16384 to 32767 byte frames          0                    0                   
+    32768 to Mtu byte frames            0                    0                   
+    Init fragment frame count           N/A                  0                   
+    Contd fragment frame count          N/A                  0                   
+    -----------------------------------------------------------------------------
+    """
+
+    cli_command = 'show controllers ethernet-controller {interface} preemption stats'
+    
+    def cli(self, interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(interface=interface))
+
+        config_dict = {}
+        
+        # Gi1/4 (Interface name)
+        p1 = re.compile(r'(?P<interface>^[A-Za-z]+\d+/\d+)$')
+
+        # Total frames received               0                    0
+        p2 = re.compile(r"Total\s+frames\s+received\s+(?P<express_total_frames_recvd>\d+)\s+(?P<preemptable_total_frames_recvd>\d+)")
+
+        # Total frames transmitted            0                    0
+        p3 = re.compile(r"Total\s+frames\s+transmitted\s+(?P<express_total_frames_transmitted>\d+)\s+(?P<preemptable_total_frames_transmitted>\d+)")
+        
+        # 64 byte frames                      0                    0
+        p4  = re.compile(r"64\s+byte\s+frames\s+(?P<express_64b_counters>\d+)\s+(?P<preempt_64b_counters>\d+)") 
+
+        # 65 to 127 byte frames               0                    0 [Matches all the output in the same format]
+        p5 = re.compile(r"^(?P<first_byte>\d+) +to +(?P<last_byte>\d+) +byte +frames +(?P<express_counter>\d+) +(?P<preempt_counter>\d+)$" )
+
+        # 32768 to Mtu byte frames            0                    0
+        p6 = re.compile(r"32768\s+to\s+Mtu+\s+byte+\s+frames\s+(?P<express_mtub_counters>\d+)\s+(?P<preempt_mtub_counters>\d+)")
+
+        # Init fragment frame count           N/A                  0
+        p7 = re.compile(r"Init\s+fragment\s+frame\s+count\s+(?P<express_init_frame_count>N\/A|\w+)\s+(?P<preempt_init_frame_count>\d+)")
+
+        # Contd fragment frame count          N/A                  0
+        p8 = re.compile(r"Contd\s+fragment\s+frame+\s+count+\s+(?P<express_contd_frame_count>N\/A|\w+)\s+(?P<preempt_contd_frame_count>\d+)")
+
+        for line in output.splitlines():
+            # Strip leading and trailing spaces
+            line = line.strip()
+                       
+            # Gi1/4 (Interface name)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name =  Common.convert_intf_name(group['interface'])
+                config_dict['interface'] = interface_name
+                continue
+            
+            # Total frames received               0                    0
+            m = p2.match(line)
+            if m:
+                express_counters = config_dict.setdefault('express_counters', {}).setdefault('rx_counters', {})
+                preemtable_counters = config_dict.setdefault('preemptable_counters', {}).setdefault('rx_counters', {})
+                express_counters['total_frames_recvd'] = int(m.group('express_total_frames_recvd'))
+                preemtable_counters['total_frames_recvd'] = int(m.group('preemptable_total_frames_recvd'))
+
+            # Total frames transmitted            0                    0
+            m = p3.match(line)
+            if m:
+                express_counters = config_dict.setdefault('express_counters', {}).setdefault('tx_counters', {})
+                preemtable_counters = config_dict.setdefault('preemptable_counters', {}).setdefault('tx_counters', {})
+                express_counters['total_frames_transmitted'] = int(m.group('express_total_frames_transmitted'))
+                preemtable_counters['total_frames_transmitted'] = int(m.group('preemptable_total_frames_transmitted'))
+
+            # 64 byte frames                      0                    0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['64_byte_frames'] = int(group['express_64b_counters'])
+                preemtable_counters['64_byte_frames'] = int(group['preempt_64b_counters'])
+                continue
+        
+            # 65 to 127 byte frames               0                    0 [Matches all the output in the same format]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                counter_name = f"{group['first_byte']}_{group['last_byte']}_byte_frames"
+                express_counters[counter_name] = int(group['express_counter'])
+                preemtable_counters[counter_name] = int(group['preempt_counter'])
+                continue
+
+            # 32768 to Mtu byte frames            0                    0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['32768_mtu_byte_frames'] = int(group['express_mtub_counters'])
+                preemtable_counters['32768_mtu_byte_frames'] = int(group['preempt_mtub_counters'])
+                continue
+
+            # Init fragment frame count           N/A                  0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['init_fragment_frame_count'] = group['express_init_frame_count']
+                preemtable_counters['init_fragment_frame_count'] = int(group['preempt_init_frame_count'])
+                continue
+
+            # Contd fragment frame count          N/A                  0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                express_counters['contd_fragment_frame_count'] = group['express_contd_frame_count']
+                preemtable_counters['contd_fragment_frame_count'] = int(group['preempt_contd_frame_count'])
+                continue
+
+        return config_dict
+
+class ShowControllerT1Schema(MetaParser):
+    '''Schema for show controller T1 command which includes all the schema_fields.
+      This schema defines the structure for parsing T1 controller data,
+      allowing for dynamic retrieval of various attributes related to T1 interfaces.
+      Each T1 interface is represented as a key in the schema,
+      with corresponding fields specified for data extraction and validation.'''
+    schema = {
+        'interface': {
+            str: {
+                'status': str,
+                'applique_type': str,
+                Optional('cable_length'): str,
+                'alarms': str,
+                'alarm_trigger': str,
+                Optional('soaking_time'): str,
+                Optional('clearance_time'): str,
+                Optional('ais_state'): str,
+                Optional('los_state'): str,
+                Optional('lof_state'): str,
+                Optional('international_bit'): str,
+                Optional('national_bits'): str,
+                'framing': str,
+                'line_code': str,
+                'clock_source': str,
+                Optional('ber_thresholds'): { # Made BER thresholds optional as it might not always be present or fully parsed
+                    'sf': str,
+                    'sd': str,
+                },
+                'data_current_interval': {
+                    'line_code_violations': int,
+                    'path_code_violations': int,
+                    'slip_secs': int,
+                    'fr_loss_secs': int,
+                    'line_err_secs': int,
+                    'degraded_mins': int,
+                    'errored_secs': int,
+                    'bursty_err_secs': int,
+                    'severely_err_secs': int,
+                    'unavail_secs': int,
+                },
+                'total_data': {
+                    'line_code_violations': int,
+                    'path_code_violations': int,
+                    'slip_secs': int,
+                    'fr_loss_secs': int,
+                    'line_err_secs': int,
+                    'degraded_mins': int,
+                    'errored_secs': int,
+                    'bursty_err_secs': int,
+                    'severely_err_secs': int,
+                    'unavail_secs': int,
+                },
+            },
+        },
+    }
+
+
+class ShowControllerT1(ShowControllerT1Schema):
+    '''Parser for show controller {controller_name} '''
+    cli_command = 'show controller {controller_name}'
+
+    def cli(self, output=None):
+        if output is None:
+            # In a real Genie environment, self.device.execute(self.cli_command) would be used.
+            # For standalone testing, 'output' would be passed directly.
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+        interface_dict = {}
+        current_data_section = None # State variable to track which data section we are in
+
+        # T1 0/1/0 is up 
+        # Updated regex to match either T1 or E1
+        p1 = re.compile(r'^(?P<interface>(T1|E1) \d+/\d+/\d+) is (?P<status>\w+)$')
+
+        # Applique type is XYZ
+        p2 = re.compile(r'^Applique type is (?P<applique_type>.+)$')
+
+        # Cablelength is 10m
+        p3 = re.compile(r'^Cablelength is (?P<cable_length>.+)$')
+
+        # No alarms detected.
+        p4 = re.compile(r'^No alarms detected\.$')
+
+        # alarm-trigger is not set
+        p5 = re.compile(r'^alarm-trigger is not set$')
+
+        # Soaking time: 3, Clearance time: 10
+        p6 = re.compile(r'^Soaking time: (?P<soaking_time>\d+), Clearance time: (?P<clearance_time>\d+)$')
+
+        # AIS State:clear  LOS State:clear  LOF State:clear
+        p7 = re.compile(r'^AIS State:(?P<ais_state>\w+)  LOS State:(?P<los_state>\w+)  LOF State:(?P<lof_state>\w+)$')
+
+        # Framing is ESF, Line Code is B8ZS, Clock Source is Line.
+        p8 = re.compile(r'^Framing is (?P<framing>\w+), Line Code is (?P<line_code>\w+), Clock Source is (?P<clock_source>[^.]+)\.$')
+
+        # BER thresholds:  SF = 10e-3  SD = 10e-6
+        p9 = re.compile(r'^BER thresholds:  SF = (?P<sf>[\d.e-]+)  SD = (?P<sd>[\d.e-]+)$')
+
+        # Data in current interval (446 seconds elapsed):
+        p10 = re.compile(r'^Data in current interval \(\d+ seconds elapsed\):$')
+
+        # 0 Line Code Violations, 0 Path Code Violations 
+        p11 = re.compile(r'^\s*(?P<line_code_violations>\d+) Line Code Violations, (?P<path_code_violations>\d+) Path Code Violations$')
+
+        # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins 
+        p12 = re.compile(r'^\s*(?P<slip_secs>\d+) Slip Secs, (?P<fr_loss_secs>\d+) Fr Loss Secs, (?P<line_err_secs>\d+) Line Err Secs, (?P<degraded_mins>\d+) Degraded Mins$')
+
+        # 0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs 
+        p13 = re.compile(r'^\s*(?P<errored_secs>\d+) Errored Secs, (?P<bursty_err_secs>\d+) Bursty Err Secs, (?P<severely_err_secs>\d+) Severely Err Secs, (?P<unavail_secs>\d+) Unavail Secs$')
+
+        # Total Data (last 24 hours)
+        p14 = re.compile(r'^\s*Total Data \(last 24 hours\)$')
+
+        # 0 Line Code Violations, 0 Path Code Violations, 
+        p15 = re.compile(r'^\s*(?P<line_code_violations>\d+) Line Code Violations, (?P<path_code_violations>\d+) Path Code Violations,$')
+
+        # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins, 
+        p16 = re.compile(r'^\s*(?P<slip_secs>\d+) Slip Secs, (?P<fr_loss_secs>\d+) Fr Loss Secs, (?P<line_err_secs>\d+) Line Err Secs, (?P<degraded_mins>\d+) Degraded Mins,$')
+
+        # International Bit: 1, National Bits: 11111 
+        p17 = re.compile(r'^International Bit: (?P<international_bit>\d+), National Bits: (?P<national_bits>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # T1 0/1/0 is up
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = group['interface']
+                interface_dict = parsed.setdefault('interface', {}).setdefault(interface_name, {})
+                interface_dict['status'] = group['status']
+                current_data_section = None # Reset section for new interface
+                continue
+
+            # Applique type is XYZ
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['applique_type'] = group['applique_type']
+                continue
+
+            # Cablelength is 10m
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['cable_length'] = group['cable_length']
+                continue
+
+            # No alarms detected.
+            m = p4.match(line)
+            if m:
+                interface_dict['alarms'] = 'No alarms detected'
+                continue
+
+            # alarm-trigger is not set
+            m = p5.match(line)
+            if m:
+                interface_dict['alarm_trigger'] = 'not set'
+                continue
+
+            # Soaking time: 3, Clearance time: 10
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['soaking_time'] = group['soaking_time']
+                interface_dict['clearance_time'] = group['clearance_time']
+                continue
+
+            # AIS State:clear  LOS State:clear  LOF State:clear
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['ais_state'] = group['ais_state']
+                interface_dict['los_state'] = group['los_state']
+                interface_dict['lof_state'] = group['lof_state']
+                continue
+
+            # Framing is ESF, Line Code is B8ZS, Clock Source is Line.
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['framing'] = group['framing']
+                interface_dict['line_code'] = group['line_code']
+                interface_dict['clock_source'] = group['clock_source']
+                continue
+
+            # BER thresholds:  SF = 10e-3  SD = 10e-6
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ber_thresholds_dict = interface_dict.setdefault('ber_thresholds', {})
+                ber_thresholds_dict['sf'] = group['sf']
+                ber_thresholds_dict['sd'] = group['sd']
+                continue
+
+            # International Bit: 1, National Bits: 11111
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['international_bit'] = group['international_bit']
+                interface_dict['national_bits'] = group['national_bits']
+                continue
+
+            # Data in current interval (446 seconds elapsed):
             m = p10.match(line)
             if m:
-                root_dict = ret_dict.setdefault('phy_link_status', {})
+                current_data_section = 'data_current_interval'
+                interface_dict.setdefault('data_current_interval', {}) # Ensure dict exists
                 continue
 
-            #Phy Configuration :
-            m = p11.match(line)
+            # Total Data (last 24 hours)
+            m = p14.match(line)
             if m:
-                root_dict =  ret_dict.setdefault('phy_link_status', {}).setdefault('phy_configuration', {})
+                current_data_section = 'total_data'
+                interface_dict.setdefault('total_data', {}) # Ensure dict exists
                 continue
 
-            #Phy Status :
-            m = p12.match(line)
-            if m:
-                root_dict = ret_dict.setdefault('phy_link_status', {}).setdefault('phy_status', {})
-                continue
+            # Now handle the data lines based on current_data_section
+            if current_data_section:
+                target_dict = interface_dict[current_data_section]
 
-        return ret_dict
+                # Lines for 'data_current_interval' (no trailing comma)
+                if current_data_section == 'data_current_interval':
+                    # 0 Line Code Violations, 0 Path Code Violations
+                    m = p11.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['line_code_violations'] = int(group['line_code_violations'])
+                        target_dict['path_code_violations'] = int(group['path_code_violations'])
+                        continue
+                    # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins
+                    m = p12.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['slip_secs'] = int(group['slip_secs'])
+                        target_dict['fr_loss_secs'] = int(group['fr_loss_secs'])
+                        target_dict['line_err_secs'] = int(group['line_err_secs'])
+                        target_dict['degraded_mins'] = int(group['degraded_mins'])
+                        continue
 
+                # Lines for 'total_data' (with trailing comma)
+                elif current_data_section == 'total_data':
+                    # 0 Line Code Violations, 0 Path Code Violations
+                    m = p15.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['line_code_violations'] = int(group['line_code_violations'])
+                        target_dict['path_code_violations'] = int(group['path_code_violations'])
+                        continue
+                    # 0 Slip Secs, 0 Fr Loss Secs, 0 Line Err Secs, 0 Degraded Mins
+                    m = p16.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['slip_secs'] = int(group['slip_secs'])
+                        target_dict['fr_loss_secs'] = int(group['fr_loss_secs'])
+                        target_dict['line_err_secs'] = int(group['line_err_secs'])
+                        target_dict['degraded_mins'] = int(group['degraded_mins'])
+                        continue
 
+                # 0 Errored Secs, 0 Bursty Err Secs, 0 Severely Err Secs, 0 Unavail Secs
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+                    target_dict['errored_secs'] = int(group['errored_secs'])
+                    target_dict['bursty_err_secs'] = int(group['bursty_err_secs'])
+                    target_dict['severely_err_secs'] = int(group['severely_err_secs'])
+                    target_dict['unavail_secs'] = int(group['unavail_secs'])
+                    continue
+
+        return parsed

@@ -1,0 +1,5 @@
+{
+    "interface": "GigabitEthernet2/0/3",
+    "switch_num": "1,2",
+    "mode": "active, standby"
+}

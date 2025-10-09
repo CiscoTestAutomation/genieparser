@@ -1,0 +1,81 @@
+show policy-map type inspect zone-pair super-zp sessions
+  Zone-pair: super-zp
+  Service-policy inspect : super-pmap
+
+    Class-map: match-acl-141 (match-all)
+      Match: access-group 141
+      Inspect
+
+
+    Class-map: match-acl-132 (match-all)
+      Match: access-group 132
+      Pass
+        0 packets, 0 bytes
+
+    Class-map: match-acl-131 (match-all)
+      Match: access-group 131
+      Inspect
+        Established Sessions
+         Session ID 0x00000001 (12.1.0.1:38012)=>(33.3.3.1:23) telnet SIS_OPEN
+          Created 00, Last heard 00
+          Bytes sent (initiator:responder) [21:31]
+
+
+    Class-map: match-ftp (match-any)
+      Match: protocol ftp
+      Inspect
+
+
+    Class-map: match-h323 (match-any)
+      Match: protocol h323
+      Inspect
+
+
+    Class-map: match-rtsp (match-any)
+      Match: protocol rtsp
+      Inspect
+
+
+    Class-map: match-sip (match-any)
+      Match: protocol sip
+      Inspect
+
+
+    Class-map: match-skinny (match-any)
+      Match: protocol skinny
+      Inspect
+
+
+    Class-map: match-tftp (match-any)
+      Match: protocol tftp
+      Inspect
+
+
+    Class-map: match-icmp (match-any)
+      Match: protocol icmp
+      Inspect
+        Established Sessions
+         Session ID 0x00000000 (11.11.11.11:8)=>(33.33.33.33:45) icmp SIS_OPEN
+          Created 00:00:03, Last heard 00:00:03
+          Bytes sent (initiator:responder) [360:360]
+
+
+    Class-map: match-udp (match-any)
+      Match: protocol udp
+      Inspect
+
+
+    Class-map: match-tcp (match-any)
+      Match: protocol tcp
+      Inspect
+
+
+    Class-map: match-dns (match-any)
+      Match: protocol dns
+      Inspect
+
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop (default action)
+        0 packets, 0 bytes

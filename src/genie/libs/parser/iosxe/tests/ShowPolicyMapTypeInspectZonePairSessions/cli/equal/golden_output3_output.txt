@@ -1,0 +1,26 @@
+  Zone-pair: in-out
+  Service-policy inspect : pmap1
+
+    Class-map: cmap1 (match-any)
+      Match: protocol udp
+      Match: protocol icmp
+      Match: protocol ftp
+      Match: protocol tcp
+      Inspect
+
+        Terminating Sessions
+         Session ID 0x00000001 (2.2.2.1:20)=>(1.1.1.1:11001) ftp-data SIS_CLOSED
+          Created 00:00:02, Last heard 00:00:02
+          Bytes sent (initiator:responder) [0:12345]
+         Session ID 0x00000002 (2.2.2.1:20)=>(1.1.1.1:11002) ftp-data SIS_CLOSED
+          Created 00:00:02, Last heard 00:00:01
+          Bytes sent (initiator:responder) [4321:0]
+         Session ID 0x00000000 (1.1.1.1:11001)=>(2.2.2.1:21) ftp SIS_CLOSED
+          Created 00:00:02, Last heard 00:00:01
+          Bytes sent (initiator:responder) [90:332]
+
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop
+        0 packets, 0 bytes

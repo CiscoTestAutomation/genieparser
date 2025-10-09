@@ -1,0 +1,57 @@
+show lslib server topology-db protocol ospfv3 instance-id 10 nlri-type link detail
+Thu Aug 14 07:53:14.337 UTC
+
+Prefix codes: E link, V node, T IP reachable route, S SRv6 SID, SP SRTE Policy, u/U unknown
+              I Identifier, N local node, R remote node, L link, P prefix, S SID, C candidate path
+              L1/L2 ISIS level-1/level-2, O OSPF, O3 OSPFv3, D direct, ST static/peer-node, SR Segment Routing
+              a area-ID, l link-ID, t topology-ID, s ISO-ID,
+              c confed-ID/ASN, b bgp-identifier, r router-ID, te te-router-ID, sd SID
+              i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
+              d designated router address, po protocol-origin, f flag
+              e endpoint-ip, cl color, as originator-asn oa originator-address
+              di discriminator, q bgp-router-ID
+  [E][O3][I0xa][N[c0][b0.0.0.0][a0.0.0.0][r192.168.0.3]][R[c0][b0.0.0.0][a0.0.0.0][r192.168.0.4]][L[l64.35]]/760
+NLRI Length: 95 bytes
+Attribute Length: 7 bytes
+Producers:
+  10, ospfv3
+NLRI Type: Link
+Protocol: OSPFv3
+Identifier: 0xa
+Local Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.0
+        Router ID IPv4: 192.168.0.3
+Remote Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.0
+        Router ID IPv4: 192.168.0.4
+Link Descriptor:
+        Link ID: 64.35
+
+  Attributes: metric: 10
+
+  [E][O3][I0xa][N[c0][b0.0.0.0][a0.0.0.1][r192.168.0.6]][R[c0][b0.0.0.0][a0.0.0.1][r192.168.0.5]][L[l65.62]]/760
+NLRI Length: 95 bytes
+Attribute Length: 7 bytes
+Producers:
+  10, ospfv3
+NLRI Type: Link
+Protocol: OSPFv3
+Identifier: 0xa
+Local Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.1
+        Router ID IPv4: 192.168.0.6
+Remote Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.1
+        Router ID IPv4: 192.168.0.5
+Link Descriptor:
+        Link ID: 65.62
+
+  Attributes: metric: 10

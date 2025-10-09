@@ -1,0 +1,129 @@
+show platform software mpls fp active eos
+
+Number of EOS Choice entries: 12
+
+
+
+EOS Choice 0x22, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x1d,0x1e
+
+  aom id: 167, CPP handle: 0x5c4b794d9520 (created), flags: 0
+
+
+
+EOS Choice 0x25, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_ADJ_DROP
+
+  Next Object Index: 0x24,0
+
+  aom id: 168, CPP handle: 0x5c4b794d95b0 (created), flags: 0
+
+
+
+EOS Choice 0x2d, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x28,0x29
+
+  aom id: 169, CPP handle: 0x5c4b794d9640 (created), flags: 0
+
+
+
+EOS Choice 0x32, Number of paths: 2
+
+  Next Object Type: OBJ_LOOKUP,OBJ_LOOKUP
+
+  Next Object Index: 0x4,0x31
+
+  aom id: 177, CPP handle: 0x5c4b794db630 (created), flags: 0
+
+
+
+EOS Choice 0x4c, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x53,0x4b
+
+  aom id: 208, CPP handle: 0x5c4b794f2440 (created), flags: 0
+
+
+
+EOS Choice 0x4e, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x52,0x4d
+
+  aom id: 213, CPP handle: 0x5c4b794f31f0 (created), flags: 0
+
+
+
+EOS Choice 0x50, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x51,0x4f
+
+  aom id: 217, CPP handle: 0x5c4b794f2960 (created), flags: 0
+
+
+
+EOS Choice 0x56, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x5d,0x55
+
+  aom id: 225, CPP handle: 0x5c4b794f51b0 (created), flags: 0
+
+
+
+EOS Choice 0x58, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x5c,0x57
+
+  aom id: 229, CPP handle: 0x5c4b794f5920 (created), flags: 0
+
+
+
+EOS Choice 0x5a, Number of paths: 2
+
+  Next Object Type: OBJ_LABEL,OBJ_LABEL
+
+  Next Object Index: 0x5b,0x59
+
+  aom id: 233, CPP handle: 0x5c4b795072b0 (created), flags: 0
+
+
+
+EOS Choice 0x8e, Number of paths: 2
+
+  Next Object Type: OBJ_LOADBALANCE,OBJ_LOADBALANCE
+
+  Next Object Index: 0x9c,0x9b
+
+  aom id: 295, CPP handle: 0x5c4b79516140 (created), flags: 0
+
+
+
+EOS Choice 0xa4, Number of paths: 2
+
+  Next Object Type: OBJ_ADJ_DROP,OBJ_LABEL
+
+  Next Object Index: 0,0xa3
+
+  aom id: 318, CPP handle: 0x5c4b79518c30 (created), flags: 2
+
+
+
+
+
+ace1#

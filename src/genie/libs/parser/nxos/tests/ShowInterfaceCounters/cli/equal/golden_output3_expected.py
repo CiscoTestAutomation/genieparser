@@ -1,0 +1,10 @@
+expected_output = {'interfaces': {'Ethernet1/1.1': {'in_bcast_pkts': 0,
+                                                    'in_mcast_pkts': 0,
+                                                    'in_octets': 0,
+                                                    'in_ucast_pkts': 0,
+                                                    'out_bcast_pkts': 0,
+                                                    'out_mcast_pkts': 0,
+                                                    'out_octets': 0,
+                                                    'out_ucast_pkts': 0,
+                                                    'in_pkts': 1778,
+                                                    'out_pkts': 1778}}}

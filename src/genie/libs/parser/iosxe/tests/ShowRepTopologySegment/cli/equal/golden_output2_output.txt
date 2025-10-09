@@ -1,0 +1,7 @@
+REP Segment 11
+BridgeName                       PortName   Edge Role
+-------------------------------- ---------- ---- ----
+IE5K1                            Gi1/13     Pri  Open
+IE34001                          Gi1/1           Open
+IE34001                          Gi1/2           Open
+IE5K2                            Gi1/13     Sec  Alt

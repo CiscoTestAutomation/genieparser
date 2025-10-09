@@ -1,0 +1,8 @@
+show ipv6 pim vrf vrf1 neighbor
+PIM Neighbor Table
+Mode: B - Bidir Capable, G - GenID Capable
+Neighbor Address           Interface          Uptime    Expires  Mode DR pri
+
+::FFFF:4.4.4.4             Tunnel2            00:02:18  00:01:26 B G     1
+::FFFF:6.6.6.6             Tunnel2            00:02:17  00:01:25 B G  DR 1
+FE80::20:1:2               Port-channel10     00:03:08  00:01:34 B G  DR 1

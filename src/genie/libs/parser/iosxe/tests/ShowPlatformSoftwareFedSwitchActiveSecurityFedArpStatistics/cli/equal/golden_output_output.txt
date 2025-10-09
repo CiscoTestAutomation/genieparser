@@ -1,0 +1,7 @@
+FED ARP SNOOPING STATISTICS : 
+Punject Punt Entries 
+Name                              OID       Packets Hits   
+-------------------------------------------------------- 
+ARP Snoop Port                    551       0              
+ARP Snoop VLAN Unconditional      553       0              
+ARP Snoop VLAN Conditional        555       0  

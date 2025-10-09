@@ -1,0 +1,10 @@
+show platform software fed switch active security-fed dhcp-snoop vlan vlan-id 10
+Platform Security DHCP Snooping Vlan Information
+
+
+Value of Snooping DI handle is:: 0x5C4
+                                                            Port        Trust Mode
+----------------------------------------------------------------------------------
+                                                   Port-channel1             trust
+                                           GigabitEthernet2/0/26             trust
+                                           GigabitEthernet1/0/26             trust

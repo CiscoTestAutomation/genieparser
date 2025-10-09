@@ -1,0 +1,15 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+
+------  -----   ---------             -----------  --------------  -------       --------
+
+ 1       24     N/A                   N/A          0ccf.1ab0.0000  N/A           N/A           
+
+Chassis/Stack Mac Address : 0000.0000.0000 - Foreign Mac Address
+
+Mac persistency wait time: Indefinite
+
+                                   Current
+
+Chassis#   Role        Priority      State 
+
+-------------------------------------------

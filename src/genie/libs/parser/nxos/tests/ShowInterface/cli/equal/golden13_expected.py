@@ -84,5 +84,6 @@ expected_output = {
             "out_discard": 0,
             "out_mac_pause_frames": 0,
         },
+        "link_down_reason": "linkFlapErrDisabled, port: error"
     }
 }

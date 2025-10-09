@@ -70,7 +70,7 @@
   Publication entries exported to:
     Map-cache:                              3
     RIB:                                    3
-    Database:                               0 (Preserve-priority: disabled)
+    Database:                               4 (Preserve-priority: disabled)
     Prefix-list:                            0
   Site-registeration entries exported to:
     Map-cache:                              0

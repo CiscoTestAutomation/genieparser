@@ -1,0 +1,22 @@
+		Port-channels in the group:
+		---------------------------
+
+Port-channel: Po1    (Primary Aggregator)
+
+------------
+
+Age of the Port-channel   = 0d:00h:01m:15s
+Logical slot/port   = 35/1          Number of ports = 2
+HotStandBy port = null
+Port state          = Port-channel Ag-Inuse
+Protocol            =   LACP
+Port security       = Disabled
+
+Ports in the Port-channel:
+
+Index   Load   Port        EC state        No of bits
+------+------+------+------------------+-----------
+  0     00     Tw1/0/14       Active             0
+  0     00     Tw1/0/15       Active             0
+
+Time since last port bundled:    0d:00h:01m:10s     Tw1/0/15

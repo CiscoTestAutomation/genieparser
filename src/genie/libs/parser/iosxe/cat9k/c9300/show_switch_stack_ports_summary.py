@@ -47,17 +47,18 @@ class ShowSwitchStackPortSummary(ShowSwitchStackPortSummarySchema):
 
         # initial regexp pattern
         # 1/1        OK           2/2         50cm           Yes       Yes           Yes       1                   No
+        # 1/1        DOWN         NONE/NONE         No Cable       Yes       No            No        0                   Yes
         
         p1 = re.compile(r"^(?P<stackport_id>\S+)"
-                        " +(?P<port_status>\w+)"
-                        " +(?P<neighbor>\S+)"
-                        " +(?P<cable_length>\w+)"
-                        " +(?P<link_ok>\w+)"
-                        " +(?P<link_active>\w+)"
-                        " +(?P<sync_ok>\w+)"
-                        " +(?P<link_changes_count>\d+)"
-                        " +(?P<in_loopback>\w+)$")
-        
+                        r" +(?P<port_status>\w+)"
+                        r" +(?P<neighbor>\S+)"
+                        r" +(?P<cable_length>(\w+|No Cable))"
+                        r" +(?P<link_ok>\w+)"
+                        r" +(?P<link_active>\w+)"
+                        r" +(?P<sync_ok>\w+)"
+                        r" +(?P<link_changes_count>\d+)"
+                        r" +(?P<in_loopback>\w+)$")
+       
         for line in output.splitlines():
            line = line.strip()
  
@@ -69,6 +70,7 @@ class ShowSwitchStackPortSummary(ShowSwitchStackPortSummarySchema):
            # 2/2        OK           1/1            50cm           Yes       Yes           Yes       1                   No
            # 3/1        OK           1/2            50cm           Yes       Yes           Yes       1                   No
            # 3/2        OK           2/1            50cm           Yes       Yes           Yes       1                   No
+           # 1/1        DOWN         NONE/NONE         No Cable       Yes       No            No        0                   Yes
            m = p1.match(line)
            if m:
                 stackport_id = m.groupdict()['stackport_id']

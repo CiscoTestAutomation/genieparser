@@ -1,0 +1,38 @@
+Mvrf: 12  ( 2000:149:1:1:1::2, ff35::1 ) Attrs:
+    Hw Flag                 : InHw
+    Mlist Flags             : None
+    Mlist_hndl (Id)         : 0x11881242190 ( 0x152 )
+    Mlist Urid              : 0x1000000000000c5a
+    Fset Urid (Hash)        : 0x3000000000000b87 ( 45b1cea1 )
+    Fset Aux Urid           : 0x0
+    RPF Adjacency ID        : 0xf8005592
+    CPU Credit              : 0
+    Total Packets[StatsMode]: 0 ( 0 pps approx.)[ Egress ]
+    Ec_seed                 : 4
+    npi_mroute_ent          : 0x11881603d98
+    svi_fwd_ifs             : 2
+    ios_f_ifs/mlist_f_ifs   : 1/1
+    OIF Count               : 2
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags      IntfType       MsgType
+      0xf8005582     Vl369              --------         ---        F NS       SVI_IF         NORMAL
+      0xf8005592     Vl379              --------         ---        A          SVI_IF         NORMAL
+    GID                   : 8199
+    MCID OID Asic[0]      : 3098
+    MCID OID Asic[1]      : 3060
+    Hardware Info ASIC[0] :
+      IP MCID OID         :3098 (cookie:urid:0x30::b87)
+      RPF PORT OID        :3087
+      punt_on_rpf_fail    :1
+      punt_and_forward    :0
+      use_rpfid           :0
+      rpfid               :0
+      enable_rpf_check    :1
+    Hardware Info ASIC[1] :
+      IP MCID OID         :3060 (cookie:urid:0x30::b87)
+      RPF PORT OID        :3056
+      punt_on_rpf_fail    :1
+      punt_and_forward    :0
+      use_rpfid           :0
+      rpfid               :0
+      enable_rpf_check    :1

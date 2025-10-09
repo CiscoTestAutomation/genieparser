@@ -1,0 +1,27 @@
+Object identifier: 2072
+  Description: Tx Channel HundredGigE2/0/22, handle 1275, hw handle 1275, flag 0x0, dirty hw: NONE dirty aom NONE
+  Status: Done
+
+Object identifier: 2075
+  Description: PM port object: port/interface 1275
+  Status: Done
+
+Object identifier: 2078
+  Description: uRPF-list(hdl=0x00000018)
+  Status: Done
+
+Object identifier: 2081
+  Description: PREFIX 10.10.10.96/32 (Table id 0)
+  Status: Done
+
+Object identifier: 2088
+  Description: adj 0xf8004fb1, Flags None
+  Status: Done
+
+Object identifier: 2042
+  Description: matm mac entry type VLAN, id 1, 4ce1.75b3.d1df
+  Status: Done
+
+Object identifier: 2053
+  Description: (TPP generated) l2m_config l2m_mrouter_entry object
+  Status: Done

@@ -1,0 +1,82 @@
+Port:    Optics0/0/0/18
+
+ Controller State: Up
+
+ Transport Admin State: In Service
+
+ Laser State: N/A
+
+ Host Squelch Status: Enable
+
+ LED State: Off
+
+ FEC State: FEC ENABLED
+
+ Power Mode: Low
+
+ Dom Data Status: Not Applicable
+
+ Optics Status
+
+	 Optics Type:  QSFPDD 400G PASSIVE COPPER
+	 Wavelength = 0.00 nm
+	 Loopback Host : None
+	 Loopback Media : None
+
+	 Alarm Status:
+	 -------------
+	 Detected Alarms: None
+
+
+	 LOS/LOL/Fault Status:
+
+
+	 Performance Monitoring: Disable
+
+	 THRESHOLD VALUES
+	 ----------------
+
+	 Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+	 ------------------------  ----------  ---------  ------------  -----------
+	 Rx Power Threshold(dBm)          0.0        0.0           0.0          0.0
+	 Rx Power Threshold(mW)           1.0        1.0           1.0          1.0
+	 Tx Power Threshold(dBm)          0.0        0.0           0.0          0.0
+	 Tx Power Threshold(mW)           1.0        1.0           1.0          1.0
+	 LBC Threshold(mA)               0.00       0.00          0.00         0.00
+	 Temp. Threshold(celsius)        0.00       0.00          0.00         0.00
+	 Voltage Threshold(volt)         0.00       0.00          0.00         0.00
+
+	 Configured Tx Power = 0.00 dBm
+	 Configured Tx Power(mW) = 1.00 mW
+	 Configured CD High Threshold = 0 ps/nm
+	 Configured CD lower Threshold = 0 ps/nm
+	 Configured OSNR lower Threshold = 0.00 dB
+	 Configured DGD Higher Threshold = 0.00 ps
+	 Polarization parameters not supported by optics
+
+	 Lane  Laser Bias    TX Power    RX Power  Output Frequency
+	 ----  ----------  ----------  ----------  ----------------
+	   0      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   1      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   2      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   3      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   4      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   5      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   6      0.0 mA    0.00 dBm    0.00 dBm       N/A
+	   7      0.0 mA    0.00 dBm    0.00 dBm       N/A
+
+	 Temperature = 0.00 Celsius
+	 Voltage = 0.00 V
+
+ Transceiver Vendor Details
+
+	 Form Factor 		: QSFP-DD
+	 Optics type 		: QSFPDD 400G PASSIVE COPPER
+	 Name 			: TE Connectivity
+	 OUI Number 		: 00.22.a7
+	 Part Number 		: 2323766-2
+	 Rev Number 		: 2
+	 Serial Number 		: 18169177
+	 PID 			: 2323766-2
+	 VID 			: 2
+	 Date Code(yy/mm/dd) 	: 18/04/27

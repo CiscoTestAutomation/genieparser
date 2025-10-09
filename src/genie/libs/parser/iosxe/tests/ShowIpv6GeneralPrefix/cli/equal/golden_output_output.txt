@@ -1,0 +1,4 @@
+IPv6 Prefix pd_prefix, acquired via DHCP PD
+  2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+   GigabitEthernet10/0/47 (Address command)
+   GigabitEthernet10/0/46 (Address command)

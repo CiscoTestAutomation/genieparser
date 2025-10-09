@@ -1,0 +1,206 @@
+expected_output = {
+    "monitor_time": {
+        "00:00:04": {
+            "hostname": "R1",
+            "sys_up_time": "88:41:56",
+            "protocol": "General",
+            "interface": {
+                "EINT0/RSP0/CPU0": {
+                    "interface_status": "(statistics not available)"
+                },
+                "EINT0/RSP1/CPU0": {
+                    "interface_status": "(statistics not available)"
+                },
+                "FortyGigE0/0/0/0": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 81.2,
+                    "output_bytes": 7.5,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0,
+                    "input_bytes_unit": "G",
+                    "output_bytes_unit": "G"
+                },
+                "FortyGigE0/0/0/1": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "MgmtEth0/RSP0/CPU0/0": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 60,
+                    "output_delta": 0,
+                    "input_bytes": 12.8,
+                    "output_bytes": 26250.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0,
+                    "input_bytes_unit": "M"
+                },
+                "MgmtEth0/RSP1/CPU0/0": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 60,
+                    "output_delta": 0,
+                    "input_bytes": 12.7,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0,
+                    "input_bytes_unit": "M"
+                },
+                "TenGigE0/0/1/0": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 81.1,
+                    "output_bytes": 68.9,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0,
+                    "input_bytes_unit": "G",
+                    "output_bytes_unit": "G"
+                },
+                "TenGigE0/0/1/1": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 8.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/10": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 24.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/11": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/12": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/13": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/14": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/15": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                },
+                "TenGigE0/0/1/16": {
+                    "input_bps": 0,
+                    "output_bps": 0,
+                    "input_delta": 0,
+                    "output_delta": 0,
+                    "input_bytes": 0.0,
+                    "output_bytes": 0.0,
+                    "input_drops": 0,
+                    "input_drops_delta": 0,
+                    "output_drops": 0,
+                    "output_drops_delta": 0,
+                    "input_bps_percent": 0.0,
+                    "output_bps_percent": 0.0
+                }
+            }
+        }
+    }
+}
+

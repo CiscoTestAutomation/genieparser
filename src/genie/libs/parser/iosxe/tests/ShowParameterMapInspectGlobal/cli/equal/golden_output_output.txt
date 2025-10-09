@@ -1,0 +1,45 @@
+show parameter-map type inspect-global
+
+ parameter-map type inspect-global
+
+  log dropped-packet off
+
+  no log flow
+
+  no log flow-export fnf
+
+  log flow-export template timeout-rate 300
+
+  alert off
+
+  lisp inner packet inspection off
+
+  multi-tenancy off
+
+  icmp unreachable drop
+
+  Session reclassify disable
+
+ vpn zone security disable
+
+ vpn disallow dia
+
+  aggressive aging disabled
+
+  syn_flood_limit  unlimited
+
+  tcp window scaling enforcement loose on
+
+  zone-mismatch drop off
+
+  max incomplete unlimited  aggressive aging disabled
+
+  max_incomplete TCP unlimited
+
+  max_incomplete UDP unlimited
+
+  max_incomplete ICMP unlimited
+
+  application-inspect all
+
+  vrf default inspect vrf-default

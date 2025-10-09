@@ -104,7 +104,7 @@ expected_output = {
                     'publication_entries_exported': {
                         'map_cache': 3,
                         'rib': 3,
-                        'database': 0,
+                        'database': 4,
                         'prefix_list': 0
                     },
                     'site_reg_entries_exported': {

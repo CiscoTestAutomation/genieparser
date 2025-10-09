@@ -1,5 +1,4 @@
 Current Mode: STATUS
-LED Ecomode: Enabled
 
 SWITCH: 1
 SYSTEM: GREEN
@@ -15,3 +14,6 @@ XPS: BLACK
 RJ45 CONSOLE: GREEN
 USB CONSOLE: BLACK
 BEACON: BLACK
+
+LED auto-off: Enabled
+LED Hardware State: OFF

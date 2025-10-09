@@ -1,0 +1,13 @@
+device# show flow monitor M1_output cache filter ipv4 source address 100.1.1.123 ipv4 destination address 200.1.1.123 format table
+Cache type:                               Normal (Platform cache)
+Cache size:                                10000
+Current entries:                               5
+
+Flows added:                                   7
+Flows aged:                                    2
+    - Active timeout    (    60 secs)            2
+
+ 
+IPV4 SRC ADDR    IPV4 DST ADDR    INTF OUTPUT   FLOW CTS SRC GROUP TAG  FLOW CTS DST GROUP TAG  IP VERSION  IP PROT  IP TTL  pkts long
+===============  ===============  ============  ======================  ======================  ==========  =======  ======  ==========
+100.1.1.123      200.1.1.123      Tw1/0/25                         100                       0           4       61      64       13978

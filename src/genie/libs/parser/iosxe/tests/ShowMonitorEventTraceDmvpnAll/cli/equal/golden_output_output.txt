@@ -251,3 +251,15 @@ Tracing currently disabled, from exec command
 interrupt context allocation count = 0
 
 Hub#
+
+nhrp_event:
+
+*Jul 27 07:30:25.534: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1
+*Jul 27 13:40:27.167: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3
+*Jul 27 13:40:27.381: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update tunnel endpoints nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2
+
+nhrp_error:
+
+*Aug 14 09:23:53.935: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 123 retrans 2 sec vrf: global(0x0) label: explicit-null
+*Aug 14 09:23:55.457: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 123 retrans 4 sec vrf: global(0x0) label: explicit-null
+*Aug 15 13:59:48.248: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 vrf: global(0x0) reason: NHRP - Hold time expiry

@@ -1,0 +1,6 @@
+Asic Auth-Behavior      IPv4-Acl-Oid          Drop-Count            IPv6-Acl-Oid          Drop-Count            Mac-Acl-Oid           Drop-Count
+---- ------------------ --------------------- --------------------- --------------------- --------------------- --------------------- ---------------------
+0    FWD_ALL_LRN_ALL    487                   0                     497                   0                     507                   0
+0    FWD_ALL_LRN_DATA   489                   0                     499                   0                     509                   0
+0    DROP_ALL_NO_LRN    491                   0                     501                   0                     511                   0
+0    DROP_ALL_LRN_DATA  494                   0                     504                   0                     514                   0

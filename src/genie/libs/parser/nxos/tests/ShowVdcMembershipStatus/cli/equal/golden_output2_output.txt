@@ -1,0 +1,71 @@
+Flags : b - breakout port
+---------------------------------
+
+vdc_id: 0 vdc_name: Unallocated interfaces:
+Port        Status
+----        ----------
+
+vdc_id: 1 vdc_name: I10-FX2-Scrimshaw-1 interfaces:
+Port        Status
+----        ----------
+Eth1/1(b) OK
+Eth1/2(b) OK
+Eth1/3(b) OK
+Eth1/4    OK
+Eth1/5    OK
+Eth1/6    OK
+Eth1/7    OK
+Eth1/8    OK
+Eth1/9    OK
+Eth1/10   OK
+Eth1/11   OK
+Eth1/12   OK
+Eth1/13   OK
+Eth1/14   OK
+Eth1/15   OK
+Eth1/16   OK
+Eth1/17   OK
+Eth1/18   OK
+Eth1/19   OK
+Eth1/20   OK
+Eth1/21   OK
+Eth1/22   OK
+Eth1/23(b)OK
+Eth1/24(b)OK
+Eth1/25(b)OK
+Eth1/26   OK
+Eth1/27   OK
+Eth1/28   OK
+Eth1/29   OK
+Eth1/30   OK
+Eth1/31   OK
+Eth1/32   OK
+Eth1/33   OK
+Eth1/34   OK
+Eth1/35   OK
+Eth1/36   OK
+Eth1/1/1  OK
+Eth1/1/2  OK
+Eth1/1/3  OK
+Eth1/1/4  OK
+Eth1/2/1  OK
+Eth1/2/2  OK
+Eth1/2/3  OK
+Eth1/2/4  OK
+Eth1/3/1  OK
+Eth1/3/2  OK
+Eth1/3/3  OK
+Eth1/3/4  OK
+Eth1/23/1 OK
+Eth1/23/2 OK
+Eth1/23/3 OK
+Eth1/23/4 OK
+Eth1/24/1 OK
+Eth1/24/2 OK
+Eth1/24/3 OK
+Eth1/24/4 OK
+Eth1/25/1 OK
+Eth1/25/2 OK
+Eth1/25/3 OK
+Eth1/25/4 OK
+

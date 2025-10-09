@@ -101,6 +101,8 @@ class ShowIsisNeighborsDetailSchema(MetaParser):
                                                 "s_flag": bool,
                                                 "p_flag": bool,
                                                 "weight": int,
+                                                Optional("algo") : int,
+
                                             }
                                         },
                                         Optional("adj_sync"): {
@@ -262,6 +264,14 @@ class ShowIsisNeighborsSuperParser(ShowIsisNeighborsDetailSchema):
         p25 = re.compile(
             r"Link mtu:\s+(?P<link_mtu>\d+)\s+"
             r"Smaller\s+than\s+lsp:\s+(?P<lsp_mtu>\d+$)"
+        )
+
+        #SRv6 End.X SID FCCC:CCC1:A1:E004::/64 b:0 s:0 p:0 weight:0 algo:0
+        p26 = re.compile(
+            r"^SRv6\s+End\.X\s+SID\s+"
+            r"(?P<srv6_endx_sid>([0-9a-fA-F:/]+))\s+"
+            r"b:\s*(?P<b_flag>0|1)\s+s:\s*(?P<s_flag>0|1)\s+"
+            r"p:\s*(?P<p_flag>0|1)\s+weight:\s*(?P<weight>0|1)\s+algo:\s*(?P<algo>\d+)$"
         )
 
         ret_dict, tag_null, prev_sys_id = {}, True, None
@@ -563,6 +573,22 @@ class ShowIsisNeighborsSuperParser(ShowIsisNeighborsDetailSchema):
                 interfaces_dict["link_mtu"] = int(group["link_mtu"])
                 interfaces_dict["lsp_mtu"] = int(group["lsp_mtu"])
                 continue
+
+            # SRv6 End.X SID FCCC:CCC1:A1:E001::/64 b:0 s:0 p:0 weight:0 algo:0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                v6_sid_flags = {
+                    "b_flag": (group["b_flag"] == "1"),
+                    "s_flag": (group["s_flag"] == "1"),
+                    "p_flag": (group["p_flag"] == "1"),
+                    "weight": int(group["weight"]),
+                    "algo": int(group["algo"]),
+                }
+                sid_dict.setdefault(group["srv6_endx_sid"], v6_sid_flags)
+                interfaces_dict["srv6_endx_sid"] = sid_dict
+                continue
+
 
         return ret_dict
 
@@ -4320,13 +4346,13 @@ class ShowIsisRibRedistribution(ShowIsisRibRedistributionSchema):
         #######  Reg-exes  ##########
         # IPv4 redistribution RIB for IS-IS process 1
         p1 = re.compile(
-            r"^IPv4 redistribution RIB for IS-IS process +" "(?P<isis_name>\S+)$"
+            r"^IPv4 redistribution RIB for IS-IS process +(?P<isis_name>\S+)$"
         )
 
         # IPV4 unicast base topology (TID 0, TOPOID 0x0) =================
         p2 = re.compile(
             r"^IPV4 (?P<topo>unicast|multicast) (?P<topo_name>.+)"
-            " \(TID (?P<mtid>\d+), TOPOID (?P<topoid>\S+)\).*"
+            r" \(TID (?P<mtid>\d+), TOPOID (?P<topoid>\S+)\).*"
         )
 
         # ====== Level 1 ======
@@ -4339,38 +4365,38 @@ class ShowIsisRibRedistribution(ShowIsisRibRedistributionSchema):
         # [ISIS/0] external  prefix-SID index: 44, R:1 N:0 P:1 E:0 V:0 L:0
         p5 = re.compile(
             r"^\[(?P<rt_pdb>Connected|Static|BGP|RIP|IGRP|EIGRP"
-            "|OSPF|OSPFv3|ISIS|Mobil|ODR|LISP|OMP|NAT Route)/"
-            "(?P<metric>\d+)\] *"
-            "(?P<interarea>interarea)? *(?P<external>external)? *"
-            "(?P<isis>isis )? *(?P<algo>prefix-SID index: )?(?P<index>\d+)?"
-            "(, R:)*(?P<r_flag>0|1)?( N:)*(?P<n_flag>0|1)?"
-            "( P:)*(?P<p_flag>0|1)?( E:)*(?P<e_flag>0|1)?"
-            "( V:)*(?P<v_flag>0|1)?( L:)*(?P<l_flag>0|1)?"
+            r"|OSPF|OSPFv3|ISIS|Mobil|ODR|LISP|OMP|NAT Route)/"
+            r"(?P<metric>\d+)\] *"
+            r"(?P<interarea>interarea)? *(?P<external>external)? *"
+            r"(?P<isis>isis )? *(?P<algo>prefix-SID index: )?(?P<index>\d+)?"
+            r"(, R:)*(?P<r_flag>0|1)?( N:)*(?P<n_flag>0|1)?"
+            r"( P:)*(?P<p_flag>0|1)?( E:)*(?P<e_flag>0|1)?"
+            r"( V:)*(?P<v_flag>0|1)?( L:)*(?P<l_flag>0|1)?"
         )
 
         # strict-SPF SID index: 404, R:1 N:0 P:1 E:0 V:0 L:0
         p6 = re.compile(
             r"^(?P<algo>strict-SPF SID index: )(?P<index>\d+)"
-            ", R:(?P<r_flag>0|1) N:(?P<n_flag>0|1) P:(?P<p_flag>0|1)"
-            " E:(?P<e_flag>0|1) V:(?P<v_flag>0|1) L:(?P<l_flag>0|1)$"
+            r", R:(?P<r_flag>0|1) N:(?P<n_flag>0|1) P:(?P<p_flag>0|1)"
+            r" E:(?P<e_flag>0|1) V:(?P<v_flag>0|1) L:(?P<l_flag>0|1)$"
         )
 
         # flex-algo 129 SID index: 122, R:0 N:1 P:0 E:0 V:0 L:0 map 0x1
         p7 = re.compile(
             r"^flex-algo (?P<algo>\d+) SID index: (?P<index>\d+)"
-            ", R:(?P<r_flag>0|1) N:(?P<n_flag>0|1) P:(?P<p_flag>0|1)"
-            " E:(?P<e_flag>0|1) V:(?P<v_flag>0|1) L:(?P<l_flag>0|1) "
-            "map (?P<map>.*)$"
+            r", R:(?P<r_flag>0|1) N:(?P<n_flag>0|1) P:(?P<p_flag>0|1)"
+            r" E:(?P<e_flag>0|1) V:(?P<v_flag>0|1) L:(?P<l_flag>0|1) "
+            r"map (?P<map>.*)$"
         )
 
         # prefix-metric: 0, not advertised
         p8 = re.compile(
-            r"^prefix-metric: (?P<metric>\d+), " "(?P<not_advertised>not )?advertised$"
+            r"^prefix-metric: (?P<metric>\d+), (?P<not_advertised>not )?advertised$"
         )
 
         # prefix attr: X:0 R:0 N:1
         p9 = re.compile(
-            r"^prefix attr: X:(?P<x_flag>0|1) R:(?P<r_flag>0|1) " "N:(?P<n_flag>0|1)$"
+            r"^prefix attr: X:(?P<x_flag>0|1) R:(?P<r_flag>0|1) N:(?P<n_flag>0|1)$"
         )
 
         # source router id: 22.22.22.22
@@ -4879,12 +4905,12 @@ class ShowIsisTopologyLevel(ShowIsisTopologyLevelSchema):
         p1 = re.compile(r"^Tag (?P<tag>\S+):$")
 
         # IS-IS TID 0 paths to level-2 routers
-        p2 = re.compile("^.+paths to level-(?P<level>\d).+$")
+        p2 = re.compile(r"^.+paths to level-(?P<level>\d).+$")
 
         # System Id            Metric     Next-Hop             Interface   SNPA
         # sw.F87A4137BE00      10         sw.F87A4137BE00      Po241       f87a.4137.bf02
         p3 = re.compile(
-            "(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\w+)\s+(?P<snpa>[\w\d\.]+)$"
+            r"(?P<system_id>\S+)\s+(?P<metric>\d+)\s+(?P<next_hop>\S+)\s+(?P<interface>\w+)\s+(?P<snpa>[\w\d\.]+)$"
         )
 
         for line in output.splitlines():

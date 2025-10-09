@@ -164,9 +164,9 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
             #  IGMP querier none
             #  IGMP querier present, address: 10.51.1.1, version: 2, i/f Vlan100
             p9 = re.compile(r'^\s*IGMP +querier +(?P<igmp_querier>\S+)'
-                            '(, +address: +(?P<address>\S+))?'
-                            '(, +version: +(?P<version>\d))?'
-                            '(, +i\/f +(?P<vlan>\w+))?$')
+                            r'(, +address: +(?P<address>\S+))?'
+                            r'(, +version: +(?P<version>\d))?'
+                            r'(, +i\/f +(?P<vlan>\w+))?$')
             m = p9.match(line)
             if m:
                 igmp_querier = m.groupdict()['igmp_querier']
@@ -184,7 +184,7 @@ class ShowIpIgmpSnooping(ShowIpIgmpSnoopingSchema):
 
             # Querier last member query interval: 1 secs
             p9_2 = re.compile(r'^\s*Querier +last +member +query +interval:'
-                              ' +(?P<querier_last_member_query_interval>\d+) +secs$')
+                              r' +(?P<querier_last_member_query_interval>\d+) +secs$')
             m = p9_2.match(line)
             if m:
                 querier_last_member_query_interval = m.groupdict()['querier_last_member_query_interval']
@@ -508,7 +508,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP Interfaces for VRF "default", count: 2
             p1 = re.compile(r'^IGMP +Interfaces +for +VRF +\"(?P<vrf>\S+)\", +'
-                             'count: +(?P<groups_count>\d+)$')
+                             r'count: +(?P<groups_count>\d+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -523,9 +523,9 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Ethernet2/1, Interface status: protocol-up/link-up/admin-up
             p2 = re.compile(r'^(?P<intf>[\w\/\.\-]+), +'
-                             'Interface +status: +protocol\-(?P<protocol_status>\w+)\/'
-                             'link\-(?P<link_status>\w+)\/'
-                             'admin\-(?P<admin_status>\w+)$')
+                             r'Interface +status: +protocol\-(?P<protocol_status>\w+)\/'
+                             r'link\-(?P<link_status>\w+)\/'
+                             r'admin\-(?P<admin_status>\w+)$')
             m = p2.match(line)
             if m:
                 intf = m.groupdict()['intf']
@@ -544,7 +544,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IP address: 10.1.2.1, IP subnet: 10.1.2.0/24
             p3 = re.compile(r'^IP +address: +(?P<ip>[\w\.\:]+), +'
-                             'IP +subnet: +(?P<subnet>[\w\.\:\/]+)$')
+                             r'IP +subnet: +(?P<subnet>[\w\.\:\/]+)$')
             m = p3.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['address'] = m.groupdict()['ip']
@@ -554,8 +554,8 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # Active querier: 10.1.2.1, version: 3, next query sent in: 00:00:47
             # Active querier: 0.0.0.0
             p4 = re.compile(r'^Active +querier: +(?P<querier>[\w\.\:]+)(, +'
-                             'version: +(?P<version>\d+), +'
-                             'next +query +sent +in: +(?P<in>[\w\.\:\.]+))?$')
+                             r'version: +(?P<version>\d+), +'
+                             r'next +query +sent +in: +(?P<in>[\w\.\:\.]+))?$')
             m = p4.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier'] = m.groupdict()['querier']
@@ -567,8 +567,8 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # Active querier: 10.3.5.3, expires: 00:02:59, querier version: 2
             p4_1 = re.compile(r'^Active +querier: +(?P<querier>[\w\.\:]+), +'
-                             'expires: +(?P<expires>[\w\.\:\.]+), +'
-                             'querier +version: +(?P<version>\d+)$')
+                             r'expires: +(?P<expires>[\w\.\:\.]+), +'
+                             r'querier +version: +(?P<version>\d+)$')
             m = p4_1.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier'] = m.groupdict()['querier']
@@ -595,7 +595,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP version: 3, host version: 3
             p7 = re.compile(r'^IGMP +version: +(?P<ver>\d+), +'
-                             'host +version: +(?P<host_ver>\d+)$')
+                             r'host +version: +(?P<host_ver>\d+)$')
             m = p7.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['version'] = \
@@ -606,7 +606,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP query interval: 133 secs, configured value: 133 secs
             p8 = re.compile(r'^IGMP +query +interval: +(?P<intverval>\d+) +secs, +'
-                             'configured +value: +(?P<conf_intvl>\d+) +secs$')
+                             r'configured +value: +(?P<conf_intvl>\d+) +secs$')
             m = p8.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['query_interval'] = \
@@ -617,7 +617,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP max response time: 15 secs, configured value: 15 secs
             p9 = re.compile(r'^IGMP +max +response +time: +(?P<time>\d+) +secs, +'
-                             'configured +value: +(?P<conf_time>\d+) +secs$')
+                             r'configured +value: +(?P<conf_time>\d+) +secs$')
             m = p9.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['query_max_response_time'] = \
@@ -628,7 +628,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP startup query interval: 33 secs, configured value: 31 secs
             p10 = re.compile(r'^IGMP +startup +query +interval: +(?P<intvl>\d+) +secs, +'
-                             'configured +value: +(?P<conf_intvl>\d+) +secs$')
+                             r'configured +value: +(?P<conf_intvl>\d+) +secs$')
             m = p10.match(line)
             if m:
                 if 'startup_query' not in ret_dict['vrfs'][vrf]['interface'][intf]:
@@ -671,7 +671,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP group timeout: 680 secs, configured value: 260 secs
             p14 = re.compile(r'^IGMP +group +timeout: +(?P<timeout>\d+) +secs, +'
-                             'configured +value: +(?P<conf_timeout>\d+) +secs$')
+                             r'configured +value: +(?P<conf_timeout>\d+) +secs$')
             m = p14.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['group_timeout'] = \
@@ -682,7 +682,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP querier timeout: 672 secs, configured value: 255 secs
             p15 = re.compile(r'^IGMP +querier +timeout: +(?P<timeout>\d+) +secs, +'
-                             'configured +value: +(?P<conf_timeout>\d+) +secs$')
+                             r'configured +value: +(?P<conf_timeout>\d+) +secs$')
             m = p15.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['querier_timeout'] = \
@@ -701,7 +701,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP robustness variable: 5, configured value: 5
             p17 = re.compile(r'^IGMP +robustness +variable: +(?P<val1>\d+), +'
-                             'configured +value: +(?P<val2>\d+)$')
+                             r'configured +value: +(?P<val2>\d+)$')
             m = p17.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['robustness_variable'] = \
@@ -753,7 +753,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             # IGMP State Limit: 10,  Available States: 10
             p23 = re.compile(r'^IGMP +State +Limit: +(?P<max_groups>\d+), +'
-                              'Available +States: +(?P<available_groups>\d+)$')
+                              r'Available +States: +(?P<available_groups>\d+)$')
             m = p23.match(line)
             if m:
                 ret_dict['vrfs'][vrf]['interface'][intf]['max_groups'] = \
@@ -774,8 +774,8 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # General (sent/received):
             #   v2-queries: 5/5, v2-reports: 0/0, v2-leaves: 0/0
             p25 = re.compile(r'^v2\-queries: +(?P<sent1>\d+)\/(?P<received1>\d+), +'
-                              'v2\-reports: +(?P<sent2>\d+)\/(?P<received2>\d+), +'
-                              'v2\-leaves: +(?P<sent3>\d+)\/(?P<received3>\d+)$')
+                              r'v2\-reports: +(?P<sent2>\d+)\/(?P<received2>\d+), +'
+                              r'v2\-leaves: +(?P<sent3>\d+)\/(?P<received3>\d+)$')
             m = p25.match(line)
             if m:
                 if 'general' not in ret_dict['vrfs'][vrf]['interface'][intf]['statistics']:
@@ -803,7 +803,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
 
             #   v3-queries: 11/11, v3-reports: 56/56
             p25_1 = re.compile(r'^v3\-queries: +(?P<sent1>\d+)\/(?P<received1>\d+), +'
-                                'v3\-reports: +(?P<sent2>\d+)\/(?P<received2>\d+)$')
+                                r'v3\-reports: +(?P<sent2>\d+)\/(?P<received2>\d+)$')
             m = p25_1.match(line)
             if m:
                 if 'general' not in ret_dict['vrfs'][vrf]['interface'][intf]['statistics']:
@@ -925,11 +925,11 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
         source_flag = False
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.rstrip()
 
             # IGMP Connected Group Membership for VRF "default" - 4 total entries
             p1 = re.compile(r'^IGMP +Connected +Group +Membership +for +VRF +\"(?P<vrf>\S+)\"'
-                             ' +\- +(?P<entries>\d+) +total +entries$')
+                             r' +\- +(?P<entries>\d+) +total +entries$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -943,27 +943,29 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 continue
 
             # 239.7.7.7
-            p2 = re.compile(r'^(?P<group>[\w\.\:]+)$')
+            p2 = re.compile(r'^(?P<whitespace>\s*)?(?P<group>[\w\.\:]+)$')
             m = p2.match(line)
             if m:
                 group = m.groupdict()['group']
+                no_of_group_whitespace = m.groupdict()['whitespace'].count(' ')
                 source_flag = True
                 continue
 
             # 239.5.5.5          S    Ethernet2/1         00:21:00  never     10.1.2.1
             # 234.1.1.2          L   loopback11             00:00:20  never     10.100.5.5
-            p3 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
-                             ' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
-                             ' +(?P<last_reporter>[\w\.\:]+)$')
+            p3 = re.compile(r'^(?P<whitespace>\s*)?(?P<group>[\w\.\:]+) +(?P<type>[SDLTH\*]+) +(?P<intf>[\w\.\/\-]+)'
+                             r' +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+)'
+                             r' +(?P<last_reporter>[\w\.\:]+)$')
             m = p3.match(line)
             if m:
+                no_of_whitespace = m.groupdict()['whitespace'].count(' ')
                 intf = m.groupdict()['intf'].capitalize()
                 if 'interface' not in ret_dict['vrfs'][vrf]:
                     ret_dict['vrfs'][vrf]['interface'] = {}
                 if intf not in ret_dict['vrfs'][vrf]['interface']:
                     ret_dict['vrfs'][vrf]['interface'][intf] = {}
 
-                if source_flag:
+                if source_flag and no_of_whitespace > no_of_group_whitespace:
                     source = m.groupdict()['group']
                 else:
                     group = m.groupdict()['group']
@@ -973,7 +975,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                 if group not in ret_dict['vrfs'][vrf]['interface'][intf]['group']:
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group] = {}
 
-                if source_flag:
+                if source_flag and no_of_whitespace > no_of_group_whitespace:
                     if 'source' not in ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]:
                         ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source'] = {}
                     if source not in ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['source']:
@@ -996,9 +998,6 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
                         m.groupdict()['uptime']
                     ret_dict['vrfs'][vrf]['interface'][intf]['group'][group]['last_reporter'] = \
                         m.groupdict()['last_reporter']
-
-                source_flag = False
-
                 continue
 
         return ret_dict
@@ -1091,8 +1090,8 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
             # 239.1.1.1        *                Local    Eth2/4      00:00:50
             # 239.7.7.7        10.16.2.1          Static   Eth2/4      01:06:47
             p2 = re.compile(r'^(?P<group>[\w\.\:]+) +(?P<source>[\w\.\:\*]+) +'
-                             '(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
-                             ' +(?P<last_reporter>[\w\.\:]+)$')
+                             r'(?P<type>\w+) +(?P<intf>[\w\.\/\-]+)'
+                             r' +(?P<last_reporter>[\w\.\:]+)$')
             m = p2.match(line)
             if m:
                 intf = Common.convert_intf_name(m.groupdict()['intf'])

@@ -1,0 +1,184 @@
+''' show_module.py
+IOSXE parsers for the following show commands:
+
+    * 'show module'
+'''
+
+import re
+import logging
+
+# Metaparser
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
+
+
+log = logging.getLogger(__name__)
+
+
+class ShowModuleSchema(MetaParser):
+    """Schema for show module"""
+    schema = {
+        Optional('switch'): {
+            Any(): {
+                'port': str,
+                'model': str,
+                'serial_number': str,
+                'mac_address': str,
+                'hw_ver': str,
+                'sw_ver': str
+            },
+        },
+        Optional('chassis_type'): str,
+        'module':{
+            int:{
+                'ports':int,
+                'card_type':str,
+                'model':str,
+                'serial':str,
+                Optional('status'):str,
+                Optional('redundancy_role'):str,
+                Optional('operating_redundancy_mode'):str,
+                Optional('configured_redundancy_mode'):str
+            }
+        },
+        'status':{
+            str:{ 
+                'mac_address': str,           
+                'hw':str,
+                'fw':str,
+                'sw':str,
+                'status':str,
+            }
+        },
+        'sup':{
+            Any(): {              
+                'operating_redundancy_mode':str,
+                'configured_redundancy_mode':str,
+            }    
+        },
+        
+        Optional('number_of_mac_address'):int,
+        Optional('chassis_mac_address_lower_range'):str,
+        Optional('chassis_mac_address_upper_range'):str,
+    }
+
+
+class ShowModule(ShowModuleSchema):
+    """Parser for show module"""
+
+    cli_command = 'show module'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+
+        # Chassis Type: C9606R
+        p0 = re.compile(r'^Chassis Type: +(?P<chassis_type>\S+)$')
+
+        #initial regex pattern
+        p1=re.compile(r'^(?P<switch>\d+) *'
+                        r'(?P<port>\w+) +'
+                        r'(?P<model>[\w\-]+) +'
+                        r'(?P<serial_number>\w+) +'
+                        r'(?P<mac_address>[\w\.]+) +'
+                        r'(?P<hw_ver>\w+) +'
+                        r'(?P<sw_ver>[\w\.]+)$')
+
+        #Mod Ports Card Type                                   Model          Serial No.
+        #---+-----+--------------------------------------+--------------+--------------
+        #1   48   48-Port 10GE / 25GE                         C9600-LC-48YL    FDO24170FSK
+        #2   48   48-Port 10GE / 25GE                         C9600-LC-48YL    FDO24170FQV
+        #3   0    Supervisor 1 Module                         C9600-SUP-1      CAT2239L096
+        #4   0    Supervisor 1 Module                         C9600-SUP-1      FDO25460SGH
+        #5   24   24-Port 40GE/12-Port 100GE                  C9600-LC-24C     FDO253115DY
+        #6   24   24-Port 40GE/12-Port 100GE                  C9600-LC-24C     FDO241609F5
+        
+        p2=re.compile(r'^(?P<mod>\d+) *(?P<ports>\d+) +(?P<card_type>.*) +(?P<model>\S+) +(?P<serial>\S+)$')
+        
+        #Mod MAC addresses                    Hw   Fw           Sw                 Status
+        #---+--------------------------------+----+------------+------------------+--------
+        #1   AC4A.67AA.CE80 to AC4A.67AA.CEFF 2.0  17.7.1r[FC3]  17.03.01           ok         
+        #2   AC4A.67AA.CB00 to AC4A.67AA.CB7F 2.0  17.7.1r[FC3]  17.03.01           ok         
+        #3   70B3.171E.EB00 to 70B3.171E.EB7F 0.8  17.7.1r[FC3]  17.03.01           ok         
+        #4   E069.BA16.0C80 to E069.BA16.0CFF 2.6  17.7.1r[FC3]  17.03.01           ok         
+        #5   A478.0633.5D80 to A478.0633.5DFF 2.0  17.7.1r[FC3]  17.03.01           ok         
+        #6   AC7A.5650.1A00 to AC7A.5650.1A7F 2.0  17.7.1r[FC3]  17.03.01           ok
+        
+        p3=re.compile(r'^(?P<mod>\d+)\s+(?P<mac_address>[\w\.\s]*) .*(?P<hw>\d+.?\d+?)\s+(?P<fw>\S+)\s+(?P<sw>\S+)\s+(?P<status>\S+)$')
+    
+        #Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+        #---+-------------------+-------------------------+---------------------------
+        #3   Standby             sso                       sso                       
+        #4   Active              sso                       sso   
+        p4=re.compile(r'^(?P<mod>\d+)\s*(?P<redundancy_role>\S+) *(?P<operating_redundancy_mode>\S+) *(?P<configured_redundancy_mode>\S+)$')
+        
+        # Chassis MAC address range: 64 addresses from 6cb2.ae4a.5540 to 6cb2.ae4a.557f
+        p5=re.compile(r'^Chassis MAC address range: (?P<number_of_mac_address>\d+) addresses from (?P<chassis_mac_address_lower_range>.*) to (?P<chassis_mac_address_upper_range>.*)$')
+        
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Chassis Type: C9606R
+            m = p0.match(line)
+            if m:
+                ret_dict.setdefault('chassis_type', m.groupdict()['chassis_type'])
+                continue
+            
+            # initial regex pattern
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('switch')
+                switch_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                switch_dict.update({k: v.lower() for k, v in group.items()})
+                continue
+
+            # Mod Ports Card Type                                   Model          Serial No.
+            # ---+-----+--------------------------------------+--------------+--------------
+            # 1   48   48-Port 10GE / 25GE                         C9600-LC-48YL    FDO24170FSK
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('mod')
+                switch_dict = ret_dict.setdefault('module', {}).setdefault(int(switch), {})
+                switch_dict.update({k: v.strip() for k, v in group.items()})
+                switch_dict['ports']=int(group['ports'])
+                continue
+            
+            # Mod MAC addresses                    Hw   Fw           Sw                 Status
+            # ---+--------------------------------+----+------------+------------------+--------
+            # 1   AC4A.67AA.CE80 to AC4A.67AA.CEFF 2.0  17.7.1r[FC3]  17.03.01           ok  
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group.pop('mod')
+                ret_dict.setdefault('module', {}).setdefault(int(switch), {}).setdefault('status', group['status'])
+                switch_dict = ret_dict.setdefault('status', {}).setdefault(str(switch), {})            
+                switch_dict.update({k: v.strip() for k, v in group.items()})
+                continue
+            
+            # Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+            # 3   Standby             sso                       sso     
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.pop('mod')
+                ret_dict.setdefault('module', {}).setdefault(int(module), {}).update({k: v.lower().strip() for k, v in group.items()})
+                switch = group.pop('redundancy_role')
+                switch_dict = ret_dict.setdefault('sup', {}).setdefault(str(switch), {})
+                switch_dict.update({k: v.lower().strip() for k, v in group.items()})
+                continue
+            
+            # Chassis MAC address range: 64 addresses from 6cb2.ae4a.5540 to 6cb2.ae4a.557f
+            m = p5.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.update({k: v.lower().strip() for k, v in group.items()})
+                ret_dict['number_of_mac_address'] = int(group['number_of_mac_address'])
+                continue
+        
+        return ret_dict

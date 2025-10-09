@@ -1,0 +1,14 @@
+Note: Slice and IFG showing -1 are global counters
+======================================================================================================================================================
+|  #     |                      Counters Name                        |slice_number|   ifg_number  |  prev_value   |  current_value  |     delta      |
+======================================================================================================================================================
+|  1    |Fwd drop counter (DSP==1): pkts                             |          -1|             -1|              0|                0|               0|
+|  2    |Fwd drop counter (DSP==1): bytes                            |          -1|             -1|              0|                0|               0|
+|  3    |RX_METER Slice0 drop_pkts                                   |           0|             -1|              0|                0|               0|
+|  4    |FLLB Slice0 drop_pkts                                       |           0|             -1|              0|                0|               0|
+|  5    |RXCGM Slice0 slice_drop_pkts TC0                            |           0|             -1|              0|                0|               0|
+|  6    |RXCGM Slice0 slice_drop_pkts TC1                            |           0|             -1|              0|                0|               0|
+|  7    |RXCGM Slice0 slice_drop_pkts TC2                            |           0|             -1|              0|                0|               0|
+|  8    |RXCGM Slice0 slice_drop_pkts TC3                            |           0|             -1|              0|                0|               0|
+|  9    |RXCGM Slice0 slice_drop_pkts TC4                            |           0|             -1|              0|                0|               0|
+|  10   |RXCGM Slice0 slice_drop_pkts TC5                            |           0|             -1|              0|                0|               0|

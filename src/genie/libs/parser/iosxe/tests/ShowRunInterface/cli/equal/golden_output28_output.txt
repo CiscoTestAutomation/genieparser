@@ -1,0 +1,8 @@
+#show running-config interface GigabitEthernet 1/0/10
+Building configuration...
+
+Current configuration : 62 bytes
+!
+interface GigabitEthernet1/0/10
+ pnp startup-vlan 1200
+end

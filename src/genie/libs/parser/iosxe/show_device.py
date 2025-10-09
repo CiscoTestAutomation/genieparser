@@ -19,9 +19,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Default
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf, Default
 
 # parser utils
 from genie.libs.parser.utils.common import Common
@@ -442,7 +440,3 @@ class ShowDeviceSensorDetails(ShowDeviceSensorDetailsSchema):
                 continue
 
         return ret_dict
-
-
-        
-        

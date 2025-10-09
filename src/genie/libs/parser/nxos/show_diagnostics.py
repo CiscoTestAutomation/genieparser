@@ -50,9 +50,9 @@ class ShowDiagnosticContentModule(ShowDiagnosticContentModuleSchema):
         out_dict = {}
         
         #Module 2: 48x10/25G + 4x40/100G Ethernet Module
-        p1 = re.compile('^Module\s+(?P<module_num>\d+).*')
+        p1 = re.compile(r'^Module\s+(?P<module_num>\d+).*')
         #1)    ASICRegisterCheck------------->     ***N******A     00:01:00
-        p2 = re.compile('^(?P<test_id>\d+)\)\s+(?P<test_name>\w+)-+>\s+(?P<attributes>\S+)\s+(?P<test_interval>(-NA-)|[\d \:\.]+)')
+        p2 = re.compile(r'^(?P<test_id>\d+)\)\s+(?P<test_name>\w+)-+>\s+(?P<attributes>\S+)\s+(?P<test_interval>(-NA-)|[\d \:\.]+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -116,37 +116,37 @@ class ShowDiagnosticResultModuleTestDetail(ShowDiagnosticResultModuleTestDetailS
         ret_dict = {}
 
         #Error code ------------------> 1 (DIAG_FAILURE)
-        p1 = re.compile('^Error code [-> ]+(?P<error_code>(.*))$')
+        p1 = re.compile(r'^Error code [-> ]+(?P<error_code>(.*))$')
         
         #Total run count -------------> 1
-        p2 = re.compile('^Total run count [-> ]+(?P<total_run_count>\d+)$')
+        p2 = re.compile(r'^Total run count [-> ]+(?P<total_run_count>\d+)$')
         
         # Last test execution time ----> Mon Oct 31 12:45:02 2022 
-        p3 = re.compile('^Last test execution time [ ->]+(?P<test_execution_time>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+ \d+)|n/a)$')
+        p3 = re.compile(r'^Last test execution time [ ->]+(?P<test_execution_time>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+ \d+)|n/a)$')
         
         #First test failure time ----->  n/a 
-        p4 = re.compile('^First test failure time [-> ]+(?P<first_test_failure>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)|n/a)$')
+        p4 = re.compile(r'^First test failure time [-> ]+(?P<first_test_failure>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)|n/a)$')
         
         #Last test failure time ------>  n/a
-        p5 = re.compile('^Last test failure time[-> ]+(?P<last_test_failure>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)|n/a)$')
+        p5 = re.compile(r'^Last test failure time[-> ]+(?P<last_test_failure>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)|n/a)$')
         
         #Last test pass time ---------> Mon Oct 31 12:45:05 2022
-        p6 = re.compile('^Last test pass time [ ->]+(?P<last_test_pass>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)|n/a)$')
+        p6 = re.compile(r'^Last test pass time [ ->]+(?P<last_test_pass>(\w+\s+\w+\s+\d+\s+\d+:\d+:\d+\s+\d+)|n/a)$')
         
         # Total failure count ---------> 0 
-        p7 = re.compile('^Total failure count [-> ]+(?P<total_failure_count>\d+)$')
+        p7 = re.compile(r'^Total failure count [-> ]+(?P<total_failure_count>\d+)$')
         
         #Consecutive failure count ---> 0 
-        p8 = re.compile('^Cons\w+ fail\w+ \w+[ ->]+ (?P<consecutive_failure_count>\d+)$')
+        p8 = re.compile(r'^Cons\w+ fail\w+ \w+[ ->]+ (?P<consecutive_failure_count>\d+)$')
         
         # 13) BootupPortLoopback: .
-        p9 = re.compile('^(?P<test_id>\d+)\) (?P<testname>\w+):?\s(?P<result>.*)$')
+        p9 = re.compile(r'^(?P<test_id>\d+)\) (?P<testname>\w+):?\s(?P<result>.*)$')
 
         #Last failure reason
-        p10 = re.compile('^Last failure reason [-> ]+(?P<last_failure_reason>(.*))$')
+        p10 = re.compile(r'^Last failure reason [-> ]+(?P<last_failure_reason>(.*))$')
         
         #Module 2: 48x10/25G + 4x40/100G Ethernet Module
-        p0 = re.compile('^Module\s+(?P<module_num>\d+).*')
+        p0 = re.compile(r'^Module\s+(?P<module_num>\d+).*')
         
         for line in output.splitlines():
             line = line.strip()

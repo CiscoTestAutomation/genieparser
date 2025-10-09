@@ -3,7 +3,7 @@ import re
 
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Optional
+from genie.metaparser.util.schemaengine import Schema, Optional, Any
 
 class ShowTcpproxyStatusSchema(MetaParser):
     ''' Schema for show tcpproxy status'''
@@ -465,4 +465,69 @@ class ShowTcpProxyStatistics(ShowTcpProxyStatisticsSchema):
                     value = groups['value']
                 last_dict_ptr.update({key: value})
 
+        return parsed_dict
+
+
+class ShowTcpBriefNumericSchema(MetaParser):
+    ''' Schema for show tcp brief numeric'''
+    schema = {
+        'tcp_connections': {
+            Any(): {  
+                'local_address': str,
+                'local_port': int,
+                'foreign_address': str,
+                'foreign_port': int,
+                'state': str,
+                'tcb': str,
+            }
+        }
+    }
+
+
+class ShowTcpBriefNumeric(ShowTcpBriefNumericSchema):
+    """ Parser for "show tcp brief numeric" """
+
+    cli_command = "show tcp brief numeric"
+
+    def cli(self, output=None):
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        
+        # Sample outputs:
+        # TCB       Local Address           Foreign Address        (state)
+        # 81C95568  172.16.1.1.23           172.16.1.100.1049      ESTAB
+        # 81C95569  0.0.0.0.23              0.0.0.0.0              LISTEN
+        
+        # Pattern for connections with ports and state
+        p1 = re.compile(r'^(?P<tcb>\w+)\s+(?P<local_addr>[\d\.]+)\.(?P<local_port>\d+)\s+'
+                       r'(?P<foreign_addr>[\d\.]+)\.(?P<foreign_port>\d+)\s+(?P<state>\w+)$')
+
+        tcp_connections_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+                           
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                
+                # Use TCB as the key since it's a unique identifier
+                tcb_key = groups['tcb']
+                connection_dict = tcp_connections_dict.setdefault(tcb_key, {})
+                
+                connection_dict['tcb'] = groups['tcb']
+                connection_dict['local_address'] = groups['local_addr']
+                connection_dict['local_port'] = int(groups['local_port'])
+                connection_dict['foreign_address'] = groups['foreign_addr']
+                connection_dict['foreign_port'] = int(groups['foreign_port'])
+                connection_dict['state'] = groups['state']
+                
+                continue
+
+        # Only add tcp_connections if we found any connections
+        if tcp_connections_dict:
+            parsed_dict['tcp_connections'] = tcp_connections_dict
+            
         return parsed_dict

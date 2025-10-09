@@ -104,7 +104,7 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
         
         # Maximum number of Group x Interfaces 75000
         p3 = re.compile(r'^Maximum +number +of +Group +x +Interfaces +'
-            			 '(?P<max_num_groups_x_intfs>\d+)$')
+            			 r'(?P<max_num_groups_x_intfs>\d+)$')
         
         # Supported Interfaces   : 1
         p4 = re.compile(r'^Supported +Interfaces +: +(?P<supported_intf>\d+)$')
@@ -129,13 +129,13 @@ class ShowMldSummaryInternal(ShowMldSummaryInternalSchema):
         
         # GigabitEthernet0/0/0/0          13      6400    Y  0x0        00:29:26 00:04:16    1d06h
         p9 = re.compile(r'^(?P<interface>[\w\-\.\/]+) +'
-                         '(?P<num_groups>\d+) +'
-                         '(?P<max_groups>\d+) +'
-                         '(?P<on>\w+) +'
-                         '(?P<parent>[\w]+) +'
-                         '(?P<last_query>[\w\:]+) +'
-                         '(?P<last_report>[\w\:]+) +'
-                         '(?P<igmp_r_uptime>[\w\:]+)$')
+                         r'(?P<num_groups>\d+) +'
+                         r'(?P<max_groups>\d+) +'
+                         r'(?P<on>\w+) +'
+                         r'(?P<parent>[\w]+) +'
+                         r'(?P<last_query>[\w\:]+) +'
+                         r'(?P<last_report>[\w\:]+) +'
+                         r'(?P<igmp_r_uptime>[\w\:]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -306,7 +306,7 @@ class ShowMldInterface(ShowMldInterfaceSchema):
 
     	# GigabitEthernet0/0/0/0 is up, line protocol is up
         p1 = re.compile(r'^(?P<intf>[\w\-\.\/]+) +is +(?P<intf_status>[\w\s]+), +'
-                         'line +protocol +is +(?P<oper_status>\w+)$')
+                         r'line +protocol +is +(?P<oper_status>\w+)$')
         
         # Internet address is fe80::5054:ff:fefa:9ad7
         p2 = re.compile(r'^Internet +address +is +(?P<ip>[\w\/\.\:]+)$')
@@ -322,15 +322,15 @@ class ShowMldInterface(ShowMldInterfaceSchema):
 
         # MLD querier timeout is 3666 seconds
         p6 = re.compile(r'^MLD +querier +timeout +is +'
-                         '(?P<timeout>\d+) +seconds$')
+                         r'(?P<timeout>\d+) +seconds$')
 
         # MLD max query response time is 12 seconds
         p7 = re.compile(r'^MLD +max +query +response +time +is +'
-                         '(?P<time>\d+) +seconds$')
+                         r'(?P<time>\d+) +seconds$')
 
         # Last member query response interval is 1 seconds
         p8 = re.compile(r'^Last +member +query +response +interval +is '
-                         '+(?P<time>\d+) +(seconds|ms)$')
+                         r'+(?P<time>\d+) +(seconds|ms)$')
 
         # MLD activity: 18 joins, 5 leaves
         p9 = re.compile(r'^MLD +activity: +(?P<joins>\d+) +joins, +(?P<leaves>\d+) +leaves$')
@@ -340,15 +340,15 @@ class ShowMldInterface(ShowMldInterfaceSchema):
 
         # Time elapsed since last query sent 00:30:16
         p11 = re.compile(r'^Time +elapsed +since +last +query +sent +'
-              			  '(?P<time_elapsed_since_last_query_sent>[\w\:]+)$')
+              			  r'(?P<time_elapsed_since_last_query_sent>[\w\:]+)$')
 
         # Time elapsed since IGMP router enabled 1d06h
         p12 = re.compile(r'^Time +elapsed +since +IGMP +router +enabled +'
-                		  '(?P<time_elapsed_since_igmp_router_enabled>[\w\:]+)$')
+                		  r'(?P<time_elapsed_since_igmp_router_enabled>[\w\:]+)$')
 
         # Time elapsed since last report received 00:00:51
         p13 = re.compile(r'^Time +elapsed +since +last +report +received +'
-                		  '(?P<time_elapsed_since_last_report_received>[\w\:]+)$')
+                		  r'(?P<time_elapsed_since_last_report_received>[\w\:]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -561,7 +561,7 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
         # Router mode:    INCLUDE
         # Router mode:    EXCLUDE (Expires: 00:29:15)
         p5 = re.compile(r'^Router +mode: +(?P<router_mode>\w+)'
-                         '( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
+                         r'( *\(Expires: +(?P<expire>[\w\.\:]+)\))?$')
 
        	# Last reporter:  fe80::5054:ff:fefa:9ad7
         p6 = re.compile(r'^Last +reporter: +(?P<last_reporter>[\w\.\:]+)$')
@@ -574,10 +574,10 @@ class ShowMldGroupsDetail(ShowMldGroupsDetailSchema):
         
         # 2001:db8:2:2::2                       08:06:00  01:00:00  Yes  Remote Local 2d
         p8 = re.compile(r'^(?P<source>(?!No)[\w\.\:]+) +'
-                         '(?P<up_time>[\w\.\:]+) +'
-                         '(?P<expire>[\w\.\:]+) +'
-                         '(?P<forward>\w+) +'
-                         '(?P<flags>[\w\s]+)$')
+                         r'(?P<up_time>[\w\.\:]+) +'
+                         r'(?P<expire>[\w\.\:]+) +'
+                         r'(?P<forward>\w+) +'
+                         r'(?P<flags>[\w\s]+)$')
 
 
         for line in out.splitlines():

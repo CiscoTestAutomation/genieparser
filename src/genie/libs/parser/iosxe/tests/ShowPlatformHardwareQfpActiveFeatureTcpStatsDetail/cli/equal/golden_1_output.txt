@@ -1,0 +1,13 @@
+TCP Statistics Detail
+---------------------
+Total TCP Sessions: 150
+TCP Packets Processed: 12000
+Retransmissions: 50
+TCP Segment Drops: 
+  - Out of Order: 30
+  - Window Violation: 20
+  - Checksum Error: 10
+Connection Attempts:
+  - Successful: 145
+  - Failed: 5
+Window Size Adjustments: 200

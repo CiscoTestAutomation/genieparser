@@ -1,0 +1,35 @@
+show device-tracking database vlan 70 details
+vlanDB has 5 entries for vlan 70, 5 dynamic 
+
+
+ Binding table configuration:
+ ----------------------------
+ max/box  : no limit
+ max/vlan : no limit
+ max/port : no limit
+ max/mac  : no limit
+
+ Binding table current counters:
+ ------------------------------
+ dynamic  : 9
+ local    : 0
+ total    : 9
+
+ Binding table counters by state:
+ ----------------------------------
+ VERIFY     : 2
+ REACHABLE  : 7
+   total    : 9
+
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+
+    Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)      prlvl      age        state      Time left        Filter     In Crimson   Client ID          Session ID                 Policy (feature) 
+DH4 100.70.0.42                              f8a5.c5eb.44ab(S)      Gi3/0/46   access     70  (  70)      0024       95s        VERIFY     38 s try 3(204 s) no         yes          f8a5.c5eb.44ab     (unspecified)              DT-PROGRAMMATIC (Device-tracking)
+DH4 100.70.0.39                              588d.0935.24d3(S)      Gi1/0/46   access     70  (  70)      0024       135s       VERIFY     512 ms try 4(164 s) no         yes          588d.0935.24d3     (unspecified)              DT-PROGRAMMATIC (Device-tracking)
+DH4 100.70.0.49                              1caa.07e2.959a(R)      Gi2/0/46   access     70  (  70)      0024       34s        REACHABLE  26 s(177 s)      no         yes          1caa.07e2.959a     (unspecified)              DT-PROGRAMMATIC (Device-tracking)
+ARP 100.70.2.2                               5061.bfc0.4c73(R)      Po126      trunk      70  (  70)      0005       34s        REACHABLE  26 s             no         yes          0000.0000.0000     (unspecified)              DT-PROGRAMMATIC (Device-tracking)
+ND  FE80::5261:BFFF:FEC0:4C73                5061.bfc0.4c73(R)      Po126      trunk      70  (  70)      0005       19s        REACHABLE  41 s             no         yes          0000.0000.0000     (unspecified)              DT-PROGRAMMATIC (Device-tracking)

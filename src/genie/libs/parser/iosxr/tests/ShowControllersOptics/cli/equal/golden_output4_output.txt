@@ -1,0 +1,940 @@
+RP/0/RP0/CPU0:ios#show controllers optics *
+Fri Jul 18 04:33:15.659 UTC
+ Port:    Optics0/2/0/0
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/1
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/2
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/3
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/4
+
+ Controller State: Up
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+ LED State: Off
+
+ FEC State: FEC DISABLED
+
+ Power Mode: High
+
+ Dom Data Status: Ready
+
+ Last link flapped: 12:41:34
+
+ Optics Status
+
+	 Optics Type:  QSFP+ 40G 4x10G BASE LR
+	 Wavelength = 1307.00 nm
+	 Loopback Host : None
+	 Loopback Media : None
+
+	 Alarm Status:
+	 -------------
+	 Detected Alarms:
+		 LOW-RX1-PWR   LOW-RX2-PWR   LOW-RX3-PWR   LOW-RX4-PWR
+		 LOW-TX1-PWR   LOW-TX2-PWR   LOW-TX3-PWR   LOW-TX4-PWR
+		 LOW-TX1_LBC   LOW-TX2_LBC   LOW-TX3_LBC   LOW-TX4_LBC
+
+	 LOS/LOL/Fault Status:
+	 Detected LOS/LOL/FAULT: RX-LOS
+
+
+
+	 Performance Monitoring: Disable
+
+	 THRESHOLD VALUES
+	 ----------------
+
+	 Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+	 ------------------------  ----------  ---------  ------------  -----------
+	 Rx Power Threshold(dBm)          3.4      -18.4           0.4        -14.4
+	 Rx Power Threshold(mW)           2.1        0.0           1.0          0.0
+	 Tx Power Threshold(dBm)          3.4      -12.2           0.4         -8.2
+	 Tx Power Threshold(mW)           2.1        0.0           1.0          0.1
+	 LBC Threshold(mA)              81.75      10.38         76.30        12.45
+	 Temp. Threshold(celsius)       75.00      -5.00         70.00         0.00
+	 Voltage Threshold(volt)         3.63       2.97          3.46         3.10
+
+	 Configured Tx Power = 0.00 dBm
+	 Configured Tx Power(mW) = 1.00 mW
+	 Configured CD High Threshold = 160000 ps/nm
+	 Configured CD lower Threshold = -160000 ps/nm
+	 Configured OSNR lower Threshold = 0.00 dB
+	 Configured DGD Higher Threshold = 0.00 ps
+	 Polarization parameters not supported by optics
+
+	 Lane  Laser Bias    TX Power    RX Power  Output Frequency
+	 ----  ----------  ----------  ----------  ----------------
+	   0      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   1      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   2      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   3      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+
+	 Temperature = 16.75 Celsius
+	 Voltage = 3.34 V
+
+ Transceiver Vendor Details
+
+	 Form Factor 		: QSFP+
+	 Optics type 		: QSFP+ 40G 4x10G BASE LR
+	 Name 			: CISCO-INNOLIGHT
+	 OUI Number 		: 44.7c.7f
+	 Part Number 		: TR-IQ13L-NC2
+	 Rev Number 		: 1B
+	 Serial Number 		: INL21370445
+	 PID 			: QSFP-4X10G-LR-S
+	 VID 			: V02
+	 Hardware Version 	: 66.49
+	 Date Code(yy/mm/dd) 	: 17/09/16
+
+-----------------------------------------------
+ Port:    Optics0/2/0/5
+
+ Controller State: Up
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+ LED State: Off
+
+ FEC State: FEC DISABLED
+
+ Power Mode: High
+
+ Dom Data Status: Ready
+
+ Last link flapped: 12:41:34
+
+ Optics Status
+
+	 Optics Type:  QSFP+ 40G 4x10G BASE LR
+	 Wavelength = 1307.00 nm
+	 Loopback Host : None
+	 Loopback Media : None
+
+	 Alarm Status:
+	 -------------
+	 Detected Alarms:
+		 LOW-RX1-PWR   LOW-RX2-PWR   LOW-RX3-PWR   LOW-RX4-PWR
+		 LOW-TX1-PWR   LOW-TX2-PWR   LOW-TX3-PWR   LOW-TX4-PWR
+		 LOW-TX1_LBC   LOW-TX2_LBC   LOW-TX3_LBC   LOW-TX4_LBC
+
+	 LOS/LOL/Fault Status:
+	 Detected LOS/LOL/FAULT: RX-LOS
+
+
+
+	 Performance Monitoring: Disable
+
+	 THRESHOLD VALUES
+	 ----------------
+
+	 Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+	 ------------------------  ----------  ---------  ------------  -----------
+	 Rx Power Threshold(dBm)          3.4      -18.4           0.4        -14.4
+	 Rx Power Threshold(mW)           2.1        0.0           1.0          0.0
+	 Tx Power Threshold(dBm)          3.4      -12.2           0.4         -8.2
+	 Tx Power Threshold(mW)           2.1        0.0           1.0          0.1
+	 LBC Threshold(mA)              81.75      10.38         76.30        12.45
+	 Temp. Threshold(celsius)       75.00      -5.00         70.00         0.00
+	 Voltage Threshold(volt)         3.63       2.97          3.46         3.10
+
+	 Configured Tx Power = 0.00 dBm
+	 Configured Tx Power(mW) = 1.00 mW
+	 Configured CD High Threshold = 160000 ps/nm
+	 Configured CD lower Threshold = -160000 ps/nm
+	 Configured OSNR lower Threshold = 0.00 dB
+	 Configured DGD Higher Threshold = 0.00 ps
+	 Polarization parameters not supported by optics
+
+	 Lane  Laser Bias    TX Power    RX Power  Output Frequency
+	 ----  ----------  ----------  ----------  ----------------
+	   0      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   1      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   2      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   3      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+
+	 Temperature = 17.23 Celsius
+	 Voltage = 3.36 V
+
+ Transceiver Vendor Details
+
+	 Form Factor 		: QSFP+
+	 Optics type 		: QSFP+ 40G 4x10G BASE LR
+	 Name 			: CISCO-INNOLIGHT
+	 OUI Number 		: 44.7c.7f
+	 Part Number 		: TR-IQ13L-NC2
+	 Rev Number 		: 1B
+	 Serial Number 		: INL21370170
+	 PID 			: QSFP-4X10G-LR-S
+	 VID 			: V02
+	 Hardware Version 	: 66.49
+	 Date Code(yy/mm/dd) 	: 17/09/13
+
+-----------------------------------------------
+ Port:    Optics0/2/0/6
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/7
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/8
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/9
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/10
+
+ Controller State: Up
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+ LED State: Off
+
+ FEC State: FEC ENABLED
+
+ Power Mode: High
+
+ Dom Data Status: Ready
+
+ Last link flapped: 12:41:34
+
+ Optics Status
+
+	 Optics Type:  QSFPDD 400G LR8
+	 Wavelength = 1291.00 nm
+	 Loopback Host : None
+	 Loopback Media : None
+
+	 Alarm Status:
+	 -------------
+	 Detected Alarms:
+		 LOW-RX1-PWR   LOW-RX2-PWR   LOW-RX3-PWR   LOW-RX4-PWR   LOW-RX5-PWR   LOW-RX6-PWR   LOW-RX7-PWR   LOW-RX8-PWR
+
+	 LOS/LOL/Fault Status:
+	 Detected LOS/LOL/FAULT: RX-LOS   TX-LOS
+
+
+
+	 Performance Monitoring: Disable
+
+	 THRESHOLD VALUES
+	 ----------------
+
+	 Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+	 ------------------------  ----------  ---------  ------------  -----------
+	 Rx Power Threshold(dBm)          8.0      -13.0           5.2         -9.1
+	 Rx Power Threshold(mW)           6.3        0.0           3.3          0.1
+	 Tx Power Threshold(dBm)          8.0       -6.8           5.2         -2.8
+	 Tx Power Threshold(mW)           6.3        0.2           3.3          0.5
+	 LBC Threshold(mA)              65.00      30.00         60.00        35.00
+	 Temp. Threshold(celsius)       80.00      -5.00         75.00         0.00
+	 Voltage Threshold(volt)         3.63       2.97          3.46         3.13
+
+	 Configured Tx Power = 0.00 dBm
+	 Configured Tx Power(mW) = 1.00 mW
+	 Configured CD High Threshold = 160000 ps/nm
+	 Configured CD lower Threshold = -160000 ps/nm
+	 Configured OSNR lower Threshold = 0.00 dB
+	 Configured DGD Higher Threshold = 0.00 ps
+	 Polarization parameters not supported by optics
+
+	 Lane  Laser Bias    TX Power    RX Power  Output Frequency
+	 ----  ----------  ----------  ----------  ----------------
+	   0      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   1      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   2      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   3      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   4      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   5      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   6      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   7      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+
+	 Temperature = 25.21 Celsius
+	 Voltage = 3.28 V
+
+ Transceiver Vendor Details
+
+	 Form Factor 		: QSFP-DD
+	 Optics type 		: QSFPDD 400G LR8
+	 Name 			: CISCO-FINISAR
+	 OUI Number 		: 00.90.65
+	 Part Number 		: FTCD1323E1PCL-C1
+	 Rev Number 		: A
+	 Serial Number 		: FNS2602051D
+	 PID 			: QDD-400G-LR8-S
+	 VID 			: V01
+	 Hardware Version 	: 3.0
+	 Firmware Version 	: Major.Minor.Build
+		 Active 	: 5.0.0
+		 Inactive 	: 0.0.0
+	 Date Code(yy/mm/dd) 	: 22/01/03
+
+-----------------------------------------------
+ Port:    Optics0/2/0/11
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/12
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/13
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/14
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/15
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/16
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/17
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/18
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/19
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/20
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/21
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/22
+
+ Controller State: Up
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+ LED State: Off
+
+ FEC State: FEC ENABLED
+
+ Power Mode: High
+
+ Dom Data Status: Ready
+
+ Last link flapped: 12:41:34
+
+ Optics Status
+
+	 Optics Type:  QSFPDD 400G FR4
+	 Wavelength = 1301.00 nm
+	 Loopback Host : None
+	 Loopback Media : None
+
+	 Alarm Status:
+	 -------------
+	 Detected Alarms: None
+
+
+	 LOS/LOL/Fault Status:
+	 Detected LOS/LOL/FAULT: RX-LOS
+
+
+
+	 Performance Monitoring: Disable
+
+	 THRESHOLD VALUES
+	 ----------------
+
+	 Parameter                 High Alarm  Low Alarm  High Warning  Low Warning
+	 ------------------------  ----------  ---------  ------------  -----------
+	 Rx Power Threshold(dBm)          7.3      -11.1           4.3         -7.2
+	 Rx Power Threshold(mW)           5.3        0.0           2.6          0.1
+	 Tx Power Threshold(dBm)          7.3       -7.2           4.3         -3.2
+	 Tx Power Threshold(mW)           5.3        0.1           2.6          0.4
+	 LBC Threshold(mA)             120.00      20.00        110.00        30.00
+	 Temp. Threshold(celsius)       80.00      -5.00         75.00         0.00
+	 Voltage Threshold(volt)         3.63       2.97          3.46         3.13
+
+	 Configured Tx Power = 0.00 dBm
+	 Configured Tx Power(mW) = 1.00 mW
+	 Configured CD High Threshold = 160000 ps/nm
+	 Configured CD lower Threshold = -160000 ps/nm
+	 Configured OSNR lower Threshold = 0.00 dB
+	 Configured DGD Higher Threshold = 0.00 ps
+	 Polarization parameters not supported by optics
+
+	 Lane  Laser Bias    TX Power    RX Power  Output Frequency
+	 ----  ----------  ----------  ----------  ----------------
+	   0      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   1      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   2      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+	   3      0.0 mA  -40.00 dBm  -40.00 dBm       N/A
+
+	 Temperature = 24.51 Celsius
+	 Voltage = 3.31 V
+
+ Transceiver Vendor Details
+
+	 Form Factor 		: QSFP-DD
+	 Optics type 		: QSFPDD 400G FR4
+	 Name 			: CISCO-INNOLIGHT
+	 OUI Number 		: 44.7c.7f
+	 Part Number 		: T-DQ4CNT-NC2
+	 Rev Number 		: 3C
+	 Serial Number 		: INL27090R6N
+	 PID 			: QDD-400G-FR4-S
+	 VID 			: V01
+	 Hardware Version 	: 1.10
+	 Firmware Version 	: Major.Minor.Build
+		 Active 	: 234.6.0
+		 Inactive 	: 0.0.0
+	 Date Code(yy/mm/dd) 	: 23/03/03
+
+-----------------------------------------------
+ Port:    Optics0/2/0/23
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/24
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/25
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/26
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/27
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/28
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/29
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/30
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/31
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/32
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/33
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/34
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------
+ Port:    Optics0/2/0/35
+
+ Controller State: Down
+
+ Transport Admin State: In Service
+
+ Laser State: Off
+
+ Host Squelch Status: Enable
+
+ Media linkdown preFEC degrade : Disabled
+
+	 Optics not present
+	 Optics Type: Unavailable
+	 DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
+	 TX Power = Unavailable
+	 RX Power = Unavailable
+-----------------------------------------------

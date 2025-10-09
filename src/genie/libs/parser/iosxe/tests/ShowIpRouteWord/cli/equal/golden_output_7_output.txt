@@ -1,0 +1,26 @@
+Routing entry for 0.0.0.0/0, supernet
+  Known via "bgp 100.1", distance 20, metric 0, candidate default path
+  Tag 65637, type external
+  Last update from 100.101.0.12 00:16:36 ago
+  Routing Descriptor Blocks:
+    100.101.0.12, from 100.101.0.12, 00:16:36 ago
+      opaque_ptr 0x7BE623EA95A8 
+      Route metric is 0, traffic share count is 1
+      AS Hops 5
+      Route tag 65637
+      MPLS label: none
+      MPLS Flags: NSF
+    100.101.0.8, from 100.101.0.8, 00:16:36 ago
+      opaque_ptr 0x7BE623EA95A8 
+      Route metric is 0, traffic share count is 1
+      AS Hops 5
+      Route tag 65637
+      MPLS label: none
+      MPLS Flags: NSF
+  * 100.101.0.4, from 100.101.0.4, 00:16:36 ago
+      opaque_ptr 0x7BE623EA95A8 
+      Route metric is 0, traffic share count is 1
+      AS Hops 5
+      Route tag 65637
+      MPLS label: none
+      MPLS Flags: NSF

@@ -10,8 +10,10 @@ expected_output = {
                    'objid': '0x40',
                    'srcmac': '40b5.c1ff.d902'
               },
+              'cla_nhtype': 0,
               'da': 2,
               'ipv4route_id': '0x5a4d1cf0f4d8',
+              'l3port_oid': '0x6e6',
               'mac_addr': '00a7.429b.db7f',
               'npd': {
                   'child_device': 0,

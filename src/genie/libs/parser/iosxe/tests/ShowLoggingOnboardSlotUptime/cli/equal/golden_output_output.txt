@@ -1,0 +1,4 @@
+ACE_Lux#show logging onboard slot R0 uptime latest 
+Slot            Reset reason       Power On
+-----------------------------------------------------------------
+  R0    reset local software       05/12/25 13:01:40

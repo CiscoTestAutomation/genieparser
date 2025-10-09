@@ -3,23 +3,23 @@
 IOSXE parsers for the following show commands:
     * show monitor
     * show monitor session {session}
-    * show monitor session all
     * show monitor capture
+    * show monitor event-trace crypto pki event all
+    * show monitor event-trace crypto pki error all
+    * show monitor event-trace crypto ikev2 event all
+    * show monitor event-trace crypto all detail
+    * show monitor event-trace crypto from-boot 
+    * show monitor event-trace crypto from-boot {timer}
 
 '''
 
 
 # Python
 import re
-import xmltodict
-from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
-
-# import parser utils
-from genie.libs.parser.utils.common import Common
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 
 # =========================================
@@ -68,16 +68,13 @@ class ShowMonitor(ShowMonitorSchema):
     ''' Parser for
       "show monitor"
       "show monitor session {session}"
-      "show monitor session all"
     '''
 
-    cli_command = ['show monitor', 'show monitor session {session}', 'show monitor session all']
+    cli_command = ['show monitor', 'show monitor session {session}']
 
-    def cli(self, session="", all="", output=None):
+    def cli(self, session="", output=None):
         if output is None:
-            if all:
-                cmd = self.cli_command[2]
-            elif session:
+            if session:
                 cmd = self.cli_command[1].format(session=session)
             else:
                 cmd = self.cli_command[0]
@@ -791,7 +788,43 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                 Optional('vendor_id'): str,
                 Optional('code'): str,
                 Optional('destination_address'): str,
-                Optional('source_address'): str
+                Optional('source_address'): str,
+                Optional('dhcp_message_type'): str,
+                Optional('message_type_boot_reply'): str,
+                Optional('hardware_type'): str,
+                Optional('hardware_address_length'): str,
+                Optional('hops'): str,
+                Optional('transaction_id'): str,
+                Optional('seconds_elapsed'): str,
+                Optional('bootp_flags'): str,
+                Optional('client_ip_address'): str,
+                Optional('your_ip_address'): str,
+                Optional('next_server_ip_address'): str,
+                Optional('relay_agent_ip_address'): str,
+                Optional('client_mac_address'): str,
+                Optional('client_hardware_address_padding'): str,
+                Optional('server_host_name'): str,
+                Optional('boot_file_name'): str,
+                Optional('magic_cookie'): str,
+                Optional('dhcp_option_53_message_type'): str,
+                Optional('dhcp_option_53_length'): int,
+                Optional('dhcp_option_53_dhcp'): str,
+                Optional('dhcp_option_61_client_identifier'): str,
+                Optional('dhcp_option_61_length'): int,
+                Optional('dhcp_option_61_hardware_type'): str,
+                Optional('dhcp_option_61_client_mac_address'): str,
+                Optional('dhcp_option_12_host_name'): str,
+                Optional('dhcp_option_12_length'): int,
+                Optional('dhcp_option_12_host_name_value'): str,
+                Optional('dhcp_option_255_end'): str,
+                Optional('dhcp_option_255_option_end'): int,
+                Optional('dhcp_padding'): str,
+                Optional('dhcp'): str,
+                Optional('option'): str,
+                Optional('option_end'): str,
+                Optional('padding'): str,
+                Optional('message_type'): str,
+                Optional('host_name'): str,
             }
         }
     }
@@ -799,6 +832,7 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
 # ======================================================
 # Parser for 'show monitor capture buffer detailed '
 # ======================================================
+
 class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
     """Parser for 'show monitor capture buffer detailed"""
     cli_command = ['show monitor capture {capture_name} buffer detailed',
@@ -806,6 +840,8 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
                     'show monitor capture file {path} packet-number {number} detailed']
     
     def cli(self, capture_name="", filter_criteria="",path="", number="", output=None):
+        if number:
+            number = int(number)
         if output is None:
             # Build the command
             if filter_criteria:
@@ -847,6 +883,46 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
         #     1010 00.. = Differentiated Services Codepoint: Class Selector 5 (40)
         p8 = re.compile(r'^[\S\s]+\s+= Differentiated Services Codepoint: [\s\S]+ \((?P<dscp_value>\d+)\)$')
 
+        # DHCP Option: (53) DHCP Message Type (Discover)
+        p9 = re.compile(r'^Option: +\(53\) +DHCP +Message +Type +\((?P<dhcp_option_53_message_type>[\w]+)\)$')
+
+        # DHCP Option Length: 1
+        p10 = re.compile(r'^Length: +(?P<dhcp_option_53_length>\d+)$')
+
+        # DHCP: Discover (1)
+        p11 = re.compile(r'^DHCP: +(?P<dhcp_option_53_dhcp>[\w]+) +\((?P<dhcp_option_53_dhcp_value>\d+)\)$')
+
+        # DHCP Option: (61) Client identifier
+        p12 = re.compile(r'^Option: +\(61\) +Client +identifier$')
+
+        # DHCP Option Length: 7
+        p13 = re.compile(r'^Length: +(?P<dhcp_option_61_length>\d+)$')
+
+        # Hardware type: Ethernet (0x01)
+        p14 = re.compile(r'^Hardware +type: +(?P<dhcp_option_61_hardware_type>[\w]+) +\((?P<dhcp_option_61_hardware_type_value>[\w]+)\)$')
+
+        # Client MAC address: 54:00:04:de:91:23 (54:00:04:de:91:23)
+        p15 = re.compile(r'^Client +MAC +address: +(?P<dhcp_option_61_client_mac_address>[\w\:]+) +\((?P<dhcp_option_61_client_mac_address_value>[\w\:]+)\)$')
+
+        # DHCP Option: (12) Host Name
+        p16 = re.compile(r'^Option: +\(12\) +Host +Name$')
+
+        # DHCP Option Length: 11
+        p17 = re.compile(r'^Length: +(?P<dhcp_option_12_length>\d+)$')
+
+        # Host Name: Tesgine2000
+        p18 = re.compile(r'^Host +Name: +(?P<dhcp_option_12_host_name_value>[\w]+)$')
+
+        # DHCP Option: (255) End
+        p19 = re.compile(r'^Option: +\(255\) +End$')
+
+        # Option End: 255
+        p20 = re.compile(r'^Option +End: +(?P<dhcp_option_255_option_end>\d+)$')
+
+        # Padding: 000000000000000000
+        p21 = re.compile(r'^Padding: +(?P<dhcp_padding>[\w]+)$')
+
+        
         # loop to split lines of output
         for line in output.splitlines():
             line = line.strip()
@@ -934,6 +1010,94 @@ class ShowMonitorCaptureBufferDetailed(ShowMonitorCaptureBufferDetailedSchema):
             if m:
                 group = m.groupdict()
                 result_dict.update({"dscp_value":int(group['dscp_value'])})
+                continue
+
+            # DHCP Option: (53) DHCP Message Type (Discover)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_53_message_type": group['dhcp_option_53_message_type']})
+                continue
+
+            # DHCP Option Length: 1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_53_length": int(group['dhcp_option_53_length'])})
+                continue
+
+            # DHCP: Discover (1)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_53_dhcp": group['dhcp_option_53_dhcp']})
+                continue
+
+            # DHCP Option: (61) Client identifier
+            m = p12.match(line)
+            if m:
+                result_dict.update({"dhcp_option_61_client_identifier": "Client identifier"})
+                continue
+
+            # DHCP Option Length: 7
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_61_length": int(group['dhcp_option_61_length'])})
+                continue
+
+            # Hardware type: Ethernet (0x01)
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_61_hardware_type": group['dhcp_option_61_hardware_type']})
+                continue
+
+            # Client MAC address: 54:00:04:de:91:23 (54:00:04:de:91:23)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_61_client_mac_address": group['dhcp_option_61_client_mac_address']})
+                continue
+
+            # DHCP Option: (12) Host Name
+            m = p16.match(line)
+            if m:
+                result_dict.update({"dhcp_option_12_host_name": "Host Name"})
+                continue
+
+            # DHCP Option Length: 11
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_12_length": int(group['dhcp_option_12_length'])})
+                continue
+
+            # Host Name: Tesgine2000
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_12_host_name_value": group['dhcp_option_12_host_name_value']})
+                continue
+
+            # DHCP Option: (255) End
+            m = p19.match(line)
+            if m:
+                result_dict.update({"dhcp_option_255_end": "End"})
+                continue
+
+            # Option End: 255
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_option_255_option_end": int(group['dhcp_option_255_option_end'])})
+                continue
+
+            # Padding: 000000000000000000
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict.update({"dhcp_padding": group['dhcp_padding']})
                 continue
 
         return ret_dict
@@ -1166,13 +1330,15 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-NHC-UP) tunnel: (?P<tunnel>[A-z0-9]+) NHC up "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+)")
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+)")
 
         '''*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added 
-            tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''        
+            tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
+        '''*Jul 27 07: 30: 25.534: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update 
+            tunnel endpoints nbma_dest: 1.1.1.1 vpn_dest: 192.168.10.1'''
         p2 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-TUNNEL-ENDPOINT-ADD) tunnel: "
-            r"(?P<tunnel>[A-z0-9]+) Added tunnel endpoints nbma_dest: "
+            r"(?P<tunnel>[A-z0-9]+) ([A-za-z/]+) tunnel endpoints nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+)")
 
         '''*Jun 22 06:39:28.930: NHRP-NHS-UP tunnel: Tu1 NHS up nbma_src: 
@@ -1182,7 +1348,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-NHS-UP) tunnel: (?P<tunnel>[A-z0-9]+) NHS up "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+)")
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+)")
 
         '''*Jun 22 06:51:10.254: NHRP-RECV-RES-REQ tunnel: Tu1 host with
             nbma_src: 1.1.1.1 vpn_src: 192.168.10.3 received resolution 
@@ -1193,7 +1359,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) received resolution request from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 23 12:56:43.560: NHRP-SEND-RES-REQ tunnel: Tu1 host with 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 send resolution request 
@@ -1204,7 +1370,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send resolution request to nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 23 12:56:43.568: NHRP-RECV-RES-REPLY tunnel: Tu1 host with 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 received resolution reply 
@@ -1215,7 +1381,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) received resolution reply from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 23 12:56:43.712: NHRP-SEND-RES-REPLY tunnel: Tu1 host with 
             nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send resolution reply to 
@@ -1226,7 +1392,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send resolution reply to nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jun 22 07:02:43.481: NHRP-RECV-PURGE-REQ tunnel: Tu1 host 
             with nbma_src: 1.1.1.1 vpn_src: 192.168.10.1 receive purge 
@@ -1237,7 +1403,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) receive purge request from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z-]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z-]+)")
 
         '''*Jun 22 07:06:10.841: NHRP-SEND-PURGE-REQ tunnel: Tu1 host with 
             nbma_src: 3.3.3.1 vpn_src: 0.0.0.0 send purge request to nbma_dest: 
@@ -1247,7 +1413,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send purge request to nbma_dest: "
             r"(?P<nbma_dest>[A-Z0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) "
-            r"vrf: (?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"vrf: (?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''NHRP-NHC-DOWN tunnel: Tu1 NHC down nbma_src: 1.1.1.1 vpn_src: 
             192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 192.168.10.2 vrf: 
@@ -1256,7 +1422,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-NHC-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHC down "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) reason: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) reason: "
             r"(?P<reason>[A-z\s-]+)")
 
         '''*Jun 22 08:56:36.794: NHRP-TUNNEL-ENDPOINT-DELETE tunnel: 
@@ -1270,42 +1436,51 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
         '''*Jun 22 08:59:28.070: NHRP-NHS-DOWN tunnel: Tu1 NHS down 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 1.1.1.1 
             vpn_dest: 192.168.10.1 vrf: global(0x0) reason: NHRP - 
-            Registration Failure'''        
+            Registration Failure'''
         p13 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-NHS-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHS "
             r"down nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
-            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) "
             r"reason: (?P<reason>[A-z\s-]+)")
 
         '''*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 
             192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 
-            'expecting replies' from 'responding expecting replies'''        
+            'expecting replies' from 'responding expecting replies'''
+        '''*Jul 27 07: 30: 34.496: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 
+            Tunnel1 vrf: global(0x0) cluster 0 priority 0 transitioned to 'responding 
+            expecting replies' from 'expecting replies'''
         p14 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-NHS-RECOVERY-NHS-STATE)  NHS vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) Tunnel1 vrf (?P<vrf>[0-9]+) cluster "
+            r"(?P<vpn_dest>[0-9.]+) ([A-z0-9]+) ([a-z:]+) (?P<vrf>[A-Za-z0()]+) cluster "
             r"(?P<cluster>[0-9]+) priority (?P<priority>[0-9]+) transitioned "
-            r"to 'expecting replies' from 'responding expecting replies'")
+            r"to ([a-z' ]+)")
 
         '''*Jun 22 08:59:56.133: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
             retransmitting registration request for vpn_dest: 192.168.10.1 
-            reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''        
+            reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''
+        '''*Aug 14 05: 06: 47.622: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
+           retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 
+           4 retrans 2 sec vrf: global (0x0) label: explicit-null'''
         p15 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-CTRL-PLANE-RETRANS) tunnel: "
-            r"(?P<tunnel>[A-z0-9]+) retransmitting registration request for "
-            r"vpn_dest: (?P<vpn_dest>[0-9.]+) reqid (?P<reqid>[0-9]+) retrans "
-            r"ivl (?P<ivl>[0-9]+) sec vrf: (?P<vrf>[A-Za-z0()]+) label: "
+            r"(?P<tunnel>[A-z0-9]+) retransmitting ([A-za-z]+) ([A-za-z]+) for "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) reqid (?P<reqid>[0-9]+) ([a-z ]+) "
+            r"(?P<ivl>[0-9]+) sec vrf: (?P<vrf>[A-Za-z0()]+) label: "
             r"(?P<label>[a-z-]+)")
 
         '''*Jun 23 13:51:22.428: NHRP-NHP-DOWN tunnel: Tu1 NHP down 
             nbma_src: 2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 
-            vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason'''        
+            vpn_dest: 192.168.10.3 vrf: global(0x0) reason: No Reason'''
+        '''*Aug 15 13: 59: 48.248: NHRP-NHP-DOWN tunnel: Tu1 NHP down nbma_src: 
+            2.2.2.1 vpn_src: 192.168.10.2 nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3 
+            vrf: global (0x0) reason: NHRP - Hold time expiry'''
         p18 = re.compile(r"\*(?P<time_stamp>[A-z0-9\s\d:.]+) "
             r"(?P<event>NHRP-NHP-DOWN) tunnel: (?P<tunnel>[A-z0-9]+) NHP down "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) reason: "
-            r"(?P<reason>[A-z\s]+)")
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) reason: "
+            r"(?P<reason>[A-z\s-]+)")
 
         '''*Jun 24 09:09:36.455: NHRP-CACHE-DELETE tunnel: Tu1 nbma_src: 
             1.1.1.1 vpn_src: 192.168.10.1 nbma_dest: 2.2.2.1 vpn_dest: 
@@ -1315,7 +1490,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-CACHE-DELETE) tunnel: (?P<tunnel>[A-z0-9]+) "
             r"nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: (?P<vpn_src>[0-9.]+) "
             r"nbma_dest: (?P<nbma_dest>[0-9.]+) vpn_dest: "
-            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) label: "
+            r"(?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) label: "
             r"(?P<label>[a-z-]+) reason: (?P<reason>[A-z\s-]+)")
 
         '''*Jun 26 18:38:52.148: NHRP-CACHE-UPDATE tunnel: Tu1 target: 
@@ -1325,7 +1500,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"(?P<event>NHRP-CACHE-UPDATE) tunnel: (?P<tunnel>[A-z0-9]+) "
             r"target: (?P<target>[0-9.]+) nbma_src: (?P<nbma_src>[0-9.]+) "
             r"vpn_src: (?P<vpn_src>[0-9.]+) nbma_dest: (?P<nbma_dest>[0-9.]+) "
-            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[a-z0()]+) label: "
+            r"vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: (?P<vrf>[A-Za-z0()]+) label: "
             r"(?P<label>[a-z-]+)")
 
         '''*Jun 27 17:48:34.466: NHRP-CACHE-NBMA-NHOP-CHANGE tunnel: Tu1 
@@ -1344,7 +1519,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) receive purge reply from nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         '''*Jul  2 16:30:55.263: NHRP-SEND-PURGE-REPLY tunnel: Tu1  host 
             with nbma_src: 3.3.3.1 vpn_src: 192.168.10.3 send purge reply 
@@ -1355,7 +1530,7 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             r"host with nbma_src: (?P<nbma_src>[0-9.]+) vpn_src: "
             r"(?P<vpn_src>[0-9.]+) send purge reply to nbma_dest: "
             r"(?P<nbma_dest>[0-9.]+) vpn_dest: (?P<vpn_dest>[0-9.]+) vrf: "
-            r"(?P<vrf>[a-z0()]+) label: (?P<label>[a-z]+)")
+            r"(?P<vrf>[A-Za-z0()]+) label: (?P<label>[a-z]+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -1404,6 +1579,8 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
 
             '''*Jun 22 06:39:28.362: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 Added 
             tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
+            '''*Jul 27 07: 30: 25.534: NHRP-TUNNEL-ENDPOINT-ADD tunnel: Tu1 add/update 
+                tunnel endpoints nbma_dest: 3.3.3.1 vpn_dest: 192.168.10.3'''
             if m:= p2.match(line):
                 groups = m.groupdict()
                 dest = groups['nbma_dest'].replace(".","_")
@@ -1640,6 +1817,9 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             '''*Jun 22 08:59:28.071: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 
             192.168.10.1 Tunnel1 vrf 0 cluster 0 priority 0 transitioned to 
             'expecting replies' from 'responding expecting replies'''
+            '''*Jul 27 07: 30: 34.496: NHRP-NHS-RECOVERY-NHS-STATE  NHS vpn_dest: 192.168.10.1 
+            Tunnel1 vrf: global (0x0) cluster 0 priority 0 transitioned to 'responding 
+            expecting replies' from 'expecting replies'''
             if m:= p14.match(line):
                 groups = m.groupdict()
                 dest = groups['vpn_dest'].replace(".","_")
@@ -1656,6 +1836,9 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
             '''*Jun 22 08:59:56.133: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
             retransmitting registration request for vpn_dest: 192.168.10.1 
             reqid 2819 retrans ivl 2 sec vrf: NONE label: explicit-null'''
+            '''*Aug 14 05: 06: 47.622: NHRP-CTRL-PLANE-RETRANS tunnel: Tu1 
+           retransmitting Registration Request for vpn_dest: 192.168.10.1 reqid 
+           4 retrans 2 sec vrf: global (0x0) label: explicit-null'''
             if m:= p15.match(line):
                 groups = m.groupdict()
                 dest = groups['vpn_dest'].replace(".","_")
@@ -1802,3 +1985,631 @@ class ShowMonitorEventTraceDmvpnAll(ShowMonitorEventTraceDmvpnAllSchema):
                 })
                 continue
         return ret_dict
+
+class ShowMonitorCaptureFileDetailedSchema(MetaParser):
+    schema = {
+        'dhcp_offer': {
+            'client_mac_address': str,
+        }
+    }
+
+class ShowMonitorCaptureFileDetailed(ShowMonitorCaptureFileDetailedSchema):
+    cli_command = 'show monitor capture file flash:file1.pcap packet-number 7 detailed'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Matching patterns
+        # Dynamic Host Configuration Protocol (Offer)
+        p1 = re.compile(r'^Dynamic Host Configuration Protocol \(Offer\)$')
+
+        # Client MAC address
+        p2 = re.compile(r'^Client MAC address: +(?P<client_mac_address>[\w:]+)')
+
+        dhcp_offer_section = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Dynamic Host Configuration Protocol (Offer)
+            m = p1.match(line)
+            if m:
+                dhcp_offer_section = True
+                ret_dict['dhcp_offer'] = {}
+                continue
+
+            # Client MAC address: 00:11:01:00:00:01 (00:11:01:00:00:01) within DHCP Offer section
+            if dhcp_offer_section:
+                m = p2.match(line)
+                if m:
+                    ret_dict['dhcp_offer']['client_mac_address'] = m.groupdict()['client_mac_address']
+                    continue
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto pki event all'
+# =================================================
+class ShowMonitorEventTraceCryptoPkiEventAllSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto pki event all`"""
+    schema = {
+        'event_trace': {
+            'event': {
+                int: {
+                    'timestamp': str,
+                    'event_message': str,
+                }
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto pki event all'
+# =================================================
+
+class ShowMonitorEventTraceCryptoPkiEventAll(ShowMonitorEventTraceCryptoPkiEventAllSchema):
+    """Parser for `show monitor event-trace crypto pki event all`"""
+
+    cli_command = 'show monitor event-trace crypto pki event all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        event_idx = 1
+
+        # Example: 'Jun  9 13:30:43.826: Trustpoint- rootca:HTTP Server is disabled.'
+        p1 = re.compile(r'^(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<event_message>.*)$')
+
+        # Example: '    This is a continuation line'
+        p2 = re.compile(r'^\s+(?P<cont>.+)$')
+
+        current_event = None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            #Jun  9 13:30:43.826: Trustpoint- rootca:HTTP Server is disabled.
+            m = p1.match(line)
+            if m:
+                current_event = event_idx
+                event_dict = parsed_dict.setdefault('event_trace', {}).setdefault('event', {}).setdefault(current_event, {})
+                event_dict['timestamp'] = m.group('timestamp')
+                event_dict['event_message'] = m.group('event_message')
+                event_idx += 1
+                continue
+            # p2: Matches lines that start with one or more spaces followed by any characters (continuation lines)
+            m = p2.match(line)
+            if m and current_event:
+                event_dict = parsed_dict['event_trace']['event'][current_event]
+                event_dict['event_message'] += '\n' + m.group('cont')
+                continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto pki error all'
+# =================================================
+class ShowMonitorEventTraceCryptoPkiErrorAllSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto pki error all`"""
+    schema = {
+        'event_trace': {
+            'event': {
+                int: {
+                    Optional('timestamp'): str,
+                    Optional('event_message'): str,
+                }
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto pki error all'
+# =================================================
+class ShowMonitorEventTraceCryptoPkiErrorAll(ShowMonitorEventTraceCryptoPkiErrorAllSchema):
+    """Parser for `show monitor event-trace crypto pki error all`"""
+
+    cli_command = 'show monitor event-trace crypto pki error all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        event_idx = 1
+
+        # Example: 'Jun  9 13:30:43.826: <event_message>'
+        p1 = re.compile(r'^(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<event_message>.*)$')
+
+        # Example: '    This is a continuation line'
+        p2 = re.compile(r'^\s+(?P<cont>.+)$')
+
+        current_event = None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            # p1: Matches a log line starting with a timestamp (e.g. 'Jun  9 13:30:43.826:') followed by an event message.
+            m = p1.match(line)
+            if m:
+                current_event = event_idx
+                event_dict = parsed_dict.setdefault('event_trace', {}).setdefault('event', {}).setdefault(current_event, {})
+                event_dict['timestamp'] = m.group('timestamp')
+                event_dict['event_message'] = m.group('event_message')
+                event_idx += 1
+                continue
+            # p2: Matches lines that start with one or more spaces followed by any characters (continuation lines)
+            m = p2.match(line)
+            if m and current_event:
+                event_dict = parsed_dict['event_trace']['event'][current_event]
+                event_dict['event_message'] += '\n' + m.group('cont')
+                continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto ikev2 event all'
+# =================================================
+class ShowMonitorEventTraceCryptoIkev2EventAllSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto ikev2 event all`"""
+    schema = {
+        'event_trace': {
+            'events': {
+                int: {
+                    'timestamp': str,
+                    'sa_id': int,
+                    'session_id': int,
+                    'remote': str,
+                    'local': str,
+                    'event_message': str,
+                    Optional('direction'): str,
+                    Optional('exchange_type'): str,
+                    Optional('spi'): str,
+                    Optional('ispi'): str,
+                    Optional('rspi'): str,
+                    Optional('ike_id_pair'): str
+                }
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto ikev2 event all'
+# =================================================
+class ShowMonitorEventTraceCryptoIkev2EventAll(ShowMonitorEventTraceCryptoIkev2EventAllSchema):
+    """Parser for `show monitor event-trace crypto ikev2 event all`"""
+
+    cli_command = 'show monitor event-trace crypto ikev2 event all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        event_idx = 1
+
+        # Main pattern for IKEv2 event entries
+        # *Apr  4 00:16:59.484: SA ID:2 SESSION ID:1 Remote: 30.1.1.2/500 Local: 30.1.1.1/500  Sending DELETE INFO message for IPsec SA [SPI: 0x28DC063C]
+        p1 = re.compile(r'^\*(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s+'
+                       r'SA\s+ID:(?P<sa_id>\d+)\s+'
+                       r'SESSION\s+ID:(?P<session_id>\d+)\s+'
+                       r'Remote:\s+(?P<remote>\S+)\s+'
+                       r'Local:\s+(?P<local>\S+)\s+'
+                       r'(?P<event_message>.*)$')
+
+        # Pattern to extract direction from event message (Initiator/Responder)
+        # "(I) Sending IKEv2 INFORMATIONAL Exchange REQUEST" or "(R) Received IKEv2 IKE_SA_INIT Exchange REQUEST"
+        p2 = re.compile(r'^\((?P<direction>[IR])\)')
+
+        # Pattern to extract SPI from event message (but not ISPI/RSPI)
+        # "Sending DELETE INFO message for IPsec SA [SPI: 0x28DC063C]"
+        p3 = re.compile(r'.*(?<!I)SPI:\s+(?P<spi>0x[0-9A-F]+)(?!\s+RSPI)')
+
+        # Pattern to extract ISPI and RSPI from event message
+        # "Sending DELETE INFO message for IKEv2 SA [ISPI: 0x52C79670608A3068 RSPI: 0x0063AAED5563FDAE]"
+        p4 = re.compile(r'.*ISPI:\s+(?P<ispi>0x[0-9A-F]+)\s+RSPI:\s+(?P<rspi>0x[0-9A-F]+)')
+
+        # Pattern to extract IKE ID pair
+        # "Session with IKE ID PAIR(30.1.1.2 , 30.1.1.1) is UP"
+        p5 = re.compile(r'.*IKE\s+ID\s+PAIR\((?P<ike_id_pair>[^)]+)\)')
+
+        # Pattern to extract exchange type
+        # "(I) Sending IKEv2 INFORMATIONAL Exchange REQUEST" or "(R) Received IKEv2 IKE_AUTH Exchange RESPONSE"
+        p6 = re.compile(r'.*IKEv2\s+(?P<exchange_type>\w+)\s+Exchange')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # *Apr 4 00:16:59.484: SA ID:2 SESSION ID:1 Remote: 30.1.1.2/500 Local: 30.1.1.1/500  Sending DELETE INFO message for IPsec SA [SPI: 0x28DC063C]
+            m = p1.match(line)
+            if m:
+                event_dict = parsed_dict.setdefault('event_trace', {}).setdefault('events', {}).setdefault(event_idx, {})
+
+                event_dict['timestamp'] = m.group('timestamp')
+                event_dict['sa_id'] = int(m.group('sa_id'))
+                event_dict['session_id'] = int(m.group('session_id'))
+                event_dict['remote'] = m.group('remote')
+                event_dict['local'] = m.group('local')
+                event_dict['event_message'] = m.group('event_message').strip()
+
+                # Extract optional fields from event message
+                event_message = event_dict['event_message']
+
+                # Extract direction (I or R)
+                m_dir = p2.match(event_message)
+                if m_dir:
+                    event_dict['direction'] = m_dir.group('direction')
+
+                # Extract ISPI and RSPI first (more specific pattern)
+                m_ispi_rspi = p4.match(event_message)
+                if m_ispi_rspi:
+                    event_dict['ispi'] = m_ispi_rspi.group('ispi')
+                    event_dict['rspi'] = m_ispi_rspi.group('rspi')
+                else:
+                    # Only check for single SPI if no ISPI/RSPI found
+                    m_spi = p3.match(event_message)
+                    if m_spi:
+                        event_dict['spi'] = m_spi.group('spi')
+
+                # Extract IKE ID pair
+                m_ike_id = p5.match(event_message)
+                if m_ike_id:
+                    event_dict['ike_id_pair'] = m_ike_id.group('ike_id_pair')
+
+                # Extract exchange type
+                m_exchange = p6.match(event_message)
+                if m_exchange:
+                    event_dict['exchange_type'] = m_exchange.group('exchange_type')
+
+                event_idx += 1
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto all detail'
+# =================================================
+class ShowMonitorEventTraceCryptoAllDetailSchema(MetaParser):
+    """Schema for `show monitor event-trace crypto all detail`"""
+    schema = {
+        'event_trace': {
+            Optional('pki_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+                'interrupt_context_allocation_count': int,
+            },
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto all detail'
+# =================================================
+class ShowMonitorEventTraceCryptoAllDetail(ShowMonitorEventTraceCryptoAllDetailSchema):
+    """Parser for `show monitor event-trace crypto all detail`"""
+
+    cli_command = 'show monitor event-trace crypto all detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        current_section = None
+        current_events = []
+
+        # pki_event:
+        p1 = re.compile(r'^(?P<section>\w+):\s*$')
+
+        # *Apr  3 23:53:30.374: EST client initialized.
+        p2 = re.compile(r'^\*(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<message>.*)$')
+
+        # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+        p3 = re.compile(r'^-Traceback=\s*(?P<traceback>.*)$')
+
+        # Tracing currently disabled, from exec command
+        p4 = re.compile(r'^Tracing currently disabled, from exec command\s*$')
+
+        # interrupt context allocation count = 0
+        p5 = re.compile(r'^interrupt context allocation count = (?P<count>\d+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # pki_event:
+            m1 = p1.match(line)
+            if m1:
+                current_section = m1.group('section')
+                if current_section not in parsed_dict:
+                    section_dict = parsed_dict.setdefault('event_trace', {}).setdefault(current_section, {})
+                else:
+                    continue
+
+            # *Apr  3 23:53:30.374: EST client initialized.
+            m2 = p2.match(line)
+            if m2:
+                event = {
+                    'timestamp': m2.group('timestamp'),
+                    'message': m2.group('message')
+                }                
+                if 'events' in section_dict:
+                    section_dict['events'].append(event)
+                else:
+                    section_dict.setdefault('events', [event])    
+                continue
+
+            # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+            m3 = p3.match(line)
+            if m3:
+                section_dict['events'][-1]['traceback'] = m3.group('traceback')
+                continue
+
+            # Tracing currently disabled, from exec command
+            m4 = p4.match(line)
+            if m4:
+                section_dict['status'] = 'Tracing currently disabled, from exec command'
+                continue
+
+           # interrupt context allocation count = 0
+            m5 = p5.match(line)
+            if m5:
+                section_dict['interrupt_context_allocation_count'] = int(m5.group('count'))
+                continue
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show monitor event-trace crypto from-boot'
+#  Schema for 'show monitor event-trace crypto from-boot {timer}'
+# =================================================
+class ShowMonitorEventTraceCryptoFromBootSchema(MetaParser):
+    """Schema for :
+        'show monitor event-trace crypto from-boot'
+        'show monitor event-trace crypto from-boot {timer}'"""
+    schema = {
+        'event_trace': {
+            Optional('pki_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('pki_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_internal_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ikev2_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_event'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_error'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+            },
+            Optional('ipsec_exception'): {
+                Optional('events'): ListOf({
+                    Optional('timestamp'): str,
+                    Optional('message'): str,
+                    Optional('traceback'): str,
+                }),
+                Optional('status'): str,
+                Optional('interrupt_context_allocation_count'): int,
+            },
+        }
+    }
+
+# =================================================
+#  Parser for 'show monitor event-trace crypto from-boot'
+#  Parser for 'show monitor event-trace crypto from-boot {timer}'
+# =================================================
+class ShowMonitorEventTraceCryptoFromBoot(ShowMonitorEventTraceCryptoFromBootSchema):
+    """Parser for :
+        'show monitor event-trace crypto from-boot'
+        'show monitor event-trace crypto from-boot {timer}'"""
+
+    cli_command = ['show monitor event-trace crypto from-boot',
+                   'show monitor event-trace crypto from-boot {timer}']
+
+    def cli(self, timer='', output=None):
+        if output is None:
+            if timer:
+                cmd = self.cli_command[1].format(timer=timer)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        parsed_dict = {}
+        current_section = None
+        current_events = []
+
+        # pki_event:
+        p1 = re.compile(r'^(?P<section>\w+):\s*$')
+
+        # Aug 11 09:10:26.036: SA ID:1 SESSION ID:1 Remote: 40.181.251.101/500 Local: 40.185.80.1/500  (I) Sending IKEv2 IKE_SA_INIT Exchange REQUEST
+        p2 = re.compile(r'^(?P<timestamp>\w{3}\s+\d+\s+\d{2}:\d{2}:\d{2}\.\d{3}):\s*(?P<message>.*)$')
+
+        # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+        p3 = re.compile(r'^-Traceback=\s*(?P<traceback>.*)$')
+
+        # Tracing currently disabled, from exec command
+        p4 = re.compile(r'^Tracing currently disabled, from exec command\s*$')
+
+        # interrupt context allocation count = 0
+        p5 = re.compile(r'^interrupt context allocation count = (?P<count>\d+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # pki_event:
+            m1 = p1.match(line)
+            if m1:
+                current_section = m1.group('section')
+                if current_section not in parsed_dict:
+                    section_dict = parsed_dict.setdefault('event_trace', {}).setdefault(current_section, {})
+                else:
+                    continue
+
+            # Aug 11 09:10:26.036: SA ID:1 SESSION ID:1 Remote: 40.181.251.101/500 Local: 40.185.80.1/500  (I) Sending IKEv2 IKE_SA_INIT Exchange REQUEST
+            m2 = p2.match(line)
+            if m2:
+                event = {
+                    'timestamp': m2.group('timestamp'),
+                    'message': m2.group('message')
+                }                
+                if 'events' in section_dict:
+                    section_dict['events'].append(event)
+                else:
+                    section_dict.setdefault('events', [event])    
+                continue
+
+            # -Traceback= 1#3c677f5693d4a1da4989c9342fd445a2 :AAAACD000000+B371FD8  :AAAACD000000+6CA9C90  :AAAACD000000+6CAFFD4  :AAAACD000000+802A094  :AAAACD000000+8029AEC  :AAAACD000000+7F8E788  :AAAACD000000+896EBD8
+            m3 = p3.match(line)
+            if m3:
+                section_dict['events'][-1]['traceback'] = m3.group('traceback')
+                continue
+
+            # Tracing currently disabled, from exec command
+            m4 = p4.match(line)
+            if m4:
+                section_dict['status'] = 'Tracing currently disabled, from exec command'
+                continue
+
+            # interrupt context allocation count = 0
+            m5 = p5.match(line)
+            if m5:
+                section_dict['interrupt_context_allocation_count'] = int(m5.group('count'))
+                continue
+
+        return parsed_dict

@@ -1,0 +1,14 @@
+show flow monitor m2in1 cache format table
+  Cache type:                               Normal (Platform cache)
+  Cache size:                                10000
+  Current entries:                             150
+
+  Flows added:                                 150
+  Flows aged:                                    0
+
+DATALINK MAC SRC ADDR INPUT  DATALINK MAC DST ADDR INPUT            bytes long  time abs first  time abs last     bytes layer2 long
+===========================  ===========================  ====================  ==============  =============  ====================
+0000.0000.002E               0000.0001.0101                              19596    05:36:26.968   05:37:30.968                 27264
+0000.0000.005B               0000.0001.0101                              19596    05:36:26.968   05:37:30.968                 27264
+0000.0000.000F               0000.0001.0101                              19596    05:36:26.968   05:37:30.968                 27264
+0000.0000.007A               0000.0001.0101                              19596    05:36:26.968   05:37:30.968                 27264

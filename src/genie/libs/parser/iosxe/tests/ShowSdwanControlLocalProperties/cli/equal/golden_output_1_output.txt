@@ -1,0 +1,55 @@
+sh sdwan control local-properties
+personality                       vedge
+sp-organization-name              scalefeatsdwan
+organization-name                 scalefeatsdwan
+root-ca-chain-status              Installed
+root-ca-crl-status                Not-Installed
+
+certificate-status                Installed
+certificate-validity              Valid
+certificate-not-valid-before      Jul 13 14:33:15 2020 GMT
+certificate-not-valid-after       Aug  9 20:58:26 2099 GMT
+
+enterprise-cert-status            Not Applicable
+enterprise-cert-validity          Not Applicable
+enterprise-cert-not-valid-before  Not Applicable
+enterprise-cert-not-valid-after   Not Applicable
+
+dns-name                          vbond
+site-id                           21
+domain-id                         1
+protocol                          dtls
+tls-port                          0
+system-ip                         20.2.1.1
+chassis-num/unique-id             ISR1100-6G-FGL2429L11N
+serial-num                        0256D35F
+subject-serial-num                FGL2429L11N
+enterprise-serial-num             No certificate installed
+token                             -NA-
+keygen-interval                   0:00:05:00
+retry-interval                    0:00:00:16
+no-activity-exp-interval          0:00:00:20
+dns-cache-ttl                     0:00:00:00
+time-since-last-port-hop          2:03:59:46
+embargo-check                     success
+device-role                       edge-router
+region-id-set                     N/A
+mrf-migration-mode                disabled
+mrf-management-region             no
+number-vbond-peers                0
+number-active-wan-interfaces      2
+
+
+ NAT TYPE: E -- indicates End-point independent mapping
+           A -- indicates Address-port dependent mapping
+           N -- indicates Not learned
+           Note: Requires minimum two vbonds to learn the NAT type
+
+                         PUBLIC          PUBLIC PRIVATE         PRIVATE                                 PRIVATE                        WAN   MAX   RESTRICT/           LAST         SPI TIME    NAT  VM          BIND
+INTERFACE                IPv4            PORT   IPv4            IPv6                                    PORT    VS/VM COLOR            STATE CNTRL CONTROL/     LR/LB  CONNECTION   REMAINING   TYPE CON REG     INTERFACE
+                                                                                                                                                   STUN                                              PRF IDs
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+GigabitEthernet0/0/4          10.4.1.1        12386  10.4.1.1        ::                                      12386    4/1  mpls             up     4      no/yes/no   No/No  0:04:32:58   0:00:02:05  E    5  Default N/A                           
+GigabitEthernet0/0/5          10.5.1.1        12426  10.5.1.1        ::                                      12426    4/0  lte              up     4      no/yes/no   No/No  0:04:32:54   0:00:02:23  E    5  Default N/A         
+
+

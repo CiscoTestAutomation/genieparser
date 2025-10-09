@@ -17,6 +17,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
 
+
 class ShowRouteMapAllSchema(MetaParser):
     """
     Schema for 
@@ -71,7 +72,25 @@ class ShowRouteMapAllSchema(MetaParser):
                         Optional('set_ospf_metric_type'): str,
                         Optional('set_metric_type'): str,
                         'route_disposition': str,
-                        Optional('set_tag'): str
+                        Optional('set_tag'): str,
+                        Optional('verify_availability'): bool,
+                        Optional('set_verify_availability_next_hops'): {
+                            Any(): {
+                                Optional('next_hop'): str,
+                                Optional('ip_version'): str,
+                                Optional('vrf'): str,
+                                Optional('track'): int,
+                                Optional('seq_no'): int,
+                                Optional('track_state'): str,
+                            }
+                        },
+                        Optional('recursive'): bool,
+                        Optional('set_recursive_next_hop'): {
+                            Optional('next_hop'): str,
+                            Optional('ip_version'): str,
+                            Optional('vrf'): str,
+                            Optional('force'): bool,
+                        }
                     },
                     Optional('policy_routing_matches'): {
                         'packets': int,
@@ -91,7 +110,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
     """
     cli_command = ['show route-map all',
                    'show route-map {name}']
-
     def cli(self, name="", output=None):
         if output is None:
             if name:
@@ -233,9 +251,31 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         # Policy routing matches: 0 packets, 0 bytes
         p26 = re.compile(r'^\s*Policy\s+routing\s+matches:\s+(?P<packets>\d+)\spackets,\s+(?P<bytes>\d+)\s+bytes')
 
+        #ip next-hop verify-availability 12.0.0.20 10 track 150  [down]
+        #ipv6 next-hop verify-availability 2001:DB8:1::1 10 track 150  [down]
+        p27_1 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *next-hop verify-availability *(?P<set_verify_availability_next_hops>[a-zA-Z0-9\:\.]+) *(?P<seq_no>[0-9\.]+) *track *(?P<track>[0-9\.]+) *\[ *(?P<state>\w+)\]$')
+        #ip vrf red next-hop verify-availability 12.0.0.10 10 track 150  [down]
+        #ipv6 vrf red next-hop verify-availability 2001:DB8:1::1 10 track 150  [down]
+        p27_2 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *vrf *(?P<vrf>[a-zA-Z0-9\:\.\-\_]+) *next-hop verify-availability *(?P<set_verify_availability_next_hops>[a-zA-Z0-9\:\.]+) *(?P<seq_no>[0-9\.]+) *track *(?P<track>[0-9\.]+) *\[ *(?P<state>\w+)\]$')
+
+        
+        #ip next-hop recursive vrf red 2.2.2.2 force
+        #ipv6 next-hop recursive vrf red 2001:DB8:1::1 force
+        p28_1 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *next-hop recursive *vrf *(?P<vrf>[a-zA-Z0-9\:\.\-\_]+) *(?P<set_recursive_next_hop>[a-zA-Z0-9\:\.]+) *force$')
+        #ip next-hop recursive vrf red 2.2.2.2
+        #ipv6 next-hop recursive vrf red 2001:DB8:1::1
+        p28_2 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *next-hop recursive *vrf *(?P<vrf>[a-zA-Z0-9\:\.\-\_]+) *(?P<set_recursive_next_hop>[a-zA-Z0-9\:\.]+)$')
+        #ipv6 next-hop recursive 2001:DB8:1::1 force
+        #ip next-hop recursive 2.2.2.2 force
+        p28_3 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *next-hop recursive *(?P<set_recursive_next_hop>[a-zA-Z0-9\:\.]+) *force$')
+        #ipv6 next-hop recursive 2001:DB8:1::1
+        #ip next-hop recursive 2.2.2.2
+        p28_4 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *next-hop recursive *(?P<set_recursive_next_hop>[a-zA-Z0-9\:\.]+)$')
+
+
         for line in output.splitlines():
             line = line.rstrip()
-
+            
             # route-map test, permit, sequence 10
             m = p1.match(line)
             if m:
@@ -396,18 +436,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop'] = m.groupdict()['set_next_hop'].split()
                 continue 
-
-            # ipv6 next-hop 2001:db8:1::1
-            # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
-            m = p13.match(line)
-            if m:
-                if clause_type == 'Match':
-                    route_map_dict[name]['statements'][statements]['conditions']\
-                    ['match_nexthop_in_v6'] = m.groupdict()['set_next_hop_v6'].split()
-                else:
-                    route_map_dict[name]['statements'][statements]['actions']\
-                    ['set_next_hop_v6'] = m.groupdict()['set_next_hop_v6'].split()
-                continue
 
             #tag 30
             m = p14.match(line)
@@ -578,8 +606,93 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                     route_map_dict[name]['statements'][statements].setdefault('policy_routing_matches', {}).setdefault(k, int(v))
                     continue
 
-        return route_map_dict
+            #ipv6 next-hop verify-availability 2001:DB8:1::1 10 track 150  [down]
+            #ip next-hop verify-availability 1.2.3.4 10 track 150  [down]
+            m = p27_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']['verify_availability'] = True
+                ip_version = str(m.groupdict()['ip_version'])
+                set_verify_availability_next_hops = m.groupdict()['set_verify_availability_next_hops']
+                seq_no, track, state = m.groupdict()['seq_no'], m.groupdict()['track'], m.groupdict()['state']
+                if 'set_verify_availability_next_hops' not in route_map_dict[name]['statements'][statements]['actions']:
+                    route_map_dict[name]['statements'][statements]['actions']['set_verify_availability_next_hops'] = {}
+                route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_verify_availability_next_hops'][seq_no] = {'next_hop': set_verify_availability_next_hops, 'ip_version': ip_version, 'vrf': 'default', 'track': int(track), 'seq_no': int(seq_no), 'track_state': state}
+                continue
 
+            #ipv6 vrf red next-hop verify-availability 2001:DB8:1::1 10 track 150  [down]
+            #ip vrf red next-hop verify-availability 1.2.3.4 10 track 150  [down]
+            m = p27_2.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']['verify_availability'] = True
+                ip_version, vrf = str(m.groupdict()['ip_version']), str(m.groupdict()['vrf'])
+                set_verify_availability_next_hops = m.groupdict()['set_verify_availability_next_hops']
+                seq_no, track, state = m.groupdict()['seq_no'], m.groupdict()['track'], m.groupdict()['state']
+                if 'set_verify_availability_next_hops' not in route_map_dict[name]['statements'][statements]['actions']:
+                    route_map_dict[name]['statements'][statements]['actions']['set_verify_availability_next_hops'] = {}
+                route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_verify_availability_next_hops'][seq_no] = {'next_hop': set_verify_availability_next_hops, 'ip_version': ip_version, 'vrf': vrf, 'track': int(track), 'seq_no': int(seq_no), 'track_state': state}
+                continue
+
+            #ipv6 next-hop recursive vrf red 2001:DB8:1::1 force
+            #ip next-hop recursive vrf red 1.2.3.4 force
+            m = p28_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']['recursive'] = True
+                ip_version = str(m.groupdict()['ip_version'])
+                vrf = str(m.groupdict()['vrf'])
+                set_recursive_next_hop = m.groupdict()['set_recursive_next_hop']
+                route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_recursive_next_hop'] = {'next_hop': set_recursive_next_hop, 'ip_version': ip_version, 'vrf': vrf, 'force': True}
+                continue
+
+            #ipv6 next-hop recursive vrf red 2001:DB8:1::1
+            #ip next-hop recursive vrf red 1.2.3.4
+            m = p28_2.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']['recursive'] = True
+                ip_version = str(m.groupdict()['ip_version'])
+                vrf = str(m.groupdict()['vrf'])
+                set_recursive_next_hop = m.groupdict()['set_recursive_next_hop']
+                route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_recursive_next_hop'] = {'next_hop': set_recursive_next_hop, 'ip_version': ip_version, 'vrf': vrf, 'force': False}
+                continue
+
+            #ipv6 next-hop recursive 2001:DB8:1::1 force
+            #ip next-hop recursive 1.2.3.4 force
+            m = p28_3.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']['recursive'] = True
+                ip_version = str(m.groupdict()['ip_version'])
+                set_recursive_next_hop = m.groupdict()['set_recursive_next_hop']
+                route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_recursive_next_hop'] = {'next_hop': set_recursive_next_hop, 'ip_version': ip_version, 'vrf': 'default', 'force': True}
+                continue
+
+            #ipv6 next-hop recursive 2001:DB8:1::1
+            #ip next-hop recursive 1.2.3.4           
+            m = p28_4.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']['recursive'] = True
+                ip_version = str(m.groupdict()['ip_version'])
+                set_recursive_next_hop = m.groupdict()['set_recursive_next_hop']
+                route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_recursive_next_hop'] = {'next_hop': set_recursive_next_hop, 'ip_version': ip_version, 'vrf': 'default', 'force': False}
+                continue
+
+            # ipv6 next-hop 2001:db8:1::1
+            # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
+            m = p13.match(line)
+            if m:
+                if clause_type == 'Match':
+                    route_map_dict[name]['statements'][statements]['conditions']\
+                    ['match_nexthop_in_v6'] = m.groupdict()['set_next_hop_v6'].split()
+                else:
+                    route_map_dict[name]['statements'][statements]['actions']\
+                    ['set_next_hop_v6'] = m.groupdict()['set_next_hop_v6'].split()
+                continue
+
+        return route_map_dict
 # ==========================================================================================
 # Parser Schema for 'show table-map {map}'
 # ==========================================================================================

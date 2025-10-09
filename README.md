@@ -3,10 +3,10 @@
 # Genie Parser
 
 Genie is both a library framework and a test harness that facilitates rapid
-development, encourages re-usability, and simplifies writing test automation. Genie
-bundled with the modular architecture of pyATS framework accelerates and
+development, encourages re-usability, and simplifies writing test automation.
+Genie bundled with the modular architecture of pyATS framework accelerates and
 simplifies test automation leveraging all the perks of the Python programming
-language in an object-orienting fashion.
+language in an object-oriented fashion.
 
 pyATS is an end-to-end testing ecosystem, specializing in data-driven and
 reusable testing, and engineered to be suitable for Agile, rapid development
@@ -20,11 +20,11 @@ general public starting early 2018 through [Cisco DevNet].
 [Cisco DevNet]: https://developer.cisco.com/
 
 This is a sub-component of Genie that parses the device output into structured
-datastructure.
+data.
 
 # Installation
 
-The package is automatically installed when pyATS gets installed
+The Genie package is automatically installed when pyATS gets installed.
 
 ```
 $ pip install 'pyats[full]'
@@ -62,10 +62,11 @@ Change logs can be found [here](changelog/CHANGELOG.md).
 
 [Guide] 
 
-[Guide]: https://pubhub.devnetcloud.com/media/pyats-development-guide/docs/writeparser/writeparser.html#
+[Guide]: https://pubhub.devnetcloud.com/media/pyats-development-guide/docs/writeparser/writeparser.html
 
 
-YouTube Video: <How to write a Genie parser for Cisco!> https://youtube.com/watch?v=ibLNilSfdTc (Thank you! @Jmahaja1)
+YouTube Video: <How to write a Genie parser for Cisco!> https://youtube.com/watch?v=ibLNilSfdTc
+(Thank you! @Jmahaja1)
 
 
 Once you create a new parser, don't forget to check 1, 2, and 3;
@@ -75,7 +76,7 @@ if you only update the parser class without modifying/creating the schema, pleas
 - [ ] 3. make sure GitHub Actions checks passed.
 
 # How to write a 'changelog' for your contribution:
-1. Become familiarized with the examples at [changelog/undistributed/template.rst](https://github.com/CiscoTestAutomation/genieparser/blob/master/changelog/undistributed/template.rst). Changelogs must be written in the same style as the examples found there:
+1. Become familiar with the examples at [changelog/undistributed/template.rst](https://github.com/CiscoTestAutomation/genieparser/blob/master/changelog/undistributed/template.rst). Changelogs must be written in the same style as the examples found there:
 ```
 --------------------------------------------------------------------------------
                             Fix

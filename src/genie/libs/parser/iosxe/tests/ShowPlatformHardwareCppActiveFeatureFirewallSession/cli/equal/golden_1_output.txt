@@ -1,0 +1,4 @@
+Session ID   Source IP     Destination IP   Source Port   Dest Port   Protocol   Status       Creation Time   Timeout
+1            192.168.1.10  10.0.0.1         12345         80          TCP        Established  00:01:30        00:04:30
+2            192.168.1.11  10.0.0.2         12346         443         TCP        Established  00:01:15        00:04:15
+3            192.168.1.12  10.0.0.3         12347         22          TCP        Established  00:00:50        00:04:50

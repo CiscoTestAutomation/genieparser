@@ -1,0 +1,22 @@
+Uplink Autoconfig: Enable
+Uplink Allow-list enforce: IPv4:No  IPv6:No
+
+IPV4 Uplink: GigabitEthernet1/0/1
+        Ping Pass Count: 14
+        GW ARP Pass Count:1
+IPV4 Preferred Uplink: Vlan 1
+        Ping Pass Count: 0
+        GW ARP Pass Count:0
+IPV6 Uplink: Vlan 120
+        Ping Pass Count: 14
+        GW ARP Pass Count:3
+IPv6 Preferred Uplink: Vlan 1
+        Ping Pass Count: 0
+        GW ARP Pass Count:0
+IfName      Score  State  IPAddress            Subnet/Prefix  ARPFail  PingFail    GWProbe       Ping ReScore Allowed
+Vlan120         4      9  100.120.3.19         255.255.0.0          0         0     3D6B3C     2F1510       0      1
+Vlan130         4      9  100.130.3.91         255.255.0.0          0         0          0          0       0      1
+Gi1/0/1         4     11  74.74.74.123         255.255.255.0        0         0     3D6930     497094       0      1
+IfName      Score  State  IPv6Address                 Prefix  ARPFail  PingFail    GWProbe       Ping ReScore Allowed
+Vlan120         4      8  2001:120::1234:5CFF:FE78:9AB0    64        0         0     3D6D34     497098       0      1
+Vlan130         4      9  2001:130::1234:5CFF:FE78:9AB1    64        0         0          0          0       0      1

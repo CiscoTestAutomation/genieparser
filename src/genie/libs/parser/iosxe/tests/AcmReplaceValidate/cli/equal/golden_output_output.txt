@@ -1,0 +1,4 @@
+Config Validation to Target: flash:day1
+    Validation Stage
+	Status : Success
+	Time   : 258 msec

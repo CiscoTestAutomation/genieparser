@@ -1,0 +1,6 @@
+Global Auto Smart Port Status
+ Auto Smart Ports Enabled
+ Fallback : CDP  Disabled
+Interface     Auto Smart Port   Fallback    Macro Description(s)
+--------------------------------------------------------------
+GigabitEthernet3/0/18      TRUE              None        CISCO_WIRELESS_LIGHTWEIGHT

@@ -1,0 +1,8 @@
+{
+    "name": "m2i",
+    "protocol": "mac",
+    "value": 15,
+    "direction": "input",
+    "destination": "source",
+    "order": "highest"
+}

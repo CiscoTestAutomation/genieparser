@@ -102,7 +102,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
             #  10.16.2.2/32, configured nh: 10.229.3.2/32
             # 192.168.205.1/32, configured nh: 0.0.0.0/32 tunnel-te12
             p2 = re.compile(r'^\s*(?P<route>[\d\/\.]+),'
-                             ' +configured +nh: +(?P<nexthop>[\d\/\.]+)?( +(?P<interface>[a-zA-Z][\w\-\/\.]+))?$')
+                             r' +configured +nh: +(?P<nexthop>[\d\/\.]+)?( +(?P<interface>[a-zA-Z][\w\-\/\.]+))?$')
             m = p2.match(line)
             if m:
                 next_hop = ""
@@ -411,7 +411,7 @@ class ShowIpv6StaticRoute(ShowIpv6StaticRouteSchema):
 
             # real-next-hop: 2001:10:2:3::2, interface: Ethernet1/4
             p4 = re.compile(r'^\s*real-next-hop: +(?P<real_next_hop>[\d\:]+)'
-                            '(, +interface: +(?P<interface2>[\w\/\.]+))?$')
+                            r'(, +interface: +(?P<interface2>[\w\/\.]+))?$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['interface2']:

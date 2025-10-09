@@ -14,7 +14,6 @@ class TestExtendParser(unittest.TestCase):
         ext = ExtendParsers('genie.libs.parser.utils.tests.dummy_parser')
         ext.extend()
         ext.output.pop('extend_info')
-
         self.assertEqual(ext.output,
             {
                 'show clock': {
@@ -65,10 +64,7 @@ class TestExtendParser(unittest.TestCase):
                             'folders': {
                                 'c9300': {
                                     'class': 'ShowInventory',
-                                    'doc': '\n'
-                                        '    Parser for :\n'
-                                        '        * show inventory\n'
-                                        '    ',
+                                    'doc': 'Parser for show inventory',
                                     'module_name': 'iosxe.c9300.show_platform',
                                     'package': 'genie.libs.parser.utils.tests.dummy_parser',
                                     'schema': '{\n'
@@ -106,6 +102,7 @@ class TestExtendParser(unittest.TestCase):
                     'model',
                     'submodel',
                     'pid',
+                    'chassis_type',
                     'version',
                     'os_flavor',
                     'revision'

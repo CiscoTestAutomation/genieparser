@@ -1,0 +1,9 @@
+Config Rollback to Target : flash:day1
+    Validation Stage
+	Status : Success
+	Time   : 712 msec
+    Apply Stage
+	Status : Success
+	Time   : 923 msec
+    Config Net-Diff: flash:acm/acm_cfg_ROLLBACK_diff_ar_39628858506.cfg
+    Config Rollback Status: Success

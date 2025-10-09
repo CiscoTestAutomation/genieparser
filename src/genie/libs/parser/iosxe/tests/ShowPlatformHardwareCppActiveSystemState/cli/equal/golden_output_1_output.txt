@@ -1,0 +1,16 @@
+CPP HA client processes registered (5 of 5)
+  cpp_ha : Initialized
+  cpp_cp : Initialized
+  cpp_sp : Initialized
+  FMAN-FP : Initialized
+  cpp_driver0 : Initialized
+Platform State: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+HA State: CPP=0 dir=BOTH Role: curr=ACTIVE_SOLO next=ACTIVE_SOLO
+Client State: ENABLE
+Image: /tmp/sw/fp/0/0/fp/mount/usr/cpp/bin/qfp-ucode-fugazi
+Load Cnt: 1 Time: Sep 04, 2025 01:36:17
+Active Threads: 0-15
+Fault Manager Flags:
+    ignore_fault:          FALSE
+    ignore_stuck_thread:   FALSE
+    crashdump_in_progress: FALSE

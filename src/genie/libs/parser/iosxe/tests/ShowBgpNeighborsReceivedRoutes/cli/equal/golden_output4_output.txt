@@ -1,0 +1,16 @@
+show ip bgp vpnv4 all neighbors 10.82.15.252 received-routes
+BGP table version is 18, local router ID is 100.127.142.250
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+x best-external, a additional-path, c RIB-compressed,
+t secondary path, L long-lived-stale,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+Network          Next Hop            Metric LocPrf Weight Path
+Route Distinguisher: 65357:201 (default for vrf WAN_VRF)
+
+      0.0.0.0 10.82.15.252 0 0 65500 65340 i
+      10.1.1.0/24 10.82.15.252 0 0 65500 65340 ?
+      10.1.2.0/24 10.82.15.252 0 0 65500 65340 ?
+Total number of prefixes 3

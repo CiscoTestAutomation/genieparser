@@ -1,0 +1,25 @@
+show policy-map type inspect zone-pair sessions
+Zone-pair: in-out
+  Service-policy inspect : in-out
+
+    Class-map: FOO (match-any)
+      Match: protocol icmp
+      Match: protocol udp
+      Match: protocol tcp
+      Inspect
+
+        Half-open Sessions
+         Session ID 0x00000603 (1.1.1.1:5633)=>(2.2.2.1:12609) udp SIS_OPENING
+          Created 00:01:48, Last heard 00:01:48
+          Bytes sent (initiator:responder) [0:0]
+         Session ID 0x00000608 (1.1.1.1:5638)=>(2.2.2.1:12614) udp SIS_OPENING
+          Created 00:01:47, Last heard 00:01:47
+          Bytes sent (initiator:responder) [0:0]
+         Session ID 0x00000609 (1.1.1.1:8)=>(3.3.3.10:0) icmp SIS_OPENING
+          Created 00:01:11, Last heard 00:00:15
+          Bytes sent (initiator:responder) [0:0]
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop (default action)
+        0 packets, 0 bytes

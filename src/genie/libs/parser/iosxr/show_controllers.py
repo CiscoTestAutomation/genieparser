@@ -5,6 +5,15 @@ IOSXR parsers for the following show commands:
     * show controller fia diagshell {diagshell_unit} 'l2 show' location {location}
     * show controllers coherentDSP {port}
     * show controllers optics {port}
+    * show controllers optics *
+    * show controllers optics {port} fec-thresholds
+    * show controllers optics * fec-thresholds
+    * show controllers optics {port} breakout-details
+    * show controllers optics {port} dwdm-carrier-map
+    * show controllers optics * dwdm-carrier-map
+    * show controllers optics {port} db
+    * show controllers optics * db
+    * show controllers optics {port} appsel active
     * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
 '''
 
@@ -76,10 +85,10 @@ class ShowControllersFiaDiagshellL2showLocation(ShowControllersFiaDiagshellL2sho
         # mac=fc:00:00:ff:01:9c vlan=2544 GPORT=0x8000048 Trunk=0 encap_id=0x2007
         # mac=fc:00:00:ff:01:0c vlan=2524 GPORT=0xc000000 Trunk=0 Static encap_id=0x3001'
         p2 = re.compile(r'^mac\=(?P<mac>[A-Fa-f0-9:]+) +vlan=(?P<vlan>\d+)'
-                         ' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
-                         '(?: +Trunk\=(?P<trunk>\d+))?'
-                         '(?: +(?P<b_static>(Static)))?'
-                         ' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
+                         r' +GPORT\=(?P<gport>\d+|0x[A-Fa-f0-9]+)'
+                         r'(?: +Trunk\=(?P<trunk>\d+))?'
+                         r'(?: +(?P<b_static>(Static)))?'
+                         r' +encap_id\=(?P<encap_id>\d+|0x[A-Fa-f0-9\']+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -386,6 +395,7 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
 class ShowControllersOpticsSchema(MetaParser):
     '''Schema for:
         * show controllers optics {port}
+        * show controllers optics *
     '''
 
     schema = {
@@ -394,11 +404,18 @@ class ShowControllersOpticsSchema(MetaParser):
             'controller_state': str,
             'transport_admin_state': str,
             'laser_state': str,
+            Optional('host_squelch_status'): str,
+            Optional('media_linkdown_pre_fec_degrade'): str,
             Optional('led_state'): str,
             Optional('fec_state'): str,
+            Optional('power_mode'): str,
+            Optional('dom_data_status'): str,
+            Optional('last_link_flapped'): str,
             'optics_status': {
                 'optics_type': str,
                 'wavelength': str,
+                Optional('loopback_host'): str,
+                Optional('loopback_media'): str,
                 Optional('dwdm_carrier_info'): str,
                 Optional('msa_itu_channel'): str,
                 Optional('frequency'): str,
@@ -467,11 +484,11 @@ class ShowControllersOpticsSchema(MetaParser):
                 Optional('serial_number'): str,
                 Optional('pid'): str,
                 Optional('vid'): str,
+                Optional('hardware_version'): str,
                 Optional('date_code'): str,
             },
         },
     }
-
 
 # ===========================================
 # Parser for 'show controllers optics {port}'
@@ -479,22 +496,31 @@ class ShowControllersOpticsSchema(MetaParser):
 class ShowControllersOptics(ShowControllersOpticsSchema):
     '''Parser for:
         * show controllers optics {port}
+        * show controllers optics *
     '''
 
-    cli_command = 'show controllers optics {port}'
+    cli_command = ['show controllers optics {port}', 'show controllers optics *']
     exclude = ['laser_bias_current', 'actual_tx_power', 'rx_power', 'chromatic_dispersion']
 
-    def cli(self, port, output=None):
+    def cli(self, port=None, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command.format(port=port))
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
         else:
             out = output
 
         result_dict = {}
 
+        # Port:    Optics0/2/0/35
+        # Port:    Optics0/1/0/4/2
+        p52 = re.compile(r'^Port: +Optics(?P<port>[\d/].*)$')
+
         # Controller State:  Up
-        p1 = re.compile(r'^Controller +State: +(?P<controller_state>\w+)$')
+        # Controller State: Administratively Down
+        p1 = re.compile(r'^Controller +State: +(?P<controller_state>[\w\s]+)$')
 
         # Transport Admin State: In Service
         p2 = re.compile(r'^Transport +Admin +State: +(?P<transport_admin_state>[\w\s]+)$')
@@ -503,6 +529,12 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # Laser State: N/A 
         p3 = re.compile(r'^Laser +State: +(?P<laser_state>.+)$')
 
+        # Host Squelch Status: Enable
+        p44 = re.compile(r'^Host Squelch Status: +(?P<host_squelch_status>.\w+)$')
+
+        # Media linkdown preFEC degrade : Disabled
+        p45 = re.compile(r'^Media linkdown preFEC degrade : +(?P<media_linkdown_pre_fec_degrade>.\w+)$')
+
         # LED State: Green
         # LED State: Not Applicable
         p4 = re.compile(r'^LED +State: +(?P<led_state>.+)$')
@@ -510,18 +542,33 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # FEC State: FEC DISABLED 
         p4_1 = re.compile(r'^FEC +State: +(?P<fec_state>.+)$')
 
+        # Power Mode: Low
+        p46 = re.compile(r'^Power Mode: +(?P<power_mode>\w+)$')
+
+        # Dom Data Status: Not Applicable
+        p47 = re.compile(r'^Dom Data Status: +(?P<dom_data_status>[\w\s]+)$')
+
+        # Last link flapped: 06:27:15
+        p48 = re.compile(r'^Last link flapped: +(?P<last_link_flapped>\d{2}:\d{2}:\d{2})$')
+
         # Optics Type:  CFP2 DWDM
         p5 = re.compile(r'^Optics +Type: +(?P<optics_type>[\S\s]+)$')
 
         # DWDM carrier Info: C BAND, MSA ITU Channel=97, Frequency=191.30THz,
         # DWDM Carrier Info: Unavailable, MSA ITU Channel= Unavailable, Frequency= Unavailable , Wavelength= Unavailable
         p6 = re.compile(r'^DWDM +[Cc]arrier +Info: +(?P<dwdm_carrier_info>[\w\s]+), '
-                         '+MSA +ITU +Channel *= *(?P<msa_itu_channel>[\w]+), '
-                         '+Frequency *= *(?P<frequency>[\w\.]+) *,'
-                         '( +Wavelength *= *(?P<wavelength>[\S\s]+))?$')
+                         r'+MSA +ITU +Channel *= *(?P<msa_itu_channel>[\w]+), '
+                         r'+Frequency *= *(?P<frequency>[\w\.]+) *,'
+                         r'( +Wavelength *= *(?P<wavelength>[\S\s]+))?$')
 
         # Wavelength=1567.133nm
         p7 = re.compile(r'^Wavelength *= *(?P<wavelength>[\S\s]+)$')
+
+        # Loopback Host : None
+        p49 = re.compile(r'^Loopback Host +: +(?P<loopback_host>\w+)$')
+
+        # Loopback Media : None
+        p50 = re.compile(r'^Loopback Media +: +(?P<loopback_media>\w+)$')
 
         # Detected Alarms: None
         p8 = re.compile(r'^Detected +Alarms: +(?P<detected_alarms>\w+)$')
@@ -627,7 +674,8 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         p35 = re.compile(r'^Optics +type +: +(?P<optics_type>[\S\s]+)$')
 
         # Name                   : CISCO-AVAGO
-        p36 = re.compile(r'^Name +: +(?P<name>\S+)$')
+        # Name                   : Sicoya GmbH
+        p36 = re.compile(r'^Name +: +(?P<name>[\S\s]+)$')
 
         # OUI Number             : 00.17.6a
         p37 = re.compile(r'^OUI +Number +: +(?P<oui_number>\S+)$')
@@ -648,6 +696,9 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         # VID                    : V03
         p42 = re.compile(r'^VID +: +(?P<vid>\S+)$')
 
+        # Hardware Version 	: 0.0
+        p51 = re.compile(r'^Hardware Version +: +(?P<hardware_version>[\d\.]+)$')
+
         # Date Code(yy/mm/dd)    : 12/05/20
         p43 = re.compile(r'^Date +Code.*: +(?P<date_code>\S+)$')
 
@@ -656,7 +707,20 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
             if not line:
                 continue
 
+            # Port:    Optics0/2/0/35
+            # Port:    Optics0/1/0/4/2
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['port']
+
+                name = 'Optics {}'.format(port)
+                optics_dict = result_dict.setdefault(port, {})
+                optics_dict.update({'name': name})
+                continue
+
             # Controller State:  Up
+            # Controller State: Administratively Down
             m = p1.match(line)
             if m:
                 name = 'Optics {}'.format(port)
@@ -682,6 +746,20 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 optics_dict.update({k: v for k, v in group.items()})
                 continue
 
+            # Host Squelch Status: Enable
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Media linkdown preFEC degrade : Disabled
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict.update({k: v for k, v in group.items()})
+                continue
+
             # LED State: Green
             # LED State: Not Applicable 
             m = p4.match(line)
@@ -690,8 +768,29 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 optics_dict.update({k: v for k, v in group.items()})
                 continue
 
-            # FEC State: FEC DISABLED  
+            # FEC State: FEC DISABLED
             m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Power Mode: Low
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Dom Data Status: Not Applicable
+            m = p47.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Last link flapped: 06:27:15
+            m = p48.match(line)
             if m:
                 group = m.groupdict()
                 optics_dict.update({k: v for k, v in group.items()})
@@ -715,6 +814,20 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
 
             # Wavelength=1567.133nm
             m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                status_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Loopback Host : None
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                status_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # Loopback Media : None
+            m = p50.match(line)
             if m:
                 group = m.groupdict()
                 status_dict.update({k: v for k, v in group.items()})
@@ -961,6 +1074,7 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
             # Name                   : CISCO-AVAGO
+            # Name                   : Sicoya GmbH
             m = p36.match(line)
             if m:
                 group = m.groupdict()
@@ -1010,6 +1124,13 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 vendor_dict.update({k: v for k, v in group.items()})
                 continue
 
+            # Hardware Version     : 0.0
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                vendor_dict.update({k: v for k, v in group.items()})
+                continue
+
             # Date Code(yy/mm/dd)    : 12/05/20
             m = p43.match(line)
             if m:
@@ -1018,6 +1139,536 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
                 continue
 
         return result_dict
+
+
+# ===========================================
+# Schema for 'show controllers optics {port} fec-thresholds'
+# ===========================================
+class ShowControllersOpticsFecThresholdsSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} fec-thresholds
+        * show controllers optics * fec-thresholds
+    '''
+
+    schema = {
+        Any(): {
+            'media_fec_excess_degrade': {
+                'raise': str,
+                'clear': str,
+            },
+            'media_fec_detected_degrade': {
+                'raise': str,
+                'clear': str,
+            },
+            'host_fec_excess_degrade': {
+                'raise': str,
+                'clear': str,
+            },
+            'host_fec_detected_degrade': {
+                'raise': str,
+                'clear': str,
+            }
+        }
+    }
+
+
+# ===========================================
+# Parser for 'show controllers optics {port} fec-thresholds'
+# ===========================================
+class ShowControllersOpticsFecThresholds(ShowControllersOpticsFecThresholdsSchema):
+    '''Parser for:
+        * show controllers optics {port} fec-thresholds
+        * show controllers optics * fec-thresholds
+    '''
+
+    cli_command = ['show controllers optics {port} fec-thresholds',
+                   'show controllers optics * fec-thresholds']
+
+    def cli(self, port=None, output=None):
+
+        if output is None:
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # regex for scientific notation number
+        scientific_notation_regex = r'[\d.]+E[+-]\d+'
+        # regex for scientific notation number under 'raise' column
+        raise_regex = fr'?P<raise>{scientific_notation_regex}'
+        # regex for scientific notation number under 'clear' column
+        clear_regex = fr'?P<clear>{scientific_notation_regex}'
+
+        #  Media FEC excess degrade   :   2.0500E-02               2.0200E-02
+        #  Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+        p1 = re.compile(fr'^Media FEC excess degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        #  Media FEC detected degrade :   1.9500E-02               1.9000E-02
+        #  Media FEC detected degrade :   0.0000E+00               0.0000E+00
+        p2 = re.compile(fr'^Media FEC detected degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        #  Host FEC excess degrade    :   2.3900E-04               2.4000E-05
+        #  Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+        p3 = re.compile(fr'^Host FEC excess degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        #  Host FEC detected degrade  :   9.0000E-05               9.0000E-06
+        #  Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+        p4 = re.compile(fr'^Host FEC detected degrade\s+:\s+({raise_regex})\s+({clear_regex})$')
+
+        # Port:    Optics0/2/0/35
+        # Port:    Optics0/1/0/4/2
+        p5 = re.compile(r'^Port: +Optics(?P<port>[\d/].*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Port:    Optics0/2/0/35
+            # Port:    Optics0/1/0/4/2
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['port']
+
+                optics_dict = result_dict.setdefault(port, {})
+                continue
+
+            #  Media FEC excess degrade   :   2.0500E-02               2.0200E-02
+            m = p1.match(line)
+            if m:
+                optics_dict = result_dict.setdefault(port, {})
+                media_fec_excess_dict = optics_dict.setdefault('media_fec_excess_degrade', {})
+                media_fec_excess_dict.update({k:v for k,v in m.groupdict().items()})
+                continue
+
+            #  Media FEC detected degrade :   1.9500E-02               1.9000E-02
+            m = p2.match(line)
+            if m:
+                media_fec_detected_dict = optics_dict.setdefault('media_fec_detected_degrade', {})
+                media_fec_detected_dict.update({k:v for k,v in m.groupdict().items()})
+                continue
+
+            #  Host FEC excess degrade    :   2.3900E-04               2.4000E-05
+            m = p3.match(line)
+            if m:
+                host_fec_excess_dict = optics_dict.setdefault('host_fec_excess_degrade', {})
+                host_fec_excess_dict.update({k:v for k,v in m.groupdict().items()})
+                continue
+
+            #  Host FEC detected degrade  :   9.0000E-05               9.0000E-06
+            m = p4.match(line)
+            if m:
+                host_fec_detected_dict = optics_dict.setdefault('host_fec_detected_degrade', {})
+                host_fec_detected_dict.update({k:v for k,v in m.groupdict().items()})
+
+        return result_dict
+
+
+# ============================================================
+# Schema for 'show controllers optics {port} breakout-details'
+# ============================================================
+class ShowControllersOpticsBreakoutDetailsSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} breakout-details
+    '''
+
+    schema = {
+        'optics_port': str,
+        'num_breakouts': int,
+        'channels_per_intf': int,
+        'interface_speed': str
+    }
+
+
+# ============================================================
+# Parser for 'show controllers optics {port} breakout-details'
+# ============================================================
+class ShowControllersOpticsBreakoutDetails(ShowControllersOpticsBreakoutDetailsSchema):
+    '''Parser for:
+        * show controllers optics {port} breakout-details
+    '''
+
+    cli_command = 'show controllers optics {port} breakout-details'
+
+    def cli(self, port, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Optics Port                	: Optics0_0_0_16
+        p1 = re.compile(r'^Optics Port\s+: (?P<optics_port>Optics[\d_]+)$')
+
+        # No:of Breakouts            	: 4
+        p2 = re.compile(r'^No:of Breakouts\s+: (?P<num_breakouts>\d+)$')
+
+        # Physical Channels per intf 	: 1
+        p3 = re.compile(r'^Physical Channels per intf\s+: (?P<channels_per_intf>\d+)$')
+
+        # Interface Speed            	: 10G
+        p4 = re.compile(r'^Interface Speed\s+: (?P<interface_speed>[\d]+[A-Z]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Optics Port                	: Optics0_0_0_16
+            m = p1.match(line)
+            if m:
+                result_dict['optics_port'] = m.groupdict()['optics_port']
+                continue
+
+            # No:of Breakouts            	: 4
+            m = p2.match(line)
+            if m:
+                result_dict['num_breakouts'] = int(m.groupdict()['num_breakouts'])
+                continue
+
+            # Physical Channels per intf 	: 1
+            m = p3.match(line)
+            if m:
+                result_dict['channels_per_intf'] = int(m.groupdict()['channels_per_intf'])
+                continue
+
+            # Interface Speed            	: 10G
+            m = p4.match(line)
+            if m:
+                result_dict['interface_speed'] = m.groupdict()['interface_speed']
+
+        return result_dict
+
+
+# ============================================================
+# Schema for 'show controllers optics {port} dwdm-carrier-map'
+# ============================================================
+class ShowControllersOpticsDwdmCarrierMapSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} dwdm-carrier-map
+        * show controllers optics * dwdm-carrier-map
+    '''
+
+    schema = {
+        Any(): {
+            'dwdm_carrier_band': str,
+            'msa_itu_channel_range_supported': str,
+            'dwdm_carrier_map_table': {
+                'itu_ch_num': {
+                    Any() :{
+                        'g_694_1_ch_num': int,
+                        'frequency': float,
+                        'wavelength': float
+                    }
+                }
+            }
+        }
+    }
+
+
+# ============================================================
+# Parser for 'show controllers optics {port} dwdm-carrier-map'
+# ============================================================
+class ShowControllersOpticsDwdmCarrierMap(ShowControllersOpticsDwdmCarrierMapSchema):
+    '''Parser for:
+        * show controllers optics {port} dwdm-carrier-map
+        * show controllers optics * dwdm-carrier-map
+    '''
+
+    cli_command = ['show controllers optics {port} dwdm-carrier-map',
+                   'show controllers optics * dwdm-carrier-map']
+
+    def cli(self, port=None, output=None):
+
+        if output is None:
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port:    Optics0/2/0/35
+        # Port:    Optics0/1/0/4/2
+        p4 = re.compile(r'^Port: +Optics(?P<port>[\d/].*)$')
+
+        # DWDM Carrier Band:: OPTICS_C_BAND
+        p1 = re.compile(r'^DWDM Carrier Band:: (?P<dwdm_carrier_band>[\w_]+)$')
+
+        # MSA ITU channel range supported: 1~97
+        p2 = re.compile(r'^MSA ITU channel range supported: (?P<msa_itu_channel_range_supported>\d+~\d+)$')
+
+        # ----------------------------------------------------
+        # ITU Ch      G.694.1     Frequency     Wavelength
+        # Num        Ch Num        (THz)          (nm)
+        # ----------------------------------------------------
+        #     1        60           196.10      1528.773
+        # ----------------------------------------------------
+        #     2        59           196.05      1529.163
+        # ----------------------------------------------------
+        #     3        58           196.00      1529.553
+        # ----------------------------------------------------
+        #     74       -13           192.45      1557.768
+        # ----------------------------------------------------
+        p3 = re.compile(r'^(?P<itu_ch_num>\d+)\s+(?P<g_694_1_ch_num>-?\d+)\s+'
+                        r'(?P<frequency>[\d.]+)\s+(?P<wavelength>[\d.]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Port:    Optics0/2/0/35
+            # Port:    Optics0/1/0/4/2
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['port']
+
+                optics_dict = result_dict.setdefault(port, {})
+                continue
+
+            # DWDM Carrier Band:: OPTICS_C_BAND
+            m = p1.match(line)
+            if m:
+                optics_dict = result_dict.setdefault(port, {})
+                optics_dict['dwdm_carrier_band'] = m.groupdict()['dwdm_carrier_band']
+                continue
+
+            # MSA ITU channel range supported: 1~97
+            m = p2.match(line)
+            if m:
+                optics_dict['msa_itu_channel_range_supported'] = m.groupdict()['msa_itu_channel_range_supported']
+                continue
+
+            # ----------------------------------------------------
+            # ITU Ch      G.694.1     Frequency     Wavelength
+            # Num        Ch Num        (THz)          (nm)
+            # ----------------------------------------------------
+            #     1        60           196.10      1528.773
+            # ----------------------------------------------------
+            #     74       -13           192.45      1557.768
+            # ----------------------------------------------------
+            m = p3.match(line)
+            if m:
+                itu_ch_num_dict = optics_dict.setdefault('dwdm_carrier_map_table', {})\
+                                             .setdefault('itu_ch_num', {})\
+                                             .setdefault(int(m.groupdict()['itu_ch_num']), {})
+                itu_ch_num_dict.update({
+                    'g_694_1_ch_num': int(m.groupdict()['g_694_1_ch_num']),
+                    'frequency': float(m.groupdict()['frequency']),
+                    'wavelength': float(m.groupdict()['wavelength']),
+                })
+
+        return result_dict
+
+
+# ===========================================
+# Schema for 'show controllers optics {port} db'
+# ===========================================
+class ShowControllersOpticsDbSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} db
+        * show controllers optics * db
+    '''
+
+    schema = {
+        Any(): {
+            'transport_admin_state': str,
+            'controller_state': str
+        }
+    }
+
+
+# ===========================================
+# Parser for 'show controllers optics {port} db'
+# ===========================================
+class ShowControllersOpticsDb(ShowControllersOpticsDbSchema):
+    '''Parser for:
+        * show controllers optics {port} db
+        * show controllers optics * db
+    '''
+
+    cli_command = ['show controllers optics {port} db', 'show controllers optics * db']
+
+    def cli(self, port=None, output=None):
+
+        if output is None:
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port:    Optics0/2/0/35
+        # Port:    Optics0/1/0/4/2
+        p3 = re.compile(r'^Port: +Optics(?P<port>[\d/].*)$')
+
+        # Transport Admin State: In Service
+        p1 = re.compile(r'^Transport Admin State:\s+(?P<transport_admin_state>[\w\s]+)$')
+
+        # Controller State:  Up
+        p2 = re.compile(r'^Controller State:\s+(?P<controller_state>\w+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Port:    Optics0/2/0/35
+            # Port:    Optics0/1/0/4/2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['port']
+
+                optics_dict = result_dict.setdefault(port, {})
+                continue
+
+            # Transport Admin State: In Service
+            m = p1.match(line)
+            if m:
+                optics_dict = result_dict.setdefault(port, {})
+                optics_dict.update({'transport_admin_state': m.groupdict()['transport_admin_state']})
+                continue
+
+            # Controller State:  Up
+            m = p2.match(line)
+            if m:
+                optics_dict.update({'controller_state': m.groupdict()['controller_state']})
+
+        return result_dict
+
+
+# =========================================================
+# Schema for 'show controllers optics {port} appsel active'
+# =========================================================
+class ShowControllersOpticsAppselActiveSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} appsel active
+    '''
+
+    schema = {
+        'instance': int,
+        'app_id': int,
+        'host_id': str,
+        'media_id': str,
+        'host_lane_count': int,
+        'media_lane_count': int,
+        'host_lane_assign': str,
+        'media_lane_assign': str,
+    }
+
+
+# =========================================================
+# Parser for 'show controllers optics {port} appsel active'
+# =========================================================
+class ShowControllersOpticsAppselActive(ShowControllersOpticsAppselActiveSchema):
+    '''Parser for:
+        * show controllers optics {port} appsel active
+    '''
+
+    cli_command = 'show controllers optics {port} appsel active'
+
+    def cli(self, port, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Instance           :1
+        p1 = re.compile(r'^Instance\s+:\s*(?P<instance>\d+)$')
+
+        # App-ID             :1
+        p2 = re.compile(r'^App-ID\s+:\s*(?P<app_id>\d+)$')
+
+        # Host-ID            :28  ETH 200GBASE-CR4 (Clause 136)
+        p3 = re.compile(r'^Host-ID\s+:\s*(?P<host_id>.*)$')
+
+        # Media-ID           :1  ETH 10GBASE-LW (Clause 52)
+        p4 = re.compile(r'^Media-ID\s+:\s*(?P<media_id>.*)$')
+
+        # Host Lane Count    :4
+        p5 = re.compile(r'^Host Lane Count\s+:\s*(?P<host_lane_count>\d+)$')
+
+        # Media Lane Count   :4
+        p6 = re.compile(r'^Media Lane Count\s+:\s*(?P<media_lane_count>\d+)$')
+
+        # Host Lane Assign   :0x11
+        p7 = re.compile(r'^Host Lane Assign\s+:\s*(?P<host_lane_assign>.*)$')
+
+        # Media Lane Assign  :0x0
+        p8 = re.compile(r'^Media Lane Assign\s+:\s*(?P<media_lane_assign>.*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Instance           :1
+            m = p1.match(line)
+            if m:
+                result_dict['instance'] = int(m.groupdict()['instance'])
+                continue
+
+            # App-ID             :1
+            m = p2.match(line)
+            if m:
+                result_dict['app_id'] = int(m.groupdict()['app_id'])
+                continue
+
+            # Host-ID            :28  ETH 200GBASE-CR4 (Clause 136)
+            m = p3.match(line)
+            if m:
+                result_dict['host_id'] = m.groupdict()['host_id']
+                continue
+
+            # Media-ID           :1  ETH 10GBASE-LW (Clause 52)
+            m = p4.match(line)
+            if m:
+                result_dict['media_id'] = m.groupdict()['media_id']
+                continue
+
+            # Host Lane Count    :4
+            m = p5.match(line)
+            if m:
+                result_dict['host_lane_count'] = int(m.groupdict()['host_lane_count'])
+                continue
+
+            # Media Lane Count   :4
+            m = p6.match(line)
+            if m:
+                result_dict['media_lane_count'] = int(m.groupdict()['media_lane_count'])
+                continue
+
+            # Host Lane Assign   :0x11
+            m = p7.match(line)
+            if m:
+                result_dict['host_lane_assign'] = m.groupdict()['host_lane_assign']
+                continue
+
+            # Media Lane Assign  :0x0
+            m = p8.match(line)
+            if m:
+                result_dict['media_lane_assign'] = m.groupdict()['media_lane_assign']
+
+        return result_dict
+
 
 # ===============================================================================
 # Schema for 'show controllers fia diagshell 0 "diag egr_calendars" location all'

@@ -1,0 +1,21 @@
+Mon Aug 19 03:56:39.363 MDT
+St:    AD - Administratively Down, Dn - Down, Up - Up
+Ly:    L2 - Switched layer 2 service, L3 = Terminated layer 3 service,
+Xtra   C - Match on Cos, E  - Match on Ethertype, M - Match on source MAC
+-,+:   Ingress rewrite operation; number of tags to pop and push respectively
+
+Interface               St  MTU  Ly Outer            Inner            Xtra -,+
+Gi0/0/0/0.200           AD  1522 L2 .1Q:200          .1Q:200-300      -    0 0
+Te0/0/0/18.1000         Up  9220 L2 .1Q:1000         -                -    1 0
+Te0/0/0/18.1001         Up  9220 L2 .1Q:1001         -                -    1 0
+Te0/0/0/18.1002         Up  9220 L2 .1Q:1002         -                -    1 0
+Te0/0/0/18.1003         Up  9220 L2 .1Q:1003         -                -    1 0
+Te0/0/0/18.1004         Up  9220 L2 .1Q:1004         -                -    1 0
+Te0/0/0/18.1005         Up  9220 L2 .1Q:1005         -                -    1 0
+Te0/0/0/18.1006         Up  9220 L2 .1Q:1006         -                -    1 0
+Te0/0/0/18.1007         Up  9220 L2 .1Q:1007         -                -    1 0
+Te0/0/0/18.1008         Up  9220 L2 .1Q:1008         -                -    1 0
+Te0/0/0/18.1009         Up  9220 L2 .1Q:1009         -                -    1 0
+Te0/0/0/18.1010         Up  9220 L2 .1Q:1010         -                -    1 0
+Te0/0/0/18.1011         Up  9220 L2 .1Q:1011         -                -    1 0
+Te0/0/0/18.1012         Up  9220 L2 .1Q:1012         -                -    1 0

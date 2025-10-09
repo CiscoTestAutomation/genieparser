@@ -1,0 +1,58 @@
+                                         Current              Bundled
+Slot  Device Name / Model           Firmware Version      Firmware Version    Mismatch  
+----- ----------------------------- --------------------- ------------------- --------- 
+ 6    Supervisor Rommon (Active)    17.18.1r              N/A                 N/A       
+ 5    Supervisor Rommon (Standby)   17.18.1r              N/A                 N/A       
+ FT1  Fantray                       25010624              25010624            No        
+ FT2  Fantray                       25010624              25010624            No        
+ FT3  Fantray                       25010624              25010624            No        
+ FT4  Fantray                       25010624              25010624            No        
+ 6    Supervisor (Active)            
+        Sup IOFPGA                  25060231              25060231            No        
+        TAM FW                      290008                290010              Yes       
+        Sup SBFPGA                  2503062c              25061844            Yes       
+        Sup DBFPGA                  2408291c              25030622            Yes       
+        Sup PMFPGA                  24071111              25022721            Yes       
+        Sup TMFPGA                  24051408              25030621            Yes       
+ 5    Supervisor (Standby)           
+        Sup IOFPGA                  25060231              25060231            No        
+        TAM FW                      290008                290010              Yes       
+        Sup SBFPGA                  2503062c              25061844            Yes       
+        Sup DBFPGA                  2408291c              25030622            Yes       
+        Sup PMFPGA                  24071111              25022721            Yes       
+        Sup TMFPGA                  24051408              25030621            Yes       
+ 1    Line Card                      
+        LC IOFPGA Upgrade           21121742              21121742            No        
+        LC PMFPGA                   101887                N/A                 N/A       
+        Phy Firmware                2.36.0                2.36.0              No        
+ 2    Line Card                      
+        LC IOFPGA Upgrade           23102385              23102385            No        
+        LC PMFPGA                   1201a2                N/A                 N/A       
+        Phy Firmware                23.11.1501            23.11.1501          No        
+ 3    Line Card                      
+        LC IOFPGA Upgrade           24030144              24030144            No        
+        LC PMFPGA                   1318b                 N/A                 N/A       
+        Phy Firmware                2.36.0                2.36.0              No        
+ 4    Line Card                      
+        LC IOFPGA                   24030144              24030144            No        
+        LC PMFPGA                   1318b                 N/A                 N/A       
+        Phy Firmware                2.36.0                2.36.0              No        
+ 9    Line Card                      
+        LC IOFPGA                   21121742              21121742            No        
+        LC PMFPGA                   101887                N/A                 N/A       
+        Phy Firmware                2.36.0                2.36.0              No        
+
+Slot      Device Name / Model                     Firmware Version              
+--------- --------------------------------------- ----------------------------- 
+ PS1      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS2      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS3      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS4      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS5      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS6      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS7      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+ PS8      Power Supply (PS PRI, PS_SEC, PS_I2C)   (0:0:3, 0:0:2, N/A)           
+
+
+
+

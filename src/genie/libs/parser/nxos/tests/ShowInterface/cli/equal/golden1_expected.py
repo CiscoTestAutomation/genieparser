@@ -158,6 +158,7 @@ expected_output = {
         "port_mode": "routed",
         "auto_mdix": "off",
         "ethertype": "0x8100",
+        "link_down_reason": "Administratively down"
     },
     "Ethernet2/1.20": {
         "port_channel": {"port_channel_member": False},
@@ -351,8 +352,9 @@ expected_output = {
             "out_no_carrier": 0,
             "out_babble": 0,
             "out_discard": 0,
-            "out_mac_pause_frames": 0,
+            "out_mac_pause_frames": 0
         },
+        "link_down_reason": "DCX-No ACK in 100 PDUs"
     },
     "nve1": {
         "port_channel": {"port_channel_member": False},

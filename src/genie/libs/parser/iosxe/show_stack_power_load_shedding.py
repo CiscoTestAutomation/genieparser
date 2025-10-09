@@ -122,3 +122,195 @@ class ShowStackPowerLoadShedding(ShowStackPowerLoadSheddingSchema):
                 continue
 
         return ret_dict
+
+# ======================================================
+# Schema for 'show stack-power detail switch {switch}'
+# ======================================================
+class ShowStackPowerDetailSwitchSchema(MetaParser):
+    """Schema for 'show stack-power detail switch {switch}'"""
+    schema = {
+        'power_stack': {
+            Any(): {
+                'stack_mode': str,
+                'stack_topology': str,
+                'total_powr': int,
+                'rsvd_pwr': int,
+                'alloc_pwr': int,
+                'sw_avail_pwr': int,
+                'num_sw': int,
+                'num_ps': int,
+                'switches': {
+                    Any(): {
+                        'power_budget': int,
+                        'power_allocated': int,
+                        'low_port_priority_value': int,
+                        'high_port_priority_value': int,
+                        'switch_priority_value': int,
+                        'port_status': {
+                            'port_1': str,
+                            'port_2': str,
+                        },
+                        'neighbor': {
+                            'port_1': str,
+                            'port_2': str,
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowStackPowerDetailSwitch(ShowStackPowerDetailSwitchSchema):
+    """Parser for 'show stack-power detail switch {switch}'"""
+    cli_command = ['show stack-power detail switch {switch}']
+
+    def cli(self, switch, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(switch=switch)
+            output = self.device.execute(cmd)
+
+        # Initialize the return dictionary
+        ret_dict = {}
+
+        # Regex patterns for summary table
+        # Powerstack-6 SP-PS Stndaln 1100 0 505 595 1 1
+        p1 = re.compile(
+            r'^(?P<power_stack_name>\S+)\s+(?P<stack_mode>\S+)\s+(?P<stack_topology>\S+)\s+'
+            r'(?P<total_powr>\d+)\s+(?P<rsvd_pwr>\d+)\s+(?P<alloc_pwr>\d+)\s+'
+            r'(?P<sw_avail_pwr>\d+)\s+(?P<num_sw>\d+)\s+(?P<num_ps>\d+)$'
+        )
+
+        # Power stack name
+        p2 = re.compile(r'^Power stack name: +(?P<power_stack_name>[\w\-]+)$')
+        # Stack mode
+        p3 = re.compile(r'^Stack mode: +(?P<stack_mode>[\w\s]+)$')
+        # Stack topology
+        p4 = re.compile(r'^Stack topology: +(?P<stack_topology>[\w\s]+)$')
+        # Switch ID
+        p5 = re.compile(r'^Switch (?P<switch_id>\d+):$')
+        # Power budget
+        p6 = re.compile(r'^Power budget: +(?P<power_budget>\d+)$')
+        # Power allocated
+        p7 = re.compile(r'^Power allocated: +(?P<power_allocated>\d+)$')
+        # Low port priority value
+        p8 = re.compile(r'^Low port priority value: +(?P<low_port_priority_value>\d+)$')
+        # High port priority value
+        p9 = re.compile(r'^High port priority value: +(?P<high_port_priority_value>\d+)$')
+        # Switch priority value
+        p10 = re.compile(r'^Switch priority value: +(?P<switch_priority_value>\d+)$')
+        # Port 1 status
+        p11 = re.compile(r'^Port 1 status: +(?P<port_1_status>\w+)$')
+        # Port 2 status
+        p12 = re.compile(r'^Port 2 status: +(?P<port_2_status>\w+)$')
+        # Neighbor on port 1
+        p13 = re.compile(r'^Neighbor on port 1: +(?P<neighbor_port_1>[\w\.]+)$')
+        # Neighbor on port 2
+        p14 = re.compile(r'^Neighbor on port 2: +(?P<neighbor_port_2>[\w\.]+)$')
+
+        current_power_stack = None
+        current_switch = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Match summary table
+            # PowerStack-1 SP-PS Ring 1100 100 500 500 2 2
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                current_power_stack = groups['power_stack_name']
+                power_stack_dict = ret_dict.setdefault('power_stack', {}).setdefault(current_power_stack, {})
+                power_stack_dict['stack_mode'] = groups['stack_mode']
+                power_stack_dict['stack_topology'] = groups['stack_topology']
+                power_stack_dict['total_powr'] = int(groups['total_powr'])
+                power_stack_dict['rsvd_pwr'] = int(groups['rsvd_pwr'])
+                power_stack_dict['alloc_pwr'] = int(groups['alloc_pwr'])
+                power_stack_dict['sw_avail_pwr'] = int(groups['sw_avail_pwr'])
+                power_stack_dict['num_sw'] = int(groups['num_sw'])
+                power_stack_dict['num_ps'] = int(groups['num_ps'])
+                continue
+
+            # Power stack name: PowerStack-1
+            m = p2.match(line)
+            if m:
+                current_power_stack = m.group('power_stack_name')
+                continue
+
+            # Stack mode: SP-PS
+            m = p3.match(line)
+            if m and current_power_stack:
+                power_stack_dict['stack_mode'] = m.group('stack_mode')
+                continue
+
+            # Stack topology: Ring
+            m = p4.match(line)
+            if m and current_power_stack:
+                power_stack_dict['stack_topology'] = m.group('stack_topology')
+                continue
+
+            # Switch 1:
+            m = p5.match(line)
+            if m and current_power_stack:
+                current_switch = int(m.group('switch_id'))
+                switches_dict = power_stack_dict.setdefault('switches', {}).setdefault(current_switch, {})
+                continue
+
+            # Power budget: 1100
+            m = p6.match(line)
+            if m and current_switch is not None:
+                switches_dict['power_budget'] = int(m.group('power_budget'))
+                continue
+
+            # Power allocated: 500
+            m = p7.match(line)
+            if m and current_switch is not None:
+                switches_dict['power_allocated'] = int(m.group('power_allocated'))
+                continue
+
+            # Low port priority value: 1
+            m = p8.match(line)
+            if m and current_switch is not None:
+                switches_dict['low_port_priority_value'] = int(m.group('low_port_priority_value'))
+                continue
+
+            # High port priority value: 2
+            m = p9.match(line)
+            if m and current_switch is not None:
+                switches_dict['high_port_priority_value'] = int(m.group('high_port_priority_value'))
+                continue
+
+            # Switch priority value: 3
+            m = p10.match(line)
+            if m and current_switch is not None:
+                switches_dict['switch_priority_value'] = int(m.group('switch_priority_value'))
+                continue
+
+            # Port 1 status: Active
+            m = p11.match(line)
+            if m and current_switch is not None:
+                port_status_dict = switches_dict.setdefault('port_status', {})
+                port_status_dict['port_1'] = m.group('port_1_status')
+                continue
+
+            # Port 2 status: Inactive
+            m = p12.match(line)
+            if m and current_switch is not None:
+                port_status_dict = switches_dict.setdefault('port_status', {})
+                port_status_dict['port_2'] = m.group('port_2_status')
+                continue
+
+            # Neighbor on port 1: Switch-2
+            m = p13.match(line)
+            if m and current_switch is not None:
+                neighbor_dict = switches_dict.setdefault('neighbor', {})
+                neighbor_dict['port_1'] = m.group('neighbor_port_1')
+                continue
+
+            # Neighbor on port 2: Switch-3
+            m = p14.match(line)
+            if m and current_switch is not None:
+                neighbor_dict = switches_dict.setdefault('neighbor', {})
+                neighbor_dict['port_2'] = m.group('neighbor_port_2')
+                continue
+
+        return ret_dict

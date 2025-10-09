@@ -86,11 +86,11 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
         # +  390     000f.53ff.1f1d   dynamic  0         F      F    Po125
         # 100 0000.0000.1112 dynamic NA F F Po100
         p1 = re.compile(r'^(?P<entry>[\w\*\+] )?\s*(?P<vlan>All|[\d\-]+) '
-            '+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
-            '+(?P<age>[0-9\-\~]+|NA) '
-            '+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
-            '+(?P<drop>(drop|Drop))?'
-            '(?P<ports>[a-zA-Z0-9\/\.\(\)\-\s]+)?$')
+            r'+(?P<mac_address>[0-9a-z\.\:]+) +(?P<mac_type>[a-z]+) '
+            r'+(?P<age>[0-9\-\~]+|NA) '
+            r'+(?P<secure>[A-Z]+) +(?P<ntfy>[A-Z]+) '
+            r'+(?P<drop>(drop|Drop))?'
+            r'(?P<ports>[a-zA-Z0-9\/\.\(\)\-\s]+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -295,16 +295,16 @@ class ShowMacAddressTableLimit(ShowMacAddressTableLimitSchema):
         # Configured System Action: Flood
         # Currently System is: Flooding Unknown SA
         p1 = re.compile(r'^Configured +System +Limit: '
-        	'+(?P<configured_system_limit>\d+)$')
+        	r'+(?P<configured_system_limit>\d+)$')
         p2 = re.compile(r'^Current +System +Count: '
-        	'+(?P<current_system_count>\d+)$')
+        	r'+(?P<current_system_count>\d+)$')
         p3 = re.compile(r'^Configured +System +Action: '
-        	'+(?P<configured_system_action>\w+)$')
+        	r'+(?P<configured_system_action>\w+)$')
         p4 = re.compile(r'^Currently +System +is: '
-        	'+(?P<currently_system_is>[\w\s]+)$')
+        	r'+(?P<currently_system_is>[\w\s]+)$')
         p5 = re.compile(r'^\s*(?P<vlan>\w+) +(?P<conf_limit>\d+) '
-        	'+(?P<curr_count>\d+) +(?P<cfg_action>\w+) '
-        	'+(?P<currently>[\w\s]+)$')
+        	r'+(?P<curr_count>\d+) +(?P<cfg_action>\w+) '
+        	r'+(?P<currently>[\w\s]+)$')
 
         for line in out.splitlines():
             line = line.strip()

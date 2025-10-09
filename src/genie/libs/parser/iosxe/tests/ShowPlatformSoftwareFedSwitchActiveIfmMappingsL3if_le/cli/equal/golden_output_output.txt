@@ -1,0 +1,4 @@
+
+L3IF_LE                   Interface                         IF_ID               Type
+
+0x000077ba149b9748        Vlan1                             0x000000fa          SVI_L3_LE

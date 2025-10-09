@@ -13,9 +13,11 @@ class ShowVersionSchema(MetaParser):
         'os': str,
         Optional('os_flavor'): str,
         'version': str,
+        Optional('build'): str,
         Optional('platform'): str,
         Optional('pid'): str,
         Optional('operating_mode'): str,
+        Optional('chassis_type'): str,
     }
 
 
@@ -32,6 +34,13 @@ class ShowVersion(ShowVersionSchema):
             output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
+
+        # ********************************************
+        # *                  SONIC                   *
+        # ********************************************
+
+        # Model Number: 8201-32FH-O
+        sonic_pid_pattern = re.compile(r'^Model\sNumber:\s+(?P<pid>.+)$')
 
         # ********************************************
         # *                  ASA                     *
@@ -88,6 +97,9 @@ class ShowVersion(ShowVersionSchema):
         # Router operating mode: Controller-Managed
         iosxe_sdwan_controller_mode = re.compile(r'^Router operating mode:\s+(?P<mode>\S+)\s*$')
 
+        # Switch 02
+        iosxe_switch_number_pattern = re.compile(r'^[Ss]witch +0(?P<switch_number>\d+)$')
+
         # ********************************************
         # *                  IOSXR                   *
         # ********************************************
@@ -103,6 +115,7 @@ class ShowVersion(ShowVersionSchema):
         # cisco IOS XRv Series (Pentium Celeron Stepping 3) processor with 4193911K bytes of memory.
         # cisco IOS-XRv 9000 () processor
         # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+        # cisco N540X-16Z4G8Q2C-A (C3708 @ 1.70GHz) processor with 8GB of memory
         iosxr_platform_pattern = re.compile(r'^cisco (?P<platform>\S+|IOS(?: |-)XRv ?\d*)(?: Series)? \(.*\) processor.*$')
 
 
@@ -115,7 +128,7 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(2)E7, RELEASE SOFTWARE (fc3)
         # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
         # Cisco IOS Software [Bengaluru], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 17.5.1a, RELEASE SOFTWARE (fc3)
-        ios_os_version_platform_pattern = re.compile(r'^(?!.*XE Software.*)(Cisco IOS Software|IOS \(\S+\))(?: \[.*\])?,?\s*(?P<alternate_platform>.+)?\s+Software \((?P<platform>[^\-]+).*\),(?: Experimental)? Version (?P<version>[\w\.\:\(\)]+),?.*$')
+        ios_os_version_platform_pattern = re.compile(r'^(?!.*XE Software.*)(Cisco IOS Software|IOS \(\S+\))(?: \[(?P<os_flavor>.*?)\])?,?\s*(?P<alternate_platform>.+)?\s+Software \((?P<platform>[^\-]+).*\),(?: Experimental)? Version (?P<version>[\w\.\:\(\)]+),?.*$')
 
         # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
         # cisco CW9164I-ROW ARMv8 Processor rev 4 (v8l) with 1780316/936396K bytes of memo
@@ -141,7 +154,7 @@ class ShowVersion(ShowVersionSchema):
 
         # system:    version 6.0(2)U6(10)
         # NXOS: version 9.3(6uu)I9(1uu) [build 9.3(6)]
-        nxos_version_pattern = re.compile(r'^(?:system|NXOS):\s+version (?P<version>\S+)(?: \[build (?P<build>.*)\])?$')
+        nxos_version_pattern = re.compile(r'^(?:system|NXOS):\s+version (?P<version>\S+)(?: \[build (?P<build>.*?)\])?$')
 
         # cisco Nexus 3048 Chassis ("48x1GE + 4x10G Supervisor")
         # cisco Nexus9000 C9396PX Chassis
@@ -265,6 +278,13 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 ret_dict['operating_mode'] = m.groupdict().get('mode')
                 continue
+
+            # Switch 02
+            m = iosxe_switch_number_pattern.match(line)
+            if m:
+                ret_dict['chassis_type'] = 'stack'
+                continue
+
             # ********************************************
             # *                  IOSXR                   *
             # ********************************************
@@ -286,6 +306,7 @@ class ShowVersion(ShowVersionSchema):
             # cisco IOS XRv Series (Pentium Celeron Stepping 3) processor with 4193911K bytes of memory.
             # cisco IOS-XRv 9000 () processor
             # cisco CRS-16/S-B (Intel 686 F6M14S4) processor with 12582912K bytes of memory.
+            # cisco N540X-16Z4G8Q2C-A (C3708 @ 1.70GHz) processor with 8GB of memory
             m = iosxr_platform_pattern.match(line)
             if m:
                 ret_dict['platform'] = m.groupdict()['platform'].lower()
@@ -322,6 +343,9 @@ class ShowVersion(ShowVersionSchema):
                     re.sub(r'\_(ios).*', r'', platform)
                 ret_dict['platform'] = \
                     re.sub(r'cat(\d)\d{3}', r'cat\1k', ret_dict['platform'])
+
+                if group['os_flavor']:
+                    ret_dict['os_flavor'] = group['os_flavor'].lower()
                 continue
 
             # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
@@ -361,13 +385,13 @@ class ShowVersion(ShowVersionSchema):
 
             # system:    version 6.0(2)U6(10)
             # NXOS: version 9.3(6uu)I9(1uu) [build 9.3(6)]
+            # NXOS: version 10.4(3) [build 10.4(2)IMG9(0.27)] [Feature Release]
             m = nxos_version_pattern.match(line)
             if m:
                 group = m.groupdict()
-                if group['build']:
-                    ret_dict['version'] = group['build']
-                else:
-                    ret_dict['version'] = group['version']
+                if group.get('build'):
+                    ret_dict['build'] = group['build']
+                ret_dict['version'] = group['version']
                 continue
 
             # cisco Nexus 3048 Chassis ("48x1GE + 4x10G Supervisor")
@@ -406,6 +430,16 @@ class ShowVersion(ShowVersionSchema):
 
             # Product/Model Number                 : AIR-AP4800-D-K9
             m = wireless_pid_pattern.match(line)
+            if m:
+                ret_dict['pid'] = m.groupdict()['pid']
+                continue
+
+            # ********************************************
+            # *                  SONIC                   *
+            # ********************************************
+
+            # Model Number: 8201-32FH-O
+            m = sonic_pid_pattern.match(line)
             if m:
                 ret_dict['pid'] = m.groupdict()['pid']
                 continue

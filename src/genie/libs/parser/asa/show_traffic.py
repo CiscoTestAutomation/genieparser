@@ -81,22 +81,22 @@ class ShowTraffic(ShowTrafficSchema):
 
         # 1 minute input rate 9452 pkts/sec,  661142 bytes/sec
         p5 = re.compile(r'^1 minute input rate\s+(?P<packets_input_1_minute>\d+)\s+pkts\/sec,\s+'
-            '(?P<bytes_input_1_minute>\d+)\s+bytes\/sec$')
+            r'(?P<bytes_input_1_minute>\d+)\s+bytes\/sec$')
 
         # 1 minute output rate 206 pkts/sec,  41887 bytes/sec    
         p6 = re.compile(r'^1 minute output rate\s+(?P<packets_output_1_minute>\d+)\s+pkts\/sec,\s+'
-            '(?P<bytes_output_1_minute>\d+)\s+bytes\/sec$')
+            r'(?P<bytes_output_1_minute>\d+)\s+bytes\/sec$')
 
         # 1 minute drop rate, 0 pkts/sec    
         p7 = re.compile(r'^1 minute drop rate,\s+(?P<packets_drop_rate_1_minute>\d+)\s+pkts\/sec$')
         
         # 5 minute input rate 11309 pkts/sec,  790978 bytes/sec
         p8 = re.compile(r'^5 minute input rate\s+(?P<packets_input_5_minute>\d+)\s+pkts\/sec,\s+'
-            '(?P<bytes_input_5_minute>\d+)\s+bytes\/sec$')
+            r'(?P<bytes_input_5_minute>\d+)\s+bytes\/sec$')
         
         # 5 minute output rate 0 pkts/sec,  0 bytes/sec
         p9 = re.compile(r'^5 minute output rate\s+(?P<packets_output_5_minute>\d+)\s+pkts\/sec,\s+'
-            '(?P<bytes_output_5_minute>\d+)\s+bytes\/sec$')
+            r'(?P<bytes_output_5_minute>\d+)\s+bytes\/sec$')
         
         # 5 minute drop rate, 0 pkts/sec
         p10 = re.compile(r'^5 minute drop rate,\s+(?P<packets_drop_rate_5_minute>\d+)\s+pkts\/sec$')

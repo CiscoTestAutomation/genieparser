@@ -190,6 +190,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
             out = output
 
         ret_dict = {}
+        database_count = 0
 
         state_dict = {
             'disabled': False,
@@ -328,6 +329,8 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         # ETR Map-Server(s) (last map-reg sent):    *** NOT FOUND ***
         p31_1 = re.compile(r'ETR Map-Server\(s\): +(?P<ems_not_found>\*\*\* NOT FOUND \*\*\*)$')
 
+        # ETR Map-Server(s):                        44.44.44.44 (00:00:07)
+        # ETR Map-Server(s):                        100:44:44:44 (00:00:07)
         # ETR Map-Server(s) (last map-reg sent):    3120:3120:3120:3120:3120:3120:3120:3120 (00:01:08, TCP)
         # ETR Map-Server(s) (last map-reg sent):    3130:3130:3130:3130:3130:3130:3130:3130 (00:00:09, UDP)
         # ETR Map-Server(s) (last map-reg sent):    3140:3140:3140:3140:3140:3140:3140:3140 (never)
@@ -346,7 +349,7 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
         #                                           3120:3120:3120:3120:3120:3120:3120:3120 prefix-list site1list domain-id 1 (00:01:08, TCP)
         #                                           3130:3130:3130:3130:3130:3130:3130:3130 prefix-list site1list domain-id 1 (00:00:09, UDP)
         #                                           3140:3140:3140:3140:3140:3140:3140:3140 prefix-list site1list domain-id 1 (never)
-        p31_2 = re.compile(r'(ETR Map-Server\(s\) \(last map-reg sent\):)? *(?P<ems_address>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+        p31_2 = re.compile(r'(ETR Map-Server\(s\)( \(last map-reg sent\))?:)? *(?P<ems_address>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
                            r'|([a-fA-F\d\:]+))( prefix-list (?P<ems_prefix_list>\w+))?( domain-id (?P<ems_domain_id>\d+))?'
                            r' \((?P<ems_last_map_reg_time>[\w:\d]+)(, (?P<ems_last_transport_state>TCP|UDP))?\)$')
 
@@ -776,7 +779,8 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
                 ems_dict = instance_dict.setdefault('etr_map_servers', {})
                 ems_dict.update({'found': False})
                 continue
-
+            # ETR Map-Server(s):                        44.44.44.44 (00:00:07)
+            # ETR Map-Server(s):                        100:44:44:44 (00:00:07)
             # ETR Map-Server(s) (last map-reg sent):    3120:3120:3120:3120:3120:3120:3120:3120 (00:01:08, TCP)
             # ETR Map-Server(s) (last map-reg sent):    3130:3130:3130:3130:3130:3130:3130:3130 (00:00:09, UDP)
             # ETR Map-Server(s) (last map-reg sent):    3140:3140:3140:3140:3140:3140:3140:3140 (never)
@@ -1076,10 +1080,11 @@ class ShowLispInstanceIdService(ShowLispInstanceIdServiceSchema):
 
             # Database:                               0
             m = p60.match(line)
-            if m:
+            if m and database_count == 0:
                 group = m.groupdict()
                 database = int(group['database'])
                 publication_dict.update({'database':database})
+                database_count = 1
                 continue
 
             # Prefix-list:                            0
@@ -1197,7 +1202,7 @@ class ShowLispSubscriberSuperParser(ShowLispSubscriberSchema):
             out = self.device.expect(
                 [r'Instance ID:\s+\S+'],
                 timeout=2).match_output
-            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            p0 = re.compile(r'^Instance ID:\s+(?P<instance_id>\d+)$')
             group = p0.match(out)
             instance_id = int(group['instance_id'])
         else:
@@ -1358,6 +1363,38 @@ class ShowLispEthernetSubscriber(ShowLispSubscriberSuperParser):
         'show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscriber',
         'show lisp instance-id {instance_id} ethernet subscriber',
         'show lisp eid-table vlan {vlan} ethernet subscriber',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, locator_table=None, vlan=None):
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                             format(locator_table=locator_table, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[3].format(vlan=vlan))
+
+        return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)
+
+
+class ShowLispEthernetARSubscriber(ShowLispSubscriberSuperParser):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} ethernet subscriber address-resolution
+        * show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscriber address-resolution
+        * show lisp instance-id {instance_id} ethernet subscriber address-resolution
+        * show lisp eid-table vlan {vlan} ethernet subscriber address-resolution
+    """
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} ethernet subscriber address-resolution',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscriber address-resolution',
+        'show lisp instance-id {instance_id} ethernet subscriber address-resolution',
+        'show lisp eid-table vlan {vlan} ethernet subscriber address-resolution',
     ]
 
     def cli(self, output=None, lisp_id=None, instance_id=None, locator_table=None, vlan=None):

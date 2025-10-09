@@ -1,0 +1,9 @@
+Sno  Event          Result   Username   Time(M/D H:M:S)  Target-config
+~~~  ~~~~~          ~~~~~~   ~~~~~~~~   ~~~~~~~~~~~~~~~  ~~~~~~~~~~~~~
+1    SAVE           Success  campus     05/20 10:47:15   checkpoint2
+2    SAVE           Success  campus     05/20 10:31:02   bootflashcheckpoint1
+3    SAVE           Success  campus     05/20 09:55:47   checkpoint1
+4    SAVE           Success  campus     05/20 09:10:39   status
+5    SAVE           Success  campus     05/20 09:09:02   checkpoint1
+6    SAVE           Success  campus     05/20 06:07:20   no
+7    SAVE           Success  campus     05/15 17:51:23   checkpoint1

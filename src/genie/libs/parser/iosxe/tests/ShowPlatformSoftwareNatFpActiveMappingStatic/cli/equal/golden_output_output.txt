@@ -1,0 +1,16 @@
+show platform software nat fp active mapping static
+
+Dump NAT static mapping config
+
+Mapping id: 1
+  VRF name: green, VRF id: 502, Table id: 502
+  Domain: INSIDE, Lookup: LOOKUP_LOCAL, Proto: none
+  Flags: Unknown
+  Local addr: 20.1.1.2, Local port: 0
+  Global addr: 200.1.1.2, Global port: 0
+  Network mask: 255.255.255.255
+  Pool ID: 0
+  IG is interface address: No
+  Route-map name:
+  Last stats update: 01/01 00:00:00.000
+  Last refcount value: 0

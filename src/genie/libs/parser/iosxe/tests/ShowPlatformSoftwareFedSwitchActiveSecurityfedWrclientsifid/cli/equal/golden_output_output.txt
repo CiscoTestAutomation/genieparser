@@ -1,0 +1,3 @@
+Client-Ifid  MAC              Host-Mode     Auth-Behavior           IPv4-CGACL-Name                                 IPv6-CGACL-Name
+------------ ---------------- ------------- ----------------------- ----------------------------------------------- ----------------------------------------------- 
+0x27fda427   0000.0033.3333   MULTI_AUTH    LA_BH_FWD_ALL_LRN_DATA  implicit_deny_v6!implicit_deny:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40: implicit_deny_v6!implicit_deny:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:

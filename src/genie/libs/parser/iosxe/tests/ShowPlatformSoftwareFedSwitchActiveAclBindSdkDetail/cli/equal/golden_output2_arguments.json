@@ -1,0 +1,9 @@
+{
+    "switch" : "switch",
+    "switch_var" : "active",
+    "acl" : "info",
+    "feature_name": "cgacl",
+    "dir": "in",
+    "asic_no" : "0"
+}
+

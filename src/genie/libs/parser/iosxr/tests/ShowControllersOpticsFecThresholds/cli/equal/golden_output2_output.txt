@@ -1,0 +1,402 @@
+#RP/0/RP0/CPU0:ios#show controllers optics * breakout-details
+Thu Jul 17 06:32:01.005 UTC
+
+Show failed due to internal error
+RP/0/RP0/CPU0:ios#show controllers optics * fec-thresholds
+Thu Jul 17 06:32:06.434 UTC
+Port:    Optics0/2/0/0
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/1
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/2
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/3
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/4
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/5
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/6
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/7
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/8
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/9
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/10
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/11
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/12
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/13
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/14
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/15
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/16
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/17
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/18
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/19
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/20
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/21
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/22
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/23
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/24
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/25
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/26
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/27
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/28
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/29
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/30
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/31
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/32
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/33
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/34
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------
+Port:    Optics0/2/0/35
+
+ FEC Threshold Information
+
+                                Raise                    Clear
+ Media FEC excess degrade   :   0.0000E+00               0.0000E+00
+ Media FEC detected degrade :   0.0000E+00               0.0000E+00
+ Host FEC excess degrade    :   0.0000E+00               0.0000E+00
+ Host FEC detected degrade  :   0.0000E+00               0.0000E+00
+
+-----------------------------------------------

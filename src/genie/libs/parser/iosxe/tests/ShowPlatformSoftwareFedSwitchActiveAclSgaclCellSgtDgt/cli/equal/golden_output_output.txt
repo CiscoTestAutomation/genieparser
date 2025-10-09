@@ -1,0 +1,5 @@
+monintor mode: 0
+ACL CG_ID:     273
+Protocol:      IPv4
+Asic Num:      0  Cell OID:      2076 
+ASIC Num:      0  Counter OID:   2077 

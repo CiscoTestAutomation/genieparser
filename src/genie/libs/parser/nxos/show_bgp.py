@@ -191,47 +191,47 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
 
         p1 = re.compile(r'^\s*BGP +Process +ID *: +(?P<bgp_pid>[0-9]+)$')
         p2 = re.compile(r'^\s*BGP Protocol Started, +reason: *:'
-                            ' +(?P<reason>[a-zA-Z\s]+)$')
+                            r' +(?P<reason>[a-zA-Z\s]+)$')
         p2_1 = re.compile(r'^\s*BGP +Performance +Mode: *:'
-                            ' +(?P<performance_mode>[a-zA-Z\s]+)$')
+                            r' +(?P<performance_mode>[a-zA-Z\s]+)$')
         p3 = re.compile(r'^\s*BGP +Protocol +Tag *:'
-                            ' +(?P<bgp_tag>[a-zA-Z0-9]+)$')
+                            r' +(?P<bgp_tag>[a-zA-Z0-9]+)$')
         p4 = re.compile(r'^\s*BGP +Protocol +State *:'
-                            ' +(?P<protocol_state>[a-zA-Z\(\)\s]+)$')
+                            r' +(?P<protocol_state>[a-zA-Z\(\)\s]+)$')
         p4_1 = re.compile(r'^\s*BGP +Isolate +Mode *:'
-                            ' +(?P<isolate_mode>[a-zA-Z\s]+)$')
+                            r' +(?P<isolate_mode>[a-zA-Z\s]+)$')
         p4_3 = re.compile(r'^\s*BGP +MMODE *:'
-                            ' +(?P<mmode>[a-zA-Z\s]+)$')
+                            r' +(?P<mmode>[a-zA-Z\s]+)$')
         p5 = re.compile(r'^\s*BGP +Memory +State *:'
-                            ' +(?P<memory_state>[\w\s]+)$')
+                            r' +(?P<memory_state>[\w\s]+)$')
         p5_1 = re.compile(r'^\s*BGP +asformat *:'
-                            ' +(?P<asformat>[a-zA-Z\s]+)$')
+                            r' +(?P<asformat>[a-zA-Z\s]+)$')
         p5_2 = re.compile(r'^\s*Segment +Routing +Global +Block *:'
-                            ' +(?P<segment>[0-9\-]+)$')
+                            r' +(?P<segment>[0-9\-]+)$')
         p6 = re.compile(r'^\s*Number +of +attribute +entries *:'
-                            ' +(?P<num_attr_entries>[0-9]+)$')
+                            r' +(?P<num_attr_entries>[0-9]+)$')
         p7 = re.compile(r'^\s*HWM +of +attribute +entries *:'
-                            ' +(?P<hwm_attr_entries>[0-9]+)$')
+                            r' +(?P<hwm_attr_entries>[0-9]+)$')
         p8 = re.compile(r'^\s*Bytes +used +by +entries *:'
-                            ' +(?P<bytes_used>[0-9]+)$')
+                            r' +(?P<bytes_used>[0-9]+)$')
         p9 = re.compile(r'^\s*Entries +pending +delete *:'
-                            ' +(?P<entries_pending_delete>[0-9]+)$')
+                            r' +(?P<entries_pending_delete>[0-9]+)$')
         p10 = re.compile(r'^\s*HWM +of +entries +pending +delete *:'
-                            ' +(?P<hwm_entries_pending_delete>[0-9]+)$')
+                            r' +(?P<hwm_entries_pending_delete>[0-9]+)$')
         p11 = re.compile(r'^\s*BGP +paths +per +attribute +HWM *:'
-                            ' +(?P<bgp_paths_per_hwm_attr>[0-9]+)$')
+                            r' +(?P<bgp_paths_per_hwm_attr>[0-9]+)$')
         p12 = re.compile(r'^\s*BGP +AS +path +entries *:'
-                            ' +(?P<bgp_as_path_entries>[0-9]+)$')
+                            r' +(?P<bgp_as_path_entries>[0-9]+)$')
         p13 = re.compile(r'^\s*Bytes +used +by +AS +path +entries *:'
-                            ' +(?P<bytes_used_as_path_entries>[0-9]+)$')
+                            r' +(?P<bytes_used_as_path_entries>[0-9]+)$')
         p14 = re.compile(r'^\s*BGP +Information +for +VRF'
-                            ' +(?P<vrf_name>(\S+))$')
+                            r' +(?P<vrf_name>(\S+))$')
         p15 = re.compile(r'^\s*VRF +Id *:'
-                            ' +(?P<vrf_id>[a-zA-Z0-9]+)$')
+                            r' +(?P<vrf_id>[a-zA-Z0-9]+)$')
         p16 = re.compile(r'^\s*VRF +state *:'
-                            ' +(?P<vrf_state>[a-zA-Z]+)$')
+                            r' +(?P<vrf_state>[a-zA-Z]+)$')
         p16_1 = re.compile(r'^\s*VNID *:'
-                            ' +(?P<vnid>[a-zA-Z0-9]+)(?: +\((\S+)\))?$')
+                            r' +(?P<vnid>[a-zA-Z0-9]+)(?: +\((\S+)\))?$')
         p16_2 = re.compile(r'^\s*Topo +Id *: +(?P<topo_id>(\d+))$')
         p16_3 = re.compile(r'^\s*Encap +type *: +(?P<etype>(\S+))$')
         p16_4 = re.compile(r'^\s*VTEP +IP *: +(?P<vtep_ip>(\S+))$')
@@ -240,55 +240,55 @@ class ShowBgpProcessVrfAll(ShowBgpProcessVrfAllSchema):
         p16_7 = re.compile(r'^\s*Router-MAC *: +(?P<router_mac>(\S+))$')
         p16_8 = re.compile(r'^\s*VIP +Derived +MAC *: +(?P<vipd_mac>(\S+))$')
         p17 = re.compile(r'^\s*Router-ID *:'
-                            ' +(?P<router_id>[0-9\.]+)$')
+                            r' +(?P<router_id>[0-9\.]+)$')
         p18 = re.compile(r'^\s*Configured +Router-ID *:'
-                            ' +(?P<conf_router_id>[0-9\.]+)$')
+                            r' +(?P<conf_router_id>[0-9\.]+)$')
         p19 = re.compile(r'^\s*Confed-ID *:'
-                            ' +(?P<confed_id>[0-9]+)$')
+                            r' +(?P<confed_id>[0-9]+)$')
         p20 = re.compile(r'^\s*Cluster-ID *:'
-                            ' +(?P<cluster_id>[0-9\.]+)$')
+                            r' +(?P<cluster_id>[0-9\.]+)$')
         p21 = re.compile(r'^\s*No. +of +configured +peers *:'
-                            ' +(?P<num_conf_peers>[0-9]+)$')
+                            r' +(?P<num_conf_peers>[0-9]+)$')
         p22 = re.compile(r'^\s*No. +of +pending +config +peers *:'
-                            ' +(?P<num_pending_conf_peers>[0-9]+)$')
+                            r' +(?P<num_pending_conf_peers>[0-9]+)$')
         p23 = re.compile(r'^\s*No. +of +established +peers *:'
-                            ' +(?P<num_established_peers>[0-9]+)$')
+                            r' +(?P<num_established_peers>[0-9]+)$')
         p24 = re.compile(r'^\s*VRF +RD *:'
-                            ' +(?P<vrf_rd>[a-zA-Z0-9\:\.\s]+)$')
+                            r' +(?P<vrf_rd>[a-zA-Z0-9\:\.\s]+)$')
         p24_1 = re.compile(r'^\s*VRF +EVPN +RD *:'
-                            ' +(?P<vrf_evpn_rd>[a-zA-Z0-9\:\.\s]+)$')
+                            r' +(?P<vrf_evpn_rd>[a-zA-Z0-9\:\.\s]+)$')
         p25 = re.compile(r'^\s*Information +for +address +family'
-                            ' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
-                            ' +in +VRF +(?P<vrf>(\S+))$')
+                            r' +(?P<address_family>[a-zA-Z0-9\s\-\_]+)'
+                            r' +in +VRF +(?P<vrf>(\S+))$')
         p26 = re.compile(r'^\s*Table +Id *: +(?P<table_id>(\S+))$')
         p27 = re.compile(r'^\s*Table +state *: +(?P<table_state>[a-zA-Z]+)$')
         p28 = re.compile(r'^\s*(?P<peers>[0-9]+) +(?P<active_peers>[0-9]+)'
-                            ' +(?P<routes>[0-9]+) +(?P<paths>[0-9]+)'
-                            ' +(?P<networks>[0-9]+) +(?P<aggregates>[0-9]+)$')
+                            r' +(?P<routes>[0-9]+) +(?P<paths>[0-9]+)'
+                            r' +(?P<networks>[0-9]+) +(?P<aggregates>[0-9]+)$')
         p29 = re.compile(r'^\s*(?P<name>[a-zA-Z]+),'
-                            ' +route-map +(?P<route_map>[a-zA-Z0-9\-\_]+)$')
+                            r' +route-map +(?P<route_map>[a-zA-Z0-9\-\_]+)$')
         p30 = re.compile(r'^\s*(?P<type>(Export|Import|EVPN Export|'
-                            'EVPN Import|MVPN Export|MVPN Import)) +RT +list'
-                            ' *:(?: +(?P<rt_list>[0-9\:]+))?$')
+                            r'EVPN Import|MVPN Export|MVPN Import)) +RT +list'
+                            r' *:(?: +(?P<rt_list>[0-9\:]+))?$')
         p31 = re.compile(r'^\s*(?P<rt_list>((\w+)\:(\d+))(\s+(\w+)\:(\d+))?)$')
         p32 = re.compile(r'^\s*Label +mode *: +(?P<label_mode>[a-zA-Z\-]+)$')
         p32_1 = re.compile(r'^\s*Is +a +Route\-reflector$')
         p33 = re.compile(r'^\s*Aggregate +label *:'
-                            ' +(?P<aggregate_label>[a-zA-Z0-9\-]+)$')
+                            r' +(?P<aggregate_label>[a-zA-Z0-9\-]+)$')
         p33_1 = re.compile(r'^\s*Allocate-index *:'
-                           ' +(?P<allocate_index>[a-zA-Z0-9\-]+)$')
+                           r' +(?P<allocate_index>[a-zA-Z0-9\-]+)$')
         p34 = re.compile(r'^\s*Import +default +limit *:'
-                            ' +(?P<import_default_prefix_limit>[0-9]+)$')
+                            r' +(?P<import_default_prefix_limit>[0-9]+)$')
         p35 = re.compile(r'^\s*Import +default +prefix +count *:'
-                            ' +(?P<import_default_prefix_count>[0-9]+)$')
+                            r' +(?P<import_default_prefix_count>[0-9]+)$')
         p36 = re.compile(r'^\s*Import +default +map *:'
-                            ' +(?P<import_default_map>[a-zA-Z0-9\_\-]+)$')
+                            r' +(?P<import_default_map>[a-zA-Z0-9\_\-]+)$')
         p37 = re.compile(r'^\s*Export +default +limit *:'
-                            ' +(?P<export_default_prefix_limit>[0-9]+)$')
+                            r' +(?P<export_default_prefix_limit>[0-9]+)$')
         p38 = re.compile(r'^\s*Export +default +prefix +count *:'
-                            ' +(?P<export_default_prefix_count>[0-9]+)$')
+                            r' +(?P<export_default_prefix_count>[0-9]+)$')
         p39 = re.compile(r'^\s*Export +default +map *:'
-                            ' +(?P<export_default_map>[a-zA-Z0-9\_\-]+)$')
+                            r' +(?P<export_default_map>[a-zA-Z0-9\_\-]+)$')
         p40 = re.compile(r'^\s*Nexthop +trigger-delay$')
         p41 = re.compile(r'^\s*critical +(?P<critical>[0-9]+) +ms$')
         p42 = re.compile(r'^\s*non-critical +(?P<non_critical>[0-9]+) +ms$')
@@ -1139,26 +1139,26 @@ class ShowBgpPeerSession(ShowBgpPeerSessionSchema):
         parsed_dict = {}
 
         p1 = re.compile(r'^\s*template +peer-session '
-                    '+(?P<session_name>[a-zA-Z\-\_0-9]+)$')
+                    r'+(?P<session_name>[a-zA-Z\-\_0-9]+)$')
         r1 = re.compile(r'^\s*Shutdown$')
         r2 = re.compile(r'^\s*Update +Source +-'
-                    ' +(?P<update_source>[a-zA-Z0-9\:\s]+)$')
+                    r' +(?P<update_source>[a-zA-Z0-9\:\s]+)$')
         r3 = re.compile(r'^\s*Description +- +description *:'
-                    ' +(?P<desc>[a-zA-Z\-]+)$')
+                    r' +(?P<desc>[a-zA-Z\-]+)$')
         r4 = re.compile(r'^\s*Password$')
         r5 = re.compile(r'^\s*EBGP +Multihop +- +hop +limit *:'
-                    ' +(?P<ebgp_multihop_limit>[0-9]+)$')
+                    r' +(?P<ebgp_multihop_limit>[0-9]+)$')
         r6 = re.compile(r'^\s*Disable +Connectivity +Check$')
         r7 = re.compile(r'^\s*Suppress +Capabilities$')
         r8 = re.compile(r'^\s*Passive Only$')
         r9 = re.compile(r'^\s*Timers +- +hold +time *:'
-                    ' +(?P<holdtime>[0-9]+), keepalive *:'
-                    ' +(?P<keepalive>[0-9]+)$')
+                    r' +(?P<holdtime>[0-9]+), keepalive *:'
+                    r' +(?P<keepalive>[0-9]+)$')
         r10 = re.compile(r'^\s*Remote AS$')
         r11 = re.compile(r'^\s*Local AS$')
         r12 = re.compile(r'^\s*Enable Bfd$')
         r13 = re.compile(r'^\s*VRF +default *:'
-                    ' +(?P<vrf_default>[0-9\.]+)$')
+                    r' +(?P<vrf_default>[0-9\.]+)$')
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -1330,24 +1330,24 @@ class ShowBgpPeerPolicy(ShowBgpPeerPolicySchema):
         parsed_dict = {}
 
         p1 = re.compile(r'^\s*template +peer-policy'
-                    ' +(?P<policy_name>[a-zA-Z0-9\-\_]+)$')
+                    r' +(?P<policy_name>[a-zA-Z0-9\-\_]+)$')
         r1 = re.compile(r'^\s*Send +Community$')
         r2 = re.compile(r'^\s*Send +Ext-community$')
         r3 = re.compile(r'^\s*Route +Reflector +Client$')
         r4 = re.compile(r'^\s*Route-map +Inbound +- +policy-name *:'
-                            ' +(?P<inbound_name>[a-zA-Z\-]+)$')
+                            r' +(?P<inbound_name>[a-zA-Z\-]+)$')
         r5 = re.compile(r'^\s*Route-map +Outbound +- +policy-name *:'
-                            ' +(?P<outbound_name>[a-zA-Z\-]+)$')
+                            r' +(?P<outbound_name>[a-zA-Z\-]+)$')
         r6 = re.compile(r'^\s*Maximum +Prefixes +- +prefix +limit *:'
-                            ' +(?P<max_prefix_no>[0-9]+)$')
+                            r' +(?P<max_prefix_no>[0-9]+)$')
         r7 = re.compile(r'^\s*Default +Originate(?: +- +route-map *:'
-                            ' +(?P<route_map>[a-zA-Z]+))?$')
+                            r' +(?P<route_map>[a-zA-Z]+))?$')
         r8 = re.compile(r'^\s*Soft-Reconfig$')
         r9 = re.compile(r'^\s*Site-of-origin$')
         r10 = re.compile(r'^\s*Allowas-in$')
         r11 = re.compile(r'^\s*AS-override$')
         r12 = re.compile(r'^\s*VRF +default *:'
-                            ' +(?P<vrf_default>[0-9\.]+)$')
+                            r' +(?P<vrf_default>[0-9\.]+)$')
         r13 = re.compile(r'^\s*Nexthop +Self$')
 
         for line in out.splitlines():
@@ -1516,31 +1516,31 @@ class ShowBgpPeerTemplate(ShowBgpPeerTemplateSchema):
             out = output
 
         p0 = re.compile(r'^\s*template +peer'
-                        ' +(?P<peer_template>[a-zA-Z0-9\-\_]+)$')
+                        r' +(?P<peer_template>[a-zA-Z0-9\-\_]+)$')
         p1 = re.compile(r'^\s*Remote +AS +(?P<remote_as>[0-9]+)$')
         p2 = re.compile(r'^\s*Inherits +session +configuration'
-                            ' +from session-template'
-                            ' +(?P<inherit_template>(\S+))$')
+                            r' +from session-template'
+                            r' +(?P<inherit_template>(\S+))$')
         p3 = re.compile(r'^\s*Description *: +(?P<desc>(\S+))$')
         p4 = re.compile(r'^\s*Using +(?P<update_source>(\S+)) +as'
-                            ' +update +source +for +this +peer$')
+                            r' +update +source +for +this +peer$')
         p5 = re.compile(r'^\s*Connected check is disabled$')
         p6 = re.compile(r'^\s*BFD live-detection +is +configured$')
         p7 = re.compile(r'^\s*External +BGP +peer +might +be +upto'
-                            ' +(?P<num_hops_bgp_peer>[0-9]+) +hops'
-                            ' +away$')
+                            r' +(?P<num_hops_bgp_peer>[0-9]+) +hops'
+                            r' +away$')
         p8 = re.compile(r'^\s*TCP +MD5 +authentication +is'
-                            ' +(?P<tcp_md5_auth>(\S+))$')
+                            r' +(?P<tcp_md5_auth>(\S+))$')
         p9 = re.compile(r'^\s*Only +passive +connection +setup'
-                            ' +allowed$')
+                            r' +allowed$')
         p10 = re.compile(r'^\s*Neighbor +local-as +command'
-                            ' +(?P<nbr_local_as_cmd>(\S+))$')
+                            r' +(?P<nbr_local_as_cmd>(\S+))$')
         p11 = re.compile(r'^\s*Private +AS +numbers +removed +from'
-                            ' +updates +sent +to +this +neighbor$')
+                            r' +updates +sent +to +this +neighbor$')
         p12 = re.compile(r'^\s*Hold +time += +(?P<holdtime>[0-9]+),'
-                            ' +keepalive +interval +is'
-                            ' +(?P<keepalive_interval>[0-9]+)'
-                            ' +seconds$')
+                            r' +keepalive +interval +is'
+                            r' +(?P<keepalive_interval>[0-9]+)'
+                            r' +seconds$')
                                     
         # Init vars
         peer_templates = []
@@ -1934,12 +1934,12 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p7 = re.compile(r'^\s*confederation +peers +(?P<confederation_peers_as>[0-9]+)$')
         p8 = re.compile(r'^\s*no graceful-restart$')
         p9 = re.compile(r'^\s*graceful-restart'
-                    ' +(?P<graceful_restart_type>[a-z\-]+)'
-                    ' +(?P<time>[0-9]+)$')
+                    r' +(?P<graceful_restart_type>[a-z\-]+)'
+                    r' +(?P<time>[0-9]+)$')
         p10 = re.compile(r'^\s*log-neighbor-changes$')
         p11 = re.compile(r'^\s*router-id +(?P<router_id>[0-9\.]+)$')
         p12 = re.compile(r'^\s*timers +bgp +(?P<keepalive_interval>[0-9]+)'
-                    ' +(?P<holdtime>[0-9]+)$')
+                    r' +(?P<holdtime>[0-9]+)$')
         p13 = re.compile(r'^\s*no enforce-first-as$')
         p14 = re.compile(r'^\s*no fast-external-fallover$')
         p15 = re.compile(r'^\s*dynamic-med-interval +(?P<dynamic_med_interval>[0-9]+)$')
@@ -1950,10 +1950,10 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
         p20 = re.compile(r'^\s*address-family +(?P<af_name>[a-z0-9\-\s]+)$')
         p21_1 = re.compile(r'^\s*route-target +(?P<af_evpn_vni_rt_type>[\w]+) +(?P<af_evpn_vni_rt>[\w\s]+)$')
         p21 = re.compile(r'^\s*dampening '
-                        '+(?P<af_dampening_half_life_time>[0-9]+) '
-                        '+(?P<af_dampening_reuse_time>[0-9]+) '
-                        '+(?P<af_dampening_suppress_time>[0-9]+) '
-                        '+(?P<af_dampening_max_suppress_time>[0-9]+)$')
+                        r'+(?P<af_dampening_half_life_time>[0-9]+) '
+                        r'+(?P<af_dampening_reuse_time>[0-9]+) '
+                        r'+(?P<af_dampening_suppress_time>[0-9]+) '
+                        r'+(?P<af_dampening_max_suppress_time>[0-9]+)$')
         p22 = re.compile(r'^\s*dampening +route-map +(?P<af_dampening_route_map>[A-Z0-9\-\_]+)$')
         p23 = re.compile(r'^\s*nexthop +route-map +(?P<af_nexthop_route_map>[A-Za-z0-9\-\_]+)$')
         p24 = re.compile(r'^\s*nexthop +trigger-delay +critical +(?P<af_nexthop_trigger_delay_critical>[0-9]+) +non-critical +(?P<af_nexthop_trigger_delay_non_critical>[0-9]+)$')
@@ -3254,36 +3254,36 @@ class ShowBgpAllDampeningFlapStatistics(ShowBgpAllDampeningFlapStatisticsSchema)
         history_paths = None
         dampened_paths = None
         p1 = re.compile(r'^Flap +Statistics +for +VRF +'
-                            '(?P<vrf_name>[\w\-]+), +address +family +'
-                            '(?P<address_family>[\w\s\-]+):$')
+                            r'(?P<vrf_name>[\w\-]+), +address +family +'
+                            r'(?P<address_family>[\w\s\-]+):$')
         p2 = re.compile(r'^Dampening +configured, +'
-                            '(?P<history_paths>\d+) +history +paths, +'
-                            '(?P<dampened_paths>\d+) +dampened +paths$')
+                            r'(?P<history_paths>\d+) +history +paths, +'
+                            r'(?P<dampened_paths>\d+) +dampened +paths$')
         p2_1 = re.compile(r'^Dampening +not +configured, +'
-                            '(?P<history_paths>\d+) +history +paths, +'
-                            '(?P<dampened_paths>\d+) +dampened +paths$')
+                            r'(?P<history_paths>\d+) +history +paths, +'
+                            r'(?P<dampened_paths>\d+) +dampened +paths$')
         p3 = re.compile(r'^Route +Distinguisher: +'
-                            '(?P<route_identifier>[\w\.\:]+)$')
+                            r'(?P<route_identifier>[\w\.\:]+)$')
         p4 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
-                            '(?P<best>[\>|\s])?'
-                            '(?P<pathtype>[e|i])?'
-                            ' +(?P<network>\S+)'
-                            ' +(?P<peer>[\w\/\.\:]+)'
-                            ' +(?P<flaps>\d+)'
-                            ' +(?P<duration>[\w\:\.]+)'
-                            '(?: +(?P<reuse_time>[\w\:\.]+))?'
-                            ' +(?P<current_penalty>\d+)\/'
-                            '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
+                            r'(?P<best>[\>|\s])?'
+                            r'(?P<pathtype>[e|i])?'
+                            r' +(?P<network>\S+)'
+                            r' +(?P<peer>[\w\/\.\:]+)'
+                            r' +(?P<flaps>\d+)'
+                            r' +(?P<duration>[\w\:\.]+)'
+                            r'(?: +(?P<reuse_time>[\w\:\.]+))?'
+                            r' +(?P<current_penalty>\d+)\/'
+                            r'(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
         p4_1 = re.compile(r'^(?P<status>[\*|d|s|h|\s])?'
-                            '(?P<best>[\>|\s])?'
-                            '(?P<pathtype>[e|i|\s])?'
-                            ' +(?P<network>\S+\/\d{1,3})'
-                            '(?P<peer>[1|2][\d\.\:]+)'
-                            ' +(?P<flaps>\d+)'
-                            ' +(?P<duration>[\w\:\.]+)'
-                            '(?: +(?P<reuse_time>[\w\:\.]+))?'
-                            ' +(?P<current_penalty>\d+)\/'
-                            '(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
+                            r'(?P<best>[\>|\s])?'
+                            r'(?P<pathtype>[e|i|\s])?'
+                            r' +(?P<network>\S+\/\d{1,3})'
+                            r'(?P<peer>[1|2][\d\.\:]+)'
+                            r' +(?P<flaps>\d+)'
+                            r' +(?P<duration>[\w\:\.]+)'
+                            r'(?: +(?P<reuse_time>[\w\:\.]+))?'
+                            r' +(?P<current_penalty>\d+)\/'
+                            r'(?P<suppress_limit>\d+)\/(?P<reuse_limit>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3945,25 +3945,25 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
         tem_peer = None
 
         p1 = re.compile(r'^BGP +peer\-template +is +'
-                            '(?P<template>[\w\-]+)$')
+                            r'(?P<template>[\w\-]+)$')
         p2 = re.compile(r'^Using +(?P<intf>[\w\-\/\.]+) +as'
-                            ' +update +source +for +this +peer$')
+                            r' +update +source +for +this +peer$')
         p3 = re.compile(r'^Peer +is +low\-memory +exempt$')
         p4 = re.compile(r'^Disable +logging +neighbor +events$')
         p5 = re.compile(r'^External +BGP +peer +might +be +up +to'
-                            ' +(?P<hops>\d+) +hops +away$')
+                            r' +(?P<hops>\d+) +hops +away$')
         p6 = re.compile(r'^Only +passive +connection +setup +allowed$')
         p23 = re.compile(r'^Neighbor +local\-as +command +not +active$')
         p7 = re.compile(r'^For +address +family: +(?P<af>[\w\s\-]+)$')
         p8 = re.compile(r'^Condition\-map +(?P<con_map>[\w\-]+), +'
-                            'Advertise\-map +(?P<adv_map>[\w\-]+), +'
-                            'Status +(?P<status>[\w\-]+)$')
+                            r'Advertise\-map +(?P<adv_map>[\w\-]+), +'
+                            r'Status +(?P<status>[\w\-]+)$')
         p25 = re.compile(r'^Inbound +soft +reconfiguration +allowed(?: *\(always\))?$')
         p9 = re.compile(r'^Community +attribute +sent +to +this +neighbor$')
         p10 = re.compile(r'^Extended +community +attribute +sent +'
-                            'to +this +neighbor$')
+                            r'to +this +neighbor$')
         p11 = re.compile(r'^Nexthop(?: +always)? +set +to +local +'
-                            'peering +address, +(?P<local_nexthop>[\w\.\:]+)$')
+                            r'peering +address, +(?P<local_nexthop>[\w\.\:]+)$')
         p12 = re.compile(r'^Third\-party +Nexthop +will +not +be +computed.$')
         p13 = re.compile(r'^Maximum +prefixes +allowed +(?P<max_pfx>\d+)$')
         p14 = re.compile(r'^SOO +Extcommunity: +(?P<soo>[\w\:\.]+)$')
@@ -3972,11 +3972,11 @@ class ShowBgpPeerTemplateCmd(ShowBgpPeerTemplateCmdSchema):
         p17 = re.compile(r'^ASN +override +is +(?P<status>\w+)$')
         p24 = re.compile(r'^Peer +ASN +check +is +disabled$')
         p18 = re.compile(r'^Inbound +(?P<type>[\w\-\s]+) +configured'
-                            ' +is +(?P<name>[\w\-]+)$')
+                            r' +is +(?P<name>[\w\-]+)$')
         p19 = re.compile(r'^Outbound +(?P<type>[\w\-\s]+) +configured'
-                            ' +is +(?P<name>[\w\-]+)$')
+                            r' +is +(?P<name>[\w\-]+)$')
         p20 = re.compile(r'^Default +information +originate(, +'
-                            'route-map +(?P<map>[\w\-]+))? +(?P<dummy>.*)$')
+                            r'route-map +(?P<map>[\w\-]+))? +(?P<dummy>.*)$')
         p21 = re.compile(r'^Unsuppress\-map +(?P<map>[\w\-]+) +configured$')
         p22 = re.compile(r'^Members +of +peer\-template +(?P<peer>[\w\-]+):$')
         p22_1 = re.compile(r'^(?P<vrf>[\w\-]+): +(?P<neighbor>[\w\:\.]+)$')
@@ -4642,19 +4642,19 @@ class ShowBgpPolicyStatisticsParser(ShowBgpPolicyStatisticsSchema):
         else:
             vrf = 'default'
         p1 = re.compile(r'^Details +for +VRF +'
-                            '(?P<vrf>[\w\-]+)$')
+                            r'(?P<vrf>[\w\-]+)$')
         p2 = re.compile(r'^Total +count +for +(?P<type>\w+) +rpm +handles: +'
-                            '(?P<handles>\d+)$')
+                            r'(?P<handles>\d+)$')
         p3 = re.compile(r'^BGP +policy +statistics +not +available$')
         p4 = re.compile(r'^route\-map +(?P<name>\S+) +'
-                            '(?P<action>\w+) +(?P<seqnum>\d+)$')
+                            r'(?P<action>\w+) +(?P<seqnum>\d+)$')
         p5 = re.compile(r'^(?P<command>[\w\s\-\>]+) +'
-                            'C: +(?P<compare_count>\d+) +'
-                            'M: +(?P<match_count>\d+)$')
+                            r'C: +(?P<compare_count>\d+) +'
+                            r'M: +(?P<match_count>\d+)$')
         p6 = re.compile(r'^Total +accept +count +for +policy: +'
-                            '(?P<total_accept_count>\d+)$')
+                            r'(?P<total_accept_count>\d+)$')
         p7 = re.compile(r'^Total +reject +count +for +policy: +'
-                            '(?P<total_reject_count>\d+)$')
+                            r'(?P<total_reject_count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5085,55 +5085,56 @@ class ShowBgpSessions(ShowBgpSessionsSchema):
                       'S': 'shutdown'}
         # Total peers 4, established peers 3
         p1 = re.compile(r'^Total +peers +(?P<total>\d+), +'
-                            'established +peers +(?P<established>\d+)$')
+                            r'established +peers +(?P<established>\d+)$')
         # ASN 100
         p2 = re.compile(r'^ASN +(?P<asn>\d+)$')
         # VRF default, local ASN 100
         p3 = re.compile(r'^VRF +(?P<vrf>\S+), +'
-                            'local +ASN +(?P<asn>\d+)$')
+                            r'local +ASN +(?P<asn>\d+)$')
         # peers 4, established peers 3, local router-id 10.1.1.1
         p4 = re.compile(r'^peers +(?P<peer>\d+), +'
-                            'established +peers +(?P<established>\d+), +'
-                            'local +router\-id +(?P<id>[\w\.\:]+)$')
+                            r'established +peers +(?P<established>\d+), +'
+                            r'local +router\-id +(?P<id>[\w\.\:]+)$')
         # 10.51.1.101        300 2     00:30:01|never   |never    I   0/0          2/0
         p5 = re.compile(r'^(?P<nei>[\w\.\:]+) +'
-                            '(?P<asn>\d+) +'
-                            '(?P<dropped>\d+) +'
-                            '(?P<last_flap>[\w\.\:]+) *\|'
-                            '(?P<last_read>[\w\.\:]+) *\|'
-                            '(?P<last_write>[\w\.\:]+) +'
-                            '(?P<state>[a-zA-Z]) +'
-                            '(?P<local_port>\d+)\/'
-                            '(?P<remote_port>\d+) +'
-                            '(?P<notifications_sent>\d+)\/'
-                            '(?P<notifications_received>\d+)$')
+                            r'(?P<asn>\d+) +'
+                            r'(?P<dropped>\d+) +'
+                            r'(?P<last_flap>[\w\.\:]+) *\|'
+                            r'(?P<last_read>[\w\.\:]+) *\|'
+                            r'(?P<last_write>[\w\.\:]+) +'
+                            r'(?P<state>[a-zA-Z]) +'
+                            r'(?P<local_port>\d+)\/'
+                            r'(?P<remote_port>\d+) +'
+                            r'(?P<notifications_sent>\d+)\/'
+                            r'(?P<notifications_received>\d+)$')
         # fe80::7e21:eff:fe2e:cc58%Ethernet1/2
+        # fe80::205:ff:fe00:15%port-channel15
         p6_1 = re.compile(r'^(?P<nei>[a-zA-Z0-9\.\:\/\[\]\,]+)%'
-                           '(?P<linklocal_interfaceport>[a-zA-Z0-9\.\:\/\[\]\,]+)$')
+                           r'(?P<linklocal_interfaceport>[a-zA-Z0-9\.\-\:\/\[\]\,]+)$')
         #                     1 0     00:00:18|00:00:17|00:00:17 E   20230/179        0/0
         p6_2 = re.compile(r'^(?P<asn>\d+) +'
-                            '(?P<dropped>\d+) +'
-                            '(?P<last_flap>[\w\.\:]+) *\|'
-                            '(?P<last_read>[\w\.\:]+) *\|'
-                            '(?P<last_write>[\w\.\:]+) +'
-                            '(?P<state>[a-zA-Z]) +'
-                            '(?P<local_port>\d+)\/'
-                            '(?P<remote_port>\d+) +'
-                            '(?P<notifications_sent>\d+)\/'
-                            '(?P<notifications_received>\d+)$')
+                            r'(?P<dropped>\d+) +'
+                            r'(?P<last_flap>[\w\.\:]+) *\|'
+                            r'(?P<last_read>[\w\.\:]+) *\|'
+                            r'(?P<last_write>[\w\.\:]+) +'
+                            r'(?P<state>[a-zA-Z]) +'
+                            r'(?P<local_port>\d+)\/'
+                            r'(?P<remote_port>\d+) +'
+                            r'(?P<notifications_sent>\d+)\/'
+                            r'(?P<notifications_received>\d+)$')
         # 4.4.4.1         4258745628
         p7_1 = re.compile(r'^(?P<nei>[\da-f.\:]+) +'
-                            '(?P<asn>\d+)$')
+                            r'(?P<asn>\d+)$')
         #                     0     00:01:39|00:00:11|00:00:20 E   179/21890      0/0
         p7_2 = re.compile(r'^(?P<dropped>\d+) +'
-                            '(?P<last_flap>[\w\.\:]+) *\|'
-                            '(?P<last_read>[\w\.\:]+) *\|'
-                            '(?P<last_write>[\w\.\:]+) +'
-                            '(?P<state>[a-zA-Z]) +'
-                            '(?P<local_port>\d+)\/'
-                            '(?P<remote_port>\d+) +'
-                            '(?P<notifications_sent>\d+)\/'
-                            '(?P<notifications_received>\d+)$')
+                            r'(?P<last_flap>[\w\.\:]+) *\|'
+                            r'(?P<last_read>[\w\.\:]+) *\|'
+                            r'(?P<last_write>[\w\.\:]+) +'
+                            r'(?P<state>[a-zA-Z]) +'
+                            r'(?P<local_port>\d+)\/'
+                            r'(?P<remote_port>\d+) +'
+                            r'(?P<notifications_sent>\d+)\/'
+                            r'(?P<notifications_received>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5622,20 +5623,20 @@ class ShowBgpLabels(ShowBgpLabelsSchema):
                          'a': 'aggregate',
                          'I': 'injected'}
         p1 = re.compile(r'^BGP +routing +table +information +for +VRF +(?P<vrf>\S+), +'
-                            'address +family +(?P<af>[\w\s]+)$')
+                            r'address +family +(?P<af>[\w\s]+)$')
         p2 = re.compile(r'^BGP +table +version +is +(?P<ver>\d+), +'
-                            '(L|l)ocal +(R|r)outer +ID +is +(?P<router_id>[\w\.\:]+)$')
+                            r'(L|l)ocal +(R|r)outer +ID +is +(?P<router_id>[\w\.\:]+)$')
         p4 = re.compile(r'^Route +Distinguisher: +(?P<rd>[\w\.\:]+) +'
-                            '\(VRF +(?P<vrf>\S+)\)$')
+                            r'\(VRF +(?P<vrf>\S+)\)$')
         p3 = re.compile(r'^(?P<status>s|S|x|d|h|\*)?'
-                            '(?P<best>\>)?'
-                            ' *(?P<type_code>i|e|c|l|a|r|I)'
-                            '(?P<prefix>[\w\/\.\:]+)?'
-                            ' +(?P<next_hop>[\w\/\.\:]+)'
-                            '(?: +(?P<in_label>\w+)\/(?P<out_label>\w+))?'
-                            '(?: +\((?P<vpn>(\S+))\))?$')
+                            r'(?P<best>\>)?'
+                            r' *(?P<type_code>i|e|c|l|a|r|I)'
+                            r'(?P<prefix>[\w\/\.\:]+)?'
+                            r' +(?P<next_hop>[\w\/\.\:]+)'
+                            r'(?: +(?P<in_label>\w+)\/(?P<out_label>\w+))?'
+                            r'(?: +\((?P<vpn>(\S+))\))?$')
         p3_1 = re.compile(r'^(?P<in_label>\w+)\/(?P<out_label>\w+)'
-                            '(?: +\((?P<vpn>(\S+))\))?$')
+                            r'(?: +\((?P<vpn>(\S+))\))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -6109,33 +6110,33 @@ class ShowBgpL2vpnEvpnSummary(ShowBgpL2vpnEvpnSummarySchema):
         #                         118316  117369     5549    0    0     3w4d 142  
 
         p1 = re.compile(r'^\s*BGP +summary +information +for +VRF +(?P<vrf_name_out>[\w]+),'
-                        ' +address +family +(?P<af_name>[\w\s]+)$')
+                        r' +address +family +(?P<af_name>[\w\s]+)$')
         p2 = re.compile(
             r'^\s*BGP +router +identifier +(?P<vrf_router_id>[\d\.]+), +local +AS +number +(?P<vrf_local_as>[\d]+)$')
         p3 = re.compile(r'^\s*BGP +table +version +is +(?P<tableversion>[\d]+), +(?P<af_name>[\w\s]+)'
-                        ' +config +peers +(?P<configuredpeers>[\d]+),'
-                        ' +capable +peers +(?P<capablepeers>[\d]+)$')
+                        r' +config +peers +(?P<configuredpeers>[\d]+),'
+                        r' +capable +peers +(?P<capablepeers>[\d]+)$')
         p4 = re.compile(
             r'^\s*(?P<totalnetworks>[\d]+) +network +entries +and +(?P<totalpaths>[\d]+) +paths +using'
-            ' +(?P<memoryused>[\d]+) +bytes +of +memory$')
+            r' +(?P<memoryused>[\d]+) +bytes +of +memory$')
         p5 = re.compile(r'^\s*BGP +attribute +entries +\[(?P<numberattrs>[\d]+)\/(?P<bytesattrs>[\d]+)\],'
-                        ' +BGP +AS +path +entries +\[(?P<numberpaths>[\d]+)\/(?P<bytespaths>[\d]+)\]$')
+                        r' +BGP +AS +path +entries +\[(?P<numberpaths>[\d]+)\/(?P<bytespaths>[\d]+)\]$')
 
         p6 = re.compile(r'^\s*BGP +community +entries +\[(?P<numbercommunities>[\d]+)\/(?P<bytescommunities>[\d]+)\],'
-                        ' +BGP +clusterlist +entries +\[(?P<numberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
+                        r' +BGP +clusterlist +entries +\[(?P<numberclusterlist>[\d]+)\/(?P<bytesclusterlist>[\d]+)\]$')
 
         p7 = re.compile(
             r'^\s*(?P<neighborid>[\w\.\:]+) +(?P<neighborversion>[\d]+) +(?P<neighboras>[\d]+) +(?P<msgrecvd>[\d]+)'
-            ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
-            ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+)$')
+            r' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
+            r' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+)$')
         
         p8a = re.compile(
             r'^\s*(?P<neighborid>[\w\.\:]+) +(?P<neighborversion>[\d]+) +((?P<neighboras>[\d]+)[\n]*)$')
         
         p8b = re.compile(
             r'^\s*((?P<msgrecvd>[\d]+)'
-            ' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
-            ' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+))$')
+            r' +(?P<msgsent>[\d]+) +(?P<neighbortableversion>[\d]+) +(?P<inq>[\d]+) +(?P<outq>[\d]+)'
+            r' +(?P<time>[\w\:]+) +(?P<prefixreceived>[\w\s\)\(]+))$')
 
         for line in out.splitlines():
             if line:
@@ -6369,7 +6370,7 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         #     10.196.0.11
 
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>[\w]+),'
-                        ' +address +family +(?P<af_name>[\w\s]+)$')
+                        r' +address +family +(?P<af_name>[\w\s]+)$')
         p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)( +\(ES +(?P<es>[\w\s\[\]\.]+)\))?( +\((?P<rd_vrf>[\w]+)VNI +(?P<rd_vniid>[\d]+)\))?$')
         p3 = re.compile(r'^\s*BGP routing table entry for +(?P<nonipprefix>[\w\[\]\:\.\/]+), +version +(?P<prefixversion>[\d]+)$')
         p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available, +best +#(?P<bestpathnr>[\d]+)\)$')
@@ -6384,9 +6385,9 @@ class ShowBgpL2vpnEvpnRouteType(ShowBgpL2vpnEvpnRouteTypeSchema):
         #   AS-Path: 4 1 10 33299 51178 47751 {27016} , path sourced external to AS
         p11 = re.compile(r'^\s*AS-Path: +(?P<as_path>[\d\s\{\}]+|[\w]+)(, +path locally originated)?(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
         p12 = re.compile(r'^\s*(?P<ipnexthop>[\d\.]+) +\((?:(?P<inaccessible>(inaccessible)), +)?metric +(?P<nexthopmetric>[\d]+)\) +from +(?P<neighbor>[\d\.]+)'
-                         ' +\((?P<neighborid>[\d\.]+)\)$')
+                         r' +\((?P<neighborid>[\d\.]+)\)$')
         p13 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)? +localpref +(?P<localpref>[\d]+),'
-                         ' +weight +(?P<weight>[\d]+)$')
+                         r' +weight +(?P<weight>[\d]+)$')
         p14 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
         p15 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+) +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
         p16 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
@@ -6883,22 +6884,22 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         # fd = 84
 
         p1 = re.compile(r'^\s*BGP +neighbor +is +(?P<neighbor>[\d\.]+), remote AS +(?P<remoteas>[\d]+), +(?P<link>[\w]+) +link,'
-                        ' +Peer index +(?P<index>[\d]+)$')
+                        r' +Peer index +(?P<index>[\d]+)$')
         p2 = re.compile(r'^\s*BGP version +(?P<version>[\d]+), remote router ID +(?P<remote_id>[\d\.]+)$')
         p3 = re.compile(r'^\s*BGP +state += +(?P<state>[\w\s\(\)]+), +(?P<up>[\w]+) +for'
-                        ' +(?P<elapsedtime>[\w\:]+)(, +retry in +(?P<retry>[\w\:]+))?$')
+                        r' +(?P<elapsedtime>[\w\:]+)(, +retry in +(?P<retry>[\w\:]+))?$')
         p4 = re.compile(r'^\s*Peer is directly attached, interface +(?P<connectedif>[\w\/]+)$')
         p5 = re.compile(r'^\s*BFD live-detection is configured and enabled, state is +(?P<bfd_state>[\w]+)?$')
         p6 = re.compile(r'^\s*TCP MD5 authentication is set \(enabled\)$')
         p7 = re.compile(r'^\s*Last read +(?P<lastread>[\w\:\.]+), hold time = +(?P<holdtime>[\d]+),'
-                            ' +keepalive interval is +(?P<keepalivetime>[\d]+) +seconds$')
+                            r' +keepalive interval is +(?P<keepalivetime>[\d]+) +seconds$')
         p8 = re.compile(r'^\s*Last written +(?P<lastwrite>[\w\:\.]+), keepalive timer expiry due +(?P<keepalive>[\w\:]+)$')
         p9 = re.compile(r'^\s*Received +(?P<msgrecvd>[\d]+) +messages, +(?P<notificationsrcvd>[\d]+) +notifications,'
-                        ' +(?P<recvbufbytes>[\d]+)+ bytes in queue$')
+                        r' +(?P<recvbufbytes>[\d]+)+ bytes in queue$')
         p10 = re.compile(r'^\s*Sent +(?P<msgsent>[\d]+) messages,'
-                          ' +(?P<notificationssent>[\d]+)'
-                          ' +notifications, +(?P<sentbytesoutstanding>[\d]+)'
-                          '(?:\((?P<totalbytessent>[\d]+)\))? +bytes in queue$')
+                          r' +(?P<notificationssent>[\d]+)'
+                          r' +notifications, +(?P<sentbytesoutstanding>[\d]+)'
+                          r'(?:\((?P<totalbytessent>[\d]+)\))? +bytes in queue$')
         p11 = re.compile(r'^\s*Connections established +(?P<connsestablished>[\d]+), +dropped +(?P<connsdropped>[\d]+)$')
         p12 = re.compile(r'^\s*Last reset by us +(?P<resettime>[\w]+), +due to +(?P<resetreason>[\w\s]+)$')
         p13 = re.compile(r'^\s*Last reset by peer +(?P<peerresettime>[\w]+), due to +(?P<peerresetreason>[\w\s]+)$')
@@ -6936,7 +6937,7 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         p46 = re.compile(r'^\s*Last End-of-RIB received +(?P<lastendribreceived>[\w\:]+) +after session start$')
         p47 = re.compile(r'^\s*Last End-of-RIB sent +(?P<lastendribsent>[\w\:]+) +after session start$')
         p48 = re.compile(r'^\s*First convergence +(?P<rrconfigured>[\w\:]+)'
-                         ' +after session start with +(?P<pfxbytes>[\d]+) +routes sent$')
+                         r' +after session start with +(?P<pfxbytes>[\d]+) +routes sent$')
         p49 = re.compile(r'^\s*Local host: +(?P<localaddr>[\d\.]+), Local port: +(?P<localport>[\d\.]+)$')
         p50 = re.compile(r'^\s*Foreign host: +(?P<remoteaddr>[\d\.]+), Foreign port: +(?P<remoteport>[\d]+)$')
         p51 = re.compile(r'^\s*fd = +(?P<fd>[\d]+)$')
@@ -7599,21 +7600,21 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         result_dict = {}
         # BGP routing table information for VRF default, address family IPv4 MVPN
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf>\S+),'
-                ' +address +family +(?P<af>[\w\s]+)$')
+                r' +address +family +(?P<af>[\w\s]+)$')
 
         # BGP table version is 390, Local Router ID is 10.16.2.2
         p2 = re.compile(r'^\s*BGP +table +version +is +(?P<table_version>[\d]+),'
-                        ' +Local +Router +ID +is +(?P<router_id>[\d\.]+)$')
+                        r' +Local +Router +ID +is +(?P<router_id>[\d\.]+)$')
 
         #    Network            Next Hop            Metric     LocPrf     Weight Path
         # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
         p3 = re.compile(r'^\s*Route +Distinguisher: +(?P<rd>[\d\.\:]+)'
-                        '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
+                        r'( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
 
         # *>l[5][10.111.1.3][238.8.4.101]/64
         p4 = re.compile(r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?'
-                            '(?P<typecode>(i|e|c|l|a|r|I)+)?'
-                            '(?P<prefix>[\w\]\/\:\.\]\[]+)$')
+                            r'(?P<typecode>(i|e|c|l|a|r|I)+)?'
+                            r'(?P<prefix>[\w\]\/\:\.\]\[]+)$')
 
         #                       Next Hop            Metric     LocPrf     Weight Path
         #                       10.196.7.7                           100          0 i
@@ -7836,25 +7837,25 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
 
         # BGP routing table information for VRF default, address family IPv4 MVPN
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>\S+),'
-                        ' +address +family +(?P<af_name>[\w\s]+)$')
+                        r' +address +family +(?P<af_name>[\w\s]+)$')
 
         # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
         p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)'
-                        '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
+                        r'( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
 
         # BGP routing table entry for [5][10.111.1.3][238.8.4.s101]/64, version 388
         p3 = re.compile(
             r'^\s*BGP +routing +table +entry +for +(?P<nonipprefix>[\d\[\]\:\.\/]+),'
-            ' +version +(?P<prefixversion>[\d]+)$')
+            r' +version +(?P<prefixversion>[\d]+)$')
 
         # Paths: (1 available, best #1)
         p4 = re.compile(r'^\s*Paths: +\((?P<totalpaths>[\d]+) +available,'
-                        ' +best +#(?P<bestpathnr>[\d]+)\)$')
+                        r' +best +#(?P<bestpathnr>[\d]+)\)$')
 
         # Flags: (0x000002)(high32 00000000) on xmit-list, is not in mvpn
         # Flags: (0x000002)(high32 00000000) on xmit-list, is not in mvpn, is not in HW
         p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list'
-            '(, +(?P<flags_attr>[\w\s\/\,]+))?$')
+            r'(, +(?P<flags_attr>[\w\s\/\,]+))?$')
 
         #   Advertised path-id 1
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
@@ -7863,31 +7864,31 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         # Path type: internal, path is invalid(rnh not resolved),
         #        not best reason: Neighbor Address, no labeled nexthop
         p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+),'
-                        ' +(?P<pathtypes>[\S\s\,\:\/\(\)]+)?$')
+                        r' +(?P<pathtypes>[\S\s\,\:\/\(\)]+)?$')
 
         #   AS-Path: NONE, path locally originated
         p9 = re.compile(
             r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?'
-                '(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
+                r'(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
 
         #     0.0.0.0 (metric 0) from 0.0.0.0 (10.16.2.2)
         #     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
         p10 = re.compile(
             r'^\s*(?P<ipnexthop>[\d\.]+) +\(((?P<nexthop_status>[\w]+), )?metric +(?P<nexthopmetric>[\d]+)\)'
-            ' +from +(?P<neighbor>[\d\.]+)'
-            ' +\((?P<neighborid>[\d\.]+)\)$')
+            r' +from +(?P<neighbor>[\d\.]+)'
+            r' +\((?P<neighborid>[\d\.]+)\)$')
 
         #       Origin IGP, MED not set, localpref 100, weight 32768
         p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)?'
-                         ' +localpref +(?P<localpref>[\d]+),'
-                         ' +weight +(?P<weight>[\d]+)$')
+                         r' +localpref +(?P<localpref>[\d]+),'
+                         r' +weight +(?P<weight>[\d]+)$')
 
         #       Extcommunity: RT:100:10100
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
 
         # Originator: 10.144.6.6 Cluster list: 10.100.5.5 
         p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+)'
-                         ' +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
+                         r' +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
 
         #   Path-id 1 advertised to peers:
         #     10.64.4.4            10.100.5.5        

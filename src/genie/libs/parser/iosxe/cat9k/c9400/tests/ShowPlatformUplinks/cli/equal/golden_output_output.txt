@@ -1,0 +1,3 @@
+Uplink port             Status
+--------------------------------
+TenGigabitEthernet4/0/6  Up 

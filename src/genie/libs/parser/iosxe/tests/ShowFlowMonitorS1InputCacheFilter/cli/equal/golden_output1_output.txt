@@ -1,0 +1,13 @@
+device# show flow monitor S1_input cache filter ipv6 source address 100:1::123 ipv6 destination address 200:1::123 format table
+Cache type:                             Normal (Platform cache)
+Cache size:                             10000
+Current entries:                            6
+
+Flows added:                               78
+Flows aged:                                72
+    - Active timeout    (    60 secs)      36
+    - Inactive timeout  (    60 secs)      36
+
+IPV6 SRC ADDR    IPV6 DST ADDR    INTF INPUT    FLOW CTS SRC GROUP TAG  FLOW CTS DST GROUP TAG  IP VERSION  IP PROT  IP TTL  pkts long
+==============  ===============  =============  ======================  ======================  ==========  =======  ======  ==========
+100:1::123      200:1::123       Tw1/0/25                          100                       0           6       59      63       13746

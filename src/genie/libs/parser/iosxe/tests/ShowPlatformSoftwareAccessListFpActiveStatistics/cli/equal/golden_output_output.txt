@@ -1,0 +1,20 @@
+Forwarding Manager Access-list Messaging Statistics
+
+Set Log Threshold: 0, Interval: 0
+IPv4 Access-list Entry Add: 1, Delete: 0
+IPv4 Access-list Bind: 0, Unbind: 0
+IPv4 Access-list Resequence: 0, Delete: 1
+IPv6 Access-list Entry Add: 0, Delete: 0
+IPv6 Access-list Bind: 0, Unbind: 0
+IPv6 Access-list Resequence: 0, Delete: 0
+MAC Access-list Entry Add: 0, Delete: 0
+MAC Access-list Bind: 0, Unbind: 0
+MAC Access-list Delete: 0
+Access-list Sync Start: 0, End: 0
+
+QFP Match Add: 0, Replace: 0, ACK Success: 0, ACK Error: 0
+QFP Match Delete: 0, ACK Success: 0, ACK Error: 0
+QFP Action Edit: 0, ACK Success: 0, ACK Error: 0
+QFP Action Replace: 0, ACK Success: 0, ACK Error: 0
+QFP Bind: 0, ACK Success: 0, ACK Error: 0
+QFP Unbind: 0, ACK Success: 0, ACK Error: 0

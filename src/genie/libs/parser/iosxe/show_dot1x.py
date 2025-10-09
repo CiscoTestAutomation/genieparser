@@ -318,7 +318,7 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
         # initial regexp pattern
         p1 = re.compile(r'^Dot1x +(Supplicant|Authenticator) +Port +Statistics +for +(?P<intf>[\w\-\/]+)$')
         p2 = re.compile(r'^RxVersion +\= *(?P<rxversion>\d+) +'
-                         'LastRxSrcMAC +\= *(?P<lastrxsrcmac>\w+\.\w+\.\w+)$')
+                         r'LastRxSrcMAC +\= *(?P<lastrxsrcmac>\w+\.\w+\.\w+)$')
         p3 = re.compile(r'(\w+) +\= *(\d+)')
 
         for line in out.splitlines():
@@ -394,7 +394,7 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<intf>[\w\-\/]+) +(?P<pae>\w+) +'
-                         '(?P<client>\w+\.\w+\.\w+) +(?P<status>\w+)$')
+                         r'(?P<client>\w+\.\w+\.\w+) +(?P<status>\w+)$')
         p2 = re.compile(r'^((?P<pae>\w+) +)?(?P<client>\w+\.\w+\.\w+) +(?P<status>\w+)$')
 
         for line in out.splitlines():
@@ -764,3 +764,82 @@ class ShowDot1xInterfaceStatistics(ShowDot1xInterfaceStatisticsSchema):
                 continue
 
         return result_dict
+
+class ShowParameterMapTypeSubscriberAttributeToServiceSchema(MetaParser):
+    """Schema for show parameter-map type subscriber attribute-to-service name {template name}"""
+    schema = {
+        'parameter_map_name': str,
+        'maps': {
+            Any(): {
+                'device_type': str,
+                'action': {
+                    Any(): {
+                        'interface_template': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowParameterMapTypeSubscriberAttributeToService(ShowParameterMapTypeSubscriberAttributeToServiceSchema):
+    """Parser for show parameter-map type subscriber attribute-to-service name {template name}"""
+
+    cli_command = 'show parameter-map type subscriber attribute-to-service name {template_name}'
+
+    def cli(self, template_name, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(template_name=template_name))
+
+        ret_dict = {}
+
+        # Regex patterns
+        # Parameter-map name: BUILTIN_DEVICE_TO_TEMPLATE
+        p1 = re.compile(r'^Parameter-map +name: +(?P<parameter_map_name>\S+)$')
+        
+        # Map: 10 device-type regex "Cisco-IP-Phone"
+        p2 = re.compile(r'^Map: +(?P<map_id>\d+) +device-type +regex +"(?P<device_type>.+)"$')
+        
+        # Map: 40 oui eq "00.0f.44"
+        p3 = re.compile(r'^Map: +(?P<map_id>\d+) +oui +eq +"(?P<device_type>.+)"$')
+        
+        # 20 interface-template IP_PHONE_INTERFACE_TEMPLATE
+        p4 = re.compile(r'^\d+ +interface-template +(?P<interface_template>\S+)$')
+
+        current_map = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Parameter-map name: BUILTIN_DEVICE_TO_TEMPLATE
+            m = p1.match(line)
+            if m:
+                ret_dict['parameter_map_name'] = m.groupdict()['parameter_map_name']
+                continue
+
+            # Map: 10 device-type regex "Cisco-IP-Phone"
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_map = int(group['map_id'])
+                map_dict = ret_dict.setdefault('maps', {}).setdefault(current_map, {})
+                map_dict['device_type'] = group['device_type']
+                continue
+
+            # Map: 40 oui eq "00.0f.44"
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                current_map = int(group['map_id'])
+                map_dict = ret_dict.setdefault('maps', {}).setdefault(current_map, {})
+                map_dict['device_type'] = group['device_type']
+                continue
+
+            # 20 interface-template IP_PHONE_INTERFACE_TEMPLATE
+            m = p4.match(line)
+            if m and current_map:
+                action_id = int(line.split()[0])
+                action_dict = ret_dict['maps'][current_map].setdefault('action', {}).setdefault(action_id, {})
+                action_dict['interface_template'] = m.groupdict()['interface_template']
+                continue
+
+        return ret_dict

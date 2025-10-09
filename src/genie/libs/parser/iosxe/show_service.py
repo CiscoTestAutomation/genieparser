@@ -279,7 +279,7 @@ class ShowServiceGroupTrafficStats(ShowServiceGroupTrafficStatsSchema):
         #     1         78      10548        172      18606
         p1 = re.compile(
             r'^\s*(?P<num>[\d]+) +(?P<pkts_in>[\d]+) +(?P<bytes_in>[\d]+)'
-            ' +(?P<pkts_out>[\d]+) +(?P<bytes_out>[\d]+)$')
+            r' +(?P<pkts_out>[\d]+) +(?P<bytes_out>[\d]+)$')
 
         for line in out.splitlines():
             line = line.rstrip()

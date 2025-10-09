@@ -3536,19 +3536,19 @@ class ShowCryptoGdoiKsCoopIdentifierDetail(ShowCryptoGdoiKsCoopIdentifierDetailS
         p9 = re.compile(r'^Current KSSID In-Use\s+:\s+(?P<current_kssid_inuse>[a-z]+)$')
 
         # KSSID(s) Assigned : none
-        p10 = re.compile('^KSSID\(s\) Assigned\s+:\s+(?P<kssids_assigned>[a-z]+)$')
+        p10 = re.compile(r'^KSSID\(s\) Assigned\s+:\s+(?P<kssids_assigned>[a-z]+)$')
 
         # KSSID(s) Used : none
-        p11 = re.compile('^KSSID\(s\) Used\s+:\s+(?P<kssids_used>[a-z]+)$')
+        p11 = re.compile(r'^KSSID\(s\) Used\s+:\s+(?P<kssids_used>[a-z]+)$')
 
         # Old KSSID(s) Used : none
-        p12 = re.compile('^Old KSSID\(s\) Used\s+:\s+(?P<old_kssids_used>[a-z]+)$')
+        p12 = re.compile(r'^Old KSSID\(s\) Used\s+:\s+(?P<old_kssids_used>[a-z]+)$')
 
         # Peer KS Role: Secondary , Peer KS Status: Alive
-        p13 = re.compile('^Peer KS Role:\s+(?P<ks_role>[\w]+)\s\, Peer KS Status:\s+(?P<ks_status>[\w]+)$')
+        p13 = re.compile(r'^Peer KS Role:\s+(?P<ks_role>[\w]+)\s\, Peer KS Status:\s+(?P<ks_status>[\w]+)$')
 
         # Peer Address : 10.78.106.117
-        p14 = re.compile('^Peer Address\s+:\s+(?P<address>\d+\.\d+\.\d+\.\d+)$')
+        p14 = re.compile(r'^Peer Address\s+:\s+(?P<address>\d+\.\d+\.\d+\.\d+)$')
 
         master_dict = {}
 

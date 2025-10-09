@@ -21,17 +21,19 @@ IOSXE parsers for the following show commands:
     * show ip ospf segment-routing global-block
     * show ip ospf {process_id} segment-routing global-block
     * show ip ospf segment-routing
+    * show ip ospf neighbor summary
     * show ipv6 ospf neighbor
     * show ipv6 ospf neighbor {interface}
     * show ip ospf rib redistribution
     * show ipv6 ospf interface {interface}
     * show ipv6 ospf neighbor detail
-'''
+    * show ipv6 ospf neighbor summary
+    '''
 
 # Python
 import re
 import xmltodict
-from netaddr import IPAddress, IPNetwork
+from netaddr import IPAddress, IPNetwork, INET_ATON
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -97,11 +99,11 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
 
         # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                         ' +\(Process +ID +(?P<pid>(\S+))\)$')
+                         r' +\(Process +ID +(?P<pid>(\S+))\)$')
 
         # OSPF Segment Routing Local Blocks in Area 8
         p2 = re.compile(r'^OSPF +Segment +Routing +Local +Blocks +in +Area'
-                         ' +(?P<area>(\d+))$')
+                         r' +(?P<area>(\d+))$')
 
         # Router ID        SR Capable   SRLB Base   SRLB Range
         # --------------------------------------------------------
@@ -109,7 +111,7 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
         # 10.16.2.2          Yes          15000       1000
         # 10.169.197.252    No 
         p3 = re.compile(r'^(?P<value>\*)?(?P<router_id>\S+) +(?P<sr_capable>Yes|No)'
-                         '( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
+                         r'( +(?P<srlb_base>\d+) +(?P<srlb_range>\d+))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -127,7 +129,7 @@ class ShowIpOspfSegmentRoutingLocalBlock(ShowIpOspfSegmentRoutingLocalBlockSchem
             m = p2.match(line)
             if m:
                 area_dict = inst_dict.setdefault('areas', {}).\
-                    setdefault(str(IPAddress(str(m.groupdict()['area']))), {})
+                    setdefault(str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON)), {})
                 continue
 
             # Router ID        SR Capable   SRLB Base   SRLB Range
@@ -349,16 +351,16 @@ class ShowIpOspf(ShowIpOspfSchema):
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'(?:^VRF +(?P<vrf>(\S+)) +in +)?Routing +Process'
-                            ' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
-                            ' +with +ID +(?P<router_id>(\S+))$')
+                            r' +\"(?:ospf)? +(?P<instance>([a-zA-Z0-9\s]+))\"'
+                            r' +with +ID +(?P<router_id>(\S+))$')
 
         p1_1 = re.compile(r'^Routing +Process +is +shutdown$')
 
         p2 = re.compile(r'^Domain +ID +type +(?P<domain_id>(\S+)), +value'
-                            ' +(?P<value>(\S+))$')
+                            r' +(?P<value>(\S+))$')
 
         p3 = re.compile(r'^Start +time: +(?P<start>([0-9\:\.]+)), +Time'
-                            ' +elapsed: +(?P<elapsed>(\S+))$')
+                            r' +elapsed: +(?P<elapsed>(\S+))$')
 
         p4 = re.compile(r'^Supports +only +single +TOS(TOS0) routes$')
 
@@ -371,178 +373,178 @@ class ShowIpOspf(ShowIpOspfSchema):
         p8 = re.compile(r'^Supports +NSSA +\(compatible +with +RFC +3101\)$')
 
         p9 = re.compile(r'^Supports +Database +Exchange +Summary +List'
-                            ' +Optimization +\(RFC +5243\)$')
+                            r' +Optimization +\(RFC +5243\)$')
 
         p10 = re.compile(r'^Event-log +(?P<event_log>(enabled|disabled)),'
-                            '(?: +Maximum +number +of +events:'
-                            ' +(?P<max_events>(\d+)),'
-                            ' +Mode: +(?P<mode>(\S+)))?$')
+                            r'(?: +Maximum +number +of +events:'
+                            r' +(?P<max_events>(\d+)),'
+                            r' +Mode: +(?P<mode>(\S+)))?$')
 
         p11 = re.compile(r'^It +is +an'
-                            '(?: +(?P<abr>(area border)))?'
-                            '(?: +and)?'
-                            '(?: +(?P<asbr>(autonomous system boundary)))?'
-                            ' +router$')
+                            r'(?: +(?P<abr>(area border)))?'
+                            r'(?: +and)?'
+                            r'(?: +(?P<asbr>(autonomous system boundary)))?'
+                            r' +router$')
 
         p12_1 = re.compile(r'^Redistributing +External +Routes +from,$')
 
         p12_2 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
-                            ' +mapped +to +(?P<metric>(\d+)))?$')
+                            r' +mapped +to +(?P<metric>(\d+)))?$')
 
         p12_2_1 = re.compile(r'^(?P<type>(connected|static|isis))'
-                                ', +includes +(?P<redist>(subnets)) +in +redistribution')
+                                r', +includes +(?P<redist>(subnets)) +in +redistribution')
 
         p12_3 = re.compile(r'^(?P<prot>(bgp|isis)) +(?P<pid>(\d+))'
-                            '(?: +with +metric +mapped +to +(?P<metric>(\d+)))?'
-                            '(?:, +includes +(?P<redist>(subnets)) +in +redistribution)?'
-                            '(?:, +(?P<nssa>(nssa areas only)))?$')
+                            r'(?: +with +metric +mapped +to +(?P<metric>(\d+)))?'
+                            r'(?:, +includes +(?P<redist>(subnets)) +in +redistribution)?'
+                            r'(?:, +(?P<nssa>(nssa areas only)))?$')
 
         p12_4 = re.compile(r'^Maximum +limit +of +redistributed +prefixes'
-                            ' +(?P<num_prefix>(\d+))'
-                            '(?: +\((?P<warn>(warning-only))\))?')
+                            r' +(?P<num_prefix>(\d+))'
+                            r'(?: +\((?P<warn>(warning-only))\))?')
 
         p12_5 = re.compile(r'^Threshold +for +warning +message'
-                            ' +(?P<thld>(\d+))\%$')
+                            r' +(?P<thld>(\d+))\%$')
 
         p13 = re.compile(r'^Router +is +not +originating +router-LSAs'
-                            ' +with +maximum +metric$')
+                            r' +with +maximum +metric$')
 
         p14_1 = re.compile(r'^Originating +router-LSAs +with +maximum'
-                            ' +metric$')
+                            r' +metric$')
 
         p14_2 = re.compile(r'^Condition:'
-                            ' +(?P<condition>(always|on \S+))'
-                            '(?: +for +(?P<seconds>(\d+)) +seconds,)?'
-                            ' +State: +(?P<state>(\S+))$')
+                            r' +(?P<condition>(always|on \S+))'
+                            r'(?: +for +(?P<seconds>(\d+)) +seconds,)?'
+                            r' +State: +(?P<state>(\S+))$')
 
         p14_3 = re.compile(r'^Advertise +stub +links +with +maximum +metric'
-                            ' +in +router\-LSAs$')
+                            r' +in +router\-LSAs$')
 
         p14_4 = re.compile(r'^Advertise +summary\-LSAs +with +metric'
-                            ' +(?P<metric>(\d+))$')
+                            r' +(?P<metric>(\d+))$')
 
         p14_5 = re.compile(r'^^Advertise +external\-LSAs +with +metric'
-                            ' +(?P<metric>(\d+))$')
+                            r' +(?P<metric>(\d+))$')
 
         p15 = re.compile(r'^Initial +SPF +schedule +delay +(?P<time>(\S+))'
-                            ' +msecs$')
+                            r' +msecs$')
 
         p16 = re.compile(r'^Minimum +hold +time +between +two +consecutive'
-                            ' +SPFs +(?P<time>(\S+)) +msecs$')
+                            r' +SPFs +(?P<time>(\S+)) +msecs$')
 
         p17 = re.compile(r'^Maximum +wait +time +between +two +consecutive'
-                            ' +SPFs +(?P<time>(\S+)) +msecs$')
+                            r' +SPFs +(?P<time>(\S+)) +msecs$')
 
         p18 = re.compile(r'^Initial +LSA +throttle +delay +(?P<time>(\S+))'
-                            ' +msecs$')
+                            r' +msecs$')
 
         p19 = re.compile(r'^Minimum +hold +time +for +LSA +throttle'
-                            ' +(?P<time>(\S+)) +msecs$')
+                            r' +(?P<time>(\S+)) +msecs$')
 
         p20 = re.compile(r'^Maximum +wait +time +for +LSA +throttle'
-                            ' +(?P<time>(\S+)) +msecs$')
+                            r' +(?P<time>(\S+)) +msecs$')
 
         p21 = re.compile(r'^Minimum +LSA +arrival'
-                            ' +(?P<arrival>(\S+)) +msecs$')
+                            r' +(?P<arrival>(\S+)) +msecs$')
 
         p22 = re.compile(r'^Incremental-SPF +(?P<incr>(disabled|enabled))$')
 
         p23 = re.compile(r'LSA +group +pacing +timer'
-                            ' +(?P<pacing>(\d+)) +secs$')
+                            r' +(?P<pacing>(\d+)) +secs$')
 
         p24 = re.compile(r'Interface +flood +pacing +timer'
-                            ' +(?P<interface>(\d+)) +msecs$')
+                            r' +(?P<interface>(\d+)) +msecs$')
 
         p25 = re.compile(r'Retransmission +pacing +timer'
-                            ' +(?P<retransmission>(\d+)) +msecs$')
+                            r' +(?P<retransmission>(\d+)) +msecs$')
 
         p26 = re.compile(r'EXCHANGE/LOADING +adjacency +limit: +initial'
-                            ' +(?P<initial>(\S+)), +process +maximum'
-                            ' +(?P<maximum>(\d+))$')
+                            r' +(?P<initial>(\S+)), +process +maximum'
+                            r' +(?P<maximum>(\d+))$')
 
         p27 = re.compile(r'^Number +of +external +LSA +(?P<ext>(\d+))\.'
-                            ' +Checksum +Sum +(?P<checksum>(\S+))$')
+                            r' +Checksum +Sum +(?P<checksum>(\S+))$')
 
         p28 = re.compile(r'^Number +of +opaque +AS +LSA +(?P<opq>(\d+))\.'
-                            ' +Checksum +Sum +(?P<checksum>(\S+))$')
+                            r' +Checksum +Sum +(?P<checksum>(\S+))$')
 
         p29 = re.compile(r'^Number +of +DCbitless +external +and +opaque'
-                            ' +AS +LSA +(?P<num>(\d+))$')
+                            r' +AS +LSA +(?P<num>(\d+))$')
 
         p30 = re.compile(r'^Number +of +DoNotAge +external +and +opaque'
-                            ' +AS +LSA +(?P<num>(\d+))$')
+                            r' +AS +LSA +(?P<num>(\d+))$')
 
         p31 = re.compile(r'^Number +of +areas +in +this +router +is'
-                            ' +(?P<total_areas>(\d+))\. +(?P<normal>(\d+))'
-                            ' +normal +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+))'
-                            ' +nssa$')
+                            r' +(?P<total_areas>(\d+))\. +(?P<normal>(\d+))'
+                            r' +normal +(?P<stub>(\d+)) +stub +(?P<nssa>(\d+))'
+                            r' +nssa$')
 
         p32 = re.compile(r'Number +of +areas +transit +capable +is'
-                            ' +(?P<num>(\d+))$')
+                            r' +(?P<num>(\d+))$')
 
         p33 = re.compile(r'^Maximum +number +of +non +self-generated +LSA'
-                            ' +allowed +(?P<max_lsa>(\d+))(?: +\((?P<warn>(warning-only))\))?')
+                            r' +allowed +(?P<max_lsa>(\d+))(?: +\((?P<warn>(warning-only))\))?')
 
         p33_1 = re.compile(r'^Current +number +of +non +self\-generated +LSA +(?P<max_lsa_current>\d+)$')
 
         p33_2 = re.compile(r'^Threshold +for +warning +message +(?P<max_lsa_threshold_value>\d+)\%$')
 
         p33_3 = re.compile(r'^Ignore\-time +(?P<max_lsa_ignore_time>\d+) +minutes,'
-                            ' +reset\-time +(?P<max_lsa_reset_time>\d+) +minutes$')
+                            r' +reset\-time +(?P<max_lsa_reset_time>\d+) +minutes$')
 
         p33_4 = re.compile(r'^Ignore\-count +allowed +(?P<max_lsa_ignore_count>\d+),'
-                            ' +current ignore\-count +(?P<max_lsa_current_count>\d+)$')
+                            r' +current ignore\-count +(?P<max_lsa_current_count>\d+)$')
 
         p33_5 = re.compile(r'^Maximum +limit +of +redistributed +prefixes +(?P<max_lsa_limit>\d+) +\(warning\-only\)$')
 
         p34 = re.compile(r'^External +flood +list +length +(?P<num>(\d+))$')
 
         p35 = re.compile(r'^(?P<gr_type>(IETF|Cisco)) +Non-Stop +Forwarding'
-                            ' +(?P<enable>(enabled|disabled))$')
+                            r' +(?P<enable>(enabled|disabled))$')
 
         p36 = re.compile(r'^(?P<gr_type>(IETF|Cisco)) +NSF +helper +support'
-                            ' +(?P<gr_helper>(enabled|disabled))$')
+                            r' +(?P<gr_helper>(enabled|disabled))$')
 
         p36_1 = re.compile(r'^restart-interval +limit *: +(?P<num>(\d+)) +sec$')
 
         p37 = re.compile(r'^Reference +bandwidth +unit +is'
-                            ' +(?P<bd>(\d+)) +(?P<unit>(mbps))$')
+                            r' +(?P<bd>(\d+)) +(?P<unit>(mbps))$')
 
         p38 = re.compile(r'^Area +(?P<area>(\S+))(?: *\((I|i)nactive\))?$')
 
         p39_1 = re.compile(r'^It +is +a +(?P<area_type>(\S+)) +area'
-                            '(?:, +(?P<summary>(no +summary +LSA +in +this'
-                            ' +area)))?$')
+                            r'(?:, +(?P<summary>(no +summary +LSA +in +this'
+                            r' +area)))?$')
 
         p39_2 = re.compile(r'^generates +stub +default +route +with +cost'
-                            ' +(?P<default_cost>(\d+))$')
+                            r' +(?P<default_cost>(\d+))$')
 
         p40_1 = re.compile(r'^Area ranges are$')
 
         p40_2 = re.compile(r'^(?P<prefix>([0-9\.\/]+)) +(Passive|Active)'
-                            '(?:\((?P<cost>(\d+)) +\- +configured\))?'
-                            ' +(?P<advertise>(Advertise|DoNotAdvertise))$')
+                            r'(?:\((?P<cost>(\d+)) +\- +configured\))?'
+                            r' +(?P<advertise>(Advertise|DoNotAdvertise))$')
 
         p41 = re.compile(r'^Number +of +interfaces +in +this +area +is'
-                            ' +(?P<num_intf>(\d+))(?:'
-                            ' *\((?P<loopback>(\d+)) +loopback\))?$')
+                            r' +(?P<num_intf>(\d+))(?:'
+                            r' *\((?P<loopback>(\d+)) +loopback\))?$')
 
         p42 = re.compile(r'^Area +has +RRR +enabled$')
 
         p43 = re.compile(r'^SPF +algorithm +executed +(?P<count>(\d+))'
-                            ' +times$')
+                            r' +times$')
 
         p44 = re.compile(r'^SPF +algorithm +last +executed'
-                            ' +(?P<last_exec>(\S+)) +ago$')
+                            r' +(?P<last_exec>(\S+)) +ago$')
 
         p45 = re.compile(r'^Area +has +no +authentication$')
 
         p46 = re.compile(r'^Number +of +LSA +(?P<lsa_count>(\d+))\.'
-                            ' +Checksum +Sum +(?P<checksum_sum>(\S+))$')
+                            r' +Checksum +Sum +(?P<checksum_sum>(\S+))$')
 
         p47 = re.compile(r'^Number +of opaque +link +LSA'
-                            ' +(?P<opaque_count>(\d+))\. +Checksum +Sum'
-                            ' +(?P<checksum_sum>(\S+))$')
+                            r' +(?P<opaque_count>(\d+))\. +Checksum +Sum'
+                            r' +(?P<checksum_sum>(\S+))$')
 
         p48 = re.compile(r'^Number +of +DCbitless +LSA +(?P<count>(\d+))$')
 
@@ -800,9 +802,9 @@ class ShowIpOspf(ShowIpOspfSchema):
             # Condition: on start-up for 5 seconds, State: inactive
             # Condition: on startup for 300 seconds, State: inactive
             p14_2 = re.compile(r'^Condition:'
-                               ' +(?P<condition>(always|on \S+))'
-                               '(?: +for +(?P<seconds>(\d+)) +seconds)?,?'
-                               ' +State: +(?P<state>(\S+))$')
+                               r' +(?P<condition>(always|on \S+))'
+                               r'(?: +for +(?P<seconds>(\d+)) +seconds)?,?'
+                               r' +State: +(?P<state>(\S+))$')
             m = p14_2.match(line)
             if m:
                 condition = str(m.groupdict()['condition']).lower().replace("-", "")
@@ -1163,11 +1165,11 @@ class ShowIpOspf(ShowIpOspfSchema):
             m = p38.match(line)
             if m:
                 parsed_area = str(m.groupdict()['area'])
-                n = re.match('BACKBONE\((?P<area_num>(\S+))\)', parsed_area)
+                n = re.match(r'BACKBONE\((?P<area_num>(\S+))\)', parsed_area)
                 if n:
-                    area = str(IPAddress(str(n.groupdict()['area_num'])))
+                    area = str(IPAddress(str(n.groupdict()['area_num']), flags=INET_ATON))
                 else:
-                    area = str(IPAddress(str(m.groupdict()['area'])))
+                    area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
 
                 # Create dict
                 if 'areas' not in sub_dict:
@@ -1406,8 +1408,8 @@ class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
         ret_dict = {}
         
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<instance>\S+) +(?P<area>\d+) +'
-            '(?P<address>\S+) +(?P<cost>\d+) +(?P<state>\S+) +(?P<nbrs_full>\d+)'
-            '\/(?P<nbrs_count>\d+)$$')
+            r'(?P<address>\S+) +(?P<cost>\d+) +(?P<state>\S+) +(?P<nbrs_full>\d+)'
+            r'\/(?P<nbrs_count>\d+)$$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1418,7 +1420,7 @@ class ShowIpOspfInterfaceBrief(ShowIpOspfInterfaceBriefSchema):
                     str(group['interface']))
                 instance = str(group['instance'])
                 ip_address = str(group['address'])
-                area = str(IPAddress(str(group['area'])))
+                area = str(IPAddress(str(group['area']), flags=INET_ATON))
                 state = group['state']
                 cost = int(group['cost'])
                 nbrs_full = int(group['nbrs_full'])
@@ -1791,51 +1793,51 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
         
         p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
-                            ' +(?P<enable>(unknown|up|down)), +line +protocol'
-                            ' +is +(?P<line_protocol>(up|down))'
-                            '(?: +\(\S+\))?$')
+                            r' +(?P<enable>(unknown|up|down)), +line +protocol'
+                            r' +is +(?P<line_protocol>(up|down))'
+                            r'(?: +\(\S+\))?$')
         # Internet Address 0.0.0.1/30|Interface is unnumbered, Interface ID 55, Area 0
         p2 = re.compile(r'^(Internet +Address|Interface +is) +(?P<address>(\S+)),'
-                            '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
-                            ' +Area +(?P<area>(\S+))(?:, +Attached +via'
-                            ' +(?P<attach>(.*)))?$')
+                            r'(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
+                            r' +Area +(?P<area>(\S+))(?:, +Attached +via'
+                            r' +(?P<attach>(.*)))?$')
  
         p2_1 = re.compile(r'^Attached +via +(?P<attached>([a-zA-Z0-9\s]+))$')
  
         p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)),'
-                            '(?: +VRF +(?P<vrf>(\S+)))?'
-                            ' +Router +ID +(?P<router_id>(\S+)),'
-                            ' +Network +Type +(?P<interface_type>(\S+)),'
-                            ' +Cost: +(?P<cost>(\d+))$')
+                            r'(?: +VRF +(?P<vrf>(\S+)))?'
+                            r' +Router +ID +(?P<router_id>(\S+)),'
+                            r' +Network +Type +(?P<interface_type>(\S+)),'
+                            r' +Cost: +(?P<cost>(\d+))$')
 
         p5 = re.compile(r'^Configured as demand circuit$')
  
         p6 = re.compile(r'^Run as demand circuit$')
  
         p7 = re.compile(r'^DoNotAge +LSA +not +allowed +\(Number +of'
-                            ' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
+                            r' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
  
         p8 = re.compile(r'^Enabled +by +interface +config, +including'
-                            ' +secondary +ip +addresses$')
+                            r' +secondary +ip +addresses$')
  
         p9 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+)) +sec,'
-                            ' +State +(?P<state>(\S+))'
-                            '(?:, +Priority +(?P<priority>(\d+)))?'
-                            '(?:, +BFD +(?P<bfd>(enabled|disabled)))?$')
+                            r' +State +(?P<state>(\S+))'
+                            r'(?:, +Priority +(?P<priority>(\d+)))?'
+                            r'(?:, +BFD +(?P<bfd>(enabled|disabled)))?$')
  
         p10 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
-                            ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
-                            ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
+                            r' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
+                            r' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
  
         p11 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
-                            ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
-                            ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
+                            r' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
+                            r' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
  
         p12 = re.compile(r'^Timer +intervals +configured,'
-                            ' +Hello +(?P<hello>(\d+)),'
-                            ' +Dead +(?P<dead>(\d+)),'
-                            ' +Wait +(?P<wait>(\d+)),'
-                            ' +Retransmit +(?P<retransmit>(\d+))$')
+                            r' +Hello +(?P<hello>(\d+)),'
+                            r' +Dead +(?P<dead>(\d+)),'
+                            r' +Wait +(?P<wait>(\d+)),'
+                            r' +Retransmit +(?P<retransmit>(\d+))$')
  
         p12_1 = re.compile(r'^oob-resync +timeout +(?P<oob>(\d+))$')
  
@@ -1844,51 +1846,51 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         p13 = re.compile(r'^Supports +Link-local +Signaling +\(LLS\)$')
  
         p14 = re.compile(r'^(?P<gr_type>(Cisco|IETF)) +NSF +helper +support'
-                            ' +(?P<helper>(enabled|disabled))$')
+                            r' +(?P<helper>(enabled|disabled))$')
  
         p15 = re.compile(r'^Index +(?P<index>(\S+)),'
-                            ' +flood +queue +length +(?P<length>(\d+))$')
+                            r' +flood +queue +length +(?P<length>(\d+))$')
  
         p16 = re.compile(r'^Next +(?P<next>(\S+))$')
  
         p17 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)),'
-                            ' +maximum +is +(?P<max>(\d+))$')
+                            r' +maximum +is +(?P<max>(\d+))$')
  
         p18 = re.compile(r'^Last +flood +scan +time +is +(?P<time1>(\d+))'
-                            ' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
+                            r' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
  
         p19 = re.compile(r'^Neighbor +Count +is +(?P<nbr_count>(\d+)),'
-                            ' +Adjacent +neighbor +count +is'
-                            ' +(?P<adj_nbr_count>(\d+))$')
+                            r' +Adjacent +neighbor +count +is'
+                            r' +(?P<adj_nbr_count>(\d+))$')
  
         p20_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                            ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
+                            r' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
  
         p20_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                            ' +\((D|d)esignated +(R|r)outer\)$')
+                            r' +\((D|d)esignated +(R|r)outer\)$')
  
         p20_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                            ' +\(Hello suppressed\)$')
+                            r' +\(Hello suppressed\)$')
  
         p21 = re.compile(r'^Suppress +hello +for +(?P<sup>(\d+))'
-                            ' +neighbor\(s\)$')
+                            r' +neighbor\(s\)$')
  
         p22 = re.compile(r'^Loopback +interface +is +treated +as +a +stub'
-                            ' +Host$')
+                            r' +Host$')
  
         p23 = re.compile(r'^Can +be +protected +by per-+prefix +Loop-Free'
-                            ' +FastReroute$')
+                            r' +FastReroute$')
  
         p24 = re.compile(r'^Can +be +used +for +per-prefix +Loop-Free'
-                            ' +FastReroute +repair +paths$')
+                            r' +FastReroute +repair +paths$')
  
         p25 = re.compile(r'^Not +Protected +by +per-prefix +TI-LFA$')
  
         p26 = re.compile(r'^Prefix-suppression +is +(?P<ps>(enabled|disabled))$')
  
         p27 = re.compile(r'^Strict +TTL +checking'
-                            ' +(?P<strict_ttl>(enabled|disabled))'
-                            '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
+                            r' +(?P<strict_ttl>(enabled|disabled))'
+                            r'(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
  
         p28_1 = re.compile(r'^Simple +password +authentication +enabled$')
  
@@ -1897,7 +1899,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
         p28_3 = re.compile(r'^Youngest +key +id +is +(?P<id>(\d+))$')
  
         p28_4 = re.compile(r'^Rollover +in +progress, +(?P<num>(\d+))'
-                            ' +neighbor(s) +using +the +old +key(s):$')
+                            r' +neighbor(s) +using +the +old +key(s):$')
  
         p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
 
@@ -1945,12 +1947,12 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                 # Determine if 'interface' or 'sham_link' or 'virtual_link'
                 if re.search('SL', interface):
-                    x = re.match('(?P<ignore>\S+)_SL(?P<num>(\d+))', interface)
+                    x = re.match(r'(?P<ignore>\S+)_SL(?P<num>(\d+))', interface)
                     if x:
                         intf_type = 'sham_links'
                         name = 'SL' + str(x.groupdict()['num'])
                 elif re.search('VL', interface):
-                    x = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
+                    x = re.match(r'(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
                     if x:
                         intf_type = 'virtual_links'
                         name = 'VL' + str(x.groupdict()['num'])
@@ -1965,7 +1967,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             m = p2.match(line)
             if m:
                 ip_address = str(m.groupdict()['address'])
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 if m.groupdict()['intf_id']:
                     intf_id = int(m.groupdict()['intf_id'])
                 if m.groupdict()['attach']:
@@ -2002,9 +2004,9 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     for line in out.splitlines():
                         line = line.rstrip()
                         # Virtual Link OSPF_VL0 to router 10.100.5.5 is down
-                        p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
-                                     ' +(?P<address>(\S+)) +is +(up|down)'
-                                     '(?:.*)?', line)
+                        p = re.search(r'Virtual +Link +(?P<intf>(\S+)) +to +router'
+                                     r' +(?P<address>(\S+)) +is +(up|down)'
+                                     r'(?:.*)?', line)
                         if p:
                             if interface == str(p.groupdict()['intf']):
                                 vl_addr = str(p.groupdict()['address'])
@@ -2018,14 +2020,14 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                         for line in out.splitlines():
                             line = line.rstrip()
                             #  area 1 virtual-link 10.100.5.5
-                            q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
-                                          ' +(?P<addr>(\S+))(?: +(.*))?', line)
+                            q = re.search(r'area +(?P<q_area>(\d+)) +virtual-link'
+                                          r' +(?P<addr>(\S+))(?: +(.*))?', line)
                             if q:
                                 q_addr = str(q.groupdict()['addr'])
 
                                 # Check parameters match
                                 if q_addr == vl_addr:
-                                    vl_transit_area_id = str(IPAddress(str(q.groupdict()['q_area'])))
+                                    vl_transit_area_id = str(IPAddress(str(q.groupdict()['q_area']), flags=INET_ATON))
                                     break
 
                     if vl_transit_area_id is not None:
@@ -2043,8 +2045,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                     for line in out.splitlines():
                         line = line.rstrip()
                         # Sham Link OSPF_SL1 to address 10.151.22.22 is up
-                        p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
-                                     ' +(?P<remote>(\S+)) +is +(up|down)', line)
+                        p = re.search(r'Sham +Link +(?P<intf>(\S+)) +to +address'
+                                     r' +(?P<remote>(\S+)) +is +(up|down)', line)
                         if p:
                             if interface == str(p.groupdict()['intf']):
                                 sl_remote_id = str(p.groupdict()['remote'])
@@ -2058,11 +2060,11 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                         for line in out.splitlines():
                             line = line.rstrip()
                             # area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
-                            q = re.search('area +(?P<q_area>(\d+)) +sham-link'
-                                          ' +(?P<local_id>(\S+))'
-                                          ' +(?P<remote_id>(\S+)) +(.*)', line)
+                            q = re.search(r'area +(?P<q_area>(\d+)) +sham-link'
+                                          r' +(?P<local_id>(\S+))'
+                                          r' +(?P<remote_id>(\S+)) +(.*)', line)
                             if q:
-                                q_area = str(IPAddress(str(q.groupdict()['q_area'])))
+                                q_area = str(IPAddress(str(q.groupdict()['q_area']), flags=INET_ATON))
                                 q_remote_id = str(q.groupdict()['remote_id'])
 
                                 # Check parameters match
@@ -2087,8 +2089,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # router ospf 1
                     # router ospf 2 vrf VRF1
-                    p = re.search('router +ospf +(?P<instance>(\S+))'
-                                  '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                    p = re.search(r'router +ospf +(?P<instance>(\S+))'
+                                  r'(?: +vrf +(?P<vrf>(\S+)))?', line)
                     if p:
                         p_instance = str(p.groupdict()['instance'])
                         if p_instance == instance:
@@ -2185,8 +2187,8 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
             # Topology-MTID    Cost    Disabled    Shutdown      Topology Name
             #             0       1          no          no               Base
             p4 = re.compile(r'^(?P<mtid>(\d+)) +(?P<topo_cost>(\d+))'
-                             ' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
-                             ' +(?P<topo_name>(\S+))$')
+                             r' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
+                             r' +(?P<topo_name>(\S+))$')
             m = p4.match(line)
             if m:
                 mtid = int(m.groupdict()['mtid'])
@@ -2876,51 +2878,51 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
 
         
         p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
-                            ' +(?P<enable>(unknown|up|down)), +line +protocol'
-                            ' +is +(?P<line_protocol>(up|down))'
-                            '(?: +\(\S+\))?$')
+                            r' +(?P<enable>(unknown|up|down)), +line +protocol'
+                            r' +is +(?P<line_protocol>(up|down))'
+                            r'(?: +\(\S+\))?$')
         # Internet Address 0.0.0.1/30|Interface is unnumbered, Interface ID 55, Area 0
         p2 = re.compile(r'^(Internet +Address|Interface +is) +(?P<address>(\S+)),'
-                            '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
-                            ' +Area +(?P<area>(\S+))(?:, +Attached +via'
-                            ' +(?P<attach>(.*)))?$')
+                            r'(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
+                            r' +Area +(?P<area>(\S+))(?:, +Attached +via'
+                            r' +(?P<attach>(.*)))?$')
  
         p2_1 = re.compile(r'^Attached +via +(?P<attached>([a-zA-Z0-9\s]+))$')
  
         p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)),'
-                            '(?: +VRF +(?P<vrf>(\S+)))?'
-                            ' +Router +ID +(?P<router_id>(\S+)),'
-                            ' +Network +Type +(?P<interface_type>(\S+)),'
-                            ' +Cost: +(?P<cost>(\d+))$')
+                            r'(?: +VRF +(?P<vrf>(\S+)))?'
+                            r' +Router +ID +(?P<router_id>(\S+)),'
+                            r' +Network +Type +(?P<interface_type>(\S+)),'
+                            r' +Cost: +(?P<cost>(\d+))$')
 
         p5 = re.compile(r'^Configured as demand circuit$')
  
         p6 = re.compile(r'^Run as demand circuit$')
  
         p7 = re.compile(r'^DoNotAge +LSA +not +allowed +\(Number +of'
-                            ' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
+                            r' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
  
         p8 = re.compile(r'^Enabled +by +interface +config, +including'
-                            ' +secondary +ip +addresses$')
+                            r' +secondary +ip +addresses$')
  
         p9 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+)) +sec,'
-                            ' +State +(?P<state>(\S+))'
-                            '(?:, +Priority +(?P<priority>(\d+)))?'
-                            '(?:, +BFD +(?P<bfd>(enabled|disabled)))?$')
+                            r' +State +(?P<state>(\S+))'
+                            r'(?:, +Priority +(?P<priority>(\d+)))?'
+                            r'(?:, +BFD +(?P<bfd>(enabled|disabled)))?$')
  
         p10 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
-                            ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
-                            ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
+                            r' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
+                            r' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
  
         p11 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
-                            ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
-                            ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
+                            r' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
+                            r' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
  
         p12 = re.compile(r'^Timer +intervals +configured,'
-                            ' +Hello +(?P<hello>(\d+)),'
-                            ' +Dead +(?P<dead>(\d+)),'
-                            ' +Wait +(?P<wait>(\d+)),'
-                            ' +Retransmit +(?P<retransmit>(\d+))$')
+                            r' +Hello +(?P<hello>(\d+)),'
+                            r' +Dead +(?P<dead>(\d+)),'
+                            r' +Wait +(?P<wait>(\d+)),'
+                            r' +Retransmit +(?P<retransmit>(\d+))$')
  
         p12_1 = re.compile(r'^oob-resync +timeout +(?P<oob>(\d+))$')
  
@@ -2929,51 +2931,51 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
         p13 = re.compile(r'^Supports +Link-local +Signaling +\(LLS\)$')
  
         p14 = re.compile(r'^(?P<gr_type>(Cisco|IETF)) +NSF +helper +support'
-                            ' +(?P<helper>(enabled|disabled))$')
+                            r' +(?P<helper>(enabled|disabled))$')
  
         p15 = re.compile(r'^Index +(?P<index>(\S+)),'
-                            ' +flood +queue +length +(?P<length>(\d+))$')
+                            r' +flood +queue +length +(?P<length>(\d+))$')
  
         p16 = re.compile(r'^Next +(?P<next>(\S+))$')
  
         p17 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)),'
-                            ' +maximum +is +(?P<max>(\d+))$')
+                            r' +maximum +is +(?P<max>(\d+))$')
  
         p18 = re.compile(r'^Last +flood +scan +time +is +(?P<time1>(\d+))'
-                            ' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
+                            r' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
  
         p19 = re.compile(r'^Neighbor +Count +is +(?P<nbr_count>(\d+)),'
-                            ' +Adjacent +neighbor +count +is'
-                            ' +(?P<adj_nbr_count>(\d+))$')
+                            r' +Adjacent +neighbor +count +is'
+                            r' +(?P<adj_nbr_count>(\d+))$')
  
         p20_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                            ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
+                            r' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
  
         p20_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                            ' +\((D|d)esignated +(R|r)outer\)$')
+                            r' +\((D|d)esignated +(R|r)outer\)$')
  
         p20_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
-                            ' +\(Hello suppressed\)$')
+                            r' +\(Hello suppressed\)$')
  
         p21 = re.compile(r'^Suppress +hello +for +(?P<sup>(\d+))'
-                            ' +neighbor\(s\)$')
+                            r' +neighbor\(s\)$')
  
         p22 = re.compile(r'^Loopback +interface +is +treated +as +a +stub'
-                            ' +Host$')
+                            r' +Host$')
  
         p23 = re.compile(r'^Can +be +protected +by per-+prefix +Loop-Free'
-                            ' +FastReroute$')
+                            r' +FastReroute$')
  
         p24 = re.compile(r'^Can +be +used +for +per-prefix +Loop-Free'
-                            ' +FastReroute +repair +paths$')
+                            r' +FastReroute +repair +paths$')
  
         p25 = re.compile(r'^Not +Protected +by +per-prefix +TI-LFA$')
  
         p26 = re.compile(r'^Prefix-suppression +is +(?P<ps>(enabled|disabled))$')
  
         p27 = re.compile(r'^Strict +TTL +checking'
-                            ' +(?P<strict_ttl>(enabled|disabled))'
-                            '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
+                            r' +(?P<strict_ttl>(enabled|disabled))'
+                            r'(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
  
         p28_1 = re.compile(r'^Simple +password +authentication +enabled$')
  
@@ -2982,7 +2984,7 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
         p28_3 = re.compile(r'^Youngest +key +id +is +(?P<id>(\d+))$')
  
         p28_4 = re.compile(r'^Rollover +in +progress, +(?P<num>(\d+))'
-                            ' +neighbor(s) +using +the +old +key(s):$')
+                            r' +neighbor(s) +using +the +old +key(s):$')
  
         p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
 
@@ -3030,12 +3032,12 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
 
                 # Determine if 'interface' or 'sham_link' or 'virtual_link'
                 if re.search('SL', interface):
-                    x = re.match('(?P<ignore>\S+)_SL(?P<num>(\d+))', interface)
+                    x = re.match(r'(?P<ignore>\S+)_SL(?P<num>(\d+))', interface)
                     if x:
                         intf_type = 'sham_links'
                         name = 'SL' + str(x.groupdict()['num'])
                 elif re.search('VL', interface):
-                    x = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
+                    x = re.match(r'(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
                     if x:
                         intf_type = 'virtual_links'
                         name = 'VL' + str(x.groupdict()['num'])
@@ -3050,7 +3052,7 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
             m = p2.match(line)
             if m:
                 ip_address = str(m.groupdict()['address'])
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 if m.groupdict()['intf_id']:
                     intf_id = int(m.groupdict()['intf_id'])
                 if m.groupdict()['attach']:
@@ -3158,8 +3160,8 @@ class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
             # Topology-MTID    Cost    Disabled    Shutdown      Topology Name
             #             0       1          no          no               Base
             p4 = re.compile(r'^(?P<mtid>(\d+)) +(?P<topo_cost>(\d+))'
-                             ' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
-                             ' +(?P<topo_name>(\S+))$')
+                             r' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
+                             r' +(?P<topo_name>(\S+))$')
             m = p4.match(line)
             if m:
                 mtid = int(m.groupdict()['mtid'])
@@ -3548,55 +3550,55 @@ class ShowIpOspfLinksParser(MetaParser):
 
 
         p1 = re.compile(r'^(Virtual|Sham) +Link +(?P<interface>(\S+)) +to'
-                            ' +(address|router) +(?P<address>(\S+)) +is'
-                            ' +(?P<link_state>(up|down))$')
+                            r' +(address|router) +(?P<address>(\S+)) +is'
+                            r' +(?P<link_state>(up|down))$')
 
         p2 = re.compile(r'^Area +(?P<area>(\S+)),? +source +address'
-                            ' +(?P<source_address>(\S+))$')
+                            r' +(?P<source_address>(\S+))$')
 
         p3 = re.compile(r'^Run +as +demand +circuit$')
 
         p4 = re.compile(r'^DoNotAge +LSA +not +allowed'
-                            ' +\(Number +of +DCbitless +LSA +is +(?P<dcbitless>(\d+))\).'
-                            '(?: +Cost +of +using +(?P<cost>(\d+)))?'
-                            '(?: State +(?P<state>(\S+)))?$')
+                            r' +\(Number +of +DCbitless +LSA +is +(?P<dcbitless>(\d+))\).'
+                            r'(?: +Cost +of +using +(?P<cost>(\d+)))?'
+                            r'(?: State +(?P<state>(\S+)))?$')
 
         p5 = re.compile(r'^Transit +area +(?P<area>(\S+)),'
-                            '(?: +via +interface +(?P<intf>(\S+)))?$')
+                            r'(?: +via +interface +(?P<intf>(\S+)))?$')
 
         p6 = re.compile(r'^(?P<mtid>(\d+)) +(?P<topo_cost>(\d+))'
-                            ' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
-                            ' +(?P<topo_name>(\S+))$')
+                            r' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
+                            r' +(?P<topo_name>(\S+))$')
 
         p7 = re.compile(r'^Transmit +Delay +is +(?P<transmit_delay>(\d+))'
-                            ' +sec, +State +(?P<state>(\S+)),?$')
+                            r' +sec, +State +(?P<state>(\S+)),?$')
 
         p8 = re.compile(r'^Timer +intervals +configured,'
-                            ' +Hello +(?P<hello>(\d+)),'
-                            ' +Dead +(?P<dead>(\d+)),'
-                            ' +Wait +(?P<wait>(\d+)),'
-                            '(?: +Retransmit +(?P<retransmit>(\d+)))?$')
+                            r' +Hello +(?P<hello>(\d+)),'
+                            r' +Dead +(?P<dead>(\d+)),'
+                            r' +Wait +(?P<wait>(\d+)),'
+                            r'(?: +Retransmit +(?P<retransmit>(\d+)))?$')
 
         p9 = re.compile(r'^Strict +TTL +checking'
-                            ' +(?P<strict_ttl>(enabled|disabled))'
-                            '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
+                            r' +(?P<strict_ttl>(enabled|disabled))'
+                            r'(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
 
         p10 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
 
         p11 = re.compile(r'^Adjacency +State +(?P<adj_state>(\S+))$')
 
         p12 = re.compile(r'^Index +(?P<index>(\S+)), +retransmission +queue'
-                            ' +length +(?P<length>(\d+)), +number +of'
-                            ' +retransmission +(?P<retrans>(\d+))$')
+                            r' +length +(?P<length>(\d+)), +number +of'
+                            r' +retransmission +(?P<retrans>(\d+))$')
 
         p13 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
 
         p14 = re.compile(r'^Last +retransmission +scan +length +is'
-                            ' +(?P<len>(\d+)), +maximum +is +(?P<max>(\d+))$')
+                            r' +(?P<len>(\d+)), +maximum +is +(?P<max>(\d+))$')
 
         p15 = re.compile(r'^Last +retransmission +scan +time +is'
-                            ' +(?P<time>(\d+)) +msec, +maximum +is'
-                            ' +(?P<max>(\d+)) +msec$')
+                            r' +(?P<time>(\d+)) +msec, +maximum +is'
+                            r' +(?P<max>(\d+)) +msec$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3612,7 +3614,7 @@ class ShowIpOspfLinksParser(MetaParser):
                 instance = None
                 
                 # Get link name
-                n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', interface)
+                n = re.match(r'(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', interface)
                 if n:
                     real_link_name = str(n.groupdict()['name'])
                 else:
@@ -3626,8 +3628,8 @@ class ShowIpOspfLinksParser(MetaParser):
                     line = line.rstrip()
 
                     # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
-                    p = re.search('Process +ID +(?P<instance>(\S+)), +Router'
-                                  ' +(.*)', line)
+                    p = re.search(r'Process +ID +(?P<instance>(\S+)), +Router'
+                                  r' +(.*)', line)
                     if p:
                         instance = str(p.groupdict()['instance'])
                         break
@@ -3646,8 +3648,8 @@ class ShowIpOspfLinksParser(MetaParser):
 
                         # router ospf 1
                         # router ospf 2 vrf VRF1
-                        p = re.search('router +ospf +(?P<instance>(\S+))'
-                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        p = re.search(r'router +ospf +(?P<instance>(\S+))'
+                                      r'(?: +vrf +(?P<vrf>(\S+)))?', line)
                         if p:
                             p_instance = str(p.groupdict()['instance'])
                             if p_instance == instance:
@@ -3679,7 +3681,7 @@ class ShowIpOspfLinksParser(MetaParser):
             # Area 1 source address 10.229.11.11
             m = p2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 source_address = str(m.groupdict()['source_address'])
 
                 # Set link_name for sham_link
@@ -3756,7 +3758,7 @@ class ShowIpOspfLinksParser(MetaParser):
             # Transit area 1, via interface GigabitEthernet0/1
             m = p5.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
 
                 # Set link_name for virtual_link
                 link_name = '{} {}'.format(area, vl_router_id)
@@ -4260,42 +4262,42 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
-                            ' +address +(?P<address>(\S+))'
-                            '(?:, +interface-id +(?P<intf_id>(\S+)))?$')
+                           r' +address +(?P<address>(\S+))'
+                            r'(?:, +interface-id +(?P<intf_id>(\S+)))?$')
         
         p2 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
-                            ' +(?P<interface>(\S+))(, +BFD +(?P<bfd_state>\S+))?$')
+                            r' +(?P<interface>(\S+))(, +BFD +(?P<bfd_state>\S+))?$')
         
         p3 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\d+)),'
-                            ' +State +is +(?P<state>(\S+)),'
-                            ' +(?P<num>(\d+)) +state +changes$')
+                           r' +State +is +(?P<state>(\S+)),'
+                            r' +(?P<num>(\d+)) +state +changes$')
         
         p4 = re.compile(r'^DR +is +(?P<dr_ip_addr>(\S+))'
-                            ' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
+                            r' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
         
         p5 = re.compile(r'^Options +is +(?P<options>(\S+)) +in +Hello'
-                            ' +\(E-bit\)$')
+                            r' +\(E-bit\)$')
         
         p6 = re.compile(r'^Options +is +(?P<options>(\S+)) +in +DBD'
-                            ' +\(E-bit, O-bit\)$')
+                            r' +\(E-bit, O-bit\)$')
         
         p7 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
         
         p8 = re.compile(r'^Neighbor +is +up +for +(?P<uptime>(\S+))$')
         
         p9 = re.compile(r'^Index +(?P<index>(\S+)) +retransmission +queue'
-                            ' +length +(?P<ql>(\d+)), +number +of'
-                            ' +retransmission +(?P<num_retrans>(\d+))$')
+                            r' +length +(?P<ql>(\d+)), +number +of'
+                            r' +retransmission +(?P<num_retrans>(\d+))$')
         
         p10 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
         
         p11 = re.compile(r'^Last +retransmission +scan +length +is'
-                            ' +(?P<num1>(\d+)), +maximum +is'
-                            ' +(?P<num2>(\d+))$')
+                            r' +(?P<num1>(\d+)), +maximum +is'
+                            r' +(?P<num2>(\d+))$')
         
         p12 = re.compile(r'^Last +retransmission +scan +time +is'
-                            ' +(?P<num1>(\d+)) +msec, +maximum +is'
-                            ' +(?P<num2>(\d+)) +msec$')
+                            r' +(?P<num1>(\d+)) +msec, +maximum +is'
+                            r' +(?P<num2>(\d+)) +msec$')
         
         p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
         
@@ -4317,7 +4319,7 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
             # In the area 0 via interface TenGigabitEthernet3/1/1, BFD enabled
             m = p2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 interface = str(m.groupdict()['interface'])
                 instance = None
                 router_id = None
@@ -4330,8 +4332,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     line = line.rstrip()
 
                     # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
-                    p = re.search('Process +ID +(?P<instance>(\S+)), +Router +ID'
-                                  ' +(?P<router_id>(\S+)) +(.*)', line)
+                    p = re.search(r'Process +ID +(?P<instance>(\S+)), +Router +ID'
+                                  r' +(?P<router_id>(\S+)) +(.*)', line)
                     if p:
                         instance = str(p.groupdict()['instance'])
                         router_id = str(p.groupdict()['router_id'])
@@ -4351,8 +4353,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 
                         # router ospf 1
                         # router ospf 2 vrf VRF1
-                        p = re.search('router +ospf +(?P<instance>(\S+))'
-                                      '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                        p = re.search(r'router +ospf +(?P<instance>(\S+))'
+                                      r'(?: +vrf +(?P<vrf>(\S+)))?', line)
                         if p:
                             p_instance = str(p.groupdict()['instance'])
                             if p_instance == instance:
@@ -4393,9 +4395,9 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     for line in out.splitlines():
                         line = line.rstrip()
                         # Virtual Link OSPF_VL0 to router 10.100.5.5 is down
-                        p = re.search('Virtual +Link +(?P<intf>(\S+)) +to +router'
-                                     ' +(?P<address>(\S+)) +is +(up|down)'
-                                     '(?:.*)?', line)
+                        p = re.search(r'Virtual +Link +(?P<intf>(\S+)) +to +router'
+                                     r' +(?P<address>(\S+)) +is +(up|down)'
+                                     r'(?:.*)?', line)
                         if p:
                             if interface == str(p.groupdict()['intf']):
                                 vl_addr = str(p.groupdict()['address'])
@@ -4409,13 +4411,13 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                         for line in out.splitlines():
                             line = line.rstrip()
                             #  area 1 virtual-link 10.100.5.5
-                            q = re.search('area +(?P<q_area>(\d+)) +virtual-link'
-                                          ' +(?P<addr>(\S+))(?: +(.*))?', line)
+                            q = re.search(r'area +(?P<q_area>(\d+)) +virtual-link'
+                                          r' +(?P<addr>(\S+))(?: +(.*))?', line)
                             if q:
                                 q_addr = str(q.groupdict()['addr'])
                                 # Check parameters match
                                 if q_addr == vl_addr:
-                                    vl_transit_area_id = str(IPAddress(str(q.groupdict()['q_area'])))
+                                    vl_transit_area_id = str(IPAddress(str(q.groupdict()['q_area']), flags=INET_ATON))
                                     break
 
                     if vl_transit_area_id is not None:
@@ -4434,8 +4436,8 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                     for line in out.splitlines():
                         line = line.rstrip()
                         # Sham Link OSPF_SL1 to address 10.151.22.22 is up
-                        p = re.search('Sham +Link +(?P<intf>(\S+)) +to +address'
-                                     ' +(?P<remote>(\S+)) +is +(up|down)', line)
+                        p = re.search(r'Sham +Link +(?P<intf>(\S+)) +to +address'
+                                     r' +(?P<remote>(\S+)) +is +(up|down)', line)
                         if p:
                             if interface == str(p.groupdict()['intf']):
                                 sl_remote_id = str(p.groupdict()['remote'])
@@ -4449,11 +4451,11 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
                         for line in out.splitlines():
                             line = line.rstrip()
                             # area 1 sham-link 10.229.11.11 10.151.22.22 cost 111 ttl-security hops 3
-                            q = re.search('area +(?P<q_area>(\d+)) +sham-link'
-                                          ' +(?P<local_id>(\S+))'
-                                          ' +(?P<remote_id>(\S+)) +(.*)', line)
+                            q = re.search(r'area +(?P<q_area>(\d+)) +sham-link'
+                                          r' +(?P<local_id>(\S+))'
+                                          r' +(?P<remote_id>(\S+)) +(.*)', line)
                             if q:
-                                q_area = str(IPAddress(str(q.groupdict()['q_area'])))
+                                q_area = str(IPAddress(str(q.groupdict()['q_area']), flags=INET_ATON))
                                 q_remote_id = str(q.groupdict()['remote_id'])
 
                                 # Check parameters match
@@ -4695,42 +4697,42 @@ class ShowIpOspfNeighborDetail2(ShowIpOspfNeighborDetail2Schema):
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'^Neighbor +(?P<neighbor>(\S+)), +interface'
-                            ' +address +(?P<address>(\S+))'
-                            '(?:, +interface-id +(?P<intf_id>(\S+)))?$')
+                            r' +address +(?P<address>(\S+))'
+                            r'(?:, +interface-id +(?P<intf_id>(\S+)))?$')
         
         p2 = re.compile(r'^In +the +area +(?P<area>(\S+)) +via +interface'
-                            ' +(?P<interface>(\S+))(, +BFD +(?P<bfd_state>\S+))?$')
+                            r' +(?P<interface>(\S+))(, +BFD +(?P<bfd_state>\S+))?$')
         
         p3 = re.compile(r'^Neighbor +priority +is +(?P<priority>(\d+)),'
-                            ' +State +is +(?P<state>(\S+)),'
-                            ' +(?P<num>(\d+)) +state +changes$')
+                            r' +State +is +(?P<state>(\S+)),'
+                            r' +(?P<num>(\d+)) +state +changes$')
         
         p4 = re.compile(r'^DR +is +(?P<dr_ip_addr>(\S+))'
-                            ' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
+                            r' +BDR +is +(?P<bdr_ip_addr>(\S+))$')
         
         p5 = re.compile(r'^Options +is +(?P<options>(\S+)) +in +Hello'
-                            ' +\(E-bit\)$')
+                            r' +\(E-bit\)$')
         
         p6 = re.compile(r'^Options +is +(?P<options>(\S+)) +in +DBD'
-                            ' +\(E-bit, O-bit\)$')
+                            r' +\(E-bit, O-bit\)$')
         
         p7 = re.compile(r'^Dead +timer +due +in +(?P<dead_timer>(\S+))$')
         
         p8 = re.compile(r'^Neighbor +is +up +for +(?P<uptime>(\S+))$')
         
         p9 = re.compile(r'^Index +(?P<index>(\S+)) +retransmission +queue'
-                            ' +length +(?P<ql>(\d+)), +number +of'
-                            ' +retransmission +(?P<num_retrans>(\d+))$')
+                            r' +length +(?P<ql>(\d+)), +number +of'
+                            r' +retransmission +(?P<num_retrans>(\d+))$')
         
         p10 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
         
         p11 = re.compile(r'^Last +retransmission +scan +length +is'
-                            ' +(?P<num1>(\d+)), +maximum +is'
-                            ' +(?P<num2>(\d+))$')
+                            r' +(?P<num1>(\d+)), +maximum +is'
+                            r' +(?P<num2>(\d+))$')
         
         p12 = re.compile(r'^Last +retransmission +scan +time +is'
-                            ' +(?P<num1>(\d+)) +msec, +maximum +is'
-                            ' +(?P<num2>(\d+)) +msec$')
+                            r' +(?P<num1>(\d+)) +msec, +maximum +is'
+                            r' +(?P<num2>(\d+)) +msec$')
         
         p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
         
@@ -4752,7 +4754,7 @@ class ShowIpOspfNeighborDetail2(ShowIpOspfNeighborDetail2Schema):
             # In the area 0 via interface TenGigabitEthernet3/1/1, BFD enabled
             m = p2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 interface = str(m.groupdict()['interface'])
                 bfd_state = m.groupdict().get('bfd_state', None)
 
@@ -4953,16 +4955,16 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'^(?P<interface>(Lo.*|.*Gig.*|.*(SL|VL).*|'
-                            'Cellular.*|FastEthernet.*|LISP.*|Po.*|Tunnel.*|'
-                            'VirtualPortGroup.*|Vlan.*))$')
+                            r'Cellular.*|FastEthernet.*|LISP.*|Po.*|Tunnel.*|'
+                            r'VirtualPortGroup.*|Vlan.*))$')
 
         p2 = re.compile(r'^Process +ID +(?P<instance>(\S+)),'
-                            '(?: +VRF +(?P<vrf>(\S+)),)?'
-                            ' +Area +(?P<area>(\S+))$')
+                            r'(?: +VRF +(?P<vrf>(\S+)),)?'
+                            r' +Area +(?P<area>(\S+))$')
 
         p3 = re.compile(r'^LDP +is'
-                            ' +(?P<auto_config>(not configured|configured))'
-                            ' +through +LDP +autoconfig$')
+                            r' +(?P<auto_config>(not configured|configured))'
+                            r' +through +LDP +autoconfig$')
 
         p5 = re.compile(r'^Holddown +timer +is (?P<val>([a-zA-Z\s]+))$')
         # Interface is down and pending LDP
@@ -5003,7 +5005,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
                 instance = str(m.groupdict()['instance'])
                 try:
                     int(m.groupdict()['area'])
-                    area = str(IPAddress(str(m.groupdict()['area'])))
+                    area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 except:
                     area = m.groupdict()['area']
                 if m.groupdict()['vrf']:
@@ -5090,7 +5092,7 @@ class ShowIpOspfMplsLdpInterface(ShowIpOspfMplsLdpInterfaceSchema):
             # LDP-IGP Synchronization : Not required
             # LDP-IGP Synchronization : Required
             p4 = re.compile(r'^LDP-IGP +Synchronization *:'
-                              ' +(?P<igp_sync>(Not required|Required))$')
+                              r' +(?P<igp_sync>(Not required|Required))$')
             m = p4.match(line)
             if m:
                 if m.groupdict()['igp_sync'] == 'Required':
@@ -5210,19 +5212,19 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                            ' +\(Process +ID +(?P<instance>(\S+))\)$')
+                            r' +\(Process +ID +(?P<instance>(\S+))\)$')
 
         p2 = re.compile(r'^Area +(?P<area>(\d+)) +has +(?P<links>(\d+))'
-                            ' +MPLS +TE +links. +Area +instance +is'
-                            ' +(?P<area_instance>(\d+))\.$')
+                            r' +MPLS +TE +links. +Area +instance +is'
+                            r' +(?P<area_instance>(\d+))\.$')
 
         p3 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not +initialized$')
 
         p4 = re.compile(r'^Links +in +hash +bucket +(?P<hash>(\d+))\.$')
 
         p5 = re.compile(r'^Link +is +associated +with +fragment'
-                            ' +(?P<fragment>(\d+))\. +Link +instance +is'
-                            ' +(?P<link_instance>(\d+))$')
+                            r' +(?P<fragment>(\d+))\. +Link +instance +is'
+                            r' +(?P<link_instance>(\d+))$')
 
         p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z\s]+))$')
 
@@ -5231,20 +5233,20 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
         p8 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
 
         p9 = re.compile(r'^Admin +Metric +te: +(?P<te>(\d+)) +igp:'
-                            ' +(?P<igp>(\d+))$')
+                            r' +(?P<igp>(\d+))$')
 
         p14 = re.compile(r'^Maximum +(B|b)andwidth *: +(?P<mband>(\d+))$')
 
         p10 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
-                            ' +(?P<res_band>(\d+))$')
+                            r' +(?P<res_band>(\d+))$')
 
         p11 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
 
         p12 = re.compile(r'^Number +of +Priority +: +(?P<priority>(\d+))$')
 
         p13 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
-                            ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
-                            ' *: +(?P<band2>(\d+)))?$')
+                            r' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                            r' *: +(?P<band2>(\d+)))?$')
 
 
         for line in out.splitlines():
@@ -5268,8 +5270,8 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
 
                     # router ospf 1
                     # router ospf 2 vrf VRF1
-                    p = re.search('router +ospf +(?P<instance>(\S+))'
-                                  '(?: +vrf +(?P<vrf>(\S+)))?', line)
+                    p = re.search(r'router +ospf +(?P<instance>(\S+))'
+                                  r'(?: +vrf +(?P<vrf>(\S+)))?', line)
                     if p:
                         p_instance = str(p.groupdict()['instance'])
                         if p_instance == instance:
@@ -5309,7 +5311,7 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
             # Area 0 has 2 MPLS TE links. Area instance is 2.
             m = p2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 total_links = int(m.groupdict()['links'])
                 area_instance = int(m.groupdict()['area_instance'])
                 # Create dict
@@ -5346,7 +5348,7 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
             if m:
                 try:
                     int(m.groupdict()['area'])
-                    area = str(IPAddress(str(m.groupdict()['area'])))
+                    area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 except:
                     area = m.groupdict()['area']
                 # Create dict
@@ -5563,19 +5565,19 @@ class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
         af = 'ipv4' # this is ospf - always ipv4
 
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                            ' +\(Process +ID +(?P<instance>(\S+))\)$')
+                            r' +\(Process +ID +(?P<instance>(\S+))\)$')
 
         p2 = re.compile(r'^Area +(?P<area>(\d+)) +has +(?P<links>(\d+))'
-                            ' +MPLS +TE +links. +Area +instance +is'
-                            ' +(?P<area_instance>(\d+))\.$')
+                            r' +MPLS +TE +links. +Area +instance +is'
+                            r' +(?P<area_instance>(\d+))\.$')
 
         p3 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not +initialized$')
 
         p4 = re.compile(r'^Links +in +hash +bucket +(?P<hash>(\d+))\.$')
 
         p5 = re.compile(r'^Link +is +associated +with +fragment'
-                            ' +(?P<fragment>(\d+))\. +Link +instance +is'
-                            ' +(?P<link_instance>(\d+))$')
+                            r' +(?P<fragment>(\d+))\. +Link +instance +is'
+                            r' +(?P<link_instance>(\d+))$')
 
         p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z\s]+))$')
 
@@ -5584,20 +5586,20 @@ class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
         p8 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
 
         p9 = re.compile(r'^Admin +Metric +te: +(?P<te>(\d+)) +igp:'
-                            ' +(?P<igp>(\d+))$')
+                            r' +(?P<igp>(\d+))$')
 
         p14 = re.compile(r'^Maximum +(B|b)andwidth *: +(?P<mband>(\d+))$')
 
         p10 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
-                            ' +(?P<res_band>(\d+))$')
+                            r' +(?P<res_band>(\d+))$')
 
         p11 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
 
         p12 = re.compile(r'^Number +of +Priority +: +(?P<priority>(\d+))$')
 
         p13 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
-                            ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
-                            ' *: +(?P<band2>(\d+)))?$')
+                            r' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                            r' *: +(?P<band2>(\d+)))?$')
 
 
         for line in out.splitlines():
@@ -5623,7 +5625,7 @@ class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
             # Area 0 has 2 MPLS TE links. Area instance is 2.
             m = p2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 total_links = int(m.groupdict()['links'])
                 area_instance = int(m.groupdict()['area_instance'])
                 # Create dict
@@ -5642,7 +5644,7 @@ class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
             if m:
                 try:
                     int(m.groupdict()['area'])
-                    area = str(IPAddress(str(m.groupdict()['area'])))
+                    area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 except:
                     area = m.groupdict()['area']
                 # Create dict
@@ -5819,15 +5821,15 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
         # OSPF Router with ID (172.16.1.214) (Process ID 65109)
         # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                         ' +\(Process +ID +(?P<instance>(\d+))'
-                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+                         r' +\(Process +ID +(?P<instance>(\d+))'
+                         r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
         # Base Topology (MTID 0)
         p2 = re.compile(r'^Base +Topology +\(MTID +(?P<mtid>(\d+))\)$')
 
         # Start time: 00:01:58.314, Time elapsed: 00:54:43.858
         p3 = re.compile(r'^Start +time: +(?P<start_time>(\S+)), +Time +elapsed:'
-                         ' +(?P<time_elapsed>(\S+))$')
+                         r' +(?P<time_elapsed>(\S+))$')
 
         # Originating router-LSAs with maximum metric
         # Originating router-LSAs with maximum metric, Time remaining: 00:03:55
@@ -5835,22 +5837,22 @@ class ShowIpOspfMaxMetric(ShowIpOspfMaxMetricSchema):
 
         # Router is not originating router-LSAs with maximum metric
         p4_2 = re.compile(r'^Router +is +not +originating +router-LSAs +with'
-                           ' +maximum +metric$')
+                           r' +maximum +metric$')
 
         # Condition: on startup for 5 seconds, State: inactive
         p5 = re.compile(r'^Condition: +(?P<condition>(.*)), +State:'
-                          ' +(?P<state>([a-zA-Z\s]+))$')
+                          r' +(?P<state>([a-zA-Z\s]+))$')
 
         # Advertise summary-LSAs with metric 16711680
         p6 = re.compile(r'^Advertise +summary-LSAs +with +metric'
-                         ' +(?P<metric>(\d+))$')
+                         r' +(?P<metric>(\d+))$')
 
         # Unset reason: timer expired, Originated for 5 seconds
         p7 = re.compile(r'^Unset +reason: (?P<reason>(.*))$')
 
         # Unset time: 00:02:03.314, Time elapsed: 00:54:38.858
         p8 = re.compile(r'^Unset +time: +(?P<time>(\S+)), +Time +elapsed:'
-                         ' +(?P<elapsed>(\S+))$')
+                         r' +(?P<elapsed>(\S+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -6196,22 +6198,22 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Last clearing of OSPF traffic counters never
         # Last clearing of interface traffic counters never
         p2 = re.compile(r'^Last +clearing +of +(?P<type>(OSPF|interface)) +traffic'
-                         ' +counters +(?P<last_clear>([a-zA-Z0-9\:\s]+))$')
+                         r' +counters +(?P<last_clear>([a-zA-Z0-9\:\s]+))$')
 
         # Rcvd: 2112690 total, 0 checksum errors
         p3 = re.compile(r'^Rcvd: +(?P<total>(\d+)) total, +(?P<csum_errors>(\d+))'
-                         ' +checksum +errors$')
+                         r' +checksum +errors$')
 
         # 2024732 hello, 938 database desc, 323 link state req
         # 2381794 hello, 1176 database desc, 43 link state req
         p4 = re.compile(r'^(?P<hello>(\d+)) +hello, +(?P<db_desc>(\d+))'
-                         ' +database +desc, +(?P<link_state_req>(\d+))'
-                         ' +link +state +req$')
+                         r' +database +desc, +(?P<link_state_req>(\d+))'
+                         r' +link +state +req$')
 
         # 11030 link state updates, 75666 link state acks
         # 92224 link state updates, 8893 link state acks
         p5 = re.compile(r'^(?P<link_state_updates>(\d+)) +link +state +updates,'
-                         ' +(?P<link_state_acks>(\d+)) +link +state +acks$')
+                         r' +(?P<link_state_acks>(\d+)) +link +state +acks$')
 
         # Sent: 2509472 total
         p6 = re.compile(r'^Sent: +(?P<total>(\d+)) +total$')
@@ -6220,8 +6222,8 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # OSPF Router with ID (10.169.197.252) (Process ID 65109)
         # OSPF Router with ID (10.36.3.3) (Process ID 1, VRF VRF1)
         p7 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
-                         ' +\(Process +ID +(?P<instance>(\d+))'
-                         '(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+                         r' +\(Process +ID +(?P<instance>(\d+))'
+                         r'(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
         # OSPF queue statistics for process ID 65109:
         p8 = re.compile(r'^OSPF +queue +statistics +for +process +ID +(?P<pid>(\d+)):$')
@@ -6231,7 +6233,7 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # Drops             0          0          0
         # Max delay [msec] 49          2          2
         p9_1 = re.compile(r'^(?P<item>(Limit|Drops|Max delay \[msec\])) +'
-                        '(?P<inputq>(\d+)) +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+                        r'(?P<inputq>(\d+)) +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
         
         # Invalid           0          0          0
         # Hello             0          0          0
@@ -6240,14 +6242,14 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # LS upd            0          0          0
         # LS ack           14         14          6
         p9_2 = re.compile(r'^(?P<item>(Invalid|Hello|DB des|LS '
-                        'req|LS upd|LS ack)) +(?P<inputq>(\d+)) '
-                        '+(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+                        r'req|LS upd|LS ack)) +(?P<inputq>(\d+)) '
+                        r'+(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
 
         #                   InputQ   UpdateQ      OutputQ
         # Max size         14         14          6
         # Current size      0          0          0
         p9_3 = re.compile(r'^(?P<item>(Max size|Current size)) +(?P<inputq>(\d+))'
-                           ' +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
+                           r' +(?P<updateq>(\d+)) +(?P<outputq>(\d+))$')
 
         # Interface statistics:
         p10 = re.compile(r'^Interface +statistics:$')
@@ -6272,60 +6274,60 @@ class ShowIpOspfTraffic(ShowIpOspfTrafficSchema):
         # TX LS ack     899                  63396
         # TX Total      182893               26212884
         p12 = re.compile(r'^(?P<type>([a-zA-Z\s]+)) +(?P<packets>(\d+))'
-                          ' +(?P<bytes>(\d+))$')
+                          r' +(?P<bytes>(\d+))$')
 
         # OSPF header errors
         p13 = re.compile(r'^OSPF +header +errors$')
 
         # Length 0, Instance ID 0, Checksum 0, Auth Type 0,
         p14 = re.compile(r'^Length +(?P<len>(\d+)), +Instance +ID'
-                          ' +(?P<iid>(\d+)), +Checksum +(?P<csum>(\d+)),'
-                          ' +Auth +Type +(?P<auth>(\d+)),?$')
+                          r' +(?P<iid>(\d+)), +Checksum +(?P<csum>(\d+)),'
+                          r' +Auth +Type +(?P<auth>(\d+)),?$')
 
         # Version 0, Bad Source 0, No Virtual Link 0,
         p15 = re.compile(r'^Version +(?P<version>(\d+)), +Bad +Source'
-                          ' +(?P<bad_source>(\d+)), +No +Virtual +Link'
-                          ' +(?P<no_virtual_link>(\d+)),?$')
+                          r' +(?P<bad_source>(\d+)), +No +Virtual +Link'
+                          r' +(?P<no_virtual_link>(\d+)),?$')
 
         # Area Mismatch 0, No Sham Link 0, Self Originated 0,
         p16 = re.compile(r'^Area +Mismatch +(?P<area_mismatch>(\d+)),'
-                          ' +No +Sham +Link +(?P<no_sham_link>(\d+)),'
-                          ' +Self +Originated +(?P<self_originated>(\d+)),?$')
+                          r' +No +Sham +Link +(?P<no_sham_link>(\d+)),'
+                          r' +Self +Originated +(?P<self_originated>(\d+)),?$')
 
         # Duplicate ID 0, Hello 0, MTU Mismatch 0,
         p17 = re.compile(r'^Duplicate +ID +(?P<duplicate_id>(\d+)),'
-                          ' +Hello +(?P<hello>(\d+)), +MTU +Mismatch'
-                          ' +(?P<mtu_mismatch>(\d+)),$')
+                          r' +Hello +(?P<hello>(\d+)), +MTU +Mismatch'
+                          r' +(?P<mtu_mismatch>(\d+)),$')
 
         # Nbr Ignored 0, LLS 0, Unknown Neighbor 0,
         p18 = re.compile(r'^Nbr +Ignored +(?P<nbr_ignored>(\d+)), +LLS'
-                          ' +(?P<lls>(\d+)), +Unknown +Neighbor'
-                          ' +(?P<unknown_neighbor>(\d+)),?$')
+                          r' +(?P<lls>(\d+)), +Unknown +Neighbor'
+                          r' +(?P<unknown_neighbor>(\d+)),?$')
 
         # Authentication 0, TTL Check Fail 0, Adjacency Throttle 0,
         p19 = re.compile(r'^Authentication +(?P<authentication>(\d+)), +TTL'
-                          ' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
-                          ' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
+                          r' +Check +Fail +(?P<ttl_check_fail>(\d+)), +Adjacency'
+                          r' +Throttle +(?P<adjacency_throttle>(\d+)),?$')
 
         # Authentication 0, TTL Check Fail 0, Test discard 0
         p19_1 = re.compile(r'^Authentication +(?P<authentication>\d+), +TTL'
-                          ' +Check +Fail +(?P<ttl_check_fail>\d+), +Test discard'
-                          ' +(?P<test_discard>\d+),?$')
+                          r' +Check +Fail +(?P<ttl_check_fail>\d+), +Test discard'
+                          r' +(?P<test_discard>\d+),?$')
 
         # BFD 0, Test discard 0
         p20 = re.compile(r'^BFD +(?P<bfd>(\d+)), +Test +discard'
-                          ' +(?P<test_discard>(\d+))$')
+                          r' +(?P<test_discard>(\d+))$')
 
         # OSPF LSA errors
         p21 = re.compile(r'^OSPF +LSA +errors$')
 
         # Type 0, Length 0, Data 0, Checksum 0
         p22 = re.compile(r'^Type +(?P<type>(\d+)), +Length +(?P<len>(\d+)),'
-                          ' +Data +(?P<data>(\d+)), +Checksum +(?P<csum>(\d+))$')
+                          r' +Data +(?P<data>(\d+)), +Checksum +(?P<csum>(\d+))$')
 
         # Summary traffic statistics for process ID 65109:
         p23 = re.compile(r'^Summary +traffic +statistics +for +process +ID'
-                          ' +(?P<pid>(\d+)):$')
+                          r' +(?P<pid>(\d+)):$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -6736,7 +6738,7 @@ class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
         # 10.169.197.252   0   FULL/  -        00:00:36    10.169.197.93  GigabitEthernet2
         
         p1=re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+(?:\s+\S+)?)'
-                       ' +(?P<dead_time>\S+) +(?P<address>\S+) +(?P<interface>\S+)$')
+                       r' +(?P<dead_time>\S+) +(?P<address>\S+) +(?P<interface>\S+)$')
 
         for line in out.splitlines():
 
@@ -6808,14 +6810,14 @@ class ShowIpOspfSegmentRoutingAdjacencySid(ShowIpOspfSegmentRoutingAdjacencySidS
 
         # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         r1 = re.compile(r'OSPF\s+Router\s+with\s+ID\s+\((?P<router_id>\S+)\)\s+'
-                         '\(Process\s+ID\s+(?P<process_id>\d+)\)')
+                         r'\(Process\s+ID\s+(?P<process_id>\d+)\)')
 
         # 16       10.16.2.2         Gi0/1/2            192.168.154.2       D U   
         # 17       10.16.2.2         Gi0/1/1            192.168.4.2       D U   
         r2 = re.compile(r'(?P<adj_sid>\d+)\s+(?P<neighbor_id>\S+)\s+'
-                         '(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+'
-                         '(?P<flags>[SDPUGL\s]+)\s*(?:(?P<backup_nexthop>\S+))?'
-                         '\s*(?:(?P<backup_interface>\S+))?')
+                         r'(?P<interface>\S+)\s+(?P<neighbor_address>\S+)\s+'
+                         r'(?P<flags>[SDPUGL\s]+)\s*(?:(?P<backup_nexthop>\S+))?'
+                         r'\s*(?:(?P<backup_interface>\S+))?')
 
         parsed_output = {}
 
@@ -6910,16 +6912,16 @@ class ShowIpOspfFastRerouteTiLfa(ShowIpOspfFastRerouteTiLfaSchema):
 
         # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)'
-            '\) +\(Process +ID +(?P<process_id>\d+)\)')
+            r'\) +\(Process +ID +(?P<process_id>\d+)\)')
 
         # Process ID (65109)       no       yes      no          no
         # Area 8                  no       yes      no          no
         # Loopback0               no       no       no          no
         # GigabitEthernet0/1/2    no       yes      no          no
         p2 = re.compile(r'^(?P<ospf_object>[\S\s]+) +(?P<ipfrr_enabled>(yes|no)'
-                         '( +\(inactive\))?) +(?P<sr_enabled>(yes|no)( +\(inactive\))?) '
-                         '+(?P<ti_lfa_configured>(yes|no)( +\(inactive\))?) +'
-                         '(?P<ti_lfa_enabled>(yes|no)( +\(inactive\))?)$')
+                         r'( +\(inactive\))?) +(?P<sr_enabled>(yes|no)( +\(inactive\))?) '
+                         r'+(?P<ti_lfa_configured>(yes|no)( +\(inactive\))?) +'
+                         r'(?P<ti_lfa_enabled>(yes|no)( +\(inactive\))?)$')
 
         # initial variables
         ret_dict = {}
@@ -7015,7 +7017,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
 
         # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
-                         'Process +ID +(?P<process_id>\d+)\)')
+                         r'Process +ID +(?P<process_id>\d+)\)')
 
         # Area with ID (8)
         p2 = re.compile(r'^Area +with +ID \((?P<area_id>\d+)\)$')
@@ -7046,7 +7048,7 @@ class ShowIpOspfSegmentRoutingProtectedAdjacencies(ShowIpOspfSegmentRoutingProte
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                area_id = str(IPAddress(str(group['area_id'])))
+                area_id = str(IPAddress(str(group['area_id']), flags=INET_ATON))
                 area_dict = process_id_dict.setdefault('areas', {}). \
                                 setdefault(area_id, {})                
                 continue
@@ -7122,7 +7124,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
 
         # OSPF Router with ID (10.4.1.1) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
-                        '\(Process +ID +(?P<pid>\d+)\)$')
+                        r'\(Process +ID +(?P<pid>\d+)\)$')
 
         # 1       (L)     10.4.1.1/32          10.4.1.1          8        Intra     0
         # 2               10.16.2.2/32          10.16.2.2          8        Intra     0
@@ -7176,7 +7178,7 @@ class ShowIpOspfSegmentRoutingSidDatabase(ShowIpOspfSegmentRoutingSidDatabaseSch
                 if group.get('adv_rtr_id'):
                     index_dict.update({'adv_rtr_id': group['adv_rtr_id']})
                 if group.get('area_id'):
-                    index_dict.update({'area_id': str(IPAddress(group['area_id']))})
+                    index_dict.update({'area_id': str(IPAddress(group['area_id'], flags=INET_ATON))})
                 if group.get('type'):
                     index_dict.update({'type': group['type']})
                 if group.get('algo'):
@@ -7238,7 +7240,7 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
 
         # OSPF Router with ID (10.4.1.1) (Process ID 1234)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>[\d+\.]+)\) +'
-                         '\(Process +ID +(?P<pid>\d+)\)$')
+                         r'\(Process +ID +(?P<pid>\d+)\)$')
 
         # OSPF Segment Routing Global Blocks in Area 3
         p2 = re.compile(r'^OSPF +Segment +Routing +Global +Blocks +in +Area (?P<area>\d+)$')
@@ -7248,8 +7250,8 @@ class ShowIpOspfSegmentRoutingGlobalBlock(ShowIpOspfSegmentRoutingGlobalBlockSch
         # *10.4.1.1         No
         # 10.16.2.2         No
         p3 = re.compile(r'^\*?(?P<router_id>[\d\.]+) +(?P<sr_capable>\w+)'
-                         '(?: +(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
-                         '(?P<srgb_range>\d+) +(?P<sid_label>\w+))?$')
+                         r'(?: +(?P<sr_algorithm>[\w,]+) +(?P<srgb_base>\d+) +'
+                         r'(?P<srgb_range>\d+) +(?P<sid_label>\w+))?$')
 
         ret_dict = {}
 
@@ -7391,11 +7393,11 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         
         # OSPF Router with ID (10.16.2.2) (Process ID 65109)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\('
-                         'Process +ID +(?P<process_id>\d+)\)$')
+                         r'Process +ID +(?P<process_id>\d+)\)$')
 
         # Global segment-routing state: Enabled
         p2 = re.compile(r'^Global +segment\-routing +state: +'
-                         '(?P<global_segment_routing_state>\S+)$')
+                         r'(?P<global_segment_routing_state>\S+)$')
         
         # Prefer non-SR (LDP) Labels
         p3 = re.compile(r'^Prefer +non\-SR +\(LDP\) +Labels$')
@@ -7417,22 +7419,22 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 
         # Registered with SR App, client handle: 2
         p9 = re.compile(r'^Registered +with +(?P<app_name>[\S\s]+), +'
-                         'client +handle: +(?P<client_handle>\d+)$')
+                         r'client +handle: +(?P<client_handle>\d+)$')
 
         # SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
         p10 = re.compile(r'^SR +algo +(?P<algo>\d+) +(?P<notifications>[\S\s]+) +\('
-                          'handle +(?P<handle>\w+)\), +bitmask +(?P<bitmask>\w+)$')
+                          r'handle +(?P<handle>\w+)\), +bitmask +(?P<bitmask>\w+)$')
 
         # Registered with MPLS, client-id: 100
         p12 = re.compile(r'^Registered +with +(?P<app_name>[\S\s]+), +client\-id: +'
-                          '(?P<client_id>\d+)$')
+                          r'(?P<client_id>\d+)$')
 
         # Max labels: platform 16, available 13
         p13 = re.compile(r'^Max +labels: +platform +(?P<platform>\d+), available +(?P<available>\d+)$')
 
         # Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
         p14 = re.compile(r'^Max +labels +pushed +by +OSPF: +uloop +tunnels +(?P<uloop_tunnels>\d+)'
-                          ', +TI\-LFA +tunnels +(?P<ti_lfa_tunnels>\d+)$')
+                          r', +TI\-LFA +tunnels +(?P<ti_lfa_tunnels>\d+)$')
 
         # mfi label reservation ack not pending
         p15 = re.compile(r'^mfi +label +reservation +ack +not +pending$')
@@ -7461,7 +7463,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
         # 8    Base             MPLS          Capable
         # AS external    Base             MPLS          Not applicable
         p21 = re.compile(r'^(?P<area>(\d+|(\w+ +\w+))) +(?P<topology_name>\w+)'
-                         ' +(?P<forwarding>\w+) +(?P<strict_spf>\w+( +\w+)?)$')
+                         r' +(?P<forwarding>\w+) +(?P<strict_spf>\w+( +\w+)?)$')
         
         # initial variables
         ret_dict = {}
@@ -7671,7 +7673,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
                 group = m.groupdict()
                 area = group['area']
                 if area.isdigit():
-                    area = str(IPAddress(str(area)))
+                    area = str(IPAddress(str(area), flags=INET_ATON))
                 topology_name = group['topology_name']
                 forwarding = group['forwarding']
                 strict_spf = group['strict_spf']
@@ -7717,13 +7719,13 @@ class ShowIpOspfLinksParser2(MetaParser):
         # Sham Link OSPF_SL0 to address 10.151.22.22 is up
         # Virtual Link OSPF_VL0 to router 10.64.4.4 is up
         p1 = re.compile(r'^(Virtual|Sham) +Link +(?P<interface>(\S+)) +to'
-                            ' +(address|router) +(?P<address>(\S+)) +is'
-                            ' +(?P<link_state>(up|down))$')
+                            r' +(address|router) +(?P<address>(\S+)) +is'
+                            r' +(?P<link_state>(up|down))$')
 
         # Area 1, source address 10.21.33.33
         # Area 1 source address 10.229.11.11
         p2 = re.compile(r'^Area +(?P<area>(\S+)),? +source +address'
-                            ' +(?P<source_address>(\S+))$')
+                            r' +(?P<source_address>(\S+))$')
         
         # Run as demand circuit
         p3 = re.compile(r'^Run +as +demand +circuit$')
@@ -7731,38 +7733,38 @@ class ShowIpOspfLinksParser2(MetaParser):
         # DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
         # DoNotAge LSA not allowed (Number of DCbitless LSA is 1). Cost of using 111 State POINT_TO_POINT,
         p4 = re.compile(r'^DoNotAge +LSA +not +allowed'
-                            ' +\(Number +of +DCbitless +LSA +is +(?P<dcbitless>(\d+))\).'
-                            '(?: +Cost +of +using +(?P<cost>(\d+)))?'
-                            '(?: State +(?P<state>(\S+)))?$')
+                            r' +\(Number +of +DCbitless +LSA +is +(?P<dcbitless>(\d+))\).'
+                            r'(?: +Cost +of +using +(?P<cost>(\d+)))?'
+                            r'(?: State +(?P<state>(\S+)))?$')
 
         # Transit area 1
         # Transit area 1, via interface GigabitEthernet0/1
         p5 = re.compile(r'^Transit +area +(?P<area>(\S+)),'
-                            '(?: +via +interface +(?P<intf>(\S+)))?$')
+                            r'(?: +via +interface +(?P<intf>(\S+)))?$')
 
         # Topology-MTID    Cost    Disabled     Shutdown      Topology Name
         #             0       1          no           no               Base
         p6 = re.compile(r'^(?P<mtid>(\d+)) +(?P<topo_cost>(\d+))'
-                            ' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
-                            ' +(?P<topo_name>(\S+))$')
+                            r' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
+                            r' +(?P<topo_name>(\S+))$')
 
         # Transmit Delay is 1 sec, State POINT_TO_POINT,
         p7 = re.compile(r'^Transmit +Delay +is +(?P<transmit_delay>(\d+))'
-                            ' +sec, +State +(?P<state>(\S+)),?$')
+                            r' +sec, +State +(?P<state>(\S+)),?$')
 
         # Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
         # Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
         # Timer intervals configured, Hello 10, Dead 40, Wait 40,
         p8 = re.compile(r'^Timer +intervals +configured,'
-                            ' +Hello +(?P<hello>(\d+)),'
-                            ' +Dead +(?P<dead>(\d+)),'
-                            ' +Wait +(?P<wait>(\d+)),'
-                            '(?: +Retransmit +(?P<retransmit>(\d+)))?$')
+                            r' +Hello +(?P<hello>(\d+)),'
+                            r' +Dead +(?P<dead>(\d+)),'
+                            r' +Wait +(?P<wait>(\d+)),'
+                            r'(?: +Retransmit +(?P<retransmit>(\d+)))?$')
 
         # Strict TTL checking enabled, up to 3 hops allowed
         p9 = re.compile(r'^Strict +TTL +checking'
-                            ' +(?P<strict_ttl>(enabled|disabled))'
-                            '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
+                            r' +(?P<strict_ttl>(enabled|disabled))'
+                            r'(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
 
         # Hello due in 00:00:03:179
         p10 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
@@ -7772,20 +7774,20 @@ class ShowIpOspfLinksParser2(MetaParser):
 
         # Index 1/2/2, retransmission queue length 0, number of retransmission 2
         p12 = re.compile(r'^Index +(?P<index>(\S+)), +retransmission +queue'
-                            ' +length +(?P<length>(\d+)), +number +of'
-                            ' +retransmission +(?P<retrans>(\d+))$')
+                            r' +length +(?P<length>(\d+)), +number +of'
+                            r' +retransmission +(?P<retrans>(\d+))$')
         
         # First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
         p13 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
 
         # Last retransmission scan length is 1, maximum is 1
         p14 = re.compile(r'^Last +retransmission +scan +length +is'
-                            ' +(?P<len>(\d+)), +maximum +is +(?P<max>(\d+))$')
+                            r' +(?P<len>(\d+)), +maximum +is +(?P<max>(\d+))$')
 
         # Last retransmission scan time is 0 msec, maximum is 0 msec
         p15 = re.compile(r'^Last +retransmission +scan +time +is'
-                            ' +(?P<time>(\d+)) +msec, +maximum +is'
-                            ' +(?P<max>(\d+)) +msec$')
+                            r' +(?P<time>(\d+)) +msec, +maximum +is'
+                            r' +(?P<max>(\d+)) +msec$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -7799,7 +7801,7 @@ class ShowIpOspfLinksParser2(MetaParser):
                 interface = str(m.groupdict()['interface'])
                 link_state = str(m.groupdict()['link_state'])
 
-                n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', interface)
+                n = re.match(r'(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', interface)
                 if n:
                     real_link_name = str(n.groupdict()['name'])
                 else:
@@ -7816,7 +7818,7 @@ class ShowIpOspfLinksParser2(MetaParser):
             # Area 1 source address 10.229.11.11
             m = p2.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
                 source_address = str(m.groupdict()['source_address'])
 
                 # Set link_name for sham_link
@@ -7884,7 +7886,7 @@ class ShowIpOspfLinksParser2(MetaParser):
             # Transit area 1, via interface GigabitEthernet0/1
             m = p5.match(line)
             if m:
-                area = str(IPAddress(str(m.groupdict()['area'])))
+                area = str(IPAddress(str(m.groupdict()['area']), flags=INET_ATON))
 
                 # Set link_name for virtual_link
                 link_name = '{} {}'.format(area, vl_router_id)
@@ -8258,7 +8260,7 @@ class ShowIpv6OspfNeighbor(ShowIpv6OspfNeighborSchema):
         # 10.169.197.252   0   FULL/  -        00:00:36          23       GigabitEthernet2
 
         p1 = re.compile(r'^(?P<neighbor>\S+) +(?P<pri>\d+) +(?P<state>\S+(?:\s+\S+)?)'
-                        ' +(?P<dead_time>\S+) +(?P<interface_id>\S+) +(?P<interface>\S+)$')
+                        r' +(?P<dead_time>\S+) +(?P<interface_id>\S+) +(?P<interface>\S+)$')
 
         for line in output.splitlines():
 
@@ -8449,7 +8451,7 @@ class ShowIpOspfRibRedistribution(ShowIpOspfRibRedistributionSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                router_id = str(IPAddress(group['router_id']))
+                router_id = str(IPAddress(group['router_id'], flags=INET_ATON))
                 instance = int(group['instance'])
 
                 # Create dict
@@ -8487,7 +8489,7 @@ class ShowIpOspfRibRedistribution(ShowIpOspfRibRedistributionSchema):
                 interface= group['interface']
                 interface= group['interface']
                 if via_network is not None:
-                    network_dict.update({'via_network': str(IPAddress(via_network))})
+                    network_dict.update({'via_network': str(IPAddress(via_network, flags=INET_ATON))})
                 else:
                     network_dict.update({'via_network': 'None'})
                  
@@ -9120,6 +9122,151 @@ class ShowIpOspfRibRoute(ShowIpOspfRibRouteSchema):
                     repair_dict['strict_label'] = int(strict_label)
                 if (cost):
                     repair_dict['cost'] = int(cost)
+                continue
+
+        return ret_dict
+       
+# ================================================================
+# Schema for:
+#   * 'show ip ospf neighbor summary'
+# ================================================================
+class ShowIpOspfNeighborSummarySchema(MetaParser):
+    ''' Schema for:
+        * 'show ip ospf neighbor summary'
+    '''
+    schema = {
+            'down': int,
+            'attempt': int,
+            'init': int,
+            '2way': int,
+            'exstart': int,
+            'exchange': int,
+            'loading': int,
+            'full': int,
+            'total_count': int,
+            'undergoing_nsf': int
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ip ospf neighbor summary'
+# ================================================================
+class ShowIpOspfNeighborSummary(ShowIpOspfNeighborSummarySchema):
+    ''' Parser for:
+        * 'show ip ospf neighbor summary'
+    '''
+    cli_command = "show ip ospf neighbor summary"
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command
+        
+        output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # DOWN         0
+        # ATTEMPT      0
+        # INIT         0
+        # 2WAY         0
+        # EXSTART      0
+        # EXCHANGE     0
+        # LOADING      0
+        # FULL         0
+        p1 = re.compile(r'^(?P<state>DOWN|ATTEMPT|INIT|2WAY|EXSTART|EXCHANGE|LOADING|FULL)\s+(?P<count>\d+)$', re.IGNORECASE)
+
+        #Total count  0    (Undergoing NSF 0)
+        p2 = re.compile(r'^Total\s+count\s+(?P<total>\d+)\s+\(Undergoing\s+NSF\s+(?P<undergoing_nsf>\d+)\)$', re.IGNORECASE)
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # DOWN         0
+            # ATTEMPT      0
+            m1 = p1.match(line)
+            if m1:
+                state = m1.group('state').lower()
+                count = int(m1.group('count'))
+                ret_dict[state] = count
+                continue
+            
+            #Total count  0    (Undergoing NSF 0)
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['total_count'] = int(m2.group('total'))
+                ret_dict['undergoing_nsf'] = int(m2.group('undergoing_nsf'))
+                continue
+
+        return ret_dict
+
+# ================================================================
+# Schema for:
+#   * 'show ipv6 ospf neighbor summary'
+# ================================================================
+class ShowIpv6OspfNeighborSummarySchema(MetaParser):
+    ''' Schema for:
+        * 'show ipv6 ospf neighbor summary'
+    '''
+    schema = {
+            'down': int,
+            'attempt': int,
+            'init': int,
+            '2way': int,
+            'exstart': int,
+            'exchange': int,
+            'loading': int,
+            'full': int,
+            'total_count': int,
+            'undergoing_gr': int
+    }
+
+# ================================================================
+# Parser for:
+#   * 'show ipv6 ospf neighbor summary'
+# ================================================================
+class ShowIpv6OspfNeighborSummary(ShowIpv6OspfNeighborSummarySchema):
+    ''' Parser for:
+        * 'show ipv6 ospf neighbor summary'
+    '''
+    cli_command = "show ipv6 ospf neighbor summary"
+
+    def cli(self, output=None):
+        if output is None:
+            cmd = self.cli_command
+        
+        output = self.device.execute(cmd)
+        ret_dict = {}
+
+        # DOWN         0
+        # ATTEMPT      0
+        # INIT         0
+        # 2WAY         0
+        # EXSTART      0
+        # EXCHANGE     0
+        # LOADING      0
+        # FULL         0
+        p1 = re.compile(r'^(?P<state>DOWN|ATTEMPT|INIT|2WAY|EXSTART|EXCHANGE|LOADING|FULL)\s+(?P<count>\d+)$', re.IGNORECASE)
+
+        #Total count  0    (Undergoing GR 0)
+        p2 = re.compile(r'^Total\s+count\s+(?P<total>\d+)\s+\(Undergoing\s+GR\s+(?P<undergoing_gr>\d+)\)$', re.IGNORECASE)
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # DOWN         0
+            # ATTEMPT      0
+            m1 = p1.match(line)
+            if m1:
+                state = m1.group('state').lower()
+                count = int(m1.group('count'))
+                ret_dict[state] = count
+                continue
+
+            #Total count  0    (Undergoing GR 0)
+            m2 = p2.match(line)
+            if m2:
+                ret_dict['total_count'] = int(m2.group('total'))
+                ret_dict['undergoing_gr'] = int(m2.group('undergoing_gr'))
                 continue
 
         return ret_dict

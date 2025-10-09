@@ -1,0 +1,24 @@
++---------------+-------------------------+-----------+---------+---------------------+----------------------+--------------+-------------+---------+
+| ACL Group OID | ACL Group Packet Format | Direction | ACL OID | ACL Key Profile OID | Key Lookup Interface | ACL PLKP OID |       Stage | AC Type |
++---------------+-------------------------+-----------+---------+---------------------+----------------------+--------------+-------------+---------+
+|          1667 |                ETHERNET |   INGRESS |     711 |                 508 |                  E_0 |          557 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1667 |                    IPV4 |   INGRESS |     713 |                 509 |                  E_0 |          560 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1667 |                    IPV6 |   INGRESS |     717 |                 510 |                  E_0 |          565 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1675 |                ETHERNET |   INGRESS |     711 |                 508 |                  E_0 |          557 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1675 |                    IPV4 |   INGRESS |     713 |                 509 |                  E_0 |          560 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1675 |                    IPV6 |   INGRESS |     717 |                 510 |                  E_0 |          565 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1673 |                ETHERNET |   INGRESS |     711 |                 508 |                  E_0 |          557 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1673 |                    IPV4 |   INGRESS |     713 |                 509 |                  E_0 |          560 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1673 |                    IPV6 |   INGRESS |     717 |                 510 |                  E_0 |          565 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1679 |                ETHERNET |   INGRESS |     711 |                 508 |                  E_0 |          557 | TERMINATION |  switch |
+|               |                         |           |         |                     |                      |              |             |         |
+|          1679 |                    IPV4 |   INGRESS |     713 |                 509 |                  E_0 |          560 | TERMINATION |  switch |

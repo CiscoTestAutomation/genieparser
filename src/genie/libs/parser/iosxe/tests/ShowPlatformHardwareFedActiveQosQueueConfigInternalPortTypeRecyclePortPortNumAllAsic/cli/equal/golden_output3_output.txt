@@ -1,0 +1,11 @@
+===================================================================================
+|                                VOQ Details                                      |
+===================================================================================
+Interface : Recircport/1 (0x1)
+VOQ OID        : 285(0x11D) 
+VOQ Set Size   : 8
+Base VOQ ID    : 256
+Base VSC IDs   : 128, 208, 288
+VOQ State      : Active
+VOQ Flush      : Flush not active
+Is Empty       : Yes

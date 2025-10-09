@@ -1,0 +1,22 @@
+expected_output = {
+    'alarm_in1': 'GREEN',
+    'alarm_in2': 'GREEN',
+    'alarm_out': 'BLACK',
+    'dc_a': 'GREEN',
+    'dc_b': 'BLACK',
+    'eip_net_led': 'BLACK',
+    'express_setup': 'BLACK',
+    'interfaces': {
+        'GigabitEthernet1/1': 'BLACK',
+        'GigabitEthernet1/10': 'BLACK',
+        'GigabitEthernet1/2': 'GREEN(Fiber)',
+        'GigabitEthernet1/3': 'BLACK',
+        'GigabitEthernet1/4': 'BLACK',
+        'GigabitEthernet1/5': 'BLACK',
+        'GigabitEthernet1/6': 'BLACK',
+        'GigabitEthernet1/7': 'BLACK',
+        'GigabitEthernet1/8': 'BLACK',
+        'GigabitEthernet1/9': 'BLACK',
+    },
+    'system': 'GREEN',
+}

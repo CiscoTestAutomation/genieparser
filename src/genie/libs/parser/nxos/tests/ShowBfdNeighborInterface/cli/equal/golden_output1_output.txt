@@ -1,0 +1,25 @@
+show bfd neighbor interface Eth7/6.5 detail
+
+OurAddr NeighAddr LD/RD RH/RS Holdown(mult) State Int Vrf Type
+22.1.1.1 22.1.1.2 1090519065/1090519076 Up 104(3) Up Eth7/6.5 default SH
+
+Session state is Up and not using echo function
+
+Session type: Singlehop
+Local Diag: 0, Demand mode: 0, Poll bit: 0, Authentication: None
+MinTxInt: 50000 us, MinRxInt: 50000 us, Multiplier: 3
+Received MinRxInt: 50000 us, Received Multiplier: 3
+Holdown (hits): 150 ms (2), Hello (hits): 50 ms (2554386)
+Rx Count: 2632305, Rx Interval (ms) min/max/avg: 0/1916/47 last: 45 ms ago
+Tx Count: 2554386, Tx Interval (ms) min/max/avg: 48/48/48 last: 40 ms ago
+Registered protocols: ospf
+Uptime: 0 days 0 hrs 24 mins 9 secs
+Last packet: Version: 1 - Diagnostic: 0
+State bit: Up - Demand bit: 0
+Poll bit: 0 - Final bit: 0
+Multiplier: 3 - Length: 24
+My Discr.: 1090519076 - Your Discr.: 1090519065
+Min tx interval: 50000 - Min rx interval: 50000
+Min Echo interval: 50000 - Authentication bit: 0
+C bit : 1
+Hosting LC: 7, Down reason: None, Reason not-hosted: None, Offloaded: No

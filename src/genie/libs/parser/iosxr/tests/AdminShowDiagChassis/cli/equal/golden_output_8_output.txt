@@ -1,0 +1,18 @@
+admin show diag chassis
+Fri Mar 28 12:33:24.147 UTC
+Diag Information For : 0
+ Rack 0-IDPROM Info
+    Product ID      : NCS-5502-SE
+    VID             : V01
+    Serial Number   : FOC20043D9R
+    CLEI Code       : INM1T00ARA
+    Part Number     : 73-17817-05
+    Part Revision   : 02
+    H/W Version     : 0.5
+Top Assembly Block:
+    Serial Number   : FOC20043D9R
+    Part Number     : 
+    Part Revision   : 
+    Mfg Deviation   : 
+    H/W Version     : 0.0
+    Mfg Bits        : 0

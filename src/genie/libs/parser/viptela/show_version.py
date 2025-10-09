@@ -36,7 +36,7 @@ class ShowVersion(ShowVersionSchema):
             out = output
         if out:
             # 99.99.999-4567
-            p1 = re.compile('^(?P<value>[\d\w/\.\:\-]+)$')
+            p1 = re.compile(r'^(?P<value>[\d\w/\.\:\-]+)$')
             for line in out.splitlines():
                 line = line.strip()
                 m = p1.match(line)

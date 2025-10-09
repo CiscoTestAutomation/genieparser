@@ -156,7 +156,7 @@ class ShowIpv6MldSnoopingVlanSchema(MetaParser):
                 'mld': str,
                 'pim': str,
                 'mld_leave': str,
-                'host_tracking': str,
+                Optional('host_tracking'): str,
                 'robustness': int,
                 'query_count': int,
                 'query_interval': int,
@@ -181,7 +181,8 @@ class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
         p1 = re.compile(r'^[Global\s]*(PIM|Pim)\s+Snooping\s+:\s+(?P<pim>\w+)$')
 
         # MLDv2 snooping               : Disabled
-        p2 = re.compile(r'^MLDv2\s+snooping\s+:\s+(?P<mldv2>\w+)$')
+        # MLDv2 snooping (minimal)     : Enabled
+        p2 = re.compile(r'^MLDv2\s+snooping.+\s+:\s+(?P<mldv2>\w+)$')
         
         # Listener message suppression : Disabled
         p3 = re.compile(r'^Listener\s+message\s+suppression\s+:\s+(?P<suppression>\w+)$')

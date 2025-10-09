@@ -1,0 +1,13 @@
+Uplink Autoconfig: Enable
+Configured IPv4 Uplink interface: Vlan 91 
+Uplink IPv4 interface: Vlan 91
+        IP Address: 91.91.91.176/255.255.255.0
+        Type:       DHCP
+        SVI:        Configured
+        Port Used:  GigabitEthernet1/0/2
+        GW IP:      91.91.91.1
+        GW MAC:     6c6c.d3d0.5cd9
+        Score:      11
+Configured IPv6 Uplink interface: GigabitEthernet1/0/1 
+Uplink IPv6 interface: None
+Uplink Reachable: IPv4

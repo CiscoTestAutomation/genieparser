@@ -1,0 +1,17 @@
++-------------------------+---------------------+---------------+----------------+-------------------+---------------------+
+| Sysport                 | Port Type           | Status        |    MPP Port ID | RX/TX             | Port Status Info    |
++-------------------------+---------------------+---------------+----------------+-------------------+---------------------+
+| sysport_gid: 305        | port_type: MPP_PORT | status: EN-UP | mpp_port_id: 1 | rx_fc_mode: PAUSE | speed: 1.0          |
+| sysport_cookie: Gi2/0/9 |                     |               |                | tx_fc_mode: NONE  | admin_state: True   |
+| serdes:                 |                     |               |                |                   | fec_mode: NONE      |
+|                         |                     |               |                |                   | loopback_mode: NONE |
+|                         |                     |               |                |                   | link_mgmt: True     |
+|                         |                     |               |                |                   | prbs_mode: NONE     |
+|                         |                     |               |                |                   | mtu: 1522           |
+|                         |                     |               |                |                   | full_duplex: True   |
+|                         |                     |               |                |                   | auto_neg: False     |
+|                         |                     |               |                |                   | link_state: UP      |
+|                         |                     |               |                |                   |                     |
+|                         |                     |               |                |                   |                     |
++-------------------------+---------------------+---------------+----------------+---------------
+

@@ -1,0 +1,63 @@
+show inventory raw
+NAME: "Chassis", DESCR: "IE-3100-8P2C Fixed Base Chassis-POE"
+PID: IE-3100-8P2C      , VID: V00  , SN: FDO2912J66D
+
+NAME: "Power Supply Bay 0", DESCR: "Power Supply Container"
+PID:                   , VID:      , SN:            
+
+NAME: "Power Supply Module 0", DESCR: " Power Supply A"
+PID:                   , VID:      , SN:            
+
+NAME: "Power Supply 0", DESCR: "Power Supply"
+PID:                   , VID:      , SN:            
+
+NAME: "Power Supply Bay 1", DESCR: "Power Supply Container"
+PID:                   , VID:      , SN:            
+
+NAME: "Power Supply Module 1", DESCR: " Power Supply B"
+PID:                   , VID:      , SN:            
+
+NAME: "Power Supply 1", DESCR: "Power Supply"
+PID:                   , VID:      , SN:            
+
+NAME: "Supervisor", DESCR: "IE3100 w/8GE Copper POE, 2GE Combo, Fixed system,Network Essentials"
+PID: IE-3100-8P2C      , VID: V00  , SN: FDO2912J66D
+
+NAME: "GigabitEthernet1/1 Container", DESCR: "GigabitEthernet Container"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/2 Container", DESCR: "GigabitEthernet Container"
+PID:                   , VID:      , SN:            
+
+NAME: "Slot 1 - Temp: LM90XXXX", DESCR: "Temp: LM90XXXX"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/3", DESCR: "GigabitEthernet1/3"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/4", DESCR: "GigabitEthernet1/4"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/5", DESCR: "GigabitEthernet1/5"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/6", DESCR: "GigabitEthernet1/6"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/7", DESCR: "GigabitEthernet1/7"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/8", DESCR: "GigabitEthernet1/8"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/9", DESCR: "GigabitEthernet1/9"
+PID:                   , VID:      , SN:            
+
+NAME: "GigabitEthernet1/10", DESCR: "GigabitEthernet1/10"
+PID:                   , VID:      , SN:            
+
+NAME: "AppGigabitEthernet1/1", DESCR: "AppGigabitEthernet1/1"
+PID:                   , VID:      , SN:            
+
+NAME: "cpu R0/0", DESCR: "CPU 0 of module R0"
+PID:                   , VID:      , SN:

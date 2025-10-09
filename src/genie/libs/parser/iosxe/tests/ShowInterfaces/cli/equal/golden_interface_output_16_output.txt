@@ -1,0 +1,38 @@
+show interfaces Serial0/3/1
+Serial0/3/1 is up, line protocol is up
+  Hardware is NIM-4T
+  Internet address is 1.0.0.1/8
+  MTU 1500 bytes, BW 64 Kbit/sec, DLY 20000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation X25, loopback not set
+  Keepalive set (10 sec)
+  X.25 DTE, version 1984, address 170091, state R1, modulo 8, timer 0
+      Defaults: idle VC timeout 0
+        cisco encapsulation
+        input/output window sizes 5/5, packet sizes 128/128
+      Timers: T20 180, T21 200, T22 180, T23 180
+      Channels: Incoming-only none, Two-way 1-1024, Outgoing-only none
+      RESTARTs 1/0 CALLs 0+0/0+0/0+0 DIAGs 0/0
+  LAPB DTE, state CONNECT, modulo 8, k 7, N1 12056, N2 20
+      T1 3000, T2 0, interface outage (partial T3) 0, T4 0
+      VS 1, VR 1, tx NR 1, Remote VR 1, Retransmissions 0
+      Queues: U/S frames 0, I frames 0, unack. 0, reTx 0
+      IFRAMEs 1/1 RNRs 0/0 REJs 0/0 SABM/Es 0/1 FRMRs 0/0 DISCs 0/0
+  Last input 00:00:11, output 00:00:11, output hang never
+  Last clearing of "show interface" counters 00:00:20
+  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     4 packets input, 21 bytes, 0 no buffer
+     Received 0 broadcasts (0 IP multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     3 packets output, 17 bytes, 0 underruns
+     Output 0 broadcasts (0 IP multicasts)
+     0 output errors, 0 collisions, 0 interface resets
+     0 unknown protocol drops
+     0 output buffer failures, 0 output buffers swapped out
+     1 carrier transitions
+     RTS up, CTS up, DTR up, DCD up, DSR up

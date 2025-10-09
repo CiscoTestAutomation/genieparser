@@ -1,0 +1,10 @@
+show ipv6 mld groups FF05::101  detail 
+ Interface:	GigabitEthernet0/0/2 
+ Group:		FF05::101 
+ Uptime:		00:00:05 
+ Router mode:	EXCLUDE (Expires: 00:04:14) 
+ Host mode:	INCLUDE 
+ Last reporter:	FE80::C664:13FF:FECA:7382 
+ Source list is empty 
+  
+ 

@@ -1,0 +1,4 @@
+/
+Switch#   Role        Priority      State 
+-------------------------------------------
+*1       Active          3          Ready  

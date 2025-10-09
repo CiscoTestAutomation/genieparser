@@ -26,7 +26,8 @@ expected_output = {
                 'state': 'green',
                 'yellow_threshold': "41",
                 'red_threshold': "56"
-            }
-        }
+            },            
+        },
+        None: {},
     }
 }

@@ -1,0 +1,6 @@
+  Policy Map type inspect pmap
+    Class cmap
+      Inspect
+    Class class-default
+      Drop log
+

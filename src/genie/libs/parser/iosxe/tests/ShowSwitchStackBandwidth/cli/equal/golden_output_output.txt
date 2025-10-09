@@ -1,0 +1,3 @@
+*1       Active    160G        Ready
+ 2       Standby   160G        Ready
+

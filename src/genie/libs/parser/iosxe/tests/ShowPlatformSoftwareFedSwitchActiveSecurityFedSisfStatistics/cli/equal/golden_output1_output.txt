@@ -1,0 +1,45 @@
+FED SISF STATISTICS :
+
+Punject Punt Entries
+Name                              OID       Packets Hits
+--------------------------------------------------------
+DHCPV6 SERVER TO ANY on PORT      1449      240
+DHCPV6 ANY TO SERVER on PORT      1450      16
+DHCPV6 ANY TO CLIENT on PORT      1451      0
+ICMPV6 TYPE NS on PORT            1452      8
+ICMPV6 TYPE NA on PORT            1453      20
+ICMPV6 TYPE RS on PORT            1454      0
+ICMPV6 TYPE RA on PORT            1455      222
+ICMPV6 TYPE REDIR on PORT         1456      0
+ICMPV6 TYPE DAR on PORT           1457      0
+ICMPV6 TYPE DAC on PORT           1458      0
+DHCPV6 SERVER TO ANY on VLAN      1461      4
+DHCPV6 ANY TO SERVER on VLAN      1462      4
+DHCPV6 ANY TO CLIENT on VLAN      1463      0
+ICMPV6 TYPE NS on VLAN            1464      13
+ICMPV6 TYPE NA on VLAN            1465      254
+ICMPV6 TYPE RS on VLAN            1466      0
+ICMPV6 TYPE RA on VLAN            1467      226
+ICMPV6 TYPE REDIR on VLAN         1468      0
+ICMPV6 TYPE DAR on VLAN           1469      0
+ICMPV6 TYPE DAC on VLAN           1470      0
+DHCPV6 SERVER TO ANY on PORT      1383      4
+DHCPV6 ANY TO SERVER on PORT      1384      96
+DHCPV6 ANY TO CLIENT on PORT      1385      0
+ICMPV6 TYPE NS on PORT            1386      240
+ICMPV6 TYPE NA on PORT            1387      100
+ICMPV6 TYPE RS on PORT            1388      0
+ICMPV6 TYPE RA on PORT            1389      240
+ICMPV6 TYPE REDIR on PORT         1390      0
+ICMPV6 TYPE DAR on PORT           1391      0
+ICMPV6 TYPE DAC on PORT           1392      0
+DHCPV6 SERVER TO ANY on VLAN      1395      8
+DHCPV6 ANY TO SERVER on VLAN      1396      2
+DHCPV6 ANY TO CLIENT on VLAN      1397      0
+ICMPV6 TYPE NS on VLAN            1398      32
+ICMPV6 TYPE NA on VLAN            1399      19
+ICMPV6 TYPE RS on VLAN            1400      0
+ICMPV6 TYPE RA on VLAN            1401      21
+ICMPV6 TYPE REDIR on VLAN         1402      0
+ICMPV6 TYPE DAR on VLAN           1403      0
+ICMPV6 TYPE DAC on VLAN           1404      0

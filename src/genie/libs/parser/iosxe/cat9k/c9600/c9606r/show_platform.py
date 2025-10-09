@@ -49,16 +49,27 @@ class ShowPlatformHardwareFedActiveTcamUtilization(ShowPlatformHardwareFedActive
 
     cli_command = ['show platform hardware fed active fwd-asic resource tcam utilization',
                    'show platform hardware fed switch {mode} fwd-asic resource tcam utilization',
-                   'show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization']
+                   'show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization',
+                   'show platform hardware fed active fwd-asic resource tcam utilization {asic}',
+                   'show platform hardware fed switch {mode} fwd-asic resource tcam utilization {asic}',
+                   'show platform hardware fed {switch} {mode} fwd-asic resource tcam utilization {asic}']
 
-    def cli(self, switch=None, mode=None, output=None):
+    def cli(self, switch=None, mode=None, output=None, asic=None):
         if output is None:
-            if switch and mode:
-                cmd = self.cli_command[2].format(switch=switch, mode=mode)
-            elif mode:
-                cmd = self.cli_command[1].format(mode=mode)
+            if asic:
+                if switch and mode:
+                    cmd = self.cli_command[5].format(switch=switch, mode=mode, asic=asic)
+                elif mode:
+                    cmd = self.cli_command[4].format(mode=mode, asic=asic)
+                else:
+                    cmd = self.cli_command[0].format(asic=asic)
             else:
-                cmd = self.cli_command[0]
+                if switch and mode:
+                    cmd = self.cli_command[2].format(switch=switch, mode=mode)
+                elif mode:
+                    cmd = self.cli_command[1].format(mode=mode)
+                else:
+                    cmd = self.cli_command[0]
             output = self.device.execute(cmd)
 
         # initial return dictionary

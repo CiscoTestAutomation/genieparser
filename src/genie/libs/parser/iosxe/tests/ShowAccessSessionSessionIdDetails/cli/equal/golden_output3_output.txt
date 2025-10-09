@@ -1,0 +1,5 @@
+Session id=2300130B0000002CBD0A520E
+
+Interface     MAC Address    Method  Domain  Status Fg  Session ID
+
+Gi2/0/3       0055.6677.8855 dot1x   DATA    Auth   2300130B0000002CBD0A520E

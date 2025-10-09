@@ -1,0 +1,21 @@
+C9500-12Q_DUT#show cce cpdp bindings
+  Target Class Group id 005195C4 (Po2.200):
+   Class Group id 002F5440 (epc_policy_match_any_IPV6_test)
+     Class 00509EC1 (epc_class_match_any_IPV6_test)
+     Feature embedded packet capture
+   Class Group id 00470CA0 (epc_policy_match_any_IPV4_test)
+     Class 0038E661 (epc_class_match_any_IPV4_test)
+     Feature embedded packet capture
+   Class Group id 004AB080 (epc_policy_match_any_MAC_test1)
+     Class 00ADBA31 (epc_class_match_any_MAC_test1)
+     Feature embedded packet capture
+  Target Class Group id 007D8014 (Po2.200):
+   Class Group id 002F5440 (epc_policy_match_any_IPV6_test)
+     Class 00509EC1 (epc_class_match_any_IPV6_test)
+     Feature embedded packet capture
+   Class Group id 00470CA0 (epc_policy_match_any_IPV4_test)
+     Class 0038E661 (epc_class_match_any_IPV4_test)
+     Feature embedded packet capture
+   Class Group id 004AB080 (epc_policy_match_any_MAC_test1)
+     Class 00ADBA31 (epc_class_match_any_MAC_test1)
+     Feature embedded packet capture

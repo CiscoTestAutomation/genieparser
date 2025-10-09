@@ -1,0 +1,3 @@
+MLD Connected Group Membership
+Group Address                           Interface                                             Uptime    Expires
+FF08:4000::1                            Gi0/2/3.2                                            00:00:00  00:04:19

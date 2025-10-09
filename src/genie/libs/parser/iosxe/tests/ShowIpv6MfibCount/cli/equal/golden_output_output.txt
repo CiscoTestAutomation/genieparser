@@ -1,0 +1,16 @@
+IP Multicast Statistics
+54 routes, 7 groups, 0.14 average sources per group
+Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+Group: FF00::/8
+  RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+Group: FF00::/15
+  RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+Group: FF05::1
+  RP-tree:    Forwarding: 2/0/100/0, Other: 0/0/0
+  Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+  Tot. shown: Source count: 1, pkt count: 369
+Group: FF10::/15
+  RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+Group: FF20::/15
+  RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0

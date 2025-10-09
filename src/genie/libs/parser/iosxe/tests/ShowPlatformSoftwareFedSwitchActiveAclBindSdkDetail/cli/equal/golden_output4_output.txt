@@ -1,0 +1,25 @@
+Sec_RAITT#show plat soft fed switch active acl bind sdk if-id 0x4b0 detail
+--------------------------------------------------------------
+         ACLs Bind details (programmed in datapath)
+--------------------------------------------------------------
+
+Interface Name: Gi3/0/31
+   Direction: Ingress
+      Feature         : Pacl
+      Protocol        : IPv4
+      CG ID           : 12
+      CG Name         : pre-auth
+--------------------------------------------------------------
+ ACL (OID: 0xAE9, No of ACEs: 12)
+--------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x11       0x0      0x0         0x0       0x0           0x44          0x43
+        M:  0xff       0x0      0x0         0x0       0x0           0xffff          0xffff
+
+    Result Action
+        Punt : N    Drop : N    Mirror: N    Counter: 0x0 (0)
+--------------------------------------------------------------

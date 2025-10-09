@@ -52,14 +52,14 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
         # index = 0
 
         p1 = re.compile(r"^(?P<stackport_id>\S+)"
-                        " +(?P<port_status>\w+)"
-                        " +(?P<neighbor>[\d+])"
-                        " +(?P<cable_length>\w+)"
-                        " +(?P<link_ok>\w+)"
-                        " +(?P<link_active>\w+)"
-                        " +(?P<sync_ok>\w+)"
-                        " +(?P<link_changes_count>\d+)"
-                        " +(?P<in_loopback>\w+)")
+                        r" +(?P<port_status>\w+)"
+                        r" +(?P<neighbor>[\d+])"
+                        r" +(?P<cable_length>\w+)"
+                        r" +(?P<link_ok>\w+)"
+                        r" +(?P<link_active>\w+)"
+                        r" +(?P<sync_ok>\w+)"
+                        r" +(?P<link_changes_count>\d+)"
+                        r" +(?P<in_loopback>\w+)")
 
         for line in output.splitlines():
             line = line.strip()
@@ -135,4 +135,51 @@ class ShowSwitchStackPorts(ShowSwitchStackPortsSchema):
                 switch_number_dict['port_2'] = dict_val['port_2']
                 continue
 
+        return ret_dict
+
+class ShowSwitchStackBandwidthSchema(MetaParser):
+    """Schema for show switch stack-bandwidth"""
+
+    schema = {
+        'switch': {
+            Any(): {
+                'role': str,
+                'stack_bw': str,
+                'current_state': str,
+            },
+        },
+    }
+
+
+class ShowSwitchStackBandwidth(ShowSwitchStackBandwidthSchema):
+    """Parser for show switch stack-bandwidth"""
+
+    cli_command = 'show switch stack-bandwidth'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # *1       Active    160G        Ready
+        #  2       Standby    N/A        Removed
+        p1 = re.compile(
+            r"\*?(?P<sw_no>\d+)\s+(?P<role>\w+)\s+(?P<stack_bw>[\w\/]+)\s+(?P<current_state>\w+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # *1       Active    160G        Ready
+            #  2       Standby    N/A        Removed
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                sw_no_var = int(dict_val['sw_no'])
+                ret_dict.setdefault('switch', {})
+                sw_no_dict = ret_dict['switch'].setdefault(sw_no_var, {})
+                sw_no_dict['role'] = dict_val['role']
+                sw_no_dict['stack_bw'] = dict_val['stack_bw']
+                sw_no_dict['current_state'] = dict_val['current_state']
+                continue
+            
         return ret_dict

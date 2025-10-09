@@ -1,0 +1,79 @@
+show platform hardware qfp active feature ipsec sa 3
+
+QFP ipsec sa Information
+
+
+
+         QFP sa  id: 3
+
+          pal sa id: 1
+
+         QFP spd id: 1
+
+          QFP sp id: 2
+
+            QFP spi: 0xdd7eee33(3716083251)
+
+         crypto ctx: 0x000000004581ffbe
+
+              flags: 0x2c400890 (Details below)
+
+                   : src:IKE  valid:Yes  soft-life-expired:No  hard-life-expired:No
+
+                   : replay-check:Yes  proto:ESP  mode:Receive-only  direction:Ingress
+
+                   : qos_preclassify:No  qos_group:No
+
+                   : frag_type:BEFORE_ENCRYPT  df_bit_type:COPY
+
+                   : sar_enable:No  getvpn_mode:SNDRCV_SA
+
+                   : doing_translation:No  assigned_outside_rport:No
+
+                   : inline_tagging_enabled:No
+
+          qos_group: 0x0
+
+                mtu: 0x0=0
+
+            mtu_adj: 0x0=0
+
+ ext_ar window_size: 0
+
+  ext_ar window top: 0
+
+          sar_delta: 0
+
+         sar_window: 0x0
+
+         sibling_sa: 0x0
+
+             sp_ptr: 0x4953a000
+
+            sbs_ptr: 0x490d2010
+
+     local endpoint: 100.255.255.1
+
+    remote endpoint: 100.200.1.1
+
+   cgid.cid.fid.rid: 0.0.0.0
+
+               ivrf: 0
+
+               fvrf: 0
+
+    trans udp sport: 0
+
+    trans udp dport: 0
+
+    first intf name: Virtual-Access1
+
+ nat fixup src port: 0
+
+    nat fixup  ip: 0.0.0.0
+
+
+
+MCP_SEC1#
+
+--- 08:29:07 ---

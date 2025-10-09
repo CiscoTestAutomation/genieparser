@@ -1,0 +1,50 @@
+SPA EEPROM data for subslot 0/1:
+
+	EEPROM version           : 4
+	Compatible Type          : 0xFF
+	Controller Type          : 1923
+	Hardware Revision        : 1.0
+	PCB Part Number          : 73-14506-06
+	Deviation Number         : 0
+	Fab Version              : 04
+	Fab Part Number          : 28-10841-04
+	PCB Serial Number        : FOC21131QPE
+	RMA Test History         : 00
+	RMA Number               : 0-0-0-0
+	RMA History              : 00
+	Product Identifier (PID) : NIM-4MFT-T1/E1
+	Version Identifier (VID) : V04
+	CLEI Code                : IP9IAWACAB
+	Top Assy. Part Number    : 800-38530-06
+	Board Revision           : A0
+	Environment Monitor Data : 40 02 61 43 00 07
+	Base MAC Address         : 88 90 8D DD C5 9A
+	MAC Address block size   : 2
+	Platform features        : 02 01 01 07 01 00 00 00
+	                           01 01 00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+EEPROM data for slot 0 bay 1 daughter board 1
+
+	EEPROM version           : 4
+	Compatible Type          : 0xFF
+	Controller Type          : 2827
+	Hardware Revision        : 1.0
+	PCB Part Number          : 73-14672-06
+	Board Revision           : C0
+	Fab Version              : 06
+	Fab Part Number          : 28-10619-06
+	Deviation Number         : 0
+	PCB Serial Number        : FOC21455F0A
+	RMA Test History         : 00
+	RMA Number               : 0-0-0-0
+	RMA History              : 00
+	Product Identifier (PID) : PVDM4-256
+	Version Identifier (VID) : V02
+	CLEI Code                : IPUCBC3BAB
+	Top Assy. Part Number    : 800-38537-02
+	Environment Monitor Data : 40 00 00 43 00 06
+	Base MAC Address         : EC 1D 8B FE 42 6C
+	MAC Address block size   : 2
+	Platform features        : 02 01 01 06 00 00 00 00
+	                           01 01 00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00

@@ -1,0 +1,179 @@
+global 0x020001a1:
+
+  HA state                               Allow-New-Sess
+
+  FW Configured                          (0x00000020)
+
+  Init Done                              (0x00000080)
+
+  Init Requested                         (0x00000100)
+
+  Syslog Deployed                        (0x02000000)
+
+global2 0x190000c4:
+
+  Salt                                   196
+
+  Global number of simultaneous packet per session allowed  0
+
+  Default number of simultaneous packet per session allowed 25
+
+global3 0x00000080:
+
+  half-open                              (0x00000080)
+
+teardowns 0, pam_cce 0x0 00000000
+
+num zp with policy                       1
+
+High priority recycle queue address      0x846519c0
+
+Low priority recycle queue address       0x846519d0
+
+Lock upgrades                                   190
+
+Half open aggressive aging:              1
+
+Num of ACK exceeds limit(5):             0
+
+Num of RST exceeds limit(5)              0
+
+Unknown VRF limit exceeds                0
+
+syncookie over rate cnt                  0
+
+fw tcp session termination RST segment control:
+
+  halfopen:  RST sent 0, blocked 0
+
+  idle:      RST sent 0, blocked 0
+
+  halfclose: RST sent 0, blocked 0
+
+NAT caching:
+
+NAT registration                         100
+
+NAT unregistration                       100
+
+Too many nat sessions                    0
+
+  Can't register with NAT                0
+
+  Invalid nat session                    0
+
+  No NAT session caching                 0
+
+  NAT cached session                     0
+
+L2 Firewall:
+
+  L2 unknown encap                       0
+
+  L2 skip tcp pkt                        0
+
+  Timer stop failed                      0
+
+VRF Global Action Block:
+
+  L7 Inspection disable flags: 0x0
+
+    Total Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+    aggr-age high watermark: 4294967295, low watermark: 0
+
+    num of times enter aggr-age: 0, aggr-age period: off
+
+  TCP SYN Cookie:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  Total Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+    aggr-age high watermark: 4294967295, low watermark: 0
+
+    num of times enter aggr-age: 0, aggr-age period: off
+
+  TCP Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  UDP Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  ICMP Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  Domain flags: 0x0
+
+Box Action Block:
+
+  L7 Inspection disable flags: 0x0
+
+      Current count::
+
+  Total Sessions                         0
+
+    aggr-age high watermark: 4294967295, low watermark: 0
+
+    num of times enter aggr-age: 0, aggr-age period: off
+
+  TCP SYN Cookie:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  Total Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+    aggr-age high watermark: 4294967295, low watermark: 0
+
+    num of times enter aggr-age: 0, aggr-age period: off
+
+  TCP Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  UDP Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  ICMP Half Open Sessions:
+
+    max limit: 4294967295, current count: 0, exceed: 0
+
+  Domain flags: 0x0
+
+FW persona alert_rlimit: 0, backpressure: 0x0
+
+Invalid RG (exceeds max RG): 0
+
+Invalid HA message version: 0
+
+RII Hash Table:  address 0xc7335810  size 128
+
+VRF Action Table Addr 0x0xc80ab800, Size 4096
+
+AVC stats table index out-of-range 0
+
+
+
+VRF ID-Name Table:
+
+  VRF:(id=1:name=Mgmt-intf)
+
+      vrf_namehash 712b9b92383e5f4 ipv4 1, ipv6 65535
+
+  VRF:(id=4095:name=__Platform_iVRF:_ID00_)
+
+      vrf_namehash 9f30f5f1fd89b0f0 ipv4 4095, ipv6 65535
+
+
+
+fw_persona: 0x846519e0 vpn zone table address: 0xc873b400, size 65536

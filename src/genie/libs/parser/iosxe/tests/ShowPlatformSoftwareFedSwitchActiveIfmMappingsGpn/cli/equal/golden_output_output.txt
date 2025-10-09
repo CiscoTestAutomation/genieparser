@@ -1,0 +1,11 @@
+GPN         Interface                         IF_ID               IF_TYPE
+
+1           FortyGigabitEthernet1/0/1         0x00000009          ETHER
+2           FortyGigabitEthernet1/0/2         0x0000000a          ETHER
+3           FortyGigabitEthernet1/0/3         0x0000000b          ETHER
+4           FortyGigabitEthernet1/0/4         0x0000000c          ETHER
+5           FortyGigabitEthernet1/0/5         0x0000000d          ETHER
+6           FortyGigabitEthernet1/0/6         0x0000000e          ETHER
+7           FortyGigabitEthernet1/0/7         0x0000000f          ETHER
+8           FortyGigabitEthernet1/0/8         0x00000010          ETHER
+9           FortyGigabitEthernet1/0/9         0x00000011          ETHER

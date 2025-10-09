@@ -2,6 +2,7 @@
 IOSXE parsers for the following commands
     * show romvar 
     * show romvar switch <switch_number>
+    * show rom-monitor <slot>
 '''
 
 # python
@@ -714,3 +715,73 @@ class ShowRomMonSwitchR0(ShowRomMonSwitchR0Schema):
 
 
         return ret_dict   
+
+
+# ================
+# Schema for:
+#  * 'show rom-monitor <slot>'
+# ================
+class ShowRomMonitorSchema(MetaParser):
+    """Schema for show rom-monitor <slot>."""
+
+    schema = {
+        'system_bootstrap': {
+            'version': str,
+            'release_type': str,
+            'copyright': str,
+            'vendor': str,
+            'year_range': str,
+        }
+    }
+
+
+# ================
+# Parser for:
+#  * 'show rom-monitor <slot>'
+# ================
+class ShowRomMonitor(ShowRomMonitorSchema):
+    """Parser for show rom-monitor <slot>."""
+
+    cli_command = 'show rom-monitor {slot}'
+
+    def cli(self, slot='0', output=None):
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            output = self.device.execute(cmd)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # System Bootstrap, Version 16.12(2r), RELEASE SOFTWARE
+        p1 = re.compile(r'^System\s+Bootstrap,\s+Version\s+(?P<version>\S+),\s+(?P<release_type>[\w\s]+)$')
+
+        # Copyright (c) 1994-2019  by cisco Systems, Inc.
+        p2 = re.compile(r'^Copyright\s+\(c\)\s+(?P<year_range>[\d\-]+)\s+by\s+(?P<vendor>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # System Bootstrap, Version 16.12(2r), RELEASE SOFTWARE
+            m = p1.match(line)
+            if m:
+                if 'system_bootstrap' not in ret_dict:
+                    ret_dict['system_bootstrap'] = {}
+                
+                ret_dict['system_bootstrap']['version'] = m.groupdict()['version']
+                ret_dict['system_bootstrap']['release_type'] = m.groupdict()['release_type'].strip()
+                continue
+
+            # Copyright (c) 1994-2019  by cisco Systems, Inc.
+            m = p2.match(line)
+            if m:
+                if 'system_bootstrap' not in ret_dict:
+                    ret_dict['system_bootstrap'] = {}
+                
+                ret_dict['system_bootstrap']['year_range'] = m.groupdict()['year_range']
+                ret_dict['system_bootstrap']['vendor'] = m.groupdict()['vendor'].strip()
+                ret_dict['system_bootstrap']['copyright'] = line
+                continue
+
+        return ret_dict

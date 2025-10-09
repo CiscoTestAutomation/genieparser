@@ -6,6 +6,8 @@
     * 'show platform software fed switch {switch} punt cpuq brief'
     * 'show platform software fed active punt cpuq brief'
     * 'show platform software fed active punt ios-cause brief'
+    * 'show platform software fed {switch} {port_num} punt entries | include {match}'
+    * 'show platform software fed {port_num} punt entries | include {match}'
 """
 # Python
 import re
@@ -441,10 +443,10 @@ class ShowPlatformSoftwareFedPuntEntries(ShowPlatformSoftwareFedPuntEntriesSchem
                 "Policy",
                 "CIR-SW",
                 "CIR-HW",
-                "Pkts\(A\)",
-                "Bytes\(A\)",
-                "Pkts\(D\)",
-                "Bytes\(D\)",
+                r"Pkts\(A\)",
+                r"Bytes\(A\)",
+                r"Pkts\(D\)",
+                r"Bytes\(D\)",
             ],
             label_fields=[
                 "source",
@@ -612,6 +614,206 @@ class ShowPlatformSoftwareFedSwitchActivePuntBrief(
                 cause_dict["cause"] = int(group["cause"])
                 cause_dict["rcvd"] = int(group["rcvd"])
                 cause_dict["dropped"] = int(group["dropped"])
+                continue
+
+        return ret_dict
+
+# ======================================================================================================#
+#  Schema for 'show platform software fed switch active punt packet-capture brief | count {key}'        #
+# ======================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureBriefCountSchema(MetaParser):
+
+    schema = {
+        'total_captured': int
+    }
+
+# =====================================================================================================#
+#  Parser for 'show platform software fed switch active punt packet-capture brief | count {key}        #
+# =====================================================================================================#
+class ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureBriefCount(ShowPlatformSoftwareFedSwitchActivePuntPacketCaptureBriefCountSchema):
+
+    cli_command = [
+        "show platform software fed {switch} {switch_num} punt packet-capture brief | count {key}",
+        "show platform software fed {switch_num} punt packet-capture brief | count {key}"
+        ]
+
+    def cli(self, switch_num, key, output=None ,switch=""):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_num=switch_num, key=key))
+            else:
+                output = self.device.execute(self.cli_command[1].format(key=key, switch_num=switch_num))
+        res_dict = {}
+
+        # Number of lines which match regexp = 778
+        p0 = re.compile(r"Number of lines which match regexp\s+=\s+(?P<total_captured>\d+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Number of lines which match regexp = 778
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                res_dict.setdefault('total_captured' , int(group['total_captured']))
+                continue
+        
+        return res_dict
+        
+
+# ==========================================================================
+# Schema for :
+#   * 'show platform software fed {switch} {port_num} punt entries | include {match}'
+# ===========================================================================
+        
+class ShowPlatformSoftwareFedPuntEntriesIncludeSchema(MetaParser):
+    """Schema for show platform software fed {switch} {port_num} punt entries | include {match}"""
+    schema = {
+        'index': {
+            Any(): {
+                Optional('name') : str,
+                Optional('source'): str,
+                Optional('asic'): int,
+                Optional('priority'): int,
+                Optional('tc'): int,
+                Optional('policy'): str,
+                Optional('cir_sw'): int,
+                Optional('cir_hw'): int,
+                Optional('packets_a'): int,
+                Optional('bytes_a'): int,
+                Optional('packets_d'): int,
+                Optional('bytes_d'): int
+            }
+        }
+    }
+
+# =====================================================================
+# Parser for:
+#   * 'show platform software fed {switch} {port_num} punt entries | include {match}'
+# =====================================================================
+class ShowPlatformSoftwareFedPuntEntriesInclude(ShowPlatformSoftwareFedPuntEntriesIncludeSchema):
+    """Parser for show platform software fed {switch} {port_num} punt entries | include {match}"""
+
+    cli_command = [
+        'show platform software fed {switch} {port_num} punt entries | include {match}',
+        'show platform software fed {port_num} punt entries | include {match}',
+    ]
+    
+
+    def cli(self, port_num, match, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(port_num=port_num, match=match, switch=switch)
+            else:
+                cmd = self.cli_command[1].format(port_num=port_num, match=match)
+            output = self.device.execute(cmd)   
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+        index = 1
+        
+        #Source    Name                            ASIC  Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+        #LPTSv4    ICMP IPv4                          0    1   3  system-cpp-police-icmp-v4                   2500    2384     18260     3652000         0           0
+        
+        p1 = re.compile(
+            r'^(?P<source>\w+(?:\s+\S+)?)  +'
+            r'(?P<name>[\w\s\(\)]+)\s+'
+            r'(?P<asic>\d+)\s+'
+            r'(?P<priority>\d+) +'
+            r'(?P<tc>\d+) +'
+            r'(?P<policy>\S+) +'
+            r'(?P<cir_sw>\d+) +'
+            r'(?P<cir_hw>\d+) +'
+            r'(?P<packets_a>\d+) +'
+            r'(?P<bytes_a>\d+) +'
+            r'(?P<packets_d>\d+) +'
+            r'(?P<bytes_d>\d+)$')
+        
+        #Source    Name                            ASIC  Pri  TC  Policy                                    CIR-SW  CIR-HW   Pkts(A)    Bytes(A)   Pkts(D)    Bytes(D)
+        #LPTSv4    ICMP IPv4                          0    1   3  system-cpp-police-icmp-v4                   2500    2384     18260     3652000         0           0
+        
+        for line in output.splitlines():
+            line = line.strip() 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {})
+                index_dict.update({int(index): {
+                                    'source': str(group['source']),
+                                    'name': str(group['name']),
+                                    'asic': int(group['asic']),
+                                    'priority' : int(group['priority']),
+                                    'tc' : int(group['tc']),
+                                    'policy' : str(group['policy']),
+                                    'cir_sw' : int(group['cir_sw']),
+                                    'cir_hw' : int(group['cir_hw']),
+                                    'packets_a' : int(group['packets_a']),
+                                    'bytes_a' : int(group['bytes_a']),
+                                    'packets_d' : int(group['packets_d']),
+                                    'bytes_d' : int(group['bytes_d'])
+                                    },
+                                })
+                
+                index += 1
+                continue
+        return ret_dict   
+
+# ==========================================================================
+# Schema for 'show platform software fed switch {} punt asic-cause brief'
+# ==========================================================================
+class ShowPlatformSoftwareFedPuntAsicCauseBriefSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} punt entries"""
+
+    schema = {
+        "cause": {
+            Any(): {
+                "source": str,
+                "rx_cur": int,
+                "rx_delta": int,
+                "drop_cur": int,
+                "drop_delta": int
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedPuntAsicCauseBrief(ShowPlatformSoftwareFedPuntAsicCauseBriefSchema):
+    """Parser for show platform software fed switch {mode} punt asic-cause brief"""
+
+    cli_command = [
+        "show platform software fed {switch} {mode} punt asic-cause brief",
+        "show platform software fed {mode} punt asic-cause brief",
+    ]
+
+    def cli(self, mode, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, mode=mode)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # UKNWN   UNKNOWN                        47           47           47           47
+        p1 = re.compile(
+            r"^(?P<source>[a-zA-Z]+)\s+(?P<cause>[\w\s\(\)\-]+)\s+(?P<rx_cur>\d+)\s+(?P<rx_delta>\d+)\s+(?P<drop_cur>\d+)\s+(?P<drop_delta>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #    ITRAP   CISCO Protocols            525860       525860            0            0
+            #    ITRAP   DHCP Client(v4)               264          264            0            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                data_dict = ret_dict.setdefault('cause', {}).setdefault(group['cause'].strip(), {})
+                data_dict['source'] = group['source'].strip()
+                data_dict['rx_cur'] = int(group['rx_cur'])
+                data_dict['rx_delta'] = int(group['rx_delta'])
+                data_dict['drop_cur'] = int(group['drop_cur'])
+                data_dict['drop_delta'] = int(group['drop_delta'])
                 continue
 
         return ret_dict

@@ -1,0 +1,4 @@
+Active Multicast Sources - sending >= 4 kbps
+Default
+(2001:DB8::1, FF03::1:1:1) 100 kbps GigabitEthernet0/0/1
+(2001:DB8::2, FF03::1:1:1) 50 kbps

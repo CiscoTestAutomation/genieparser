@@ -1,0 +1,2174 @@
+ Interface name :               BVI100
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:40
+ Burned In Address :            34ed.1b03.bd40
+ IPv4 Address :                 139.39.39.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+
+ Interface name :               Bundle-Ether1
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 120.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.51
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.51.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.52
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.52.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.53
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.53.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.54
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.54.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.55
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.55.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.56
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.56.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.57
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.57.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.58
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.58.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.59
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.59.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.60
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.60.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.61
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.61.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.62
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.62.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.63
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.63.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.64
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.64.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.65
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.65.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether1.66
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3d
+ Burned In Address :            34ed.1b03.bd3d
+ IPv4 Address :                 88.0.66.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether2
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3c
+ Burned In Address :            34ed.1b03.bd3c
+ IPv4 Address :                 126.0.0.2/24
+ Max. Bandwidth (Kbit) :        20000000
+ Effective Bandwidth (Kbit) :   20000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 141.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.4
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 140.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.51
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.51.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.52
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.52.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.53
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.53.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.54
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.54.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.55
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.55.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.56
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.56.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.57
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.57.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.58
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.58.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.59
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.59.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.60
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.60.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.61
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.61.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.62
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.62.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.63
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.63.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.64
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.64.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.65
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.65.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Bundle-Ether4.66
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  34:ed:1b:03:bd:3b
+ Burned In Address :            34ed.1b03.bd3b
+ IPv4 Address :                 90.0.66.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               Loopback1
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 2.1.2.2/32
+ Max. Bandwidth (Kbit) :        0
+ Effective Bandwidth (Kbit) :   0
+ MTU (in bytes) :               1500
+
+ Interface name :               Loopback2
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 2.2.2.2/32
+ Max. Bandwidth (Kbit) :        0
+ Effective Bandwidth (Kbit) :   0
+ MTU (in bytes) :               1500
+
+ Interface name :               Loopback3
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 2.3.2.2/32
+ Max. Bandwidth (Kbit) :        0
+ Effective Bandwidth (Kbit) :   0
+ MTU (in bytes) :               1500
+
+ Interface name :               Null0
+ Operational state :            up
+ Admin state :                  up
+ Max. Bandwidth (Kbit) :        0
+ Effective Bandwidth (Kbit) :   0
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip12
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.12.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip13
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.13.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip14
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.14.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip15
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.15.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip16
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.16.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip17
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.17.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip18
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.18.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip19
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.19.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip20
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.20.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip21
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.21.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip22
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.22.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip23
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.23.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip24
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.24.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip25
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.25.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               tunnel-ip26
+ Operational state :            up
+ Admin state :                  up
+ IPv4 Address :                 111.1.26.2/24
+ Max. Bandwidth (Kbit) :        100
+ Effective Bandwidth (Kbit) :   100
+ MTU (in bytes) :               1500
+
+ Interface name :               MgmtEth0/RSP0/CPU0/0
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  00:a7:42:8b:f4:b0
+ Burned In Address :            00a7.428b.f4b0
+ IPv4 Address :                 5.68.13.20/16
+ Max. Bandwidth (Kbit) :        1000000
+ Effective Bandwidth (Kbit) :   1000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/0
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:f8
+ Burned In Address :            084f.a964.d1f8
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/1
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:f9
+ Burned In Address :            084f.a964.d1f9
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/2
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:fa
+ Burned In Address :            084f.a964.d1fa
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/3
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:fb
+ Burned In Address :            084f.a964.d1fb
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/4
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:fc
+ Burned In Address :            084f.a964.d1fc
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/5
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:fd
+ Burned In Address :            084f.a964.d1fd
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/6
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:fe
+ Burned In Address :            084f.a964.d1fe
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/7
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d1:ff
+ Burned In Address :            084f.a964.d1ff
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/8
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:00
+ Burned In Address :            084f.a964.d200
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/9
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:01
+ Burned In Address :            084f.a964.d201
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/10
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:02
+ Burned In Address :            084f.a964.d202
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/11
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:03
+ Burned In Address :            084f.a964.d203
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/12
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:04
+ Burned In Address :            084f.a964.d204
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/13
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:05
+ Burned In Address :            084f.a964.d205
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/14
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:06
+ Burned In Address :            084f.a964.d206
+ IPv4 Address :                 23.1.1.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/14.51
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:06
+ Burned In Address :            084f.a964.d206
+ IPv4 Address :                 95.0.51.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/15
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:07
+ Burned In Address :            084f.a964.d207
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/16
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:08
+ Burned In Address :            084f.a964.d208
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/17
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:09
+ Burned In Address :            084f.a964.d209
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/18
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0a
+ Burned In Address :            084f.a964.d20a
+ IPv4 Address :                 38.38.38.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/19
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 201.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/19.1
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.2
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.1.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.3
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.2.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.4
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.3.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.5
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.4.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.6
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.5.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.7
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.6.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.8
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.7.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.9
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.8.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.10
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.9.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.11
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.10.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.12
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.11.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.13
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.12.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.14
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.13.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.15
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.14.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/19.16
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0b
+ Burned In Address :            084f.a964.d20b
+ IPv4 Address :                 202.0.15.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 131.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/20.3
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 130.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.4
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 130.1.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.5
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.12.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.6
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.13.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.7
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.14.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.8
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.15.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.9
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.16.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.10
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.17.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.11
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.18.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.12
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.19.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.13
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.20.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.14
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.21.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.15
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.22.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.16
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.23.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.17
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.24.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.18
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.25.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.19
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.26.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.20
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 11.11.27.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.51
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.51.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.52
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.52.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.53
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.53.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.54
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.54.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.55
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.55.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.56
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.56.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.57
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.57.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.58
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.58.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.59
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.59.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.60
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.60.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.61
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.61.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.62
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.62.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.63
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.63.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.64
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.64.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.65
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.65.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.66
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 89.0.66.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/20.1611
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0c
+ Burned In Address :            084f.a964.d20c
+ IPv4 Address :                 13.13.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/21
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:0d
+ Burned In Address :            084f.a964.d20d
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/22
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 110.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/22.51
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.51.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.52
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.52.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.53
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.53.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.54
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.54.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.55
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.55.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.56
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.56.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.57
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.57.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.58
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.58.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.59
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.59.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.60
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.60.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.61
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.61.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.62
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.62.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.63
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.63.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.64
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.64.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.65
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.65.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.66
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ IPv4 Address :                 87.0.66.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.1601
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/22.1603
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0e
+ Burned In Address :            084f.a964.d20e
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1522
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/23
+ Operational state :            down
+ Admin state :                  down
+ MAC address :                  08:4f:a9:64:d2:0f
+ Burned In Address :            084f.a964.d20f
+ IPv4 Address :                 200.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/24
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:10
+ Burned In Address :            084f.a964.d210
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/25
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:11
+ Burned In Address :            084f.a964.d211
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/26
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:12
+ Burned In Address :            084f.a964.d212
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/27
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:13
+ Burned In Address :            084f.a964.d213
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/28
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:14
+ Burned In Address :            084f.a964.d214
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/29
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:15
+ Burned In Address :            084f.a964.d215
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/30
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:16
+ Burned In Address :            084f.a964.d216
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/31
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:17
+ Burned In Address :            084f.a964.d217
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/32
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:18
+ Burned In Address :            084f.a964.d218
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/33
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:19
+ Burned In Address :            084f.a964.d219
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/34
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:1a
+ Burned In Address :            084f.a964.d21a
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/35
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:1b
+ Burned In Address :            084f.a964.d21b
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/36
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:1c
+ Burned In Address :            084f.a964.d21c
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/37
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:1d
+ Burned In Address :            084f.a964.d21d
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/38
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:1e
+ Burned In Address :            084f.a964.d21e
+ IPv4 Address :                 170.0.0.2/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/39
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:1f
+ Burned In Address :            084f.a964.d21f
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/40
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:20
+ Burned In Address :            084f.a964.d220
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/41
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:21
+ Burned In Address :            084f.a964.d221
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/42
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:22
+ Burned In Address :            084f.a964.d222
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/43
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:23
+ Burned In Address :            084f.a964.d223
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/44
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:24
+ Burned In Address :            084f.a964.d224
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/45
+ Operational state :            administratively down
+ Admin state :                  administratively down
+ MAC address :                  08:4f:a9:64:d2:25
+ Burned In Address :            084f.a964.d225
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/46
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 101.0.0.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up
+
+ Interface name :               TenGigE0/0/0/46.1
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 11.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.2
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 21.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.3
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 31.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.4
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 41.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.5
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 51.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.6
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 61.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.7
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 71.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.8
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 81.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.10
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 71.2.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.11
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 11.2.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.12
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 21.2.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.13
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 31.2.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.14
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 41.2.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.15
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 31.3.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.16
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 132.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.17
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 171.171.171.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.18
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 18.2.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.19
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 189.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.20
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.21
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 122.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.22
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 123.1.1.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1601
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1602
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1603
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1604
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1611
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1612
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1522
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/46.1617
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:26
+ Burned In Address :            084f.a964.d226
+ IPv4 Address :                 16.17.16.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1518
+ Duplexity :                    Full-duplex
+
+ Interface name :               TenGigE0/0/0/47
+ Operational state :            up
+ Admin state :                  up
+ MAC address :                  08:4f:a9:64:d2:27
+ Burned In Address :            084f.a964.d227
+ IPv4 Address :                 106.0.0.1/24
+ Max. Bandwidth (Kbit) :        10000000
+ Effective Bandwidth (Kbit) :   10000000
+ MTU (in bytes) :               1514
+ Duplexity :                    Full-duplex
+ Link type :                    force-up

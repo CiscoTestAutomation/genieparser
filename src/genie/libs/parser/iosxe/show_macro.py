@@ -34,12 +34,15 @@ class ShowMacroAutoDeviceSchema(MetaParser):
 
 class ShowMacroAutoDevice(ShowMacroAutoDeviceSchema):
     '''Parser for show macro auto device'''
+    
+    cli_command = ['show macro auto device {device_name}', 'show macro auto device']
 
-    cli_command = 'show macro auto device'
-
-    def cli(self, output=None):
+    def cli(self, device_name=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if device_name:
+                output = self.device.execute(self.cli_command[0].format(device_name=device_name))
+            else:
+                output = self.device.execute(self.cli_command[1])
         
         # Device:access-point
         p1 = re.compile(r'^Device:(?P<device>\S+)$')
@@ -102,4 +105,59 @@ class ShowMacroAutoDevice(ShowMacroAutoDeviceSchema):
                 param_dict.update(m.groupdict())
                 continue
 
+        return ret_dict
+
+
+class ShowMacroAutoAddressgroupSchema(MetaParser):
+    '''Schema for show macro auto address-group {address_group_name}'''
+    schema = {
+        'index': {
+            Any(): {
+                'group_name': str,
+                'oui': str,
+                'mac_address': str,
+            },
+        },
+    }
+
+
+class ShowMacroAutoAddressgroup(ShowMacroAutoAddressgroupSchema):
+    '''Parser for show macro auto address-group {address_group_name}'''
+
+    cli_command =  "show macro auto address-group {address_group_name}"
+
+    def cli(self, address_group_name="", output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(address_group_name=address_group_name))
+        
+        # MAC Address Group Configuration:
+
+        # Group Name                      OUI         MAC ADDRESS
+        # --------------------------------------------------------------
+        # test_add                                    1111.2222.3333
+        p1 = re.compile(r'^(?P<group_name>\S+)\s+(?P<oui>\S*)\s+(?P<mac_address>\S+)$')
+        
+        ret_dict= dict()
+        
+        index = 1
+        index_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # MAC Address Group Configuration:
+
+            # Group Name                      OUI         MAC ADDRESS
+            # --------------------------------------------------------------
+            # test_add                                    1111.2222.3333
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault('index', {}).setdefault(index,{})
+                index_dict['group_name'] = group['group_name']
+                index_dict['oui'] = group['oui']
+                index_dict['mac_address'] = group['mac_address']
+                index += 1
+                continue
+    
         return ret_dict

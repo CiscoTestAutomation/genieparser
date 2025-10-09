@@ -76,8 +76,8 @@ class ShowLispExtranetSchema(MetaParser):
     schema = {
         'lisp_id': {
             int: {
-                'home_instance': int,
-                'total': int,
+                Optional('home_instance'): int,
+                Optional('total'): int,
                 Optional('eid_prefix'): {
                     str:{
                         'type': str,
@@ -122,7 +122,7 @@ class ShowLispExtranet(ShowLispExtranetSchema):
         # Provider    Dynamic     103        88.88.88.0/24
         # Provider    Config      103        88.88.88.0/24
         # Provider    Config      103        2001:200:200:200::/64
-        p3 = re.compile(r'^(?P<type>Provider|Subscriber)\s+(?P<source>Dynamic|Config)'
+        p3 = re.compile(r'^(?P<type>Provider|Subscriber)\s+(?P<source>Dynamic|Config|Config-Propagation)'
                         r'\s+(?P<iid>\d+)\s+(?P<eid>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'
                         r'[a-fA-F\d\:]+)\/(?P<mask>\d{1,2})$')
 
@@ -764,6 +764,41 @@ class ShowLispEthernetPublisher(ShowLispPublisherSuperParser, ShowLispPublisherS
         return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)
 
 
+class ShowLispEthernetARPublisher(ShowLispPublisherSuperParser, ShowLispPublisherSchema):
+    """ Parser for:
+        * show lisp {lisp_id} instance-id {instance_id} ethernet publisher address-resolution
+        * show lisp locator-table {vrf} instance-id {instance_id} ethernet publisher address-resolution
+        * show lisp instance-id {instance_id} ethernet publisher address-resolution
+        * show lisp eid-table vlan {vlan} ethernet publisher address-resolution
+    """
+
+    cli_command = [
+        'show lisp {lisp_id} instance-id {instance_id} ethernet publisher address-resolution',
+        'show lisp locator-table {vrf} instance-id {instance_id} ethernet publisher address-resolution',
+        'show lisp instance-id {instance_id} ethernet publisher address-resolution',
+        'show lisp eid-table vlan {vlan} ethernet publisher address-resolution',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, vlan=None):
+
+        # Initialize dictionary
+        ret_dict = {}
+
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                             format(lisp_id=lisp_id, instance_id=instance_id))
+            elif vrf and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                             format(vrf=vrf, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[2].format(instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[3].format(vlan=vlan))
+
+        return super().cli(output=output, lisp_id=lisp_id, instance_id=instance_id)
+
+
 class ShowLispEthernetSubscriber(ShowLispSubscriberSuperParser, ShowLispSubscriberSchema):
     """ Parser for:
         * show lisp {lisp_id} instance-id {instance_id} ethernet subscriber
@@ -832,6 +867,41 @@ class ShowLispEthernetSubscription(ShowLispSubscriptionSuperParser, ShowLispSubs
         return super().cli(output=output)
 
 
+class ShowLispEthernetARSubscription(ShowLispSubscriptionSuperParser, ShowLispSubscriptionSchema):
+    ''' Show Command ethernet subscription
+        show lisp instance-id {instance_id} ethernet subscription
+        show lisp {lisp_id} instance-id {instance_id} ethernet subscription
+        show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscription
+        show lisp eid-table vlan {eid_table} ethernet subscription
+    '''
+
+    cli_command = [
+        'show lisp instance-id {instance_id} ethernet subscription address-resolution',
+        'show lisp {lisp_id} instance-id {instance_id} ethernet subscription address-resolution',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscription address-resolution',
+        'show lisp eid-table vlan {vlan} ethernet subscription address-resolution'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vlan=None, locator_table=None,
+            eid_table=None, eid=None, eid_prefix=None):
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(lisp_id=lisp_id, \
+                                                   instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(locator_table=locator_table, \
+                                                   instance_id=instance_id))
+            elif vlan:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(vlan=vlan))
+
+        return super().cli(output=output)
+
 
 class ShowLispAFSubscriptionPrefix(ShowLispSubscriptionPrefixSuperParser, ShowLispSubscriptionPrefixSchema):
     ''' Show Command Ipv4 Subscription
@@ -888,6 +958,57 @@ class ShowLispAFSubscriptionPrefix(ShowLispSubscriptionPrefixSuperParser, ShowLi
             else:
                 output = self.device.execute(self.cli_command[9].\
                                                 format(vrf=vrf, address_family=address_family))
+
+        return super().cli(output=output)
+
+
+class ShowLispEthernetARSubscriptionPrefix(ShowLispSubscriptionPrefixSuperParser, ShowLispSubscriptionPrefixSchema):
+    ''' Show Command Ipv4 Subscription
+        show lisp instance-id {instance_id} {address_family} subscription {prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} {address_family} subscription {prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} {address_family} subscription {prefix}/detail
+        show lisp eid-table {eid_table} {address_family} subscription {prefix}/detail
+        show lisp eid-table vrf {eid_table} {address_family} subscription {prefix}/detail
+    '''
+
+    cli_command = [
+        'show lisp instance-id {instance_id} ethernet subscription address-resolution {eid_prefix}',
+        'show lisp {lisp_id} instance-id {instance_id} ethernet subscription address-resolution {eid_prefix}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscription address-resolution {eid_prefix}',
+        'show lisp eid-table {eid_table} ethernet subscription address-resolution {eid_prefix}',
+        'show lisp instance-id {instance_id} ethernet subscription address-resolution detail',
+        'show lisp {lisp_id} instance-id {instance_id} ethernet subscription address-resolution detail',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet subscription address-resolution detail',
+        'show lisp eid-table {eid_table} ethernet subscription address-resolution detail',
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, locator_table=None,
+            eid_table=None, eid=None, eid_prefix=None):
+        if output is None:
+            if lisp_id and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id, eid_prefix=eid_prefix))
+            elif locator_table and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(locator_table=locator_table, instance_id=instance_id, eid_prefix=eid_prefix))
+            elif eid_table and eid_prefix:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(eid_table=eid_table, eid_prefix=eid_prefix))
+            elif lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[5].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[4].\
+                                                format(instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[6].\
+                                                format(locator_table=locator_table, instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[7].\
+                                                format(eid_table=eid_table))
 
         return super().cli(output=output)
 
@@ -1613,6 +1734,7 @@ class ShowLispDatabaseEidSchema(MetaParser):
                         Optional('srvc_ins_id'): int,
                         Optional('extranet_iid'): int,
                         Optional('sgt'): int,
+                        Optional('publish_mode'): str,
                         Optional('locators'): {
                             str: { # locator address
                                 Optional('priority'): int,
@@ -1705,6 +1827,10 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
 
         # SGT: 10
         p10 = re.compile(r"^SGT:\s(?P<sgt>\d+)$")
+
+        # Publish-mode: no-extranet
+        # Publish-mode: publish-extranet instance-id <id>
+        p10_1 = re.compile(r'^Publish-mode:\s+(?P<publish_mode>.+\S)')
 
         #  Locator       Pri/Wgt  Source     State
         #  100.31.31.31    1/1    cfg-addr   site-self, unreachable
@@ -1815,6 +1941,13 @@ class ShowLispDatabaseEid(ShowLispDatabaseEidSchema):
             if m:
                 groups = m.groupdict()
                 instance_id_dict['sgt'] = int(groups['sgt'])
+                continue
+
+            # Publish-mode: no-extranet
+            m = p10_1.match(line)
+            if m:
+                groups = m.groupdict()
+                instance_id_dict['publish_mode'] = groups['publish_mode']
                 continue
 
             #  Locator       Pri/Wgt  Source     State
@@ -1980,7 +2113,7 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
             out = self.device.expect(
                 [r'Instance ID:\s+\S+'],
                 timeout=2).match_output
-            p0 = re.compile('^Instance ID:\s+(?P<instance_id>\d+)$')
+            p0 = re.compile(r'^Instance ID:\s+(?P<instance_id>\d+)$')
             group = p0.match(out)
             instance_id = int(group['instance_id'])
         else:
@@ -2170,8 +2303,6 @@ class ShowLispEthernetMapCachePrefix(ShowLispEthernetMapCachePrefixSchema):
                 continue
 
         return ret_dict
-
-
 
 # ==========================================
 # Parser for: show lisp {lisp_id} redundancy
@@ -4095,11 +4226,11 @@ class ShowLisp(ShowLispSchema):
 
         # Silent Host Detection
         p19 = re.compile(r'^(?P<shd>Silent\s+Host\s+Detection)$')
-        
+
         # RTT Refresh
         p20 = re.compile(r'^(?P<rtt>RTT\s+Refresh)$')
-        
-        # RLOC Domain Path 
+
+        # RLOC Domain Path
         p21 = re.compile(r'^(?P<rdp>RLOC\s+Domain\s+Path)$')
 
         # Publish-Subscribe EID
@@ -4250,7 +4381,7 @@ class ShowLisp(ShowLispSchema):
                 rar = groups['rar']
                 capability_list.append(rar)
                 continue
-            
+
             # Extended Subscription
             m = p18.match(line)
             if m:
@@ -5792,7 +5923,7 @@ class ShowLispInstanceIdServiceStatisticsSchema(MetaParser):
                                 'dropped': int
                                 }
                             },
-                        'itr_map_resolvers': {
+                        Optional('itr_map_resolvers'): {
                             str: {
                                 'last_reply': str,
                                 'metric': int,
@@ -5807,7 +5938,7 @@ class ShowLispInstanceIdServiceStatisticsSchema(MetaParser):
                                     }
                                 }
                             },
-                        'etr_map_servers': {
+                        Optional('etr_map_servers'): {
                             str: {
                                 'avgrtt': {
                                     '5_sec': int,
@@ -7570,6 +7701,35 @@ class ShowLispInstanceIdEthernetMapCachePrefixRAR(ShowLispIpMapCachePrefixSuperP
                            instance_id=instance_id)
 
 
+class ShowLispEthernetMapCachePrefixAR(ShowLispIpMapCachePrefixSuperParser):
+
+    """
+    Parser for
+    * sh lisp instance-id {instance_id} ethernet map-cache address-resolution {eid_prefix}
+    * sh lisp {lisp_id} instance-id {instance_id} ethernet map-cache address-resolution
+    * show lisp locator-table {locator_table} instance-id {instance_id} ethernet map-cache address-resolution
+    """
+    cli_command = ['show lisp instance-id {instance_id} ethernet map-cache address-resolution {prefix}',
+                   'show lisp {lisp_id} instance-id {instance_id} ethernet map-cache address-resolution {prefix}',
+                   'show lisp locator-table {locator_table} instance-id {instance_id} ethernet map-cache address-resolution {prefix}']
+
+    def cli(self, lisp_id=None, instance_id=None, locator_table=None, prefix=None, output=None):
+        if output is None:
+            if locator_table and instance_id and prefix:
+                output = self.device.execute(self.cli_command[2].format(locator_table=locator_table, \
+                                            instance_id=instance_id, prefix=prefix))
+            elif lisp_id and instance_id and prefix:
+                output = self.device.execute(self.cli_command[1].format(lisp_id=lisp_id, \
+                                            instance_id=instance_id,prefix=prefix))
+            elif instance_id and prefix:
+                output = self.device.execute(self.cli_command[0].format(instance_id=instance_id,\
+                                             prefix=prefix))
+            else:
+                raise TypeError("No arguments provided to parser")
+        return super().cli(output=output,prefix=prefix,lisp_id=lisp_id,locator_table=locator_table,\
+                           instance_id=instance_id)
+
+
 class ShowLispEthernetServerSubscription(ShowLispServerSubscriptionSuperParser, ShowLispServerSubscriptionSchema):
     ''' Show Command ethernet Subscription
         show lisp instance-id {instance_id} ethernet server subscription
@@ -7583,6 +7743,39 @@ class ShowLispEthernetServerSubscription(ShowLispServerSubscriptionSuperParser, 
         'show lisp {lisp_id} instance-id {instance_id} ethernet server subscription',
         'show lisp locator-table {locator_table} instance-id {instance_id} ethernet server subscription',
         'show lisp eid-table vlan {vlan} ethernet server subscription'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vlan=None, locator_table=None,
+            eid_table=None, eid=None, eid_prefix=None):
+        if output is None:
+            if lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(locator_table=locator_table, instance_id=instance_id))
+            else:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(vlan=vlan))
+
+        return super().cli(output=output)
+
+class ShowLispEthernetARServerSubscription(ShowLispServerSubscriptionSuperParser, ShowLispServerSubscriptionSchema):
+    ''' Show Command ethernet Subscription
+        show lisp instance-id {instance_id} ethernet server subscription
+        show lisp {lisp_id} instance-id {instance_id} ethernet server subscription
+        show lisp locator-table {locator_table} instance-id {instance_id} ethernet server subscription
+        show lisp eid-table vlan {vlan} ethernet server subscription
+    '''
+
+    cli_command = [
+        'show lisp instance-id {instance_id} ethernet server subscription address-resolution',
+        'show lisp {lisp_id} instance-id {instance_id} ethernet server subscription address-resolution',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet server subscription address-resolution',
+        'show lisp eid-table vlan {vlan} ethernet server subscription address-resolution'
     ]
 
     def cli(self, output=None, lisp_id=None, instance_id=None, vlan=None, locator_table=None,
@@ -7663,6 +7856,57 @@ class ShowLispAFServerSubscriptionPrefix(ShowLispServerSubscriptionPrefixSuperPa
         return super().cli(output=output)
 
 
+class ShowLispEthernetARServerSubscriptionPrefix(ShowLispServerSubscriptionPrefixSuperParser, ShowLispServerSubscriptionPrefixSchema):
+    ''' Show command for {address_family} server subscription prefix/detail
+        show lisp instance-id {instance_id} {address_family} server subscription {eid_prefix}/detail
+        show lisp {lisp_id} instance-id {instance_id} {address_family} server subscription {eid_prefix}/detail
+        show lisp locator-table {locator_table} instance-id {instance_id} {address_family} server subscription {eid_prefix}/detail
+        show lisp eid-table {eid_table} {address_family} server subscription {eid_prefix}/detail
+        show lisp eid-table vrf {eid_table} {address_family} server subscription {eid_prefix}/detail
+    '''
+
+    cli_command = [
+        'show lisp instance-id {instance_id} ethernet server subscription address-resolution {eid_prefix}',
+        'show lisp {lisp_id} instance-id {instance_id} ethernet server subscription address-resolution {eid_prefix}',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet server subscription address-resolution {eid_prefix}',
+        'show lisp eid-table {eid_table} ethernet server subscription address-resolution {eid_prefix}',
+        'show lisp instance-id {instance_id} ethernet server subscription address-resolution detail',
+        'show lisp {lisp_id} instance-id {instance_id} ethernet server subscription address-resolution detail',
+        'show lisp locator-table {locator_table} instance-id {instance_id} ethernet server subscription address-resolution detail',
+        'show lisp eid-table {eid_table} ethernet server subscription address-resolution detail'
+    ]
+
+    def cli(self, output=None, lisp_id=None, instance_id=None, vrf=None, locator_table=None,
+            eid_table=None, eid=None, eid_prefix=None):
+        if output is None:
+            if lisp_id and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[1].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id, eid_prefix=eid_prefix))
+            elif instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[0].\
+                                                format(instance_id=instance_id, eid_prefix=eid_prefix))
+            elif locator_table and instance_id and eid_prefix:
+                output = self.device.execute(self.cli_command[2].\
+                                                format(locator_table=locator_table, instance_id=instance_id, eid_prefix=eid_prefix))
+            elif eid_table and eid_prefix:
+                output = self.device.execute(self.cli_command[3].\
+                                                format(eid_table=eid_table, eid_prefix=eid_prefix))
+            elif lisp_id and instance_id:
+                output = self.device.execute(self.cli_command[5].\
+                                                format(lisp_id=lisp_id, instance_id=instance_id))
+            elif instance_id:
+                output = self.device.execute(self.cli_command[4].\
+                                                format(instance_id=instance_id))
+            elif locator_table and instance_id:
+                output = self.device.execute(self.cli_command[6].\
+                                                format(locator_table=locator_table, instance_id=instance_id))
+            elif eid_table:
+                output = self.device.execute(self.cli_command[7].\
+                                                format(eid_table=eid_table))
+
+        return super().cli(output=output)
+
+
 class ShowLispDecapsulationFilterSchema(MetaParser):
 
     schema = {
@@ -7718,7 +7962,7 @@ class ShowLispDecapsulationFilterParser(ShowLispDecapsulationFilterSchema):
                 continue
 
             # Source RLOC      Added by
-            # 100:33:33::33    MS 100:44:44::44, MS 100:55:55::55  
+            # 100:33:33::33    MS 100:44:44::44, MS 100:55:55::55
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
@@ -7769,7 +8013,7 @@ class ShowLispVrfSchema(MetaParser):
         }
     }
 }
-    
+
 class ShowLispVrf(ShowLispVrfSchema):
 
     ''' Parser for "show lisp vrf {vrf}"'''
@@ -7779,27 +8023,27 @@ class ShowLispVrf(ShowLispVrfSchema):
 
     def cli(self, vrf, output=None):
         if output is None:
-            cmd = self.cli_command[0].format(vrf=vrf)            
+            cmd = self.cli_command[0].format(vrf=vrf)
             output = self.device.execute(cmd)
         # Init vars
         ret_dict = {}
-    
+
         # vrf VN_1 ID 0x2 UP users  EID
         p1 = re.compile(r'vrf\s+(?P<vrf>\S+)+\s+ID\s+(?P<vrf_id>\S+)\s+UP\s+users+\s+EID$')
-        
+
         # Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
         p2 = re.compile(r'Topology\s+IPv4\s+(?P<status>\w+),\s+topoid\s+(?P<v4_topoid>\S+),\s+locks\s+(?P<lock_no>(\d+)),\s+RIB\s+(?P<rib>\S+)$')
-    
+
         # User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
         p3 = re.compile(
             r'User\s+EID,\s+top\s+ID (?P<top_id>(\d+)),\s+IID (?P<iid>(\d+)),\s+lock\s+count (?P<lock_count>(\d+)),\s+RIB\s+watch\s+count (?P<watch_count>(\d+))$')
-    
+
         # Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no
         p4 = re.compile(r'Topology\s+IPv6\s+(?P<status>\w+),\s+topoid\s+(?P<v6_topoid>\S+),\s+locks\s+(?P<lock_no>(\d+)),\s+RIB\s+(?P<rib>\S+)$')
-    
+
         for line in output.splitlines():
             line = line.strip()
-    
+
             # Sessions for VRF default, total: 7, established: 4
             m = p1.match(line)
             if m:
@@ -7810,7 +8054,7 @@ class ShowLispVrf(ShowLispVrfSchema):
                     setdefault(vrf, {})
                 vrf_dict['vrf_id'] = group['vrf_id']
                 continue
-            
+
             # Topology IPv4 UP, topoid 0x2, locks 2, RIB registered
             m = p2.match(line)
             if m:
@@ -7825,7 +8069,7 @@ class ShowLispVrf(ShowLispVrfSchema):
                 topo_dict['lock_no'] = int(group['lock_no'])
                 topo_dict['rib'] = group['rib']
                 continue
-    
+
             # User EID, top ID 0, IID 4105, lock count 4, RIB watch count 0
             m = p3.match(line)
             if m:
@@ -7840,7 +8084,7 @@ class ShowLispVrf(ShowLispVrfSchema):
                 topo_dict['lock_count'] = int(group['lock_count'])
                 topo_dict['watch_count'] = int(group['watch_count'])
                 continue
-    
+
             # Topology IPv6 DOWN, topoid 0x503316482, locks 0, RIB no
             m = p4.match(line)
             if m:
@@ -7855,5 +8099,5 @@ class ShowLispVrf(ShowLispVrfSchema):
                 topo_dict['lock_no'] = int(group['lock_no'])
                 topo_dict['rib'] = group['rib']
                 continue
-    
+
         return ret_dict

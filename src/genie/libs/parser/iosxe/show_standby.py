@@ -417,8 +417,8 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
         # 8 state changes, last state change 1w0d
         p3 = re.compile(r'(?P<num_state_changes>\d+) +state'
-                        r' +changes, +last +state +change'
-                        r' +(?P<last_state_change>\w+)$')
+                        r' +changes?, +last +state +change'
+                        r' +(?P<last_state_change>\S+)$')
 
         # Virtual IP address is 192.168.1.254
         # Virtual IP address is unknown

@@ -1,0 +1,45 @@
+show alarm settings
+Alarm relay mode: De-energized 
+Power Supply
+         Alarm                   Enabled
+         Relay 
+         Notifies                Disabled
+         Syslog                  Enabled
+Temperature-Primary
+         Alarm                   Enabled
+         Thresholds              MAX: 95C                MIN: -30C
+         Relay                   MAJ
+         Notifies                Enabled
+         Syslog                  Enabled
+Temperature-Secondary
+         Alarm                   Disabled
+         Threshold  
+         Relay 
+         Notifies                Disabled
+         Syslog                  Disabled
+SD-Card
+         Alarm                   Disabled
+         Relay 
+         Notifies                Disabled
+         Syslog                  Disabled
+REP
+         Alarm                   Disabled
+         Relay 
+         Notifies                Disabled
+         Syslog                  Disabled
+License-File-Corrupt
+         Alarm                   Enabled
+         Relay                   MAJ
+         Notifies                Enabled
+         Syslog                  Enabled
+Input-Alarm 1
+         Alarm                   Enabled
+         Relay 
+         Notifies                Disabled
+         Syslog                  Enabled
+Input-Alarm 2
+         Alarm                   Enabled
+         Relay 
+         Notifies                Disabled
+         Syslog                  Enabled
+

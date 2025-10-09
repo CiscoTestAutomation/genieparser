@@ -1,0 +1,68 @@
+show lslib server topology-db protocol ospfv3 instance-id 10 nlri-type ipv6-prefix detail
+Thu Aug 14 08:01:20.698 UTC
+
+Prefix codes: E link, V node, T IP reachable route, S SRv6 SID, SP SRTE Policy, u/U unknown
+              I Identifier, N local node, R remote node, L link, P prefix, S SID, C candidate path
+              L1/L2 ISIS level-1/level-2, O OSPF, O3 OSPFv3, D direct, ST static/peer-node, SR Segment Routing
+              a area-ID, l link-ID, t topology-ID, s ISO-ID,
+              c confed-ID/ASN, b bgp-identifier, r router-ID, te te-router-ID, sd SID
+              i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
+              d designated router address, po protocol-origin, f flag
+              e endpoint-ip, cl color, as originator-asn oa originator-address
+              di discriminator, q bgp-router-ID
+  [T][O3][I0xa][N[c0][b0.0.0.0][a0.0.0.0][r192.168.0.3]][P[o0x01][p34:34:1::/64]]/520
+NLRI Length: 65 bytes
+Attribute Length: 8 bytes
+Producers:
+  10, ospfv3
+NLRI Type: Prefix
+Protocol: OSPFv3
+Identifier: 0xa
+Local Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.0
+        Router ID IPv4: 192.168.0.3
+Prefix Descriptor:
+        OSPF Route Type: 0x01
+        Prefix: 34:34:1::/64
+
+  Attributes: Metric: 10
+
+  [T][O3][I0xa][N[c0][b0.0.0.0][a0.0.0.1][r192.168.0.6]][P[o0x01][p192:168:1::6/128]]/584
+NLRI Length: 73 bytes
+Attribute Length: 8 bytes
+Producers:
+  10, ospfv3
+NLRI Type: Prefix
+Protocol: OSPFv3
+Identifier: 0xa
+Local Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.1
+        Router ID IPv4: 192.168.0.6
+Prefix Descriptor:
+        OSPF Route Type: 0x01
+        Prefix: 192:168:1::6/128
+
+  Attributes: Metric: 10
+
+  [T][O3][I0xa][N[c0][b0.0.0.0][a0.0.0.2][r192.168.0.3]][P[o0x01][p192:168:2::3/128]]/584
+NLRI Length: 73 bytes
+Attribute Length: 8 bytes
+Producers:
+  10, ospfv3
+NLRI Type: Prefix
+Protocol: OSPFv3
+Identifier: 0xa
+Local Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.2
+        Router ID IPv4: 192.168.0.3
+Prefix Descriptor:
+        OSPF Route Type: 0x01
+        Prefix: 192:168:2::3/128
+
+  Attributes: Metric: 10

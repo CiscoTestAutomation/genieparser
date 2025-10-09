@@ -35,7 +35,14 @@
     * show ipv6 dhcp statistics
     * show ipv6 dhcp binding 
     * show ipv6 dhcp relay binding
-
+    * show ipv6 general-prefix
+    * show ipv6 pim neighbor {intf}
+    * show ipv6 cef exact-route {source} {destination}
+    * show ipv6 mfib count
+    * sh ipv6 mfib FF03::1:1:1 count
+    * sh ipv6 mfib FF03::1:1:1 10::1:1:200 count
+    * show ipv6 virtual-reassembly features
+    * show ipv6 mfib {group} active
 """
 
 # Python
@@ -112,8 +119,8 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         # IPv6 Address                              Age Link-layer Addr State Interface
         # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<age>\S+)\s+'
-                        '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
-                        '\s+(?P<interface>\S+)$')
+                        r'(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
+                        r'\s+(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -169,8 +176,8 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsSchema):
         # IPv6 Address                              TRLV Age Link-layer Addr State Interface
         # FE80::F816:3EFF:FEFF:F3DC                   0    0 fa16.3eff.f3dc  REACH Gi2.90
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<trlv>\S)\s+(?P<age>\S+)\s+'
-                         '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
-                         '(?P<interface>\S+)$')
+                         r'(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
+                         r'(?P<interface>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -895,23 +902,23 @@ class ShowIpv6Mrib(ShowIpv6MribSchema):
         #(2001:192:168:7::11,FF05:1:1::1) RPF nbr: 2001:150:1:1::1 Flags: L C
 
         p1 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     ' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
-                     '\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r' +RPF nbr: (?P<RPF_nbr>[\w\:\.\/]+)'
+                     r'\s+Flags\:(?P<mrib_flags>[\w\s]+|$)')
 
         # GigabitEthernet2/0/6 Flags: A NS 
         # Tunnel1 Flags: A NS  		 
         p2 = re.compile(r'^(?P<ingress_if>[\w\.\/\, ]+)'
-                         '\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
+                         r'\s+Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)') 
 						 
         #  LISP0.1 Flags: F NS  Next-hop: 100.154.154.154
         #  LISP0.1 Flags: F NS   Next-hop: (100.11.11.11, 235.1.3.167)
         p3 = re.compile(r'^(?P<egress_if>[\w\.\/\,]+)'
-                        '\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
+                        r'\s+Flags\:\s+(?P<egress_flags>F[\s\w]+)+Next-hop\:\s+(?P<egress_next_hop>([\w\:\.\*\/]+)|(\([\w\:\.\*\/]+\, +[\w\:\.\*\/]+\)))')
 
         #  Vlan2006 Flags: F LI NS
         p4=re.compile(r'^(?P<egress_if>[\w\.\/\, ]+)'
-                        '\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
+                        r'\s+Flags\: +(?P<egress_flags>F[\s\w]+)')            
 
         for line in output.splitlines():
             line=(line.strip()).replace('\t',' ')
@@ -1166,6 +1173,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('ingress_vxlan_cap'): str,
                                                      Optional('ingress_vxlan_vni'): str,
                                                      Optional('ingress_vxlan_nxthop'): str,
+                                                     Optional('ingress_mdt_ip'): str,
                                                     }
                                                 },
                                             Optional('outgoing_interfaces'): {
@@ -1182,6 +1190,7 @@ class ShowIpv6MfibSchema(MetaParser):
                                                      Optional('egress_vxlan_cap'): str,
                                                      Optional('egress_vxlan_vni'): str,
                                                      Optional('egress_vxlan_nxthop'): str,
+                                                     Optional('egress_mdt_ip'): str,
                                                     },
                                                 },
                                             },
@@ -1271,11 +1280,11 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #  (*,FF05:1:1::1) Flags: C HW
         # (2001:70:1:1::10,FF05:1:1::1) Flags: HW
         p3 = re.compile(r'^\((?P<source_address>[\w\:\.\*\/]+)\,'
-                     '(?P<multicast_group>[\w\:\.\/]+)\)'
-                     '\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
+                     r'(?P<multicast_group>[\w\:\.\/]+)\)'
+                     r'\s+Flags\:\s*(?P<mfib_flags>[\w\s]*)$')
         #0x1AF0  OIF-IC count: 0, OIF-A count: 1
         p4 = re.compile(r'\w+ +OIF-IC count: +(?P<oif_ic_count>[\w]+)'
-                   '\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
+                   r'\, +OIF-A count: +(?P<oif_a_count>[\w]+)$')
         # SW Forwarding: 0/0/0/0, Other: 0/0/0
         p5 = re.compile(r'SW Forwarding\:\s+(?P<sw_packet_count>[\w]+)\/'
                      r'(?P<sw_packets_per_second>[\w]+)\/'
@@ -1298,21 +1307,24 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         #Tunnel0, VXLAN Decap Flags: A
         #Vlan500, VXLAN v6 Encap (50000, 239.1.1.0) Flags: A
         #Port-channel5 Flags: RA A MA
+        # Tunnel0, MDTv6overv4/::FFFF:226.10.10.10 Flags: A
 
         p7 = re.compile(r'^(?P<ingress_if>[\w\/\.\-\:]+)'
-                         r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
-                         r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<ingress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
+                        r'(\,\s+VXLAN +(?P<ingress_vxlan_version>[v0-9]+)?(\s+)?(?P<ingress_vxlan_cap>[\w]+)(\s+)?(\(?(?P<ingress_vxlan_vni>[0-9]+)(\,\s+)?(?P<ingress_vxlan_nxthop>[\w:./]+)?\)?)?)?'
+                        r' +Flags\: +(?P<ingress_flags>A[\s\w]+|[\s\w]+ +A[\s\w]+|A$)')
 
         #Vlan2001 Flags: F NS
         #LISP0.1, (100.11.11.11, 235.1.3.167) Flags:
-        
         #Tunnel1, VXLAN v6 Decap Flags: F NS
         # Vlan200, VXLAN v4 Encap (10100, 239.1.1.1) Flags: F
         #L2LISP0.1502, L2LISP v6 Decap Flags: F NS
         #LISP0.101, 100:88:88::88 Flags: F
         #Port-channel5 Flags: RF F NS
+        # Tunnel8, MDTv6overv4/::FFFF:226.10.10.10 Flags: F NS
         p8 = re.compile(r'^(?P<egress_if>[\w\/\.\-\:]+)'
                         r'(\,\s+L2LISP\s*v6\s*Decap\s*)?'
+                        r'(?:,\s*MDTv6overv4\/(?:::FFFF:)?(?P<egress_mdt_ip>\d+\.\d+\.\d+\.\d+))?'
                         r'(\,\s+\(?(?P<egress_rloc>[\w:\.]+)(\,\s+)?(?P<egress_underlay_mcast>[\w\.]+)?\)?)?'
                         r'(\,\s+VXLAN +(?P<egress_vxlan_version>[v0-9]+)?(\s+)?(?P<egress_vxlan_cap>[\w]+)(\s+)?'
                         r'(\(?(?P<egress_vxlan_vni>[0-9]+)(\,\s+)?(?P<egress_vxlan_nxthop>[\w:.]+)?\)?)?)?'
@@ -1325,9 +1337,9 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
         p9_2 = re.compile(r'^CEF\: +(?P<egress_adj_mac>[\w \(\.\)]+)$')
         #Pkts: 0/0/2    Rate: 0 pps
         p10 = re.compile(r'^Pkts\:\s+(?P<egress_hw_pkt_count>[\w]+)\/'
-                         '(?P<egress_fs_pkt_count>[\w]+)\/'
-                         '(?P<egress_ps_pkt_count>[\w]+)'
-                         '\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
+                         r'(?P<egress_fs_pkt_count>[\w]+)\/'
+                         r'(?P<egress_ps_pkt_count>[\w]+)'
+                         r'\s+Rate\:\s+(?P<egress_pkt_rate>[\w]+)\s+pps$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1404,6 +1416,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     ing_intf_dict['ingress_vxlan_nxthop']=group['ingress_vxlan_nxthop']
                 if group['ingress_vxlan_vni']:
                     ing_intf_dict['ingress_vxlan_vni']=group['ingress_vxlan_vni']
+                if group['ingress_mdt_ip']:
+                    ing_intf_dict['ingress_mdt_ip']=group['ingress_mdt_ip']
                 continue
 
 
@@ -1445,6 +1459,8 @@ class ShowIpv6Mfib(ShowIpv6MfibSchema):
                     egress_data['egress_vxlan_vni'] = group['egress_vxlan_vni']
                 if group['egress_vxlan_nxthop']:
                     egress_data['egress_vxlan_nxthop'] = group['egress_vxlan_nxthop']
+                if group['egress_mdt_ip']:
+                    egress_data['egress_mdt_ip']=group['egress_mdt_ip']
                 continue
             #CEF: Adjacency with MAC: 01005E010101000A000120010800
             m=p9_1.match(line)
@@ -2463,3 +2479,806 @@ class ShowIpv6cefExactRoute(ShowIpv6cefExactRouteSchema):
                 continue
 
         return ret_dict
+
+#===============================================================================
+# Schema for 'show ipv6 general-prefix'
+#===============================================================================
+
+class ShowIpv6GeneralPrefixSchema(MetaParser):
+    """Schema for show ipv6 general-prefix"""
+
+    schema = {
+        'ipv6_prefix': {
+            Any(): {
+                'prefix': str,
+                'acquired_via': str,
+                'valid_lifetime': int,
+                'preferred_lifetime': int,
+                Optional('interfaces'): list,
+            }
+        }
+    }
+
+#===============================================================================
+# Parser for 'show ipv6 general-prefix'
+#===============================================================================
+class ShowIpv6GeneralPrefix(ShowIpv6GeneralPrefixSchema):
+    """Parser for show ipv6 general-prefix"""
+
+    cli_command = 'show ipv6 general-prefix'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # IPv6 Prefix pd_prefix, acquired via DHCP PD
+        p1 = re.compile(r'^IPv6 Prefix (?P<prefix_name>\S+), acquired via (?P<acquired_via>.+)$')
+
+        # 2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+        p2 = re.compile(r'^(?P<prefix>\S+) Valid lifetime (?P<valid_lifetime>\d+), preferred lifetime (?P<preferred_lifetime>\d+)$')
+
+        # GigabitEthernet10/0/47 (Address command)
+        p3 = re.compile(r'^(?P<interface>\S+) \(Address command\)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IPv6 Prefix pd_prefix, acquired via DHCP PD
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_name = group['prefix_name']
+                prefix_dict = ret_dict.setdefault('ipv6_prefix', {}).setdefault(prefix_name, {})
+                prefix_dict['acquired_via'] = group['acquired_via']
+                continue
+
+            # 2001:DB8:1200::/48 Valid lifetime 1735, preferred lifetime 535
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict['prefix'] = group['prefix']
+                prefix_dict['valid_lifetime'] = int(group['valid_lifetime'])
+                prefix_dict['preferred_lifetime'] = int(group['preferred_lifetime'])
+                continue
+
+            # GigabitEthernet10/0/47 (Address command)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces = prefix_dict.setdefault('interfaces', [])
+                interfaces.append(group['interface'])
+                continue
+
+        return ret_dict
+    
+
+class ShowIpv6PimNeighborIntfSchema(MetaParser):
+    """Schema for show ipv6 pim neighbor Te0/0/4"""
+    schema = {
+        'interface': str,
+        'neighbors': {
+            Any(): {
+                'uptime': str,
+                'expires': str,
+                'mode': str,
+                'dr_priority': int,
+                'bsr_priority': int,
+                'hello_interval': str,
+                'neighbor_interface': str,
+                'neighbor_state': str,
+            }
+        }
+    }
+
+class ShowIpv6PimNeighborIntf(ShowIpv6PimNeighborIntfSchema):
+    """Parser for show ipv6 pim neighbor Te0/0/4"""
+
+    cli_command = 'show ipv6 pim neighbor {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # Example: "PIM Neighbor Table for Interface: GigabitEthernet0/0/0"
+        p1 = re.compile(r'^PIM +Neighbor +Table +for +Interface: +(?P<interface>\S+)$')
+
+        # Example: "Neighbor Address: 192.168.1.1"
+        p2 = re.compile(r'^Neighbor +Address: +(?P<neighbor_address>\S+)$')
+
+        # Example: "Uptime: 00:15:23"
+        p3 = re.compile(r'^Uptime: +(?P<uptime>\S+)$')
+
+        # Example: "Expires: 00:01:47"
+        p4 = re.compile(r'^Expires: +(?P<expires>\S+)$')
+
+        # Example: "Mode: Dense"
+        p5 = re.compile(r'^Mode: +(?P<mode>\S+)$')
+
+        # Example: "DR Priority: 1"
+        p6 = re.compile(r'^DR +Priority: +(?P<dr_priority>\d+)$')
+
+        # Example: "BSR Priority: 5"
+        p7 = re.compile(r'^BSR +Priority: +(?P<bsr_priority>\d+)$')
+
+        # Example: "Hello Interval: 30 seconds"
+        p8 = re.compile(r'^Hello +Interval: +(?P<hello_interval>[\d\s\w]+)$')
+
+        # Example: "Neighbor Interface: GigabitEthernet0/0/0"
+        p9 = re.compile(r'^Neighbor +Interface: +(?P<neighbor_interface>\S+)$')
+
+        # Example: "Neighbor State: Up"
+        p10 = re.compile(r'^Neighbor +State: +(?P<neighbor_state>\S+)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # PIM Neighbor Table for Interface: GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                interface = m.group('interface')
+                parsed_dict['interface'] = interface
+                continue
+
+            # Neighbor Address: 192.168.1.1
+            m = p2.match(line)
+            if m:
+                neighbor_address = m.group('neighbor_address')
+                neighbor_dict = parsed_dict.setdefault('neighbors', {}).setdefault(neighbor_address, {})
+                continue
+
+            # Uptime: 00:15:23
+            m = p3.match(line)
+            if m:
+                neighbor_dict['uptime'] = m.group('uptime')
+                continue
+
+            # Expires: 00:01:47
+            m = p4.match(line)
+            if m:
+                neighbor_dict['expires'] = m.group('expires')
+                continue
+
+            # Mode: Dense
+            m = p5.match(line)
+            if m:
+                neighbor_dict['mode'] = m.group('mode')
+                continue
+
+            # DR Priority: 1
+            m = p6.match(line)
+            if m:
+                neighbor_dict['dr_priority'] = int(m.group('dr_priority'))
+                continue
+
+            # BSR Priority: 5
+            m = p7.match(line)
+            if m:
+                neighbor_dict['bsr_priority'] = int(m.group('bsr_priority'))
+                continue
+
+            # Hello Interval: 30 seconds
+            m = p8.match(line)
+            if m:
+                neighbor_dict['hello_interval'] = m.group('hello_interval')
+                continue
+
+            # Neighbor Interface: GigabitEthernet0/0/1
+            m = p9.match(line)
+            if m:
+                neighbor_dict['neighbor_interface'] = m.group('neighbor_interface')
+                continue
+
+            # Neighbor State: Up
+            m = p10.match(line)
+            if m:
+                neighbor_dict['neighbor_state'] = m.group('neighbor_state')
+                continue
+
+        return parsed_dict
+
+
+
+# ====================================================
+#  schema for show ipv6 mfib count
+# ====================================================
+class ShowIpv6MfibCountSchema(MetaParser):
+    """Schema for show ipv6 mfib count"""
+    
+    schema = {
+        'ip_multicast_statistics': {
+            'total_routes': int,
+            'total_groups': int,
+            'average_sources_per_group': float,
+            'forwarding_counts_description': str,
+            'other_counts_description': str,
+            'groups': {
+                Any(): {
+                    Optional('rp_tree'): {
+                        'forwarding': {
+                            'pkt_count': int,
+                            'pkts_per_second': int,
+                            'avg_pkt_size': int,
+                            'kilobits_per_second': int,
+                        },
+                        'other': {
+                            'total': int,
+                            'rpf_failed': int,
+                            'other_drops': int,
+                        }
+                    },
+                    Optional('sources'): {
+                        Any(): {
+                            'forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            }
+                        }
+                    },
+                    Optional('total_shown'): {
+                        'source_count': int,
+                        'pkt_count': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ====================================================
+#  parser for show ipv6 mfib count
+# ====================================================
+class ShowIpv6MfibCount(ShowIpv6MfibCountSchema):
+    """Parser for show ipv6 mfib count"""
+    
+    cli_command = 'show ipv6 mfib count'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # IP Multicast Statistics
+        p1 = re.compile(r'^IP Multicast Statistics$')
+        
+        # 54 routes, 7 groups, 0.14 average sources per group
+        p2 = re.compile(r'^(?P<routes>\d+) routes, (?P<groups>\d+) groups, (?P<avg_sources>[\d\.]+) average sources per group$')
+        
+        # Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+        p3 = re.compile(r'^Forwarding Counts: (?P<forward_desc>.+)$')
+        
+        # Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+        p4 = re.compile(r'^Other counts: (?P<other_desc>.+)$')
+        
+        # Group: FF00::/8
+        p5 = re.compile(r'^Group: (?P<group>[\w\:\/]+)$')
+        
+        # RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+        p6 = re.compile(r'^RP-tree:\s+Forwarding: (?P<pkt_count>\d+)/(?P<pkts_per_sec>\d+)/(?P<avg_pkt_size>\d+)/(?P<kbps>\d+), Other: (?P<total>\d+)/(?P<rpf_failed>\d+)/(?P<other_drops>\d+)$')
+        
+        # Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+        p7 = re.compile(r'^Source: (?P<source>[\w\:\.]+),\s+Forwarding: (?P<pkt_count>\d+)/(?P<pkts_per_sec>\d+)/(?P<avg_pkt_size>\d+)/(?P<kbps>\d+), Other: (?P<total>\d+)/(?P<rpf_failed>\d+)/(?P<other_drops>\d+)$')
+        
+        # Tot. shown: Source count: 1, pkt count: 369
+        p8 = re.compile(r'^Tot\. shown: Source count: (?P<source_count>\d+), pkt count: (?P<pkt_count>\d+)$')
+        
+        current_group = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # IP Multicast Statistics
+            m = p1.match(line)
+            if m:
+                stats_dict = ret_dict.setdefault('ip_multicast_statistics', {})
+                continue
+            
+            # 54 routes, 7 groups, 0.14 average sources per group
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['total_routes'] = int(group['routes'])
+                stats_dict['total_groups'] = int(group['groups'])
+                stats_dict['average_sources_per_group'] = float(group['avg_sources'])
+                continue
+            
+            # Forwarding Counts: Pkt Count/Pkts per second/Avg Pkt Size/Kilobits per second
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['forwarding_counts_description'] = group['forward_desc']
+                continue
+            
+            # Other counts: Total/RPF failed/Other drops(OIF-null, rate-limit etc)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                stats_dict['other_counts_description'] = group['other_desc']
+                continue
+            
+            # Group: FF00::/8
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                current_group = group['group']
+                groups_dict = stats_dict.setdefault('groups', {})
+                groups_dict.setdefault(current_group, {})
+                continue
+            
+            # RP-tree:    Forwarding: 0/0/0/0, Other: 0/0/0
+            m = p6.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                rp_tree_dict = group_dict.setdefault('rp_tree', {})
+                
+                forwarding_dict = rp_tree_dict.setdefault('forwarding', {})
+                forwarding_dict['pkt_count'] = int(group['pkt_count'])
+                forwarding_dict['pkts_per_second'] = int(group['pkts_per_sec'])
+                forwarding_dict['avg_pkt_size'] = int(group['avg_pkt_size'])
+                forwarding_dict['kilobits_per_second'] = int(group['kbps'])
+                
+                other_dict = rp_tree_dict.setdefault('other', {})
+                other_dict['total'] = int(group['total'])
+                other_dict['rpf_failed'] = int(group['rpf_failed'])
+                other_dict['other_drops'] = int(group['other_drops'])
+                continue
+            
+            # Source: 10::1:1:200,   Forwarding: 367/10/100/7, Other: 0/0/0
+            m = p7.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                sources_dict = group_dict.setdefault('sources', {})
+                source_name = group['source']
+                source_dict = sources_dict.setdefault(source_name, {})
+                
+                forwarding_dict = source_dict.setdefault('forwarding', {})
+                forwarding_dict['pkt_count'] = int(group['pkt_count'])
+                forwarding_dict['pkts_per_second'] = int(group['pkts_per_sec'])
+                forwarding_dict['avg_pkt_size'] = int(group['avg_pkt_size'])
+                forwarding_dict['kilobits_per_second'] = int(group['kbps'])
+                
+                other_dict = source_dict.setdefault('other', {})
+                other_dict['total'] = int(group['total'])
+                other_dict['rpf_failed'] = int(group['rpf_failed'])
+                other_dict['other_drops'] = int(group['other_drops'])
+                continue
+            
+            # Tot. shown: Source count: 1, pkt count: 369
+            m = p8.match(line)
+            if m and current_group:
+                group = m.groupdict()
+                group_dict = stats_dict['groups'][current_group]
+                total_shown_dict = group_dict.setdefault('total_shown', {})
+                total_shown_dict['source_count'] = int(group['source_count'])
+                total_shown_dict['pkt_count'] = int(group['pkt_count'])
+                continue
+        
+        return ret_dict
+
+# ==============================================================================
+# Schema and Parser for 'show ipv6 mfib {group} (source} count'
+# ==============================================================================
+class ShowIpv6MfibGroupCountSchema(MetaParser):
+    """Schema for show ipv6 mfib {group} count
+                  show ipv6 mfib {group} {source} count"""
+    schema = {
+        'vrf': {
+            Any(): {
+                'routes': int,
+                'star_g': int,
+                'star_g_m': int,
+                'group': {
+                    Any(): {
+                        Optional('rp_tree'): {
+                            'sw_forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            },
+                            'hw_forwarding': {
+                                'pkt_count': int,
+                                'pkts_per_second': int,
+                                'avg_pkt_size': int,
+                                'kilobits_per_second': int,
+                            },
+                            'hw_other': {
+                                'total': int,
+                                'rpf_failed': int,
+                                'other_drops': int,
+                            },
+                        },
+                        'source': {
+                            Any(): {
+                                'sw_forwarding': {
+                                    'pkt_count': int,
+                                    'pkts_per_second': int,
+                                    'avg_pkt_size': int,
+                                    'kilobits_per_second': int,
+                                },
+                                'other': {
+                                    'total': int,
+                                    'rpf_failed': int,
+                                    'other_drops': int,
+                                },
+                                'hw_forwarding': {
+                                    'pkt_count': int,
+                                    'pkts_per_second': int,
+                                    'avg_pkt_size': int,
+                                    'kilobits_per_second': int,
+                                },
+                                'hw_other': {
+                                    'total': int,
+                                    'rpf_failed': int,
+                                    'other_drops': int,
+                                },
+                            }
+                        },
+                        'totals': {
+                            'source_count': int,
+                            'packet_count': int,
+                        }
+                    }
+                },
+                'groups': int,
+                'average_sources_per_group': float,
+            }
+        }
+    }
+
+
+class ShowIpv6MfibGroupCount(ShowIpv6MfibGroupCountSchema):
+    """Parser for show ipv6 mfib {group} count"""
+
+    cli_command = 'show ipv6 mfib {group} {source} count'
+
+    def cli(self, group="", source="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(group=group, source=source)
+            output = self.device.execute(cmd)
+
+        ret = {} # Changed 'parsed' to 'ret' for consistency with later usage
+
+        # Regex patterns
+        # Default
+        p1 = re.compile(r'^(?P<vrf_name>Default)$')
+
+        # 56 routes, 9 (*,G)s, 46 (*,G/m)s
+        p2 = re.compile(r'(?P<routes>\d+)\s+routes,\s+(?P<g_count>\d+)\s+\(\*,G\)s,\s+(?P<gm_count>\d+)\s+\(\*,G/m\)s')
+
+        # Group: FF03::1:1:1
+        p3 = re.compile(r'Group:\s+(?P<group>[0-9A-Fa-f:]+)')
+
+        # RP-tree,
+        p4 = re.compile(r'^\s*RP-tree,\s*$')
+
+        # SW Forwarding: 0/0/0/0, Other: 0/0/0
+        p5 = re.compile(r'SW Forwarding:\s*(?P<sw_pkts>\d+)/(?P<sw_pps>\d+)/(?P<sw_avg>\d+)/(?P<sw_kbps>\d+),\s*Other:\s*(?P<sw_tot>\d+)/(?P<sw_rpf>\d+)/(?P<sw_other>\d+)')
+
+        # HW Forwarding:   0/0/0/0, Other: 0/0/0
+        p6 = re.compile(r'HW Forwarding:\s*(?P<hw_pkts>\d+)/(?P<hw_pps>\d+)/(?P<hw_avg>\d+)/(?P<hw_kbps>\d+),\s*Other:\s*(?P<hw_tot>\d+)/(?P<hw_rpf>\d+)/(?P<hw_other>\d+)')
+
+        # Source: 10::1:1:200,
+        p7 = re.compile(r'Source:\s*(?P<src_ip>[0-9A-Fa-f:]+),')
+
+        # Totals - Source count: 1, Packet count: 5
+        p8 = re.compile(r'Totals\s*-\s*Source count:\s*(?P<source_count>\d+),\s*Packet count:\s*(?P<packet_count>\d+)')
+
+        # Groups: 1, 1.00 average sources per group
+        p9 = re.compile(r'Groups:\s*(?P<groups>\d+),\s*(?P<avg_sources>[\d.]+)\s+average sources per group')
+
+
+        # Skip header lines
+        lines = output.splitlines()
+        current_vrf = None 
+        current_group = None
+        current_source = None
+
+        for line in lines:
+            line = line.strip()
+
+            # Skip empty lines and header lines
+            if not line or line.startswith('Forwarding Counts:') or line.startswith('Other counts:'):
+                continue
+
+            # Default
+            m = p1.match(line)
+            if m:
+                current_vrf = m.group('vrf_name')
+                continue
+
+            # Parse route summary line
+            # 56 routes, 9 (*,G)s, 46 (*,G/m)s
+            m = p2.match(line)
+            if m:
+                vrf_dict = ret.setdefault('vrf', {}).setdefault(current_vrf, {})
+                vrf_dict['routes'] = int(m.group('routes'))
+                vrf_dict['star_g'] = int(m.group('g_count'))
+                vrf_dict['star_g_m'] = int(m.group('gm_count'))
+                continue
+
+            # Parse group line
+            # Group: FF03::1:1:1
+            m = p3.match(line)
+            if m:
+                current_group = m.group('group')
+                vrf_dict = ret.setdefault('vrf', {}).setdefault(current_vrf, {})
+                group_dict = vrf_dict.setdefault('group', {}).setdefault(current_group, {})
+                continue
+
+            # Parse RP-tree line
+            # RP-tree,
+            m = p4.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                group_dict.setdefault('rp_tree', {})
+                continue
+
+            # Parse Source line
+            # Source: 10::1:1:200,
+            m = p7.match(line)
+            if m:
+                current_source = m.group('src_ip')
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                sources = group_dict.setdefault('source', {})
+                sources.setdefault(current_source, {})
+                continue
+
+            # Parse SW Forwarding line
+            # SW Forwarding: 0/0/0/0, Other: 0/0/0
+            m = p5.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                if 'rp_tree' in group_dict and current_source is None:
+                    # RP-tree SW forwarding
+                    group_dict['rp_tree']['sw_forwarding'] = {
+                        'pkt_count': int(m.group('sw_pkts')),
+                        'pkts_per_second': int(m.group('sw_pps')),
+                        'avg_pkt_size': int(m.group('sw_avg')),
+                        'kilobits_per_second': int(m.group('sw_kbps')),
+                    }
+                    group_dict['rp_tree']['other'] = {
+                        'total': int(m.group('sw_tot')),
+                        'rpf_failed': int(m.group('sw_rpf')),
+                        'other_drops': int(m.group('sw_other')),
+                    }
+                elif current_source:
+                    # Source SW forwarding
+                    sources = group_dict.setdefault('source', {})
+                    sources[current_source]['sw_forwarding'] = {
+                        'pkt_count': int(m.group('sw_pkts')),
+                        'pkts_per_second': int(m.group('sw_pps')),
+                        'avg_pkt_size': int(m.group('sw_avg')),
+                        'kilobits_per_second': int(m.group('sw_kbps')),
+                    }
+                    sources[current_source]['other'] = {
+                        'total': int(m.group('sw_tot')),
+                        'rpf_failed': int(m.group('sw_rpf')),
+                        'other_drops': int(m.group('sw_other')),
+                    }
+                continue
+
+            # Parse HW Forwarding line
+            # HW Forwarding:   0/0/0/0, Other: 0/0/0
+            m = p6.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                if 'rp_tree' in group_dict and current_source is None:
+                    # RP-tree HW forwarding
+                    group_dict['rp_tree']['hw_forwarding'] = {
+                        'pkt_count': int(m.group('hw_pkts')),
+                        'pkts_per_second': int(m.group('hw_pps')),
+                        'avg_pkt_size': int(m.group('hw_avg')),
+                        'kilobits_per_second': int(m.group('hw_kbps')),
+                    }
+                    group_dict['rp_tree']['hw_other'] = {
+                        'total': int(m.group('hw_tot')),
+                        'rpf_failed': int(m.group('hw_rpf')),
+                        'other_drops': int(m.group('hw_other')),
+                    }
+                elif current_source:
+                    # Source HW forwarding
+                    sources = group_dict.setdefault('source', {})
+                    sources[current_source]['hw_forwarding'] = {
+                        'pkt_count': int(m.group('hw_pkts')),
+                        'pkts_per_second': int(m.group('hw_pps')),
+                        'avg_pkt_size': int(m.group('hw_avg')),
+                        'kilobits_per_second': int(m.group('hw_kbps')),
+                    }
+                    sources[current_source]['hw_other'] = {
+                        'total': int(m.group('hw_tot')),
+                        'rpf_failed': int(m.group('hw_rpf')),
+                        'other_drops': int(m.group('hw_other')),
+                    }
+                continue
+
+
+            # Parse Totals line
+            # Totals - Source count: 1, Packet count: 5
+            m = p8.match(line)
+            if m:
+                group_dict = ret['vrf'][current_vrf]['group'][current_group]
+                group_dict['totals'] = {
+                    'source_count': int(m.group('source_count')),
+                    'packet_count': int(m.group('packet_count')),
+                }
+                # Reset current_source after processing totals
+                current_source = None
+                continue
+
+            # Parse Groups summary line
+            # Groups: 1, 1.00 average sources per group
+            m = p9.match(line)
+            if m:
+                vrf_dict = ret['vrf'][current_vrf]
+                vrf_dict['groups'] = int(m.group('groups'))
+                vrf_dict['average_sources_per_group'] = float(m.group('avg_sources'))
+                continue
+
+        return ret
+
+# ==============================================
+# Schema for show ipv6 virtual-reassembly features
+# ==============================================
+class ShowIpv6VirtualReassemblyFeaturesSchema(MetaParser):
+    """Schema for show ipv6 virtual-reassembly features"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'status': str,
+                'direction': str,
+                'enabled_features': str
+            }
+        }
+    }
+
+
+# ==============================================
+# Parser for show ipv6 virtual-reassembly features
+# ==============================================
+class ShowIpv6VirtualReassemblyFeatures(ShowIpv6VirtualReassemblyFeaturesSchema):
+    """Parser for show ipv6 virtual-reassembly features"""
+
+    cli_command = 'show ipv6 virtual-reassembly features'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the result dict
+        result_dict = {}
+
+        # NVI0:
+        p1 = re.compile(r'^(?P<interface>\S+):$')
+
+        # IPV6 Virtual Fragment Reassembly (IPV6 VFR) Current Status is ENABLED [out]
+        p2 = re.compile(r'^IPV6 Virtual Fragment Reassembly \(IPV6 VFR\) Current Status is'
+                        r' (?P<status>\w+)(?: \[(?P<direction>\w+)\])?$')
+
+        # Features to use if IPV6 VFR is Enabled:NAT64
+        p3 = re.compile(r'^Features to use if IPV6 VFR is Enabled:(?P<features>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # NVI0:
+            m = p1.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+                continue
+
+            # IPV6 Virtual Fragment Reassembly (IPV6 VFR) Current Status is ENABLED [out]
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['status'] = group['status']
+                if group['direction']:
+                    intf_dict['direction'] = group['direction'].lower()
+                continue
+
+            # Features to use if IPV6 VFR is Enabled:NAT64
+            m = p3.match(line)
+            if m:
+                intf_dict['enabled_features'] = m.groupdict()['features']
+                continue
+
+        return result_dict
+
+# ==============================================================================
+# Schema and Parser for 'show ipv6 mfib {group} active'
+# ==============================================================================
+
+class ShowIpv6MfibGroupActiveSchema(MetaParser):
+    """Schema for show ipv6 mfib {group} active"""
+    schema = {
+        'active_multicast_sources': {
+            'threshold_kbps': int,
+            Optional('sources'): {
+                Any(): {  # Source IP address
+                    'group': str,
+                    'rate_kbps': int,
+                    Optional('interface'): str,
+                }
+            }
+        }
+    }
+
+class ShowIpv6MfibGroupActive(ShowIpv6MfibGroupActiveSchema):
+    """Parser for show ipv6 mfib {group} active"""
+
+    cli_command = 'show ipv6 mfib {group} active'
+
+    def cli(self, group="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(group=group)
+            output = self.device.execute(cmd)
+
+        ret = {}
+
+        # Active Multicast Sources - sending >= 4 kbps
+        p1 = re.compile(r'^Active Multicast Sources - sending >= (?P<unit>\d+) kbps$')
+
+        # Default
+        p2 = re.compile(r'^(?P<vrf_name>Default)$')
+
+        # (2001:DB8::1, FF03::1:1:1) 100 kbps GigabitEthernet0/0/1
+        p3 = re.compile(r'\((?P<source_ip>[0-9A-Fa-f:]+),\s*(?P<group_ip>[0-9A-Fa-f:]+)\)\s+(?P<rate>\d+)\s*kbps(?:\s+(?P<interface>\S+))?')
+
+        lines = output.strip().splitlines()
+
+        for line in lines:
+            # Active Multicast Sources - sending >= 4 kbps
+            m = p1.match(line)
+            if m:
+                threshold = int(m.group('unit'))
+                active_dict = ret.setdefault('active_multicast_sources', {})
+                active_dict['threshold_kbps'] = threshold
+                continue
+
+            # Parse VRF line
+            # Default
+            m = p2.match(line)
+            if m:
+                continue
+
+            # (2001:DB8::1, FF03::1:1:1) 100 kbps GigabitEthernet0/0/1
+            m = p3.match(line)
+            if m:
+                source_ip = m.group('source_ip').strip()
+                group_ip = m.group('group_ip').strip()
+                rate = int(m.group('rate'))
+                interface = m.group('interface')
+                vrf_dict = ret['active_multicast_sources']
+                sources = vrf_dict.setdefault('sources', {})
+                source_dict = sources.setdefault(source_ip, {})
+                source_dict['group'] = group_ip
+                source_dict['rate_kbps'] = rate
+                if interface:
+                    source_dict['interface'] = interface
+                continue
+
+        return ret

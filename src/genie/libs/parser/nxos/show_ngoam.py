@@ -63,13 +63,13 @@ class ShowNgoamLoopDetectionStatus(ShowNgoamLoopDetectionStatusSchema):
         # node01# show ngoam loop-detection summary 
         # ERROR: Loop detection is not enabled
         #========================================================================================
-        p0 = re.compile("ERROR: Loop detection is not enabled")
+        p0 = re.compile(r"ERROR: Loop detection is not enabled")
 
         #========================================================================================
         #101        Eth1/11    RECOVERING   17            Mon Jun 10 02:56:55 2024  Mon Jun 10 02:44:05 2024
         #========================================================================================
 
-        p1 = re.compile("^(?P<vlan_id>\d+)\s+(?P<intf_name>Eth\d+\/\d+(\/d+)?)\s+(?P<state>\S+)\s+(?P<count>\d+)\s+(?P<date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4})\s+(?P<last_cleared>(\S+)|([A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4}))$")
+        p1 = re.compile(r"^(?P<vlan_id>\d+)\s+(?P<intf_name>Eth\d+\/\d+(\/d+)?)\s+(?P<state>\S+)\s+(?P<count>\d+)\s+(?P<date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4})\s+(?P<last_cleared>(\S+)|([A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4}))$")
 
 
         for line in out.splitlines():
@@ -153,45 +153,45 @@ class ShowNgoamLoopDetectionSummary(ShowNgoamLoopDetectionSummarySchema):
         # Message that appears when no loop-detection is enabled
         # node01# show ngoam loop-detection summary 
         # ERROR: Loop detection is not enabled
-        p0 = re.compile("ERROR: Loop detection is not enabled")
+        p0 = re.compile(r"ERROR: Loop detection is not enabled")
 
         # Loop detection:enabled
-        p1 = re.compile("Loop detection:(?P<sld_state>\S+)")
+        p1 = re.compile(r"Loop detection:(?P<sld_state>\S+)")
         
         # Periodic probe interval: 60
-        p2 = re.compile("Periodic probe interval: (?P<probe_interval>\d+)")
+        p2 = re.compile(r"Periodic probe interval: (?P<probe_interval>\d+)")
 
         # Port recovery interval: 300
-        p3 = re.compile("Port recovery interval: (?P<recovery_interval>\d+)")
+        p3 = re.compile(r"Port recovery interval: (?P<recovery_interval>\d+)")
 
         # Number of vlans: 0
-        p4 = re.compile("Number of vlans: (?P<vlan_count>\d+)")
+        p4 = re.compile(r"Number of vlans: (?P<vlan_count>\d+)")
 
         # Number of ports: 0
-        p5 = re.compile("Number of ports: (?P<port_count>\d+)")
+        p5 = re.compile(r"Number of ports: (?P<port_count>\d+)")
 
         # Number of loops: 0
-        p6 = re.compile("Number of loops: (?P<loop_count>\d+)")
+        p6 = re.compile(r"Number of loops: (?P<loop_count>\d+)")
 
         # Number of ports blocked: 0
-        p7 = re.compile("Number of ports blocked: (?P<ports_blocked_count>\d+)")
+        p7 = re.compile(r"Number of ports blocked: (?P<ports_blocked_count>\d+)")
 
         # Number of vlans disabled: 0
-        p8 = re.compile("Number of vlans disabled: (?P<vlan_disabled_count>\d+)")
+        p8 = re.compile(r"Number of vlans disabled: (?P<vlan_disabled_count>\d+)")
 
         # Number of ports disabled: 0
-        p9 = re.compile("Number of ports disabled: (?P<port_disabled_count>\d+)")
+        p9 = re.compile(r"Number of ports disabled: (?P<port_disabled_count>\d+)")
 
         # Total number of probes sent: 187864
-        p10 = re.compile("Total number of probes sent: (?P<sent_probes_count>\d+)")
+        p10 = re.compile(r"Total number of probes sent: (?P<sent_probes_count>\d+)")
 
         # Total number of probes received: 908
-        p11 = re.compile("Total number of probes received: (?P<received_probes_count>\d+)")
+        p11 = re.compile(r"Total number of probes received: (?P<received_probes_count>\d+)")
         # Next probe window start: Mon Jun 10 21:35:02 2024 (27 seconds)
-        p12 = re.compile(".*?probe.*?(?P<date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4})\s+(\((?P<probe_wait>\d+))\s+seconds\)")
+        p12 = re.compile(r".*?probe.*?(?P<date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4})\s+(\((?P<probe_wait>\d+))\s+seconds\)")
 
         # Next recovery window start: Mon Jun 10 21:35:52 2024 (77 seconds) 
-        p13 = re.compile(".*?recovery.*?(?P<date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4})\s+(\((?P<recovery_wait>\d+)\s+seconds\))")
+        p13 = re.compile(r".*?recovery.*?(?P<date>[A-Za-z]{3}\s+[A-Za-z]{3}\s+[0-9]{1,2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\s+[0-9]{4})\s+(\((?P<recovery_wait>\d+)\s+seconds\))")
 
         for line in out.splitlines():
 

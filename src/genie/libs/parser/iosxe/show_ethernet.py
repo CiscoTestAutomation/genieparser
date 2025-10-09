@@ -599,3 +599,298 @@ class ShowEthernetCfmStatistics(ShowEthernetCfmStatisticsSchema):
                 continue
 
         return parsed_dict
+
+# ====================================================================
+#  Schema for 'show ethernet ring g8032 brief'
+# ====================================================================
+class ShowEthernetRingG8032BriefSchema(MetaParser):
+    """Schema for 'show ethernet ring g8032 brief'
+    """
+    schema = {
+        'ethernet_rings': {
+            Any(): {
+                'ringname': str,
+                'inst': int,
+                'nodetype': str,
+                'nodestate': str,
+                Optional('port0'): str,
+                Optional('port1'): str,
+            }
+        }
+    }
+
+
+class ShowEthernetRingG8032Brief(ShowEthernetRingG8032BriefSchema):
+    """
+    Parser for :
+        * show ethernet ring g8032 brief
+    """
+    cli_command = 'show ethernet ring {ring} brief'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Switch#show ethernet ring g8032 brief 
+        # R: Interface is the RPL-link
+        # F: Interface is faulty
+        # B: Interface is blocked
+        # FS: Local forced switch
+        # MS: Local manual switch
+
+        # RingName                         Inst NodeType  NodeState     Port0    Port1
+        # --------------------------------------------------------------------------------
+        # g8032_ring                       1    Normal    Protection             F,B
+        # g8032_ring                       1    Owner     Idle          R,B
+        # g8032_ring                       1    Owner     Pending       R
+        # g8032_ring                       1    Normal    Protection             F,B
+        # g8032_ring                       1    Owner     Manual Switch R        B,MS
+        # g8032_ring                       1    Neighbor  Force Switch R
+        # g8032_ring                       1    Owner     Protection    R,F,B    F
+        # g8032_ring                       2    Owner     Protection    R,F,B    F
+        # g8032_ring                       1    Normal    Idle
+
+        p1 = re.compile(r'(?P<ringname>\S+)\s+(?P<inst>\d+)\s+(?P<nodetype>\S+)\s+(?P<nodestate>[A-Za-z\s]+?(?:\sSwitch)?)(?:\s{1,11}(?P<port0>[A-Za-z,]+))?(?:\s+(?P<port1>[A-Za-z,]+))?\s*$')
+
+        ret_dict = {}
+
+        # Initialize count to 1
+        count = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # RingName                         Inst NodeType  NodeState     Port0    Port1
+            # --------------------------------------------------------------------------------
+            # g8032_ring                       1    Normal    Protection             F,B
+            # g8032_ring                       1    Owner     Idle          R,B
+            # g8032_ring                       1    Owner     Pending       R
+            # g8032_ring                       1    Normal    Protection             F,B
+            # g8032_ring                       1    Owner     Manual Switch R        B,MS
+            # g8032_ring                       1    Neighbor  Force Switch R
+            # g8032_ring                       1    Owner     Protection    R,F,B    F
+            # g8032_ring                       2    Owner     Protection    R,F,B    F
+            # g8032_ring                       1    Normal    Idle      
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ethernet_rings = ret_dict.setdefault('ethernet_rings', {})
+                ethernet_dict = ethernet_rings.setdefault(count, {})
+                ethernet_dict['inst'] = int(group['inst'])
+                ethernet_dict['nodetype'] = group['nodetype']
+                ethernet_dict['nodestate'] = group['nodestate']
+                ethernet_dict['ringname'] = group['ringname']
+
+                if group['port0']:
+                    ethernet_dict['port0'] = group['port0'].strip()
+                if group['port1']:
+                    ethernet_dict['port1'] = group['port1'].strip()
+
+                count+=1
+
+        return ret_dict
+
+# ====================================================================
+#  Schema for 'show ethernet ring g8032 port status'
+# ====================================================================
+
+
+class ShowEthernetRingG8032PortStatusSchema(MetaParser):
+    """Schema for 'show ethernet ring g8032 port status'
+    """
+    schema = {
+        'ethernet_ring_ports': {
+            Any(): {
+                'ring': str,
+                'block_vlan_list': str,
+                'unblock_vlan_list': str,
+                'req/ack': str,
+                'instance': str,
+                'state': str,
+            }
+        }
+    }
+
+# ================================================================
+#  Parser for 'show ethernet ring g8032 port status'
+# =================================================================
+
+
+class ShowEthernetRingG8032PortStatus(ShowEthernetRingG8032PortStatusSchema):
+    """
+    Parser for :
+        * show ethernet ring g8032 port status
+        * show ethernet ring g8032 port status interface {interface}
+    """
+    cli_command = ['show ethernet ring g8032 port status interface {interface}', 'show ethernet ring g8032 port status']
+
+    def cli(self, interface='', cmd=None, output=None):
+
+        if output is None:
+            if interface != '':
+                output = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[1])
+
+        # Switch#show ethernet ring g8032 port status
+        # Port: GigabitEthernet1/3
+        # Ring: g8032_ring
+        #     Block vlan list: 1-9,11-4095
+        #     Unblock vlan list: 10
+        #     REQ/ACK: 0/0
+        #     Instance 1 is in Blocked state
+
+        # Port: GigabitEthernet1/4
+        # Ring: g8032_ring
+        #     Block vlan list: 1-9,11-99,201-4095
+        #     Unblock vlan list: 10,100-200
+        #     REQ/ACK: 0/0
+        #     Instance 1 is in Unblocked state
+
+
+        #Port: GigabitEthernet1/3
+        p1 = re.compile(r'Port: (?P<Port>\S+)')
+
+        #Ring: g8032_ring
+        p2 = re.compile(r'Ring: (?P<Ring>\S+)')
+
+        #Block vlan list: 1-9,11-4095
+        p3 = re.compile(r'Block vlan list: (?P<Block_vlan_list>\S+)')
+
+        #Unblock vlan list: 10
+        p4 = re.compile(r'Unblock vlan list: (?P<Unblock_vlan_list>\S+)')
+
+        #REQ/ACK: 0/0
+        p5 = re.compile(r'REQ/ACK: (?P<req_ack>\S+)')
+
+        #Instance 1 is in Blocked state
+        p6 = re.compile(r'Instance (?P<Instance>\d+) is in (?P<state>\S+) state')
+        
+        # initial variables
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Port: GigabitEthernet1/3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                port = group['Port']
+                port_dict = ret_dict.setdefault('ethernet_ring_ports', {}).setdefault(port, {})
+                continue
+            
+            # Ring: g8032_ring
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['ring'] = group['Ring']
+                continue
+
+            # Block vlan list: 1-9,11-4095
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['block_vlan_list'] = group['Block_vlan_list']
+                continue
+
+            # Unblock vlan list: 10
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['unblock_vlan_list'] = group['Unblock_vlan_list']
+                continue
+
+            # REQ/ACK: 0/0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['req/ack'] = group['req_ack']
+                continue
+
+            # Instance 1 is in Blocked state
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                port_dict['instance'] = group['Instance']
+                port_dict['state'] = group['state']
+                continue
+
+        return ret_dict
+
+
+class ShowEthernetCFMEFDMepsSchema(MetaParser):
+    """Schema for 'show ethernet cfm efd meps'
+    """
+    schema = {
+        'efd_meps': {
+            'domain': str,
+            'service': str,
+            'notify': str,
+            'efd': str,
+            Optional('meps_info'): {
+                int: {
+                    'id': str,
+                    'interface': str,
+                    'srvcinst': str,
+                    'defect': str,
+                    'threshold': str,
+                    'triggered': str,
+                }
+            }
+        }
+    }
+
+
+class ShowEthernetCFMEFDMeps(ShowEthernetCFMEFDMepsSchema):
+    """
+    Parser for :
+        * show ethernet cfm efd meps
+    """
+    cli_command = 'show ethernet cfm efd meps'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Domain g8032_domain, Service vlan-id 10: notify G.8032 Controller, EFD not triggered
+        p1 = re.compile(r'Domain (?P<Domain>\S+), Service (?P<Service>.*): notify (?P<notify>.*), EFD (?P<EFD>.*)')
+
+        #     11 Gi1/3      N/A      None          DefMACstatus  No
+        p2 = re.compile(r'(?P<ID>\d+)\s+(?P<Interface>\S+)\s+(?P<SrvcInst>\S+)\s+(?P<Defect>\S+)\s+(?P<Threshold>\S+)\s+(?P<Triggered>\S+)')
+
+        # initial return dictionary
+        ret_dict = {}
+        count = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Domain g8032_domain, Service vlan-id 10: notify G.8032 Controller, EFD not triggered
+            m = p1.match(line)
+            if m:
+                domain_dict = ret_dict.setdefault('efd_meps', {})
+                domain_dict['domain'] = m.groupdict()['Domain']
+                domain_dict['service'] = m.groupdict()['Service']
+                domain_dict['notify'] = m.groupdict()['notify']
+                domain_dict['efd'] = m.groupdict()['EFD']
+                continue
+
+            #     11 Gi1/3      N/A      None          DefMACstatus  No
+            m = p2.match(line)
+            if m:
+                count += 1
+                group = m.groupdict()
+                mep_status_dict = domain_dict.setdefault('meps_info', {})
+                mep_dict = mep_status_dict.setdefault(count, {})
+                mep_dict['id'] = group['ID']
+                mep_dict['interface'] = group['Interface']
+                mep_dict['srvcinst'] = group['SrvcInst']
+                mep_dict['defect'] = group['Defect']
+                mep_dict['threshold'] = group['Threshold']
+                mep_dict['triggered'] = group['Triggered']
+                continue
+
+        return ret_dict

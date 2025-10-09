@@ -1,0 +1,2 @@
+Uplink Autoconfig: Enable
+VlanID  State  L2   Created  SVI  IPAssign  IPState  Route  Static  Score

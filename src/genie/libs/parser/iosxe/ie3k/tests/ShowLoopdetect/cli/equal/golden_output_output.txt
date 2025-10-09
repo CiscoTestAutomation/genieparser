@@ -1,0 +1,6 @@
+Loopdetect is enabled
+
+Interface      Interval Elapsed-Time Port-to-Errdisbale     ACTION
+-------------- -------- ------------ ---------------------  ---------
+Gi1/1           5        3            errdisable Dest Port   ERRDISABLE
+Gi1/2           5        1            errdisable Dest Port   ERRDISABLE

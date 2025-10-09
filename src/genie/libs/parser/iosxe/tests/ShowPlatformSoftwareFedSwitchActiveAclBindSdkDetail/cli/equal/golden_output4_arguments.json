@@ -1,0 +1,6 @@
+{
+    "switch" : "switch",
+    "switch_var" : "active",
+    "acl" : "bind",
+    "if_id": "0x4b0"
+}

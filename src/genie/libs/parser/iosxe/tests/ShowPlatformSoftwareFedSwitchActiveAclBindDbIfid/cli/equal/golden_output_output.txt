@@ -1,0 +1,35 @@
+Sec_RAITT#show plat soft fed switch active acl bind db if-id 0x456 detail 
+--------------------------------------------------------------
+         ACLs Bind details (programmed in datapath)
+--------------------------------------------------------------
+
+Interface Name: Gi2/0/10 
+   Direction: Ingress
+      Feature         : Pacl
+      Protocol        : MAC
+      CG ID           : 1
+      CG Name         : pacl_mac
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: Gi2/0/10 
+   Direction: Ingress
+      Feature         : Pacl
+      Protocol        : IPv4
+      CG ID           : 9
+      CG Name         : pacl_gi2/0/10_v4
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: Gi2/0/10 
+   Direction: Ingress
+      Feature         : Pacl
+      Protocol        : IPv6
+      CG ID           : 16
+      CG Name         : pacl_gi2/0/10_v6
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+

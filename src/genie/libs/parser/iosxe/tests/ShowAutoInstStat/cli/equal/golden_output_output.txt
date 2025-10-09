@@ -1,0 +1,10 @@
+IPv4 Status         : Success
+DHCP Server         : 10.10.10.1
+TFTP Server         : 10.10.10.1
+Network Config File :
+Device Config File  : tftp://10.10.10.1/ztp_http_latest.py
+Device Image File   :
+IPv6 Status         : Aborted
+IPv6 Device Config File  :
+AutoIP Status         : FAIL
+No Auto IP data

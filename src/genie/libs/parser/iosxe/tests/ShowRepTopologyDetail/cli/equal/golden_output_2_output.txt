@@ -1,0 +1,29 @@
+REP Segment 170
+BOI-AIR-AGG-1, Te0/0/26 (Primary Edge No-Neighbor)
+Open Port, all vlans forwarding
+Bridge MAC: 00ea.bd0a.243f
+Port Number: 021
+Port Priority: 000
+Effective Port Priority: 00002100EABD0A243F
+Neighbor Number: 1 / [-4]
+BOI-AIR-AGG-1, Te0/0/27 (Intermediate)
+Alternate Port, some vlans blocked
+Bridge MAC: 00ea.bd0a.243f
+Port Number: 022
+Port Priority: 040
+Effective Port Priority: 04002200EABD0A243F
+Neighbor Number: 2 / [-3]
+BOI-AIR-AGG-2, Te0/0/26 (Intermediate)
+Open Port, all vlans forwarding
+Bridge MAC: 00ea.bd0a.1dbf
+Port Number: 021
+Port Priority: 000
+Effective Port Priority: 00002100EABD0A1DBF
+Neighbor Number: 3 / [-2]
+BOI-AIR-AGG-2, Te0/0/27 (Secondary Edge No-Neighbor)
+Open Port, all vlans forwarding
+Bridge MAC: 00ea.bd0a.1dbf
+Port Number: 022
+Port Priority: 000
+Effective Port Priority: 00002200EABD0A1DBF
+Neighbor Number: 4 / [-1]

@@ -1,0 +1,41 @@
+                       TX                       RX                  TX-DROP                  RX-DROP
+Port-channel241 [0]
+                        0                        0                        0                        0
+
+Port-channel242 [1]
+                        0                        0                        0                        0
+
+
+Timestamp Now: Sep 11 10:38:15.253
+
+Port-channel241 [0]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [0]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [1]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [2]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [3]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [4]
+ISIS RX Maximum Time Gap:                0 sec,               0 usec
+ISIS RX Maximum Gap Timestamp: Jan 01 00:00:00.000
+ISIS TX Timestamp: Jan 01 00:00:00.000 [0]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [1]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [2]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [3]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [4]
+ISIS TX Maximum Time Gap:                0 sec,               0 usec
+ISIS TX Maximum Gap Timestamp: Jan 01 00:00:00.000
+
+Port-channel242 [1]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [0]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [1]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [2]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [3]
+ISIS RX Timestamp: Jan 01 00:00:00.000 [4]
+ISIS RX Maximum Time Gap:                0 sec,               0 usec
+ISIS RX Maximum Gap Timestamp: Jan 01 00:00:00.000
+ISIS TX Timestamp: Jan 01 00:00:00.000 [0]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [1]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [2]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [3]
+ISIS TX Timestamp: Jan 01 00:00:00.000 [4]
+ISIS TX Maximum Time Gap:                0 sec,               0 usec
+ISIS TX Maximum Gap Timestamp: Jan 01 00:00:00.000 

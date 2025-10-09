@@ -1,0 +1,48 @@
+MTTEdge-GD#sh inventory 
+NAME: "Chassis", DESCR: "Cisco C8500-12X4QC Chassis"
+PID: C8500-12X4QC      , VID: V00  , SN: TTM223806BY
+
+NAME: "Power Supply Module 0", DESCR: "Cisco Catalyst 9800-40 750W AC Power Supply Reverse Air"
+PID: C9800-AC-750W-R   , VID: V01  , SN: ART2229FAR7
+
+NAME: "Power Supply Module 1", DESCR: "Cisco Catalyst 9800-40 750W AC Power Supply Reverse Air"
+PID: C9800-AC-750W-R   , VID: V01  , SN: ART2229FAQW
+
+NAME: "Fan Tray", DESCR: "Cisco C8500-FAN-1R Fan Tray"
+PID: C8500-FAN-1R      , VID:      , SN:            
+
+NAME: "module 0", DESCR: "Cisco C8500-12X4QC Modular Interface Processor"
+PID: C8500-12X4QC      , VID:      , SN:            
+
+NAME: "SPA subslot 0/0", DESCR: "8-port 10 Gigabit SFP+ Ethernet Port Adapter"
+PID: 8xSFP+            , VID: N/A  , SN: JAE12345678
+
+NAME: "SPA subslot 0/1", DESCR: "4-port 10 Gigabit SFP+ Ethernet Port Adapter"
+PID: 4xSFP+/1xQSFP     , VID: N/A  , SN: JAE12345678
+
+NAME: "subslot 0/1 transceiver 0", DESCR: "10GE SR"
+PID: SFP-10G-SR          , VID: V03  , SN: FNS212111FT     
+
+NAME: "subslot 0/1 transceiver 2", DESCR: "10GE SR"
+PID: SFP-10G-SR          , VID: V03  , SN: AVD21199GSX     
+
+NAME: "subslot 0/1 transceiver 3", DESCR: "10GE SR"
+PID: SFP-10G-SR-S        , VID: V01  , SN: OPM24411B10     
+
+NAME: "SPA subslot 0/2", DESCR: "3-port 40 Gigabit QSFP Ethernet Port Adapter"
+PID: 3xQSFP            , VID: N/A  , SN: JAE12345678
+
+NAME: "subslot 0/2 transceiver 1", DESCR: "QSFP 40GE SR-S"
+PID: QSFP-40G-SR4-S      , VID: 10   , SN: ACW24180F4D     
+
+NAME: "subslot 0/2 transceiver 2", DESCR: "QSFP 40GE SR"
+PID: QSFP-40G-SR4        , VID: B    , SN: FIW230803KK     
+
+NAME: "module R0", DESCR: "Cisco C8500-12X4QC Route Processor"
+PID: C8500-12X4QC      , VID: V00  , SN: JAE22460TT4
+
+NAME: "module F0", DESCR: "Cisco C8500-12X4QC Embedded Services Processor"
+PID: C8500-12X4QC      , VID:      , SN:            
+          
+
+MTTEdge-GD#

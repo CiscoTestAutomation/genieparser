@@ -1,0 +1,4 @@
+| Eth Port OID | Direction | ACL Group Packet Format | ACL Group OID | ACL OID and Cookie | ACL KP OID | ACL Interface | ACL PLKP OID | ACL Stage   | ACL Label Type |
++--------------+-----------+-------------------------+---------------+--------------------+------------+---------------+--------------+-------------+----------------+
+| 813          | INGRESS   | ETHERNET                | 656           | acl_oid:642        | 492        | E_0           | 557          | TERMINATION | CLIENT_LABEL   |
+|              |           |                         |               | acl_cookie:        |            |               |              |             |                |

@@ -1,0 +1,95 @@
+Ethernet1/5 is down (Authorization pending)
+admin state is up, Dedicated Interface
+  Hardware: 10000/25000/40000/50000/100000 Ethernet, address: 6cb2.ae9f.e726 (bia 6cb2.ae9f.e726)
+  MTU 1500 bytes, BW 10000000 Kbit , DLY 10 usec
+  reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, medium is broadcast
+  Port mode is access
+  auto-duplex, auto-speed, media type is 10G
+  Beacon is turned off
+  Auto-Negotiation is turned on  FEC mode is Auto
+  Input flow-control is off, output flow-control is off
+  Auto-mdix is turned off
+  Rate mode is dedicated
+  Switchport monitor is off
+  EtherType is 0x8100
+  EEE (efficient-ethernet) : n/a
+    admin fec state is auto, oper fec state is off
+  Last link flapped 00:00:05
+  Last clearing of "show interface" counters 00:07:31
+  2 interface resets
+  Load-Interval #1: 30 seconds
+    30 seconds input rate 2056 bits/sec, 0 packets/sec
+    30 seconds output rate 1888 bits/sec, 0 packets/sec
+    input rate 2.06 Kbps, 0 pps; output rate 1.89 Kbps, 0 pps
+  Load-Interval #2: 5 minute (300 seconds)
+    300 seconds input rate 13188072 bits/sec, 3034 packets/sec
+    300 seconds output rate 13187848 bits/sec, 3034 packets/sec
+    input rate 13.19 Mbps, 3.03 Kpps; output rate 13.19 Mbps, 3.03 Kpps
+  RX
+    1706286 unicast packets  316 multicast packets  0 broadcast packets
+    1706602 input packets  905327593 bytes
+    0 jumbo packets  0 storm suppression bytes
+    0 runts  0 giants  0 CRC  0 no buffer
+    0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+    0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+    0 input with dribble  0 input discard
+    0 Rx pause
+    0 Stomped CRC
+  TX
+    1706182 unicast packets  316 multicast packets  0 broadcast packets
+    1706498 output packets  905269615 bytes
+    0 jumbo packets
+    0 output error  0 collision  0 deferred  0 late collision
+    0 lost carrier  0 no carrier  0 babble  0 output discard
+    0 Tx pause
+Ethernet1/62 is down (hpoXcvrUnsupported)
+admin state is up, Dedicated Interface
+  Hardware: 10000/25000/40000/50000/100000/200000/400000 Ethernet, address: b0c5.3cdc.8303 (bia b0c5.3cdc.83f8)
+  MTU 1500 bytes, BW 400000000 Kbit , DLY 10 usec
+  reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, medium is broadcast
+  auto-duplex, auto-speed, media type is 400G
+  Beacon is turned off
+  Auto-Negotiation is turned on  FEC mode is Auto
+  Input flow-control is off, output flow-control is off
+  Auto-mdix is turned off
+  Rate mode is dedicated
+  Switchport monitor is off
+  EtherType is 0x8100
+  EEE (efficient-ethernet) : n/a
+    admin fec state is auto, oper fec state is auto
+  Last link flapped never
+  Last clearing of "show interface" counters never
+  0 interface resets
+  Load-Interval #1: 30 seconds
+    30 seconds input rate 0 bits/sec, 0 packets/sec
+    30 seconds output rate 0 bits/sec, 0 packets/sec
+    input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+  Load-Interval #2: 5 minute (300 seconds)
+    300 seconds input rate 0 bits/sec, 0 packets/sec
+    300 seconds output rate 0 bits/sec, 0 packets/sec
+    input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+  RX
+    0 unicast packets  0 multicast packets  0 broadcast packets
+    0 input packets  0 bytes
+    0 jumbo packets  0 storm suppression bytes
+    0 runts  0 giants  0 CRC  0 no buffer
+    0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+    0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+    0 input with dribble  0 input discard
+    0 Rx pause
+    0 Stomped CRC
+  TX
+    0 unicast packets  0 multicast packets  0 broadcast packets
+    0 output packets  0 bytes
+    0 jumbo packets
+    0 output error  0 collision  0 deferred  0 late collision
+    0 lost carrier  0 no carrier  0 babble  0 output discard
+    0 Tx pause
+=======
+port-channel1 is down (port-channel-members-down) ß this right here with the port-channel-members-down
+Ethernet140/1/26 is down (linkFlapErrDisabled, port: error)
+admin state is up
+    Hardware: Port-Channel, address: 0000.0000.0000 (bia 0000.0000.0000)
+>>>>>>> faa0a0c3117756f37341f9734fd0ae6ec7863465

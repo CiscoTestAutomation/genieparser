@@ -1,0 +1,10 @@
+Statistics for all causes
+
+Cause  Cause Info                      Rcvd                 Dropped
+------------------------------------------------------------------------------
+1      L2 control/legacy               5458                 1
+2      QFP destination lookup          15                   0
+5      QFP <->RP keepalive             416                  0
+12     ARP request or response         3                    0
+25     Layer2 frame to BD              219930               0
+------------------------------------------------------------------------------

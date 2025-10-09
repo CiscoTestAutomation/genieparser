@@ -1,0 +1,19 @@
+Reload fast supported: Yes
+xFSU PLATFORM Status: Not started yet
+Stack Configuration: Yes
+Eligibility Check         Status
+=================         ======
+Autoboot Enabled          Yes
+Install Mode              Yes
+Network Advantage License Yes
+Full ring stack           Yes
+Check macsec eligibility  Eligible
+Note:	All the status should be Yes or eligible to continue xFSU
+
+Spanning Tree             Eligible
+Note:   For STP status should be eligible to continue xFSU
+
+SSO Mode                  Yes
+Note:	If 'SSO mode' status is 'No', please wait until condition is met, then proceed
+
+For all the list of protocols un-support,please refer the following link https://www.cisco.com/c/en/us/support/docs/switches/catalyst-9300-series-switches/216837-extended-fast-software-upgrade-on-cataly.html#anc6

@@ -1,0 +1,79 @@
+Group state = L2
+Ports: 2   Maxports = 16
+Port-channels: 1 Max Port-channels = 16
+Protocol:   LACP
+Minimum Links: 0
+
+
+		Ports in the group:
+		-------------------
+Port: Te1/0/1
+------------
+
+Port state    = Up Mstr Assoc In-Bndl
+Channel group = 1           Mode = Active          Gcchange = -
+Port-channel  = Po1         GC   =   -             Pseudo port-channel = Po1
+Port index    = 0           Load = 0x00            Protocol =   LACP
+
+Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
+        A - Device is in active mode.        P - Device is in passive mode.
+
+Local information:
+                                LACP port    Admin     Oper    Port        Port
+Port          Flags   State     Priority     Key       Key     Number      State
+Te1/0/1       SA      bndl      32768        0x1       0x1     0x102       0x3D
+
+ Partner's information:
+
+                     LACP port                      Admin  Oper   Port    Port
+Port          Flags  Priority  Dev ID          Age  key    Key    Number  State
+Te1/0/1       SA     32768     a410.b6bb.ba00  22s  0x0    0x1    0x20B   0x3D
+
+Age of the port in the current state: 0d:00h:01m:15s
+
+Port: Te1/0/2
+------------
+
+Port state    = Up Mstr Assoc In-Bndl
+Channel group = 1           Mode = Active          Gcchange = -
+Port-channel  = Po1         GC   =   -             Pseudo port-channel = Po1
+Port index    = 0           Load = 0x00            Protocol =   LACP
+
+Flags:  S - Device is sending Slow LACPDUs   F - Device is sending fast LACPDUs.
+        A - Device is in active mode.        P - Device is in passive mode.
+
+Local information:
+                                LACP port    Admin     Oper    Port        Port
+Port          Flags   State     Priority     Key       Key     Number      State
+Te1/0/2       SA      bndl      32768        0x1       0x1     0x103       0x3D
+
+ Partner's information:
+
+                     LACP port                      Admin  Oper   Port    Port
+Port          Flags  Priority  Dev ID          Age  key    Key    Number  State
+Te1/0/2       SA     32768     a410.b6bb.ba00  19s  0x0    0x1    0x21B   0x3D
+
+Age of the port in the current state: 0d:00h:01m:15s
+
+		Port-channels in the group:
+		---------------------------
+
+Port-channel: Po1    (Primary Aggregator)
+
+------------
+
+Age of the Port-channel   = 0d:00h:01m:19s
+Logical slot/port   = 12/1          Number of ports = 2
+HotStandBy port = null
+Port state          = Port-channel Ag-Inuse
+Protocol            =   LACP
+Port security       = Disabled
+
+Ports in the Port-channel:
+
+Index   Load   Port        EC state        No of bits
+------+------+------+------------------+-----------
+  0     00     Te1/0/1     Active             0
+  0     00     Te1/0/2     Active             0
+
+Time since last port bundled:    0d:00h:01m:15s    Te1/0/2

@@ -1,0 +1,165 @@
+show forwarding distribution multicast route
+
+IPv4 Multicast Routing Table for table-id: 1
+Total number of groups: 11
+Legend:
+   C = Control Route
+   D = Drop Route
+   G = Local Group (directly connected receivers)
+   O = Drop on RPF Fail
+   P = Punt to supervisor
+   L = SRC behind L3
+   d = Decap Route
+   Es = Extranet src entry
+   Er = Extranet recv entry
+   Nf = VPC None-Forwarder
+   dm = MVPN Decap Route
+   em = MVPN Encap Route
+   IPre = Ingress Service-reflect Pre
+   EPre = Egress Service-reflect Pre
+   Pst = Ingress/Egress Service-reflect Post
+   Dci = Dci Core Route
+   V   = Source is Vipr
+   Rm  = Source is DCI Remote
+   PstUM  = Post translated UM NAT
+   Mdt  = Data Mdt
+
+  (*, 232.0.0.0/8), RPF Interface: NULL, flags: DNf
+    Uestream Nbr: 0.0.0.0
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, 239.0.2.30/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 18
+      Vlan361 (VPC)
+        ( Mem L2 Ports: )
+        l2_oiflist_index: 1
+
+  (36.2.0.101/32, 239.1.1.13/32), RPF Interface: Ethernet1/7, flags: L
+    Upstream Nbr: 36.2.0.101
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 24
+      port-channel100
+
+  (*, 239.1.1.22/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 19
+      Vlan461 (VPC)
+        ( Mem L2 Ports: )
+        l2_oiflist_index: 1
+
+  (46.1.0.221/32, 239.1.1.22/32), RPF Interface: Vlan461, flags: O
+    Upstream Nbr: 46.1.0.221
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 25
+      Vlan461
+        ( Mem L2 Ports: port-channel40 )
+        l2_oiflist_index: 1
+
+  (*, 239.1.1.23/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 19
+      Vlan461 (VPC)
+        ( Mem L2 Ports: )
+        l2_oiflist_index: 1
+
+  (46.1.0.231/32, 239.1.1.23/32), RPF Interface: Vlan461, flags: O
+    Upstream Nbr: 46.1.0.231
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 25
+      Vlan461
+        ( Mem L2 Ports: port-channel40 )
+        l2_oiflist_index: 1
+
+  (*, 239.2.1.2/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 19
+      Vlan461 (VPC)
+        ( Mem L2 Ports: )
+        l2_oiflist_index: 1
+
+  (*, 239.3.1.2/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 20
+      Vlan461 (VPC)
+        ( Mem L2 Ports: Ethernet1/8 )
+        l2_oiflist_index: 7
+
+  (46.1.0.211/32, 239.3.1.2/32), RPF Interface: Vlan461, flags: O
+    Upstream Nbr: 46.1.0.211
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 23
+      Vlan461
+        ( Mem L2 Ports: port-channel40 Ethernet1/8 )
+        l2_oiflist_index: 7
+
+  (*, 239.3.1.3/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 20
+      Vlan461 (VPC)
+        ( Mem L2 Ports: Ethernet1/8 )
+        l2_oiflist_index: 7
+
+  (46.1.0.221/32, 239.3.1.3/32), RPF Interface: Vlan461, flags: O
+    Upstream Nbr: 46.1.0.221
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 23
+      Vlan461
+        ( Mem L2 Ports: port-channel40 Ethernet1/8 )
+        l2_oiflist_index: 7
+
+  (*, 239.3.1.12/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 21
+      Ethernet1/7
+
+  (16.1.0.101/32, 239.3.1.12/32), RPF Interface: port-channel100, flags: LNf
+    Upstream Nbr: 23.1.0.2
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 21
+      Ethernet1/7
+
+  (*, 239.3.1.13/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 21
+      Ethernet1/7
+
+  (26.1.0.102/32, 239.3.1.13/32), RPF Interface: port-channel100, flags: LNf
+    Upstream Nbr: 23.1.0.2
+    Received Packets: 13 Bytes: 845
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 21
+      Ethernet1/7
+
+  (*, 239.4.1.2/32), RPF Interface: port-channel100, flags: GLNf
+    Uestream Nbr: 23.1.0.2
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 22
+      Vlan461 (VPC)
+        ( Mem L2 Ports: port-channel10 )
+        l2_oiflist_index: 2

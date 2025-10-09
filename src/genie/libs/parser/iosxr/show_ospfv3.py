@@ -6,14 +6,17 @@ Parser for the following commands:
     * show ospfv3 vrf {vrf} neighbor
     * show ospfv3 database
     * show ospfv3 {process_id} database
+    * show ospfv3 topology detail
+    * show ospfv3 topology prefixes
+    * show ospfv3 vrf all-inclusive database ext-router
 '''
 import re
 
 import genie.metaparser.util.exceptions
-from netaddr import IPAddress, IPNetwork
+from netaddr import IPAddress, INET_ATON
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 
 class ShowOspfv3NeighborSchema(MetaParser):
@@ -74,14 +77,14 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
         # Neighbors for OSPFv3 1, VRF default
         # Neighbors for OSPFv3 1, VRF VRF1
         p1 = re.compile(r'^Neighbors +for +OSPFv3 +(?P<process>\w+)'
-                        '(, +VRF (?P<vrf>[\w-]+))?$')
+                        r'(, +VRF (?P<vrf>[\w-]+))?$')
 
         # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
         # 10.145.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1
         # 10.220.100.100 1     FULL/  -        00:00:38    6               GigabitEthernet0/0/0/0
         p2 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<priority>\d+)'
-                        ' +(?P<state>\S+\s*\S+) +(?P<dead_time>\S+)'
-                        ' +(?P<address>\S+) +(?P<interface>\S+)$')
+                        r' +(?P<state>\S+\s*\S+) +(?P<dead_time>\S+)'
+                        r' +(?P<address>\S+) +(?P<interface>\S+)$')
 
         # Neighbor is up for 2d18h
         # Neighbor is up for 2d19h
@@ -89,7 +92,7 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
 
         # Total neighbor count: 2
         p4 = re.compile(r'^Total +neighbor +count:'
-                        ' +(?P<total_neighbor_count>\d+)$')
+                        r' +(?P<total_neighbor_count>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -250,7 +253,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
         # Link (Type-8) Link States (Area 0)
         # Intra Area Prefix Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
 
         # 10.94.1.1       2019        0x8000007d 0            2           E
         # 10.145.95.95     607         0x80000097 0            2           E
@@ -306,7 +309,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 if group['area']:
                     try:
                         int(group['area'])
-                        area = str(IPAddress(str(group['area'])))
+                        area = str(IPAddress(str(group['area']), flags=INET_ATON))
                     except Exception:
                         area = str(group['area'])
                 else:
@@ -488,7 +491,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
         # In the area 0 via interface GigabitEthernet0/0/0/0.1
         # In the area 0 via interface GigabitEthernet0/0/0/1.500     BFD enabled, Mode: Default
         p3 = re.compile(r"^In the area +(?P<area>([0-9]+)) via interface +(?P<interface>(\S+))"
-                        "( +BFD (?P<enable>\w+), Mode: (?P<mode>\w+))*")
+                        r"( +BFD (?P<enable>\w+), Mode: (?P<mode>\w+))*")
 
         # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
         p4 = re.compile(r"^Neighbor: interface-id +(?P<interface_id>([0-9]+)), "
@@ -750,45 +753,45 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         # Loopback0 is up, line protocol is up
         p1 = re.compile(
             r"^(?P<interface>(\S+)) +is( +administratively)?"
-            " +(?P<enable>(unknown|up|down)), +line +protocol +is"
-            " +(?P<line_protocol>(up|down))$")
+            r" +(?P<enable>(unknown|up|down)), +line +protocol +is"
+            r" +(?P<line_protocol>(up|down))$")
 
         # Link Local address fe80:100:10::1, Interface ID 7
         p2 = re.compile(
             r"^Link +Local +address +(?P<link_local_address>(\S+)),"
-            " +Interface ID +(?P<interface_id>(\S+))$")
+            r" +Interface ID +(?P<interface_id>(\S+))$")
 
         # Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
         p3 = re.compile(
             r"^Area +(?P<area>(\S+))"
-            ", +Process +ID +(?P<pid>(\S+))"
-            ", +Instance +ID +(?P<instance>(\S+))"
-            ", +Router +ID +(?P<router_id>(\S+))$")
+            r", +Process +ID +(?P<pid>(\S+))"
+            r", +Instance +ID +(?P<instance>(\S+))"
+            r", +Router +ID +(?P<router_id>(\S+))$")
 
         # Network Type POINT_TO_POINT, Cost: 1
         p4 = re.compile(
             r"^Network +Type +(?P<network_type>(\S+))"
-            ", +Cost: +(?P<cost>(\S+))$")
+            r", +Cost: +(?P<cost>(\S+))$")
 
         # BFD enabled, interval 150 msec, multiplier 3, mode Default
         p5 = re.compile(
             r"^BFD +(?P<bfd_status>(\S+))"
-            "(?:, +interval +(?P<interval>(\d+)) +msec)?"
-            "(?:, +multiplier +(?P<multi>(\d+)))?"
-            "(?:, +mode +(?P<mode>(\S+)))?$")
+            r"(?:, +interval +(?P<interval>(\d+)) +msec)?"
+            r"(?:, +multiplier +(?P<multi>(\d+)))?"
+            r"(?:, +mode +(?P<mode>(\S+)))?$")
 
         # Transmit Delay is 1 sec, State POINT_TO_POINT,
         p6 = re.compile(
             r"^Transmit +Delay is +(?P<delay>(\d+)) +sec"
-            ", +State +(?P<state>(\w)+),$")
+            r", +State +(?P<state>(\w)+),$")
 
         # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
         p7 = re.compile(
             r"^Timer +intervals +configured"
-            ", +Hello +(?P<hello>(\d+))"
-            ", +Dead +(?P<dead>(\d+))"
-            ", +Wait +(?P<wait>(\d+))"
-            ", +Retransmit +(?P<retransmit>(\d+))$")
+            r", +Hello +(?P<hello>(\d+))"
+            r", +Dead +(?P<dead>(\d+))"
+            r", +Wait +(?P<wait>(\d+))"
+            r", +Retransmit +(?P<retransmit>(\d+))$")
 
         # Hello due in 00:00:08
         p8 = re.compile(r"^Hello +due +in +(?P<hello_timer>(\S+))$")
@@ -801,18 +804,18 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # Last flood scan length is 1, maximum is 4
         p11 = re.compile(r"^Last +flood +scan +length +is +(?P<last_flood_scan_length>(\d+))"
-                         ", +maximum +is +(?P<max_flood_scan_length>(\d+))$")
+                         r", +maximum +is +(?P<max_flood_scan_length>(\d+))$")
 
         # Last flood scan time is 0 msec, maximum is 0 msec
         p12 = re.compile(
             r"^Last +flood +scan +time +is +(?P<last_flood_scan_time_msec>(\d+))"
-            " +msec, +maximum +is +(?P<max_flood_scan_time_msec>(\d+)) +msec$")
+            r" +msec, +maximum +is +(?P<max_flood_scan_time_msec>(\d+)) +msec$")
 
         # Neighbor Count is 1, Adjacent neighbor count is 1
         p13 = re.compile(
             r"^Neighbor +Count +is +(?P<nbr_count>(\d+))"
-            ", +Adjacent +neighbor +count +is"
-            " +(?P<adj_nbr_count>(\d+))$")
+            r", +Adjacent +neighbor +count +is"
+            r" +(?P<adj_nbr_count>(\d+))$")
 
         # Adjacent with neighbor 10.220.100.100
         p14 = re.compile(
@@ -1111,7 +1114,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
         
         # Router Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
 
         # Routing Bit Set on this LSA
         p3 = re.compile(r"^Routing +Bit +Set +on +this +LSA$")
@@ -1126,7 +1129,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
         p6 = re.compile(r"^LS +Type: +(?P<lsa_type>(.*))$")
         
         # Link State ID: 0
-        p7 = re.compile(r"^Link +State +ID: +(?P<lsa_id>(\d+))" "(?: +\(.*\))?$")
+        p7 = re.compile(r"^Link +State +ID: +(?P<lsa_id>(\d+))(?: +\(.*\))?$")
 
         # Advertising Router: 25.97.1.1
         p8 = re.compile(r"^Advertising +Router: +(?P<adv_router>(\S+))$")
@@ -1201,7 +1204,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
                 if m.groupdict()["area"]:
                     try:
                         int(m.groupdict()["area"])
-                        area = str(IPAddress(str(m.groupdict()["area"])))
+                        area = str(IPAddress(str(m.groupdict()["area"]), flags=INET_ATON))
                     except Exception:
                         area = str(m.groupdict()["area"])
                 else:
@@ -1492,7 +1495,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
 
         # Intra Area Prefix Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
 
         # Routing Bit Set on this LSA
         p3 = re.compile(r'^Routing +Bit +Set +on +this +LSA$')
@@ -1503,7 +1506,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         p5 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
 
         # Link State ID: 0
-        p6 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\d+))' '(?: +\(.*\))?$')
+        p6 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\d+))(?: +\(.*\))?$')
 
         # Advertising Router: 25.97.1.1
         p7 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
@@ -1521,7 +1524,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         p11 = re.compile(r'^Referenced +LSA +Type: +(?P<ref_lsa_type>(.*))$')
 
         # Referenced Link State ID: 0
-        p12 = re.compile(r'^Referenced +Link +State +ID: +(?P<ref_lsa_id>(\d+))' '(?: +\(.*\))?$')
+        p12 = re.compile(r'^Referenced +Link +State +ID: +(?P<ref_lsa_id>(\d+))(?: +\(.*\))?$')
 
         # Referenced Advertising Router: 25.97.1.1
         p13 = re.compile(r'^Referenced +Advertising +Router: +(?P<ref_adv_router>(\S+))$')
@@ -1535,9 +1538,9 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         # Prefix Length: 128, Options: None, Metric: 65535, Priority: Medium
         p16 = re.compile(
             r'^Prefix +Length: +(?P<prefix_length>(\d+))\s*,'
-            ' +Options: +(?P<options>(\S+))\s*,'
-            ' +Metric: +(?P<metric>(\d+))\s*,'
-            ' +Priority: +(?P<priority>(\S+))$'
+            r' +Options: +(?P<options>(\S+))\s*,'
+            r' +Metric: +(?P<metric>(\d+))\s*,'
+            r' +Priority: +(?P<priority>(\S+))$'
         )
 
         # OSPFv3 Router with ID (25.97.1.1) (Process ID mpls1 VRF default)
@@ -1574,7 +1577,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
                 if m.groupdict()["area"]:
                     try:
                         int(m.groupdict()["area"])
-                        area = str(IPAddress(str(m.groupdict()["area"])))
+                        area = str(IPAddress(str(m.groupdict()["area"]), flags=INET_ATON))
                     except Exception:
                         area = str(m.groupdict()["area"])
                 else:
@@ -1767,7 +1770,7 @@ class ShowOspfv3DatabaseprefixAdvRouter(ShowOspfv3DatabaseprefixAdvRouterSchema)
         
         #Router Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
-                        ' +(?P<area>(\S+))\)$')
+                        r' +(?P<area>(\S+))\)$')
         
         #Advertising Router: 10.0.0.3
         p3 = re.compile(r'^Advertising Router: +(?P<advertising_router>(\S+))$')
@@ -1809,7 +1812,7 @@ class ShowOspfv3DatabaseprefixAdvRouter(ShowOspfv3DatabaseprefixAdvRouterSchema)
                 if group['area']:
                     try:
                         int(group['area'])
-                        area = str(IPAddress(group['area']))
+                        area = str(IPAddress(group['area'], flags=INET_ATON))
                     except Exception:
                         area = group['area']
                 else:
@@ -1834,4 +1837,880 @@ class ShowOspfv3DatabaseprefixAdvRouter(ShowOspfv3DatabaseprefixAdvRouterSchema)
                 area_dict["prefix_address"] = m.groupdict()["prefix_address"]
                 continue
             
+        return ret_dict
+
+class ShowOspfv3VrfAllInclusiveDatabaseExtRouterSchema(MetaParser):
+    """Schema for show ospfv3 vrf all-inclusive database ext-router"""
+    schema = {
+            "vrf": {
+                Any(): {
+                    "address_family": {
+                        Any(): {
+                            "instance": {
+                                Any(): {
+                                    Optional("areas"): {
+                                        Any(): {
+                                            "database": {
+                                                "lsa_types": {
+                                                    Any(): {
+                                                        "lsa_type": int,
+                                                        "lsas": {
+                                                            Any(): {
+                                                                "lsa_id": int,
+                                                                "adv_router": str,
+                                                                "ospfv3": {
+                                                                    "header": {
+                                                                        "age": int,
+                                                                        "type": str,
+                                                                        "lsa_id": int,
+                                                                        "adv_router": str,
+                                                                        "seq_num": str,
+                                                                        "checksum": str,
+                                                                        "length": int,
+                                                                        },
+                                                                    "body": {
+                                                                        "num_of_tlvs": int,
+                                                                        "tlvs": {
+                                                                            Any(): {
+                                                                                "type": int,
+                                                                                Optional ("type_desc"): str,
+                                                                                "length": int,
+                                                                                "value": {
+                                                                                    Any(): {
+                                                                                        Optional("link"): {
+                                                                                            Any(): {
+                                                                                                "link_type": str,
+                                                                                                "link_metric": int,
+                                                                                                "local_interface_id": int,
+                                                                                                "neighbor_interface_id": int,
+                                                                                                "neighbor_router_id": str,
+                                                                                                },
+                                                                                            },
+                                                                                        "num_of_subtlvs": int,
+                                                                                        Optional("subtlv"): {
+                                                                                            Any(): {
+                                                                                                "subtype": int,
+                                                                                                Optional ("subtype_desc"): str,
+                                                                                                "length": int,
+                                                                                                "value": {
+                                                                                                    Any(): {
+                                                                                                        Optional("optical_info"): {
+                                                                                                            Any(): {
+                                                                                                                "enterprise_num": int,
+                                                                                                                "opaque_value": str,
+                                                                                                                },
+                                                                                                            },
+                                                                                                        },
+                                                                                                    },
+                                                                                                },
+                                                                                            },
+                                                                                        },
+                                                                                    },
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+
+class ShowOspfv3VrfAllInclusiveDatabaseExtRouter(ShowOspfv3VrfAllInclusiveDatabaseExtRouterSchema):
+    ''' Parser for:
+        *'show ospfv3 vrf all-inclusive database ext-router'
+    '''
+
+    cli_command = ['show ospfv3 vrf all-inclusive database ext-router']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = "ipv6"
+
+        #Lsa Types
+        # 1: Router
+        # 2: Network Link
+        # 3: Summary
+        # 3: Summary Network
+        # 3: Summary Net
+        # 4: Summary ASB
+        # 5: Type-5 AS External
+        # 8: Link (Type-8)
+        # 9: Intra Area Prefix'
+        # 10: Opaque Area
+        # 33: Extended Router
+
+        lsa_type_mapping = {
+            'router': 1,
+            'net': 2,
+            'summary': 3,
+            'summary net': 3,
+            'summary asb': 4,
+            'external': 5,
+            'link (type-8)': 8,
+            'intra area prefix': 9,
+            'opaque': 10,
+            'extended router': 33,
+        }
+
+        # OSPFv3 Router with ID (96.96.96.96) (Process ID mpls1 VRF default)
+        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
+
+        # Extended Router Link States (Area 0)
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
+                        r' +(?P<area>(\S+))\)$')
+
+        # LS age: 1472
+        p4 = re.compile(r"^LS +age: +(?P<age>(\d+))$")
+
+        # LS Type: Extended Router Links
+        p6 = re.compile(r"^LS +Type: +(?P<lsa_type>(.*))$")
+
+        # Link State ID: 0
+        p7 = re.compile(r"^Link +State +ID: +(?P<lsa_id>(\d+))(?: +\(.*\))?$")
+
+        # Advertising Router: 25.97.1.1
+        p8 = re.compile(r"^Advertising +Router: +(?P<adv_router>(\S+))$")
+
+        # LS Seq Number: 80000007
+        p9 = re.compile(r"^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$")
+
+        # Checksum: 0x2132
+        p10 = re.compile(r"^Checksum: +(?P<checksum>(\S+))$")
+
+        # Length: 56
+        p11 = re.compile(r"^Length: +(?P<length>(\d+))$")
+
+        # Number of TLVs: 1
+        p13 = re.compile(r"^Number +of +TLVs *: +(?P<num_tlvs>(\d+))$")
+
+        # TLV Type: 1, Router Link
+        p14 = re.compile(r"^TLV +Type: +(?P<tlv_type>(\d+)), +(?P<tlv_desc>(.*))$")
+
+        # TLV Length: 44
+        p15 = re.compile(r"^TLV +Length: +(?P<length>(\d+))$")
+
+        # Link connected to: a Transit Network
+        p16_1 = re.compile(r"^Link +connected +to: +a +(?P<link_type>(.*))$")
+
+        # Link connected to: another Router (point-to-point)
+        p16_2 = re.compile(r"^Link +connected +to: +(?P<link_type>(.*))$")
+
+        # Link Metric: 65535
+        p17 = re.compile(r"^Link +Metric: +(?P<link_metric>(\d+))$")
+
+        # Local Interface ID: 7
+        p18 = re.compile(r"^Local +Interface +ID: +(?P<local_interface_id>(\d+))$")
+
+        # Neighbor Interface ID: 6
+        # Neighbor (DR) Interface ID: 6
+        p19 = re.compile(r"^Neighbor.*Interface +ID: +(?P<neighbor_interface_id>(\d+))$")
+
+        # Neighbor Router ID: 95.95.95.95
+        # Neighbor (DR) Router ID: 96.96.96.96
+        p20 = re.compile(r"^Neighbor.*Router +ID: +(?P<neighbor_router_id>(\S+))$")
+
+        # Number of sub-TLVs: 1
+        p21 = re.compile(r"^Number +of +sub-TLVs: +(?P<num_of_subtlvs>(\d+))$")
+
+        # Sub-TLV Type: 32770, Optical Link Info
+        p22 = re.compile(r"^Sub-TLV +Type: +(?P<subtype>(\d+)), +(?P<subtype_desc>(.*))$")
+
+        # Sub-TLV Length: 24
+        p23 = re.compile(r"^Sub-TLV +Length: +(?P<length>(\d+))$")
+
+        # Enterprise number: 9
+        p24 = re.compile(r"^Enterprise +number: +(?P<enterprise_num>(\d+))$")
+
+        # Optical Info: 76 31 2e 30 30 2d 4f 4c 54 2d 43 5f 30 5f 30 5f 30 20 20 20
+        p25 = re.compile(r"^Optical +Info: +(?P<opaque_value>(.*))$")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPFv3 Router with ID (96.96.96.96) (Process ID mpls1 VRF default)
+            m = p1.match(line)
+            if m:
+                router_id = str(m.groupdict()["router_id"])
+                instance = str(m.groupdict()["instance"])
+                if m.groupdict()["vrf"]:
+                    vrf = str(m.groupdict()["vrf"])
+                else:
+                    vrf = "default"
+
+                inst_dict = (
+                    ret_dict.setdefault("vrf", {})
+                    .setdefault(vrf, {})
+                    .setdefault("address_family", {})
+                    .setdefault(address_family, {})
+                    .setdefault("instance", {})
+                    .setdefault(instance, {})
+                )
+                continue
+
+            # Router Link States (Area 0)
+            m = p2.match(line)
+            if m:
+                # get lsa_type
+                lsa_type_key = m.groupdict()['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
+
+                # Set area
+                if m.groupdict()["area"]:
+                    area = int(m.groupdict()["area"])
+
+                # Create dict structure
+                type_dict = (
+                    inst_dict.setdefault("areas", {})
+                    .setdefault(area, {})
+                    .setdefault("database", {})
+                    .setdefault("lsa_types", {})
+                    .setdefault(lsa_type, {})
+                )
+
+                # Set lsa_type
+                type_dict["lsa_type"] = lsa_type
+                continue
+
+            # LS age: 1472
+            m = p4.match(line)
+            if m:
+                age = int(m.groupdict()["age"])
+                continue
+
+            # LS Type: Router Links
+            m = p6.match(line)
+            if m:
+                lsa_type = str(m.groupdict()["lsa_type"])
+                continue
+
+            # Link State ID: 0
+            m = p7.match(line)
+            if m:
+                lsa_id = int(m.groupdict()["lsa_id"])
+                continue
+
+            # Advertising Router: 25.97.1.1
+            m = p8.match(line)
+            if m:
+                adv_router = str(m.groupdict()["adv_router"])
+                lsa = str(lsa_id) + " " + adv_router
+
+                # Reset counters for this lsa
+                link_idx = 0
+
+                # Create schema structure
+                lsa_dict = type_dict.setdefault("lsas", {}).setdefault(lsa, {})
+
+                # Set keys under 'lsa'
+                lsa_dict["adv_router"] = adv_router
+                try:
+                    lsa_dict["lsa_id"] = lsa_id
+                except Exception:
+                    pass
+
+                # Set header dict
+                header_dict = lsa_dict.setdefault("ospfv3", {}).setdefault("header", {})
+
+                # Set db_dict
+                db_dict = lsa_dict.setdefault("ospfv3", {}).setdefault("body", {})
+
+                # Set previously parsed values
+                try:
+                    header_dict["age"] = age
+                    del age
+                except Exception:
+                    pass
+                try:
+                    header_dict["type"] = lsa_type
+                    del lsa_type
+                except Exception:
+                    pass
+                try:
+                    header_dict["lsa_id"] = lsa_id
+                    del lsa_id
+                except Exception:
+                    pass
+                try:
+                    header_dict["adv_router"] = adv_router
+                    del adv_router
+                except Exception:
+                    pass
+
+            # LS Seq Number: 80000007
+            m = p9.match(line)
+            if m:
+                header_dict["seq_num"] = str(m.groupdict()["ls_seq_num"])
+                continue
+
+            # Checksum: 0x2132
+            m = p10.match(line)
+            if m:
+                header_dict["checksum"] = str(m.groupdict()["checksum"])
+                continue
+
+            # Length: 56
+            m = p11.match(line)
+            if m:
+                header_dict["length"] = int(m.groupdict()["length"])
+                continue
+
+            # Number of TLVs: 2
+            m = p13.match(line)
+            if m:
+                db_dict["num_of_tlvs"] = int(m.groupdict()["num_tlvs"])
+                continue
+
+            # TLV Type: 1, Router Link
+            m = p14.match(line)
+            if m:
+                tlv_idx = len(db_dict.get("tlvs", {})) + 1
+                tlv_dict = db_dict.setdefault("tlvs", {}).setdefault(tlv_idx, {})
+                tlv_dict["type"] = int(m.groupdict()["tlv_type"])
+                tlv_dict["type_desc"] = str(m.groupdict()["tlv_desc"])
+                value_dict = tlv_dict.setdefault("value", {}).setdefault("tlv_value", {})
+
+            # TLV Length: 44
+            m = p15.match(line)
+            if m:
+                tlv_dict["length"] = int(m.groupdict()["length"])
+
+            # Link connected to: a Transit Network
+            m = p16_1.match(line)
+            if m:
+                link_type = str(m.groupdict()["link_type"]).lower()
+                continue
+
+            # Link connected to: another Router (point-to-point)
+            m = p16_2.match(line)
+            if m:
+                link_type = str(m.groupdict()["link_type"]).lower()
+                continue
+
+            # Link Metric: 65535
+            m = p17.match(line)
+            if m:
+                link_dict = value_dict.setdefault("link", {}).setdefault("link_info", {})
+                link_dict["link_type"] = link_type
+                link_dict["link_metric"] = int(m.groupdict()["link_metric"])
+                continue
+
+            # Local Interface ID: 7
+            m = p18.match(line)
+            if m:
+                link_dict["local_interface_id"] = int(m.groupdict()["local_interface_id"])
+                continue
+
+            # Neighbor Interface ID: 6
+            # Neighbor (DR) Interface ID: 6
+            m = p19.match(line)
+            if m:
+                link_dict["neighbor_interface_id"] = int(m.groupdict()["neighbor_interface_id"])
+                continue
+
+            # Neighbor Router ID: 95.95.95.95
+            # Neighbor (DR) Router ID: 96.96.96.96
+            m = p20.match(line)
+            if m:
+                link_dict["neighbor_router_id"] = str(m.groupdict()["neighbor_router_id"])
+                continue
+
+            # Number of sub-TLVs: 1
+            m = p21.match(line)
+            if m:
+                value_dict["num_of_subtlvs"] = int(m.groupdict()["num_of_subtlvs"])
+                continue
+
+            # Sub-TLV Type: 32770, Optical Link Info
+            m = p22.match(line)
+            if m:
+                subtlv_idx = len(value_dict.get("subtlv", {})) + 1
+                subtlv_dict = value_dict.setdefault("subtlv", {}).setdefault(subtlv_idx, {})
+                subtlv_value_dict = subtlv_dict.setdefault("value", {}).setdefault("subtlv_value", {})
+                subtlv_dict["subtype"] = int(m.groupdict()["subtype"])
+                subtlv_dict["subtype_desc"] = str(m.groupdict()["subtype_desc"])
+                continue
+
+            # Sub-TLV Length: 24
+            m = p23.match(line)
+            if m:
+                subtlv_dict["length"] = int(m.groupdict()["length"])
+                continue
+
+            # Enterprise number: 9
+            m = p24.match(line)
+            if m:
+                optical_dict = subtlv_value_dict.setdefault("optical_info", {}).setdefault("optical_info", {})
+                # Set enterprise number
+                optical_dict["enterprise_num"] = int(m.groupdict()["enterprise_num"])
+                continue
+
+            # Optical Info: 76 31 2e 30 30 2d 4f 4c 54 2d 43 5f 30 5f 30 5f 30 20 20 20
+            m = p25.match(line)
+            if m:
+                # Set opaque optical info value
+                optical_dict["opaque_value"] = str(''.join(m.groupdict()["opaque_value"].split()))
+                continue
+
+        return ret_dict
+
+class ShowOspfv3TopologyDetailSchema(MetaParser):
+    """Schema for show ospfv3 topology detail"""
+    schema = {
+        "process": str,
+        "instance": str,
+        "router_id": str,
+        "areas": {
+            Any(): {
+                "area_id": int,
+                "num_nodes": int,
+                "nodes": {
+                    Any(): {
+                        "node_id": str,
+                        "root": bool,
+                        "pseudo": bool,
+                        Optional("flags"): ListOf(str),
+                        Optional("num_links"): int,
+                        "oper_flags": hex,
+                        Optional("contributing_lsas"): ListOf(str),
+                        Optional("links") : {
+                            Any(): {
+                                "remote_node": str,
+                                "local_link_id": int,
+                                "remote_link_id": int,
+                                "link_type": str,
+                                "metric": int,
+                                Optional('remote_link'): {
+                                    "remote_node": str,
+                                    "local_link_id": int,
+                                    "remote_link_id": int,
+                                    "link_type": str,
+                                    },
+                                Optional('lladdr'): str,
+                                Optional('remote_lladdr'): str,
+                                "oper_flags": hex,
+                                Optional('local_interface_id'): int,
+                                Optional('remote_interface_id'): int,
+                                Optional('link_attributes'): {
+                                    "lsid": str,
+                                    Optional("optical_info"): {
+                                        "type": int,
+                                        "length": int,
+                                        "entity_number": int,
+                                        "data": str,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+# This code defines a class `ShowOspfv3TopologyDetail` which acts as a parser 
+# for the output of the command `show ospfv3 topology detail`. It includes 
+# regex patterns to match different parts of the command output and extracts 
+# relevant information, storing it into a dictionary (`ret_dict`). The output 
+# is processed line-by-line to match regex patterns and populate the dictionary 
+# with detailed OSPFv3 topology information such as process, instance, router ID,
+# areas, nodes, links, metrics, and additional attributes like optical info.
+class ShowOspfv3TopologyDetail(ShowOspfv3TopologyDetailSchema):
+    """
+    Parser for show ospfv3 topology detail
+    """
+
+    cli_command = ['show ospfv3 topology detail']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+        node_oper_flag_set = False
+
+        # Process ospfv3-1
+        p1 = re.compile(r'^Process\s+(?P<process>\S+)$')
+        # Instance : default
+        p2 = re.compile(r'^Instance\s*:\s*(?P<instance>\S+)$')
+        # Router ID : 192.168.0.3
+        p3 = re.compile(r'^Router ID\s*:\s*(?P<router_id>\S+)$')
+        # Area : 0 (3 nodes)
+        p4 = re.compile(r'^Area\s*:\s*(?P<area>\d+)\s*\((?P<area_nodes>\d+)\s+nodes\)$')
+        # Node : 192.168.0.3 (2 link(s)) ABR
+        p5 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\s+\((?P<num_links>\d+)\s*link\(s\)\)(?:\s+(?P<flags>.*))?$')
+        # Node : 192.168.0.2  (5 link(s))
+        # Node : 192.168.0.1  (5 link(s))   ASBR
+        # Node : 192.168.0.5  (2 link(s))  ABR, ASBR
+        # Node : 192.168.0.3 (root) (2 link(s)) ABR
+        p6 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\s*\((?P<node_type>\S+)\)\s*(?:\((?P<num_links>\d+)\s*link\(s\)\))?(?:\s+(?P<flags>.*))?$')
+        # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 link(s))  ABR, ASBR
+        p7 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\/(?P<node_id>\S+)\s+\((?P<pseudo>pseudo)\)\s*\((?P<num_links>\d+)\s*link\(s\)\)(?:\s+(?P<flags>.*))?$')
+        # Oper Flags : 0x4080
+        p8 = re.compile(r'^Oper Flags\s*:\s*(?P<oper_flags>\S+)$')
+        # Contributing LSAs : Router
+        p9 = re.compile(r'^Contributing LSAs\s*:\s*(?P<lsas>.+)$')
+        # Link: Nbr 192.168.0.4 Local-id 64 Remote-id 35 P2P
+        p10 = re.compile(r'^Link\s*:\s*Nbr\s*(?P<remote_node>\S+)\s+Local-id\s+(?P<local_link_id>\d+)\s+Remote-id\s+(?P<remote_link_id>\d+)\s+(?P<link_type>.+)$')
+        # Metric        : 10
+        p11 = re.compile(r'^Metric\s*:\s*(?P<metric>\d+)$')
+        # Remote link   : Nbr 192.168.0.3 Local-id 35 Remote-id 64 P2P
+        p12 = re.compile(r'^Remote link\s*:\s*Nbr\s*(?P<remote_node>\S+)\s+Local-id\s+(?P<local_link_id>\d+)\s+Remote-id\s+(?P<remote_link_id>\d+)\s+(?P<link_type>.+)$')
+        # LLAddr       : fe80::21b:54ff:fe5d:3c2f
+        p13 = re.compile(r'^LLAddr\s*:\s*(?P<lladdr>\S+)$')
+        # Remote LLAddr: fe80::21b:54ff:fe5d:3c2f
+        p14 = re.compile(r'^Remote LLAddr\s*:\s*(?P<remote_lladdr>\S+)$')
+        # Local-Remote Interface ID: (10, 11)
+        p15 = re.compile(r'^Local-Remote Interface ID\s*:\s*\((?P<local_ifid>\d+),\s*(?P<remote_ifid>\d+)\)$')
+        # Link Attributes:
+        p16 = re.compile(r'^Link Attributes:$')
+        # LSID: 10.4.1.1
+        p17 = re.compile(r'^LSID\s*:\s*(?P<lsid>\S+)$')
+        # Optical Info:
+        p18 = re.compile(r'^Optical Info:$')
+        # Type: 1
+        p19 = re.compile(r'^Type:\s*(?P<type>\d+)$')
+        # Length: 10
+        p20 = re.compile(r'^Length:\s*(?P<length>\d+)$')
+        # Entity Number: 1
+        p21 = re.compile(r'^Entity Number:\s*(?P<entity_number>\d+)$')
+        # Data: 01020304
+        p22 = re.compile(r'^Data:\s*(?P<data>.+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Process ospfv3-1
+            m = p1.match(line)
+            if m:
+                ret_dict = {}
+                ret_dict["process"] = m.group('process')
+                continue
+
+            # Instance : default
+            m = p2.match(line)
+            if m:
+                ret_dict["instance"] = m.group('instance')
+                continue
+
+            # Router ID : 192.168.0.3
+            m = p3.match(line)
+            if m:
+                ret_dict['router_id'] = m.group('router_id')
+                continue
+
+            # Area : 0 (3 nodes)
+            m = p4.match(line)
+            if m:
+                area = int(m.group('area'))
+                area_dict = ret_dict.setdefault('areas', {}).setdefault(area, {})
+                area_dict['area_id'] = area
+                area_dict['num_nodes'] = int(m.group('area_nodes'))
+                continue
+
+            # Node : 192.168.0.3 (2 link(s)) ABR
+            m = p5.match(line)
+            if m:
+                node_oper_flag_set = False
+                node = m.group('node')
+                node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
+                node_dict['node_id'] = node
+                node_dict['root'] = False
+                node_dict['pseudo'] = False
+                node_dict['num_links'] = int(m.group('num_links'))
+                flags = m.group('flags')
+                if flags:
+                    node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
+                continue
+
+            # Node : 192.168.0.2  (5 link(s))
+            # Node : 192.168.0.1  (5 link(s))   ASBR
+            # Node : 192.168.0.5  (2 link(s))  ABR, ASBR
+            # Node : 192.168.0.3 (root) (2 link(s)) ABR
+            m = p6.match(line)
+            if m:
+                node_oper_flag_set = False
+                node = m.group('node')
+                node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
+                node_dict['node_id'] = node
+                node_dict['root'] = m.group('node_type') == 'root'
+                node_dict['pseudo'] = m.group('node_type') == 'pseudo'
+                num_links = m.group('num_links')
+                if num_links:
+                    node_dict['num_links'] = int(num_links)
+                flags = m.group('flags')
+                if flags:
+                    node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
+                continue
+
+            # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 link(s))  ABR, ASBR
+            m = p7.match(line)
+            if m:
+                node_oper_flag_set = False
+                node = m.group('node') + '/' + m.group('node_id')
+                node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
+                node_dict['node_id'] = node
+                node_dict['root'] = False
+                node_dict['pseudo'] = True
+                node_dict['num_links'] = int(m.group('num_links'))
+                flags = m.group('flags')
+                if flags:
+                    node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
+                continue
+
+            # Oper Flags : 0x4080
+            m = p8.match(line)
+            if m:
+                if node_oper_flag_set == False:
+                    node_dict['oper_flags'] = int(m.group('oper_flags'), 16)
+                    node_oper_flag_set = True
+                else:
+                    link_dict['oper_flags'] = int(m.group('oper_flags'), 16)
+                continue
+
+            # Contributing LSAs : Router
+            m = p9.match(line)
+            if m:
+                node_dict['contributing_lsas'] = [x.strip() for x in m.group('lsas').split(',')]
+                continue
+
+            # Link: Nbr 192.168.0.4 Local-id 64 Remote-id 35 P2P
+            m = p10.match(line)
+            if m:
+                link_key = "{} {} {}".format(m.group('remote_node'), m.group('local_link_id'), m.group('remote_link_id'))
+                link = link_key
+                link_dict = node_dict.setdefault('links', {}).setdefault(link_key, {})
+                link_dict['remote_node'] = m.group('remote_node')
+                link_dict['local_link_id'] = int(m.group('local_link_id'))
+                link_dict['remote_link_id'] = int(m.group('remote_link_id'))
+                link_dict['link_type'] = m.group('link_type').lower()
+                continue
+
+            # Metric        : 10
+            m = p11.match(line)
+            if m:
+                link_dict['metric'] = int(m.group('metric'))
+                continue
+
+            # Remote link   : Nbr 192.168.0.3 Local-id 35 Remote-id 64 P2P
+            m = p12.match(line)
+            if m:
+                link_dict['remote_link'] = {
+                    'remote_node': m.group('remote_node'),
+                    'local_link_id' : int(m.group('local_link_id')),
+                    'remote_link_id' : int(m.group('remote_link_id')),
+                    'link_type': m.group('link_type').lower(),
+                }
+                continue
+
+            # LLAddr       : fe80::21b:54ff:fe5d:3c2f
+            m = p13.match(line)
+            if m:
+                link_dict['lladdr'] = m.group('lladdr')
+                continue
+
+            # Remote LLAddr: fe80::21b:54ff:fe5d:3c2f
+            m = p14.match(line)
+            if m:
+                link_dict['remote_lladdr'] = m.group('remote_lladdr')
+                continue
+
+            # Local-Remote Interface ID: (10, 11)
+            m = p15.match(line)
+            if m:
+                link_dict['local_interface_id'] = int(m.group('local_ifid'))
+                link_dict['remote_interface_id'] = int(m.group('remote_ifid'))
+                continue
+
+            # Link Attributes:
+            m = p16.match(line)
+            if m:
+                link_attr_dict = link_dict.setdefault('link_attributes', {})
+                continue
+
+            # LSID: 10.4.1.1
+            m = p17.match(line)
+            if m:
+                link_attr_dict['lsid'] = m.group('lsid')
+                continue
+
+            # Optical Info:
+            m = p18.match(line)
+            if m:
+                optical_info_dict = link_attr_dict.setdefault('optical_info', {})
+                continue
+
+            # Type: 1
+            m = p19.match(line)
+            if m:
+                optical_info_dict['type'] = int(m.group('type'))
+                continue
+
+            # Length: 10
+            m = p20.match(line)
+            if m:
+                optical_info_dict['length'] = int(m.group('length'))
+                continue
+
+            # Entity Number: 1
+            m = p21.match(line)
+            if m:
+                optical_info_dict['entity_number'] = int(m.group('entity_number'))
+                continue
+
+            # Data: 01020304
+            m = p22.match(line)
+            if m:
+                optical_info_dict['data'] = str(m.group('data').replace(' ', ''))
+                continue
+
+        return ret_dict
+
+class ShowOspfv3TopologyPrefixesSchema(MetaParser):
+    """Schema for show ospfv3 topology prefixes"""
+    schema = {
+        "process": str,
+        "instance": str,
+        "router_id": str,
+        "areas": {
+            Any(): {
+                "area_id": int,
+                "num_nodes": int,
+                "nodes": {
+                    Any(): {
+                        "node_id": str,
+                        Optional("root"): bool,
+                        Optional("pseudo"): bool,
+                        Optional("flags"): ListOf(str),
+                        "num_prefixes": int,
+                        "prefixes": ListOf(str),
+                    },
+                },
+            },
+        }
+    }
+
+class ShowOspfv3TopologyPrefixes(ShowOspfv3TopologyPrefixesSchema):
+    """
+    Parser for show ospfv3 topology prefixes
+    """
+
+    cli_command = ['show ospfv3 topology prefixes']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+        area_dict = None
+        node_dict = None
+
+        # Process ospfv3-1
+        p1 = re.compile(r'^Process\s+(?P<process>\S+)$')
+        # Instance : default
+        p2 = re.compile(r'^Instance\s*:\s*(?P<instance>\S+)$')
+        # Router ID : 192.168.0.3
+        p3 = re.compile(r'^Router ID\s*:\s*(?P<router_id>\S+)$')
+        # Area : 0 (3 nodes)
+        p4 = re.compile(r'^Area\s*:\s*(?P<area>\d+)\s*\((?P<area_nodes>\d+)\s+nodes\)$')
+        # Node : 192.168.0.3 (root) (3 prefix(es)) ABR
+        # Node : 192.168.0.4  (4 prefix(es))
+        p5 = re.compile(
+            r'^Node\s*:\s*(?P<node>\S+)'
+            r'(?:\s*\((?P<root>root)\))?'
+            r'\s*\((?P<num_prefixes>\d+)\s*prefix\(es\)\)'
+            r'(?:\s+(?P<flags>.*))?$'
+        )
+        # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 prefix(es))
+        p6 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\/(?P<node_id>\S+)\s+\((?P<pseudo>pseudo)\)\s*\((?P<num_prefixes>\d+)\s*prefix\(es\)\)(?:\s+(?P<flags>.*))?$')
+        # Prefix : 34:34:1::/64
+        p7 = re.compile(r'^Prefix\s*:\s*(?P<prefix>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Process ospfv3-1
+            m = p1.match(line)
+            if m:
+                ret_dict["process"] = m.group('process')
+                continue
+            # Instance : default
+            m = p2.match(line)
+            if m:
+                ret_dict["instance"] = m.group('instance')
+                continue
+            # Router ID : 192.168.0.3
+            m = p3.match(line)
+            if m:
+                ret_dict['router_id'] = m.group('router_id')
+                continue
+            # Area : 0 (3 nodes)
+            m = p4.match(line)
+            if m:
+                area = int(m.group('area'))
+                area_dict = ret_dict.setdefault('areas', {}).setdefault(area, {})
+                area_dict['area_id'] = area
+                area_dict['num_nodes'] = int(m.group('area_nodes'))
+                continue
+
+            # Node : 192.168.0.3 (root) (3 prefix(es)) ABR
+            # Node : 192.168.0.4  (4 prefix(es))
+            m = p5.match(line)
+            if m:
+                node = m.group('node')
+                node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
+                node_dict['node_id'] = node
+                node_dict['root'] = m.group('root') == 'root'
+                node_dict['pseudo'] = False
+                node_dict['num_prefixes'] = int(m.group('num_prefixes'))
+                node_dict['prefixes'] = []
+                flags = m.group('flags')
+                if flags:
+                    node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
+                continue
+
+            # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 prefix(es))
+            m = p6.match(line)
+            if m:
+                node = m.group('node') + '/' + m.group('node_id')
+                node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
+                node_dict['node_id'] = node
+                node_dict['root'] = False
+                node_dict['pseudo'] = True
+                node_dict['num_prefixes'] = int(m.group('num_prefixes'))
+                node_dict['prefixes'] = []
+                flags = m.group('flags')
+                if flags:
+                    node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
+                continue
+
+            # Prefix : 34:34:1::/64
+            m = p7.match(line)
+            if m and node_dict is not None:
+                node_dict['prefixes'].append(m.group('prefix'))
+                continue
+
         return ret_dict

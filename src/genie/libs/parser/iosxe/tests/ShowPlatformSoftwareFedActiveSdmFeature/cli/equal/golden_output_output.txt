@@ -1,0 +1,240 @@
+show platform software fed active sdm feature
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+MAC entry             131072      4           0      2001        0           131072      0      0
+MAC entry             131072      0           0      0           0           131072      1      0
+MAC entry             131072      0           0      0           0           131072      2      0
+MAC entry             131072      0           0      0           0           131072      3      0
+FIB Host Route        131072      2           0      2           0           131072      0      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FIB Host Route        131072      2           0      2           0           131072      1      0
+FIB Host Route        131072      2           0      2           0           131072      2      0
+FIB Host Route        131072      2           0      2           0           131072      3      0
+MPLS Label            65536       0           0      0           0           65536       0      0
+MPLS Label            65536       0           0      0           0           65536       1      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+MPLS Label            65536       0           0      0           0           65536       2      0
+MPLS Label            65536       0           0      0           0           65536       3      0
+OG                    2048        0           0      0           0           2048        0      0
+OG                    2048        0           0      0           0           2048        1      0
+OG                    2048        0           0      0           0           2048        2      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+OG                    2048        0           0      0           0           2048        3      0
+SGACL Hosts           24576       0           0      0           0           24576       0      0
+SGACL Hosts           24576       0           0      0           0           24576       1      0
+SGACL Hosts           24576       0           0      0           0           24576       2      0
+SGACL Hosts           24576       0           0      0           0           24576       3      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+SGACL Cells           24576       0           0      0           0           24576       0      0
+SGACL Cells           24576       0           0      0           0           24576       1      0
+SGACL Cells           24576       0           0      0           0           24576       2      0
+SGACL Cells           24576       0           0      0           0           24576       3      0
+Security ACL IN       5120        50          0      50          0           21504       0      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+Security ACL IN       5120        50          0      50          0           21504       1      0
+Security ACL IN       5120        50          0      50          0           21504       2      0
+Security ACL IN       5120        50          0      50          0           21504       3      0
+Security ACL IN       5120        50          0      50          0           21504       0      1
+Security ACL IN       5120        50          0      50          0           21504       1      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+Security ACL IN       5120        50          0      50          0           21504       2      1
+Security ACL IN       5120        50          0      50          0           21504       3      1
+Security ACL OUT      5120        14          0      14          0           21504       0      0
+Security ACL OUT      5120        14          0      14          0           21504       1      0
+Security ACL OUT      5120        14          0      14          0           21504       2      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+Security ACL OUT      5120        14          0      14          0           21504       3      0
+Security ACL OUT      5120        14          0      14          0           21504       0      1
+Security ACL OUT      5120        14          0      14          0           21504       1      1
+Security ACL OUT      5120        14          0      14          0           21504       2      1
+Security ACL OUT      5120        14          0      14          0           21504       3      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+QOS ACL IN            1024        0           0      0           0           5120        0      0
+QOS ACL IN            1024        0           0      0           0           5120        1      0
+QOS ACL IN            1024        0           0      0           0           5120        2      0
+QOS ACL IN            1024        0           0      0           0           5120        3      0
+QOS ACL IN            1024        0           0      0           0           5120        0      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+QOS ACL IN            1024        0           0      0           0           5120        1      1
+QOS ACL IN            1024        0           0      0           0           5120        2      1
+QOS ACL IN            1024        16          1      16          0           5120        3      1
+QOS ACL OUT           1024        0           0      0           0           5120        0      0
+QOS ACL OUT           1024        0           0      0           0           5120        1      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+QOS ACL OUT           1024        0           0      0           0           5120        2      0
+QOS ACL OUT           1024        0           0      0           0           5120        3      0
+QOS ACL OUT           1024        0           0      0           0           5120        0      1
+QOS ACL OUT           1024        0           0      0           0           5120        1      1
+QOS ACL OUT           1024        0           0      0           0           5120        2      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+QOS ACL OUT           1024        0           0      0           0           5120        3      1
+PBR/NAT ACL IN        1024        2           0      2           0           8192        0      0
+PBR/NAT ACL IN        1024        2           0      2           0           8192        1      0
+PBR/NAT ACL IN        1024        2           0      2           0           8192        2      0
+PBR/NAT ACL IN        1024        2           0      2           0           8192        3      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+PBR/NAT ACL IN        1024        2           0      2           0           8192        0      1
+PBR/NAT ACL IN        1024        2           0      2           0           8192        1      1
+PBR/NAT ACL IN        1024        2           0      2           0           8192        2      1
+PBR/NAT ACL IN        1024        2           0      2           0           8192        3      1
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        0      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        1      0
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        2      0
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        3      0
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        0      1
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        1      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        2      1
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        3      1
+Mirror ACL IN         256         0           0      0           0           1024        0      0
+Mirror ACL IN         256         0           0      0           0           1024        1      0
+Mirror ACL IN         256         0           0      0           0           1024        2      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+Mirror ACL IN         256         0           0      0           0           1024        3      0
+Mirror ACL IN         256         0           0      0           0           1024        0      1
+Mirror ACL IN         256         0           0      0           0           1024        1      1
+Mirror ACL IN         256         0           0      0           0           1024        2      1
+Mirror ACL IN         256         0           0      0           0           1024        3      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+Mirror ACL OUT        256         0           0      0           0           1024        0      0
+Mirror ACL OUT        256         0           0      0           0           1024        1      0
+Mirror ACL OUT        256         0           0      0           0           1024        2      0
+Mirror ACL OUT        256         0           0      0           0           1024        3      0
+Mirror ACL OUT        256         0           0      0           0           1024        0      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+Mirror ACL OUT        256         0           0      0           0           1024        1      1
+Mirror ACL OUT        256         0           0      0           0           1024        2      1
+Mirror ACL OUT        256         0           0      0           0           1024        3      1
+FNF ACL IN            256         0           0      0           0           2048        0      0
+FNF ACL IN            256         0           0      0           0           2048        1      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FNF ACL IN            256         0           0      0           0           2048        2      0
+FNF ACL IN            256         0           0      0           0           2048        3      0
+FNF ACL IN            256         0           0      0           0           2048        0      1
+FNF ACL IN            256         0           0      0           0           2048        1      1
+FNF ACL IN            256         0           0      0           0           2048        2      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FNF ACL IN            256         0           0      0           0           2048        3      1
+FNF ACL OUT           256         0           0      0           0           2048        0      0
+FNF ACL OUT           256         0           0      0           0           2048        1      0
+FNF ACL OUT           256         0           0      0           0           2048        2      0
+FNF ACL OUT           256         0           0      0           0           2048        3      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FNF ACL OUT           256         0           0      0           0           2048        0      1
+FNF ACL OUT           256         0           0      0           0           2048        1      1
+FNF ACL OUT           256         0           0      0           0           2048        2      1
+FNF ACL OUT           256         0           0      0           0           2048        3      1
+FNF Flow IN           0           0           0      0           0           32768       0      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FNF Flow IN           0           0           0      0           0           32768       1      0
+FNF Flow IN           0           0           0      0           0           32768       2      0
+FNF Flow IN           0           0           0      0           0           32768       3      0
+FNF Flow IN           0           0           0      0           0           32768       0      1
+FNF Flow IN           0           0           0      0           0           32768       1      1
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FNF Flow IN           0           0           0      0           0           32768       2      1
+FNF Flow IN           0           0           0      0           0           32768       3      1
+FNF Flow OUT          0           0           0      0           0           32768       0      0
+FNF Flow OUT          0           0           0      0           0           32768       1      0
+FNF Flow OUT          0           0           0      0           0           32768       2      0
+
+NPI SDM Feature Table Entries
+
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+-----------------------------------------------------------------------------------------------------
+FNF Flow OUT          0           0           0      0           0           32768       3      0
+FNF Flow OUT          0           0           0      0           0           32768       0      1
+FNF Flow OUT          0           0           0      0           0           32768       1      1
+FNF Flow OUT          0           0           0      0           0           32768       2      1
+FNF Flow OUT          0           0           0      0           0           32768       3      1

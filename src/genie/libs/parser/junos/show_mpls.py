@@ -79,7 +79,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Local LDP Identifier: 10.94.1.1:0
         p1 = re.compile(r'^Local +LDP +Identifier: '
-                        '(?P<local_ldp_identifier>[\d\.\:]+)$')
+                        r'(?P<local_ldp_identifier>[\d\.\:]+)$')
 
         # Discovery Sources:
         p2 = re.compile(r'^Discovery +Sources:$')
@@ -87,7 +87,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         # TenGigE0/3/0/0 (0xa0004c0) : xmit/recv
         # TenGigE0/3/0/26 (0xa000e00) : xmit/recv
         p3 = re.compile(r'^(?P<interface>\S+) \((?P<interface_hex>[\w]+)\)'
-                        ' : (?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+                        r' : (?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
         # VRF: 'default' (0x60000000)
         p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\((?P<vrf_hex>[\w]+)\)$')
@@ -97,12 +97,12 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Source address: 10.120.0.1; Transport address: 10.94.1.1
         p6 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
-                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+                        r' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
 
         # Hold time: 15 sec (local:15 sec, peer:45 sec)
         p7 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec '
-                        '\(local:(?P<proposed_local>\d+) +sec, '
-                        'peer:(?P<proposed_peer>\d+) +sec\)$')
+                        r'\(local:(?P<proposed_local>\d+) +sec, '
+                        r'peer:(?P<proposed_peer>\d+) +sec\)$')
 
         # (expiring in 11 sec)
         # (expiring in 14.5 sec)
@@ -110,11 +110,11 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Established: Nov  6 14:39:26.164 (5w2d ago)
         p9 = re.compile(r'^Established: +(?P<established_date>\S.*) '
-                        '+\((?P<established_elapsed>\S*) +ago\)$')
+                        r'+\((?P<established_elapsed>\S*) +ago\)$')
 
         # Hello interval: 5 sec (due in 563 msec)
         p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
-                        ' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
+                        r' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
 
         # Quick-start: Enabled
         p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
@@ -125,7 +125,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         #     Jan  4 05:20:34.814: User cleared session manually
         #     Jan  4 05:28:48.641: User cleared session manually
         p13 = re.compile(r'^(?P<timestamp>[A-Z][a-z]{2}\s+[0-9]{1,2}\s[0-9:.]+)'
-                         ':\s+(?P<reason>[\w\s]+)$')
+                         r':\s+(?P<reason>[\w\s]+)$')
 
         #         (Last up for 00:06:56)
         #         (Last up for 00:08:05)
@@ -631,7 +631,7 @@ class ShowMPLSLSPNameDetail(ShowMPLSLSPNameDetailSchema):
                     for k, v in group.items():
                         if v is not None:
                             if k == 'interface_name':
-                                v = re.search('\((.+?)\)',v).group(1)
+                                v = re.search(r'\((.+?)\)',v).group(1)
                                 packet_dict[k.replace('_', '-')] = v
                             else:
                                 packet_dict[k.replace('_', '-')] = v

@@ -1,0 +1,23 @@
+FED DHCP SNOOPING VLAN Data :
+  Vlan= 50
+  Multicast Group ID:
+    Multicast Group with OID(3476) on ASIC(0)
+    Multicast Group with OID(3415) on ASIC(1)
+  Trusted ports multicast group GID:: 0x2043
+  Punject Switch Profile: FALSE
+  No trust ports for this vlan
+
+  ===== ASIC Specific Section =====
+
+  Information about ACL with OID(1438) on ASIC(0)
+    Position Protocol Src Port Dst Port Action  Counter OID
+    -------------------------------------------------------
+    0        UDP      68       67       PUNT    1439
+    1        UDP      67       68       PUNT    1439
+    2        UDP      67       67       PUNT    1439
+  Information about ACL with OID(1372) on ASIC(1)
+    Position Protocol Src Port Dst Port Action  Counter OID
+    -------------------------------------------------------
+    0        UDP      68       67       PUNT    1373
+    1        UDP      67       68       PUNT    1373
+    2        UDP      67       67       PUNT    1373

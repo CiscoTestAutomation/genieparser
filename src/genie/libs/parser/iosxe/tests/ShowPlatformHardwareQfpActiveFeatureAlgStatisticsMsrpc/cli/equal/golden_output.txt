@@ -1,0 +1,28 @@
+Router#show platform hardware qfp active feature alg statistics msrpc
+
+MSRPC total packets: 8
+MSRPC Tolerance Switch: OFF
+MSRPC non data packets: 4
+MSRPC BIND packets: 1
+MSRPC BIND_ACK packets: 1
+MSRPC ALTER_CTX packets: 0
+MSRPC ALTER_CTX_RESP packets: 0
+MSRPC REQUEST packets: 1
+MSRPC RESPONSE packets: 1
+MSRPC Number of EPM sessions: 1
+MSRPC Number of iSystem sessions: 0
+MSRPC Number of tokens created: 1
+MSRPC bad order packets: 0
+MSRPC bad uuid packets: 0
+MSRPC malformed packets: 0
+MSRPC non standard packets: 0
+MSRPC VFRed packets: 0
+MSRPC vTCP packets: 0
+MSRPC internal errors: 0
+MSRPC chunk requests: 0
+MSRPC mem creation fail (scb): 0
+MSRPC scb allocated: 1
+MSRPC scb freed: 0
+MSRPC extended tokens failed: 0
+MSRPC extended tokens allocated: 0
+MSRPC extended tokens freed: 0

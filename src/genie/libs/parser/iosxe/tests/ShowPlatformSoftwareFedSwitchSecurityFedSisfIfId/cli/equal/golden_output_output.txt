@@ -1,0 +1,193 @@
+FED SISF PORT Data : 
+
+  Interface ID (if-id) = 1035 
+
+  Interface name = GigabitEthernet1/0/4 
+
+  Interface OID = 1090 
+
+  Target Port: TRUE 
+
+  SISF enable: TRUE 
+
+    Interface Local: TRUE on ASIC 0x1 
+
+    EtherChannel member: FALSE 
+
+    Interface active: TRUE 
+
+    Internal error = None 
+
+    Low-level error = None 
+
+  EtherChannel: FALSE 
+
+  EtherChannel ID = 0 
+
+  Reference count = 0 
+
+  Number of OIDs programmed = 1 on ASIC 0x1 
+
+  No ACL diagnostic = 0 
+
+  Invalid ACL diagnostic = 0 
+
+  Redundant active diagnostic = 0 
+
+  Redundant deactivate diagnostic = 0 
+
+
+
+  ===== ASIC Specific Section ===== 
+
+
+
+  Information about ACL with OID(557) on ASIC(0) 
+
+    Position Protocol Src Port Dst Port Action  Counter OID 
+
+    ------------------------------------------------------- 
+
+    0        UDP      547      0        PUNT    558  
+
+    1        UDP      0        547      PUNT    559  
+
+    2        UDP      0        546      PUNT    560  
+
+
+
+    Position Protocol Message Type                     Code      Action  Counter OID 
+
+    -------------------------------------------------------------------------------- 
+
+    3        ICMPv6   Neighbor Solicitation            0         PUNT    561  
+
+    4        ICMPv6   Neighbor Advertisement           0         PUNT    562  
+
+    5        ICMPv6   Router Solicitation              0         PUNT    563  
+
+    6        ICMPv6   Router Advertisement             0         PUNT    564  
+
+    7        ICMPv6   Redirect Message                 0         PUNT    565  
+
+    8        ICMPv6   Duplicate Address Request        0         PUNT    566  
+
+    9        ICMPv6   Duplicate Address Confirmation   0         PUNT    567  
+
+
+
+FED SISF PORT Data : 
+
+  Interface ID (if-id) = 1044 
+
+  Interface name = GigabitEthernet1/0/13 
+
+  Interface OID = 0 
+
+  Target Port: TRUE 
+
+  SISF enable: FALSE 
+
+    Interface Local: TRUE on ASIC 0x1 
+
+    EtherChannel member: TRUE (Not programmed) 
+
+    Interface active: TRUE 
+
+    Internal error = None 
+
+    Low-level error = None 
+
+  EtherChannel: FALSE 
+
+  EtherChannel ID = 1169 
+
+  Reference count = 0 
+
+  Number of OIDs programmed = 0 on ASIC 0x0 
+
+  No ACL diagnostic = 0 
+
+  Invalid ACL diagnostic = 0 
+
+  Redundant active diagnostic = 0 
+
+  Redundant deactivate diagnostic = 0 
+
+
+
+FED SISF PORT Data : 
+
+  Interface ID (if-id) = 1169 
+
+  Interface name = Port-channel128 
+
+  Interface OID = 2090 
+
+  Target Port: TRUE 
+
+  SISF enable: TRUE 
+
+    Interface Local: TRUE on ASIC 0x1 
+
+    EtherChannel member: FALSE 
+
+    Interface active: TRUE 
+
+    Internal error = None 
+
+    Low-level error = None 
+
+  EtherChannel: TRUE 
+
+  EtherChannel ID = 0 
+
+  Reference count = 1 
+
+  Number of OIDs programmed = 1 on ASIC 0x1 
+
+  No ACL diagnostic = 0 
+
+  Invalid ACL diagnostic = 0 
+
+  Redundant active diagnostic = 0 
+
+  Redundant deactivate diagnostic = 0 
+
+
+
+  ===== ASIC Specific Section ===== 
+
+
+
+  Information about ACL with OID(557) on ASIC(0) 
+
+    Position Protocol Src Port Dst Port Action  Counter OID 
+
+    ------------------------------------------------------- 
+
+    0        UDP      547      0        PUNT    558  
+
+    1        UDP      0        547      PUNT    559  
+
+    2        UDP      0        546      PUNT    560  
+
+
+
+    Position Protocol Message Type                     Code      Action  Counter OID 
+
+    -------------------------------------------------------------------------------- 
+
+    3        ICMPv6   Neighbor Solicitation            0         PUNT    561  
+
+    4        ICMPv6   Neighbor Advertisement           0         PUNT    562  
+
+    5        ICMPv6   Router Solicitation              0         PUNT    563  
+
+    6        ICMPv6   Router Advertisement             0         PUNT    564  
+
+    7        ICMPv6   Redirect Message                 0         PUNT    565  
+
+    8        ICMPv6   Duplicate Address Request        0         PUNT    566  
+
+    9        ICMPv6   Duplicate Address Confirmation   0         PUNT    567

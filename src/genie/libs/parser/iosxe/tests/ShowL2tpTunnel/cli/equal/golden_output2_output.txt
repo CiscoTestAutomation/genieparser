@@ -1,0 +1,5 @@
+L2TP Tunnel Information Total tunnels 1 sessions 1
+
+LocTunID RemTunID Remote Name State Remote Address Sessn L2TP Class/
+Count VPDN Group
+2311074340 2784131943 fsw-TSN-2 est 150.0.0.1 1 l2tp_default_class

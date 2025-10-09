@@ -1,0 +1,43 @@
+Power Supply:
+Voltage: 12 Volts
+Power                      Actual             Actual        Total
+Supply    Model            Output             Input        Capacity     Status
+                           (Watts )           (Watts )     (Watts )
+-------  ----------  ---------------  ------  ----------  --------------------
+1        NXA-PAC-1500W-PI      548 W              584 W      1500 W      Ok
+2        ------------            0 W                0 W         0 W   Absent
+
+
+Power Usage Summary:
+--------------------
+Power Supply redundancy mode (configured)                Non-Redundant(combined)
+Power Supply redundancy mode (operational)               Non-Redundant(combined)
+
+Total Power Capacity (based on configured mode)            1500.00 W
+Total Grid-A (first half of PS slots) Power Capacity       1500.00 W
+Total Grid-B (second half of PS slots) Power Capacity         0.00 W
+Total Power of all Inputs (cumulative)                     1500.00 W
+Total Power Output (actual draw)                            548.00 W
+Total Power Input (actual draw)                             584.00 W
+Total Power Allocated (budget)                                N/A   
+Total Power Available for additional modules                  N/A   
+
+
+Power Usage details:
+--------------------
+Power reserved for Supervisor(s):                             N/A   
+Power reserved for Fabric, SC Module(s):                      N/A   
+Power reserved for Fan Module(s):                             N/A   
+Total power reserved for Sups,SCs,Fabrics,Fans:               N/A   
+
+Are all inlet cords connected: No
+
+Power supply details:
+---------------------
+PS_1 total capacity:    1500 W   Voltage:12V
+
+Pin:584.00W  Vin:207.50V    Iin:2.88A    Pout:548.00W    Vout:12.01V    Iout:45.50A
+
+Cord connected to 220V AC
+Software-Alarm: No
+Hardware alarm_bits 

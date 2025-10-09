@@ -1,0 +1,54 @@
+show post
+Stored system POST messages:
+
+Switch 1
+---------
+
+POST: CRYPTO Tests : Begin
+POST: CRYPTO Tests : End, Status Passed
+
+POST: PORT Loopback: loopback Test : Begin
+POST: PORT Loopback: loopback Test : End, Status Passed
+
+POST: SIF Tests : Begin
+POST: SIF Tests : End, Status Passed
+
+POST: Thermal, Temperature Tests : Begin
+POST: Thermal, Temperature Tests : End, Status Passed
+
+POST: Inline Power Controller Tests : Begin
+POST: Inline Power Controller Tests : End, Status Passed
+Switch 2
+---------
+
+POST: CRYPTO Tests : Begin
+POST: CRYPTO Tests : End, Status Passed
+
+POST: PORT Loopback: loopback Test : Begin
+POST: PORT Loopback: loopback Test : End, Status Passed
+
+POST: SIF Tests : Begin
+POST: SIF Tests : End, Status Passed
+
+POST: Thermal, Temperature Tests : Begin
+POST: Thermal, Temperature Tests : End, Status Passed
+
+POST: Inline Power Controller Tests : Begin
+POST: Inline Power Controller Tests : End, Status Passed
+Switch 3
+---------
+
+POST: CRYPTO Tests : Begin
+POST: CRYPTO Tests : End, Status Passed
+
+POST: PORT Loopback: loopback Test : Begin
+POST: PORT Loopback: loopback Test : End, Status Passed
+
+POST: SIF Tests : Begin
+POST: SIF Tests : End, Status Passed
+
+POST: Thermal, Temperature Tests : Begin
+POST: Thermal, Temperature Tests : End, Status Passed
+
+POST: Inline Power Controller Tests : Begin
+POST: Inline Power Controller Tests : End, Status Passed

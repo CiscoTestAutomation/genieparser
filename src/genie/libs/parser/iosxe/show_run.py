@@ -8,10 +8,13 @@ IOSXE parsers for the following show commands:
     * 'show running-config aaa'
     * 'show running-config nve'
     * 'show running-config | section bgp'
+    * 'show running-config all | section class {class_map}'
+    * 'show running-config vrf'
 '''
 
 # Python
 import re
+import logging
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -20,6 +23,8 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, ListOf, \
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+log = logging.getLogger(__name__)
 
 # =================================================
 # Schema for:
@@ -88,9 +93,9 @@ class ShowRunPolicyMap(ShowRunPolicyMapSchema):
         # police cir 100000 pir  70000 conform-action transmit  exceed-action drop
         # police cir 8000000 bc 4000 be 1000 conform-action transmit  exceed-action transmit  violate-action drop
         p1 = re.compile(r'^police +cir +(?P<cir_bps>(\d+))( +pir +(?P<pir_bps>(\d+)))?'
-            '( +bc +(?P<cir_bc_bytes>(\d+)))?( +be +(?P<cir_be_bytes>(\d+)))?'
-            ' +conform-action +(?P<conformed>(\w+)) +exceed-action +(?P<exceeded>(\w+))'
-            '( +violate-action +(?P<violated>(\w+)))?$')
+            r'( +bc +(?P<cir_bc_bytes>(\d+)))?( +be +(?P<cir_be_bytes>(\d+)))?'
+            r' +conform-action +(?P<conformed>(\w+)) +exceed-action +(?P<exceeded>(\w+))'
+            r'( +violate-action +(?P<violated>(\w+)))?$')
 
         # policy-map L3VPN-out_child
         # policy-map type queueing child
@@ -461,7 +466,13 @@ class ShowRunInterfaceSchema(MetaParser):
                             }
                         }
                     }
-                }
+                },
+                Optional('ip_verify_unicast_source_reachable_via'): str,
+                Optional('ip_verify_unicast_source_reachable_via_rx'): str,
+                Optional('ip_verify_unicast_source_reachable_via_rx_allow_self_ping'): bool,
+                Optional('ip_verify_unicast_source_reachable_via_rx_acl'): str,
+                Optional('pnp_startup_vlan'): int,
+
             }
         }
     }
@@ -848,6 +859,21 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # service-policy type queueing output 2p6q
         p112 = re.compile(r'^service-policy +type +(?P<policy_type>[\S]+) +output +(?P<output_name>[\S]+)$')
+
+        # ip verify unicast source reachable-via any
+        p113 = re.compile(r'^ip verify unicast source reachable-via (?P<reachable_via>\S+)$')
+        
+        # ip verify unicast source reachable-via rx
+        p114 = re.compile(r'^ip verify unicast source reachable-via rx$')
+        
+        # ip verify unicast source reachable-via rx allow-self-ping
+        p115 = re.compile(r'^ip verify unicast source reachable-via rx allow-self-ping$')
+        
+        # ip verify unicast source reachable-via rx 102
+        p116 = re.compile(r'^ip verify unicast source reachable-via rx (?P<acl>\S+)$')
+
+        # pnp startup-vlan 100
+        p117 = re.compile(r'^pnp startup-vlan (?P<vlan>\d+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -1734,6 +1760,39 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                     'policy_type': group['policy_type'],
                     'output_name': group['output_name']
                 })
+                continue
+
+            # ip verify unicast source reachable-via any
+            m = p113.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_verify_unicast_source_reachable_via': group['reachable_via']})
+                continue
+        
+            # ip verify unicast source reachable-via rx
+            m = p114.match(line)
+            if m:
+                intf_dict.update({'ip_verify_unicast_source_reachable_via_rx': 'rx'})
+                continue
+        
+            # ip verify unicast source reachable-via rx allow-self-ping
+            m = p115.match(line)
+            if m:
+                intf_dict.update({'ip_verify_unicast_source_reachable_via_rx_allow_self_ping': True})
+                continue
+        
+            # ip verify unicast source reachable-via rx 102
+            m = p116.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'ip_verify_unicast_source_reachable_via_rx_acl': group['acl']})
+                continue
+            
+            # Add this block in the main parsing loop
+            m = p117.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['pnp_startup_vlan'] = int(group['vlan'])
                 continue
 
         return config_dict
@@ -2695,7 +2754,9 @@ class ShowRunningConfigAAAUsernameSchema(MetaParser):
                 Optional('common_criteria_policy'): str,
                 Optional('view'): str,
                 Optional('type'): str,
+                Optional('autocommand'): str,
                 Optional('onetime'): bool,
+                Optional('nopassword'): bool,
                 Optional('secret'): {
                     Optional('type'): int,
                     Optional('secret'): str,
@@ -2841,36 +2902,44 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
         else:
             out = output
 
-        # username testuser password 0 lab
-        p1 = re.compile(r'^username +(?P<username>\S+) +password +(?P<type>\d) +(?P<password>.*)$')
+        # NOTE: All of the following regular expressions should be anchored to
+        # the begining of the line ('^'). As each is used the line will be
+        # shortened. Think of this as popping arguments (and their parameters)
+        # off of a stack (the front of the line).
+        #
+        # There are some arguments that cannot have any subsequent arguments.
+        # These are:
+        # 1) password
+        # 2) secret
+        # 3) autocommand
+        # These arguments shall also match the end of the line ('$').
+        #
+        # All arguments that are not matched to the end of the line shall match
+        # an optional trailing space (' ?').
 
-        # username testuser common-criteria-policy Test-CC password 0 password
-        p2 = re.compile(
-            r'^username +(?P<username>\S+) +common-criteria-policy +(?P<common_criteria_policy>.*) '
-            r'+password +(?P<type>\d) +(?P<password>.*)$')
+        # username testuser
+        username_cmd = re.compile(r'^username (?P<username>\S+) ?')
 
-        # username testuser secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
-        p3 = re.compile(r'^username +(?P<username>\S+) +secret +(?P<type>\d) +(?P<secret>.*)$')
+        # common-criteria-policy Test-CC
+        common_criteria_policy = re.compile(r'^common-criteria-policy (?P<common_criteria_policy>\S+) ?')
 
-        # username testuser one-time secret 9 $9$AuJ8xgW8aBBuF.$HyAzLk.3ILFsKrEvd4YjaAHbtonVMLikXw2pnrlkYJY
-        p4 = re.compile(
-            r'^username +(?P<username>\S+) +one-time +(?P<Onetime>)\s*secret +(?P<type>\d+) +(?P<secret>.*)$')
+        # secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
+        secret = re.compile(r'^secret (?P<type>\d) (?P<secret>.*)$')
 
-        # username testuser privilege 15 password 0 lab
-        p5 = re.compile(
-            r'^username +(?P<username>\S+) +privilege +(?P<privilege>\d+) +password +(?P<type>\d) +(?P<password>.*)$')
+        # privilege 15
+        privilege = re.compile(r'^privilege (?P<privilege>\d+) ?')
 
-        # username testuser common-criteria-policy Test-CC secret 9 $9$7K9qbCZMJa2Vuk$6bS3.Bv7AkBXhTHpTH9V9fhMnJCQe1a9O7xBWHtOKo.
-        p6 = re.compile(
-            r'^username +(?P<username>\S+) +common-criteria-policy +(?P<common_criteria_policy>.*) '
-            r'+secret +(?P<type>\d) +(?P<secret>.*)$')
+        # one-time
+        onetime = re.compile(r'^one-time ?')
 
-        # username testuser one-time password 0 password
-        p7 = re.compile(
-            r'^username +(?P<username>\S+) +one-time +(?P<Onetime>)\s*password +(?P<type>\d) +(?P<password>.*)$')
+        # nopassword
+        nopassword = re.compile(r'^nopassword ?')
 
-        # username developer privilege 15 secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A
-        p8 = re.compile(r'^username +(?P<username>\S+) +privilege +(?P<privilege>\d+) +secret +(?P<secret_type>\d+) +(?P<secret>\S+)$')
+        # password 0 lab
+        password = re.compile(r'^password (?P<type>\d) (?P<password>.*)$')
+
+        # autocommand show ip bgp summary
+        autocommand = re.compile(r'^autocommand (?P<autocommand>.*)$')
 
         # Initial return dictionary
         ret_dict = {}
@@ -2878,102 +2947,90 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # username testuser password 0 lab
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
+            # username testuser
+            m = username_cmd.match(line)
+            if not m:
+                # CLAIM: This is not a line with a 'username' command.
                 continue
 
-            # username testuser common-criteria-policy Test-CC password 0 password
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['common_criteria_policy'] = group['common_criteria_policy']
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
-                continue
+            # CLAIM: this is a username line
+            # GOAL: extract the specified username and switch to that
+            # sub-dictionary:
+            group = m.groupdict()
+            username = group['username']
+            users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
 
-            # username testuser secret 9 $9$A2OfV.30kNlIhE$ZEJQIT6aUj.TfCzqGQr.h4AmjQd/bWikQaGRlaLv0nQ
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                secret_dict = users_dict.setdefault('secret', {})
-                secret_dict['type'] = int(group['type'])
-                secret_dict['secret'] = group['secret']
-                continue
+            # GOAL: remove the matched portion from the begining of the line
+            # so that we can match the subsequent argument (if any):
+            line = line[m.end():]
 
-            # username testuser one-time secret 9 $9$AuJ8xgW8aBBuF.$HyAzLk.3ILFsKrEvd4YjaAHbtonVMLikXw2pnrlkYJY
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['onetime'] = True
-                secret_dict = users_dict.setdefault('secret', {})
-                secret_dict['type'] = int(group['type'])
-                secret_dict['secret'] = group['secret']
-                continue
+            while line:
+                # GOAL: parse through the line an argument at a time,
+                # shortening the line as we go.
 
-            # username testuser privilege 15 password 0 lab
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['privilege'] = int(group['privilege'])
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
-                continue
+                # GOAL: match the 'common-criteria-policy' option and return its parameter
+                # Sample: "common-criteria-policy MyPolicy"
+                if m := common_criteria_policy.match(line):
+                    group = m.groupdict()
+                    users_dict['common_criteria_policy'] = group['common_criteria_policy']
+                    line = line[m.end():]
+                    continue
 
-            # username testuser common-criteria-policy Test-CC secret 9 $9$7K9qbCZMJa2Vuk$6bS3.Bv7AkBXhTHpTH9V9fhMnJCQe1a9O7xBWHtOKo.
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['common_criteria_policy'] = group['common_criteria_policy']
-                secret_dict = users_dict.setdefault('secret', {})
-                secret_dict['type'] = int(group['type'])
-                secret_dict['secret'] = group['secret']
-                continue
+                # GOAL: match the 'privilege' option and return its parameter
+                # Sample: "privilege 15"
+                if m := privilege.match(line):
+                    group = m.groupdict()
+                    users_dict['privilege'] = int(group['privilege'])
+                    line = line[m.end():]
+                    continue
 
-            # username testuser one-time password 0 password
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                username = group['username']
-                users_dict = ret_dict.setdefault('username', {}).setdefault(username, {})
-                users_dict['onetime'] = True
-                pass_dict = users_dict.setdefault('password', {})
-                pass_dict['type'] = int(group['type'])
-                pass_dict['password'] = group['password']
-                continue
+                # GOAL: match the 'secret' option and return its parameters ('type' and 'secret')
+                # Sample: "secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A"
+                if m := secret.match(line):
+                    group = m.groupdict()
+                    pass_dict = users_dict.setdefault('secret', {})
+                    pass_dict['type'] = int(group['type'])
+                    pass_dict['secret'] = group['secret']
+                    line = line[m.end():]
+                    continue
 
-            # username developer privilege 15 secret 9 $9$oNguEA9um9vRx.$MsDk0DOy1rzBjKAcySWdNjoKcA7GetG9YNnKOs8S67A
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                user_dict = ret_dict.setdefault('username', {}).setdefault(group['username'], {})
-                user_dict.update({
-                    'privilege': int(group['privilege']),
-                })
+                # GOAL: match the 'onetime' flag
+                # Sample: "onetime"
+                if m := onetime.match(line):
+                    group = m.groupdict()
+                    users_dict['onetime'] = True
+                    line = line[m.end():]
+                    continue
 
-                secret_dict = user_dict.setdefault('secret', {})
-                secret_dict.update({
-                    'type': int(group['secret_type']),
-                    'secret': group['secret']
-                })
+                # GOAL: match the 'nopassword' flag
+                # Sample: "nopassword"
+                if m := nopassword.match(line):
+                    group = m.groupdict()
+                    users_dict['nopassword'] = True
+                    line = line[m.end():]
+                    continue
+
+                # GOAL: match the 'autocommand' option and return all subsequent text
+                # Sample: "autocommand show ip bgp summary"
+                if m := autocommand.match(line):
+                    group = m.groupdict()
+                    users_dict['autocommand'] = group['autocommand']
+                    line = line[m.end():]
+                    continue
+
+                # GOAL: match the 'password' option and return its parameters ('type' and 'password')
+                # Sample: "password 0 lab"
+                if m := password.match(line):
+                    group = m.groupdict()
+                    pass_dict = users_dict.setdefault('password', {})
+                    pass_dict['type'] = int(group['type'])
+                    pass_dict['password'] = group['password']
+                    line = line[m.end():]
+                    continue
+
+                # CLAIM: There is an unhandled argument.
+                log.warning(f"Unhandled argument in parser 'show running-config aaa username': {line}")
+                break
 
         return ret_dict
 
@@ -4771,5 +4828,518 @@ class ShowRunSectionMacAddress(ShowRunSectionMacAddressSchema):
                 ret_dict['mac_address'] = dict_val['mac_address']
                 ret_dict['type'] = dict_val['type']
                 ret_dict['port'] = dict_val['port']
+
+        return ret_dict
+        
+# ==========================================================================
+# Schema for :
+#   * 'show running-config all | section class {class_map}'
+# ===========================================================================
+class ShowRunningConfigAllClassMapSchema(MetaParser):
+
+    ''' Schema for :
+        * 'show running-config all | section class {class_map}'
+    '''
+
+    schema = {
+        'class': {
+            Any(): {
+                Optional('police'): {
+                    Optional('rate_pps'): int,
+                    Optional('rate'): int,
+                    },
+                },
+            },    
+        }                   
+
+# =====================================================================
+# Parser for:
+#   * 'show running-config all | section class {class_map}'
+# =====================================================================
+class ShowRunningConfigAllClassMap(ShowRunningConfigAllClassMapSchema):
+    ''' Parser for
+        * 'show running-config all | section class {class_map}'
+    '''
+
+    cli_command = 'show running-config all | section class {class_map}'
+
+    def cli(self, class_map='', output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command.format(class_map=class_map))
+
+        ret_dict={}
+        police_dict={}
+        class_map_dict={}
+
+        # class system-cpp-default-v4
+        p1 = re.compile(r'^class +(?P<class_map>([\w\-\_]+))$')
+
+        # police rate 2000 pps
+        # police rate 10000000000
+        p2 = re.compile(r'^police +rate +(?P<rate>\d+)\s*((?P<rate_mode>pps))?$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # class system-cpp-default-v4
+            m = p1.match(line)
+            if m:
+                class_map = m.groupdict()['class_map']
+                class_map_dict = ret_dict.setdefault('class', {}).setdefault(class_map, {})
+                continue
+
+            # police rate 2000 pps
+            # police rate 10000000000
+            m = p2.match(line)
+            if m:
+                #police_line = 1
+                police_dict = class_map_dict.setdefault('police', {})
+                if m.groupdict()['rate_mode']:
+                    police_dict['rate_pps'] = int(m.groupdict()['rate'])
+                else:
+                    police_dict['rate'] = int(m.groupdict()['rate'])
+                continue
+        return ret_dict
+
+class ShowRunningConfigAAARadiusServerSchema(MetaParser):
+    """Schema for show running-config aaa radius-server"""
+    schema = {
+        'radius_server': {
+            Any(): {
+                'address_type': str,
+                'address': str,
+                'key': str,
+                'dtls_port': int,
+                'dtls_watchdoginterval': int,
+                'dtls_retries': int,
+                'dtls_trustpoint_client': str,
+                'dtls_trustpoint_server': str,
+            }
+        }
+    }
+
+class ShowRunningConfigAAARadiusServer(ShowRunningConfigAAARadiusServerSchema):
+    """Parser for show running-config aaa radius-server"""
+
+    cli_command = 'show running-config aaa radius-server'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        radius_server_name = None
+
+        # Matching patterns
+        # radius server TMP_NAME
+        p1 = re.compile(r'^radius server (?P<name>\S+)$')
+
+        # address ipv4 16.0.0.104
+        p2 = re.compile(r'^address (?P<address_type>\S+) (?P<address>\S+)$')
+
+        # key radius/dtls
+        p3 = re.compile(r'^key (?P<key>\S+)$')
+
+        # dtls port 2083
+        p4 = re.compile(r'^dtls port (?P<dtls_port>\d+)$')
+
+        # dtls watchdoginterval 2
+        p5 = re.compile(r'^dtls watchdoginterval (?P<dtls_watchdoginterval>\d+)$')
+
+        # dtls retries 2
+        p6 = re.compile(r'^dtls retries (?P<dtls_retries>\d+)$')
+
+        # dtls trustpoint client Client
+        p7 = re.compile(r'^dtls trustpoint client (?P<dtls_trustpoint_client>\S+)$')
+
+        # dtls trustpoint server Server
+        p8 = re.compile(r'^dtls trustpoint server (?P<dtls_trustpoint_server>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # radius server TMP_NAME
+            m = p1.match(line)
+            if m:
+                radius_server_name = m.groupdict()['name']
+                radius_server_dict = ret_dict.setdefault('radius_server', {}).setdefault(radius_server_name, {})
+                continue
+
+            # address ipv4 16.0.0.104
+            m = p2.match(line)
+            if m:
+                radius_server_dict.update({
+                    'address_type': m.groupdict()['address_type'],
+                    'address': m.groupdict()['address']
+                })
+                continue
+
+            # key radius/dtls
+            m = p3.match(line)
+            if m:
+                radius_server_dict.update({'key': m.groupdict()['key']})
+                continue
+
+            # dtls port 2083
+            m = p4.match(line)
+            if m:
+                radius_server_dict.update({'dtls_port': int(m.groupdict()['dtls_port'])})
+                continue
+
+            # dtls watchdoginterval 2
+            m = p5.match(line)
+            if m:
+                radius_server_dict.update({'dtls_watchdoginterval': int(m.groupdict()['dtls_watchdoginterval'])})
+                continue
+
+            # dtls retries 2
+            m = p6.match(line)
+            if m:
+                radius_server_dict.update({'dtls_retries': int(m.groupdict()['dtls_retries'])})
+                continue
+
+            # dtls trustpoint client Client
+            m = p7.match(line)
+            if m:
+                radius_server_dict.update({'dtls_trustpoint_client': m.groupdict()['dtls_trustpoint_client']})
+                continue
+
+            # dtls trustpoint server Server
+            m = p8.match(line)
+            if m:
+                radius_server_dict.update({'dtls_trustpoint_server': m.groupdict()['dtls_trustpoint_server']})
+                continue
+
+        return ret_dict
+
+# =======================================================
+# Schema for 'show running-config vrf'
+# =======================================================
+class ShowRunningConfigVrfSchema(MetaParser):
+    """Schema for show running-config vrf"""
+    schema = {
+        Optional('vrf'): {
+            Any(): {
+                'type': str,  # 'ip vrf' or 'vrf definition'
+                Optional('rd'): str,
+                Optional('route_target'): {
+                    Optional('export'): list,
+                    Optional('import'): list,
+                },
+                Optional('address_family'): {
+                    Optional('ipv4'): dict,
+                    Optional('ipv6'): dict,
+                },
+                Optional('interfaces'): {
+                    Any(): {
+                        'ip_vrf_forwarding': str,
+                        Optional('ip_address'): str,
+                        Optional('ip_mask'): str,
+                        Optional('ip_nbar_protocol_discovery'): bool,
+                        Optional('ip_nat_inside'): bool,
+                        Optional('ip_nat_outside'): bool,
+                        Optional('negotiation_auto'): bool,
+                    }
+                },
+                Optional('nat_rules'): {
+                    Any(): {
+                        'type': str,  # 'inside' or 'outside'
+                        'local_ip': str,
+                        'global_ip': str,
+                        'vrf': str,
+                        Optional('match_in_vrf'): bool,
+                    }
+                },
+                Optional('routes'): {
+                    Any(): {
+                        'network': str,
+                        'mask': str,
+                        Optional('interface'): str,
+                        Optional('next_hop'): str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# =======================================================
+# Parser for 'show run vrf'
+# =======================================================
+class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
+    """Parser for show running-config vrf"""
+
+    cli_command = 'show running-config vrf'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Regex patterns
+        # ip vrf CUST_A
+        p1 = re.compile(r'^ip vrf (?P<vrf_name>\S+)$')
+
+        # vrf definition Mgmt-intf
+        p2 = re.compile(r'^vrf definition (?P<vrf_name>\S+)$')
+
+        # rd 100:1
+        p3 = re.compile(r'^\s*rd (?P<rd>\S+)$')
+
+        # route-target export 100:1
+        p4 = re.compile(r'^\s*route-target export (?P<rt_export>\S+)$')
+
+        # route-target import 100:1
+        p5 = re.compile(r'^\s*route-target import (?P<rt_import>\S+)$')
+
+        # address-family ipv4
+        p6 = re.compile(r'^\s*address-family ipv4$')
+
+        # address-family ipv6
+        p7 = re.compile(r'^\s*address-family ipv6$')
+
+        # exit-address-family
+        p8 = re.compile(r'^\s*exit-address-family$')
+
+        # interface TenGigabitEthernet0/0/8
+        p9 = re.compile(r'^interface (?P<interface>\S+)$')
+
+        # ip vrf forwarding CUST_A
+        p10 = re.compile(r'^\s*ip vrf forwarding (?P<vrf_name>\S+)$')
+
+        # vrf forwarding Mgmt-intf
+        p11 = re.compile(r'^\s*vrf forwarding (?P<vrf_name>\S+)$')
+
+        # ip address 15.0.0.1 255.255.255.0
+        # ip address 15.0.0.1/24
+        p12 = re.compile(r'^\s*ip address (?P<ip_address>\S+) (?P<ip_mask>\S+)$')
+
+        # ip nbar protocol-discovery
+        p13 = re.compile(r'^\s*ip nbar protocol-discovery$')
+
+        # ip nat inside
+        p14 = re.compile(r'^\s*ip nat inside$')
+
+        # ip nat outside
+        p15 = re.compile(r'^\s*ip nat outside$')
+
+        # negotiation auto
+        p16 = re.compile(r'^\s*negotiation auto$')
+
+        # ip nat inside source static 15.0.0.2 16.0.0.2 vrf CUST_A match-in-vrf
+        p17 = re.compile(r'^ip nat (?P<type>inside|outside) source static '
+                                  r'(?P<local_ip>\S+) (?P<global_ip>\S+) vrf '
+                                  r'(?P<vrf_name>\S+)(?P<match_in_vrf>\s+match-in-vrf)?$')
+
+        # ip route vrf CUST_A 15.0.0.0 255.0.0.0 TenGigabitEthernet0/0/8 15.0.0.2
+        p18 = re.compile(r'^ip route vrf (?P<vrf_name>\S+) (?P<network>\S+) (?P<mask>\S+) (?P<interface>\S+) (?P<next_hop>\S+)$')
+
+        # ip route vrf Mgmt-intf 223.255.254.0 255.255.255.0 1.46.0.1
+        p19 = re.compile(r'^ip route vrf (?P<vrf_name>\S+) (?P<network>\S+) (?P<mask>\S+) (?P<next_hop>\S+)$')
+
+        current_vrf = None
+        current_interface = None
+        current_interface_vrf = None
+        in_address_family = False
+        nat_counter = {}
+        route_counter = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Parse ip vrf
+            # ip vrf CUST_A
+            m = p1.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                current_vrf = vrf_name
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf_name, {})
+                vrf_dict['type'] = 'ip vrf'
+                nat_counter[vrf_name] = 0
+                route_counter[vrf_name] = 0
+                continue
+
+            # Parse vrf definition
+            # vrf definition Mgmt-intf
+            m = p2.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                current_vrf = vrf_name
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf_name, {})
+                vrf_dict['type'] = 'vrf definition'
+                nat_counter[vrf_name] = 0
+                route_counter[vrf_name] = 0
+                continue
+
+            # Parse rd
+            # rd 100:1
+            m = p3.match(line)
+            if m and current_vrf:
+                ret_dict['vrf'][current_vrf]['rd'] = m.group('rd')
+                continue
+
+            # Parse route-target export
+            # route-target export 100:1
+            m = p4.match(line)
+            if m and current_vrf:
+                rt_dict = ret_dict['vrf'][current_vrf].setdefault('route_target', {})
+                rt_export_list = rt_dict.setdefault('export', [])
+                rt_export_list.append(m.group('rt_export'))
+                continue
+
+            # Parse route-target import
+            # route-target import 100:1
+            m = p5.match(line)
+            if m and current_vrf:
+                rt_dict = ret_dict['vrf'][current_vrf].setdefault('route_target', {})
+                rt_import_list = rt_dict.setdefault('import', [])
+                rt_import_list.append(m.group('rt_import'))
+                continue
+
+            # Parse address-family ipv4
+            # address-family ipv4
+            m = p6.match(line)
+            if m and current_vrf:
+                af_dict = ret_dict['vrf'][current_vrf].setdefault('address_family', {})
+                af_dict['ipv4'] = {}
+                in_address_family = True
+                continue
+
+            # Parse address-family ipv6
+            # address-family ipv6
+            m = p7.match(line)
+            if m and current_vrf:
+                af_dict = ret_dict['vrf'][current_vrf].setdefault('address_family', {})
+                af_dict['ipv6'] = {}
+                in_address_family = True
+                continue
+
+            # Parse exit-address-family
+            # exit-address-family
+            m = p8.match(line)
+            if m:
+                in_address_family = False
+                continue
+
+            # Parse interface
+            # interface TenGigabitEthernet0/0/8
+            m = p9.match(line)
+            if m:
+                current_interface = m.group('interface')
+                current_interface_vrf = None
+                continue
+
+            # Parse ip vrf forwarding
+            # ip vrf forwarding CUST_A
+            m = p10.match(line)
+            if m and current_interface:
+                vrf_name = m.group('vrf_name')
+                current_interface_vrf = vrf_name
+                if vrf_name in ret_dict.get('vrf', {}):
+                    intf_dict = ret_dict['vrf'][vrf_name].setdefault('interfaces', {}).setdefault(current_interface, {})
+                    intf_dict['ip_vrf_forwarding'] = vrf_name
+                continue
+
+            # Parse vrf forwarding
+            # vrf forwarding Mgmt-intf
+            m = p11.match(line)
+            if m and current_interface:
+                vrf_name = m.group('vrf_name')
+                current_interface_vrf = vrf_name
+                if vrf_name in ret_dict.get('vrf', {}):
+                    intf_dict = ret_dict['vrf'][vrf_name].setdefault('interfaces', {}).setdefault(current_interface, {})
+                    intf_dict['ip_vrf_forwarding'] = vrf_name
+                continue
+
+            # Parse ip address
+            # ip address 15.0.0.1 255.255.255.0
+            # ip address 15.0.0.1/24
+            m = p12.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_address'] = m.group('ip_address')
+                intf_dict['ip_mask'] = m.group('ip_mask')
+                continue
+
+            # Parse ip nbar protocol-discovery
+            # ip nbar protocol-discovery
+            m = p13.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_nbar_protocol_discovery'] = True
+                continue
+
+            # Parse ip nat inside
+            # ip nat inside
+            m = p14.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_nat_inside'] = True
+                continue
+
+            # Parse ip nat outside
+            # ip nat outside
+            m = p15.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['ip_nat_outside'] = True
+                continue
+
+            # Parse negotiation auto
+            # negotiation auto
+            m = p16.match(line)
+            if m and current_interface and current_interface_vrf:
+                intf_dict = ret_dict['vrf'][current_interface_vrf]['interfaces'][current_interface]
+                intf_dict['negotiation_auto'] = True
+                continue
+
+            # Parse NAT static rules
+            # ip nat inside source static 15.0.0.2 16.0.0.2 vrf CUST_A match-in-vrf
+            m = p17.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                if vrf_name in ret_dict.get('vrf', {}):
+                    nat_counter[vrf_name] += 1
+                    nat_key = f"nat_rule_{nat_counter[vrf_name]}"
+                    nat_dict = ret_dict['vrf'][vrf_name].setdefault('nat_rules', {}).setdefault(nat_key, {})
+                    nat_dict['type'] = m.group('type')
+                    nat_dict['local_ip'] = m.group('local_ip')
+                    nat_dict['global_ip'] = m.group('global_ip')
+                    nat_dict['vrf'] = vrf_name
+                    if m.group('match_in_vrf'):
+                        nat_dict['match_in_vrf'] = True
+                continue
+
+            # Parse routes with interface
+            # ip route vrf CUST_A 15.0.0.0 255.0.0.0 TenGigabitEthernet0/0/8 15.0.0.2
+            m = p18.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                if vrf_name in ret_dict.get('vrf', {}):
+                    route_counter[vrf_name] += 1
+                    route_key = f"route_{route_counter[vrf_name]}"
+                    route_dict = ret_dict['vrf'][vrf_name].setdefault('routes', {}).setdefault(route_key, {})
+                    route_dict['network'] = m.group('network')
+                    route_dict['mask'] = m.group('mask')
+                    route_dict['interface'] = m.group('interface')
+                    route_dict['next_hop'] = m.group('next_hop')
+                continue
+
+            # Parse routes without interface
+            # ip route vrf Mgmt-intf 223.255.254.0 255.255.255.0 1.46.0.1
+            m = p19.match(line)
+            if m:
+                vrf_name = m.group('vrf_name')
+                if vrf_name in ret_dict.get('vrf', {}):
+                    route_counter[vrf_name] += 1
+                    route_key = f"route_{route_counter[vrf_name]}"
+                    route_dict = ret_dict['vrf'][vrf_name].setdefault('routes', {}).setdefault(route_key, {})
+                    route_dict['network'] = m.group('network')
+                    route_dict['mask'] = m.group('mask')
+                    route_dict['next_hop'] = m.group('next_hop')
+                continue
 
         return ret_dict

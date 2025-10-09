@@ -1,0 +1,32 @@
+--------------------------------------------------------------
+         ACLs details (programmed in datapath)
+--------------------------------------------------------------
+
+[CG ID: 272]    CG Name: implicit_deny_v6!pre-auth:xACSACLx-IPV6-PERMIT_ALL_IPV6_TRAFFIC-64a351c6!xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3:
+              Feature: Cgacl    Prot: IPv4
+              Region grp: 0xd00b87d8    Dir: Ingress
+              SDK-handle(asic: 0, OID: 0xB3C)
+
+    Seq Num:1
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0xB3D (0))
+    Result  action: PERMIT    Logging: NONE
+
+    Seq Num:2
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x11       0x0      0x0         0x0        0x44          0x43
+        M:  0xff       0x0      0x0         0x0        0xffff          0xffff
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0xB3E (0))
+    Result  action: PERMIT    Logging: NONE

@@ -1,0 +1,141 @@
+show platform hardware qfp active feature alg statistics
+
+ALG counters:
+
+
+
+ALG         Cntrl-Pkt        Parser-Err&Drop  Parser-No-Act
+
+-------------------------------------------------------------
+
+FTP         0                0                0              
+
+SIP         0                0                0              
+
+SKINNY      0                0                0              
+
+H225        0                0                0              
+
+H245        0                0                0              
+
+H225ras     0                0                0              
+
+RTSP        0                0                0              
+
+DNS         2                0                0              
+
+LDAP        0                0                0              
+
+TFTP        0                0                0              
+
+SHELL       0                0                0              
+
+LOGIN       0                0                0              
+
+EXEC        0                0                0              
+
+NETBIOS-DGM 0                0                0              
+
+PPTP        0                0                0              
+
+NETBIOS-NS  0                0                0              
+
+NETBIOS-SSN 0                0                0              
+
+MSRPC       0                0                0              
+
+
+
+
+
+ALG chunk pool:
+
+
+
+Pool-Name                  Used-Entries     Free-Entries     
+
+----------------------------------------------------------
+
+FTP pool                   0                640            
+
+SCCP pool                  0                160            
+
+SIP pool                   1                639            
+
+SIP pkt pool               0                160            
+
+SIP msg pool               0                320            
+
+SIP dbl pool               0                160            
+
+SIP dbl cfg pool           0                2048           
+
+RTSP pool                  0                160            
+
+H323 info pool             0                100            
+
+H323 fs olc pool           0                100            
+
+H323 indus pool            50               950            
+
+H323 tl olc pool           0                100            
+
+H323 msg info pool         0                100            
+
+DNS pool                   0                2048           
+
+LDAP pool                  0                128            
+
+LDAP pkt info pool         0                32             
+
+Sun RPC info pool          0                1024           
+
+MS RPC info pool           0                1024           
+
+SMTP l7 info pool          0                1200           
+
+SMTP command pool          0                3200           
+
+SMTP log filter pool       0                3200           
+
+SMTP mask pool             0                3200           
+
+IMAP info pool             0                1200           
+
+POP3 info pool             0                1200           
+
+GTP AIC ctxt pool          0                1200           
+
+GTP Req/Res pool           0                1200           
+
+GTP hash info pool         0                1200           
+
+GTP master pdp pool        0                1200           
+
+GTP secondary pdp pool     0                1200           
+
+GTP req_res hash entry pool  0                1200           
+
+
+
+
+
+Common ALG chunk pool:
+
+
+
+Pool-Name                  Used-Entries     Free-Entries     
+
+----------------------------------------------------------
+
+Act Token Pool             0                2048           
+
+Ext State Pool             0                160            
+
+HA ntuple hdr Pool         0                10000          
+
+
+
+M1#
+
+--- 11:12:50 ---

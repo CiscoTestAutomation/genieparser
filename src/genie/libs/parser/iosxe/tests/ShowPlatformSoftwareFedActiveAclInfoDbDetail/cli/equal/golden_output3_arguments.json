@@ -1,0 +1,7 @@
+{
+    "switch" : "switch",
+    "mode" : "active",
+    "feature_name": "sgacl",
+    "in_out" : "in ",
+    "cg_id" : "273"
+}

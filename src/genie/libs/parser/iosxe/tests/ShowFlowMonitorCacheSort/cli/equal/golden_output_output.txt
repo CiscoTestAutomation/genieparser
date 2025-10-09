@@ -1,0 +1,51 @@
+Processed 2 flows 
+
+Aggregated to 2 flows 
+
+Showing the top 2 flows 
+
+ 
+
+TRNS SOURCE PORT:                         68 
+
+TRNS DESTINATION PORT:                    67 
+
+CONNECTION IPV4 INITIATOR ADDRESS:        0.0.0.0 
+
+CONNECTION IPV4 RESPONDER ADDRESS:        255.255.255.255 
+
+CONNECTION RESPONDER PORT:                67 
+
+FLOW OBSPOINT ID:                         9 
+
+IP VERSION:                               4 
+
+IP PROTOCOL:                              17 
+
+APPLICATION NAME:                         layer7 dhcp 
+
+interface input:                          Gi3/0/1 
+
+flow direction:                           Input 
+
+flow cts source group tag:                0 
+
+counter bytes long:                       1002416 
+
+timestamp abs first:                      02:20:36.000 
+
+timestamp abs last:                       02:21:17.000 
+
+connection initiator:                     Initiator 
+
+connection count new:                     1 
+
+connection server packets counter:        0 
+
+connection client packets counter:        2021 
+
+connection initiator port:                68 
+
+connection server network bytes counter:  0 
+
+connection client network bytes counter:  1002416

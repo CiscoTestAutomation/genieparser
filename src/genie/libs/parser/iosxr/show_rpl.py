@@ -194,7 +194,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # prepend as-path 100 10
             p6 = re.compile(r'\s*prepend +as-path +(?P<set_as_path_prepend>[0-9]+)'
-                            ' *(?P<set_as_path_prepend_repeat_n>[0-9]+)$')
+                            r' *(?P<set_as_path_prepend_repeat_n>[0-9]+)$')
             m = p6.match(line)
             if m:
                 set_as_path_prepend = int(m.groupdict()['set_as_path_prepend'])
@@ -220,7 +220,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set community test additive
             p7_1 = re.compile(r'^\s*set +community +(?P<set_community_list>\S+)'
-                              ' *(?P<set_community_additive>(additive))$')
+                              r' *(?P<set_community_additive>(additive))$')
             m = p7_1.match(line)
             if m:
                 set_community_list = m.groupdict()['set_community_list']
@@ -236,9 +236,9 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set community (100:100, no-export, no-advertise) additive
             p8 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
-                            ' *(?P<set_community_no_export>(no-export)),'
-                            ' *(?P<set_community_no_advertise>(no-advertise))\)'
-                            ' *(?P<set_community_additive>(additive))$')
+                            r' *(?P<set_community_no_export>(no-export)),'
+                            r' *(?P<set_community_no_advertise>(no-advertise))\)'
+                            r' *(?P<set_community_additive>(additive))$')
             m = p8.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']
@@ -260,8 +260,8 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             #  set community (111:1, 222:1, no-advertise) additive
             p8_1 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
-                              ' *(?P<set_community_no_advertise>(no-advertise))\)'
-                              '(?: *(?P<set_community_additive>(additive)))?$')
+                              r' *(?P<set_community_no_advertise>(no-advertise))\)'
+                              r'(?: *(?P<set_community_additive>(additive)))?$')
             m = p8_1.match(line)
             if m:
                 set_community_no_advertise = m.groupdict()['set_community_no_advertise']
@@ -280,8 +280,8 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set community (100:100, no-export) additive
             p8_2 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
-                              ' *(?P<set_community_no_export>(no-export))\)'
-                              '(?: *(?P<set_community_additive>(additive)))?$')
+                              r' *(?P<set_community_no_export>(no-export))\)'
+                              r'(?: *(?P<set_community_additive>(additive)))?$')
             m = p8_2.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']
@@ -300,8 +300,8 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set community (100:1, 200:1, 300:1, no-export, no-advertise)
             p8_3 = re.compile(r'^\s*set +community +\((?P<set_community>[0-9\:\s\,]+),'
-                              ' *(?P<set_community_no_export>(no-export)),'
-                              ' *(?P<set_community_no_advertise>(no-advertise))\)$')
+                              r' *(?P<set_community_no_export>(no-export)),'
+                              r' *(?P<set_community_no_advertise>(no-advertise))\)$')
             m = p8_3.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']
@@ -320,9 +320,9 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set community (100:100, no-export, no-advertise) additive
             p8_4 = re.compile(r'^\s*set +community +\((?:(?P<set_community>[0-9\:\s\,]+),)?'
-                              '(?: *(?P<set_community_no_export>(no-export)),)?'
-                              '(?: *(?P<set_community_no_advertise>(no-advertise)))?\)'
-                              '(?: *(?P<set_community_additive>(additive)))?$')
+                              r'(?: *(?P<set_community_no_export>(no-export)),)?'
+                              r'(?: *(?P<set_community_no_advertise>(no-advertise)))?\)'
+                              r'(?: *(?P<set_community_additive>(additive)))?$')
             m = p8_4.match(line)
             if m:
                 set_community_no_export = m.groupdict()['set_community_no_export']
@@ -344,7 +344,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # delete community in test
             p9 = re.compile(r'^\s*delete +community *in'
-                            ' *(?P<set_community_delete>[a-zA-Z]+)$')
+                            r' *(?P<set_community_delete>[a-zA-Z]+)$')
             m = p9.match(line)
             if m:
                 rpl_route_policy_dict[name]['statements'][statements]['actions'] \
@@ -354,8 +354,8 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             # set extcommunity rt (100:100, 200:200) additive
             # set extcommunity rt (300:1, 300:2) additive
             p10 = re.compile(r'^\s*set +extcommunity +rt'
-                             ' *\((?P<set_ext_community_rt>[0-9\:\,\s]+)\)(?:'
-                             ' *(?P<set_ext_community_rt_additive>(additive)))?$')
+                             r' *\((?P<set_ext_community_rt>[0-9\:\,\s]+)\)(?:'
+                             r' *(?P<set_ext_community_rt_additive>(additive)))?$')
             m = p10.match(line)
             if m:
                 set_ext_community_rt_additive = m.groupdict()['set_ext_community_rt_additive']
@@ -371,8 +371,8 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # set extcommunity soo (100:100) additive
             p11 = re.compile(r'^\s*set extcommunity +soo'
-                             ' +\((?P<set_ext_community_soo>[0-9\:]+)\)(?:'
-                             ' *(?P<set_ext_community_soo_additive>(additive)))?$')
+                             r' +\((?P<set_ext_community_soo>[0-9\:]+)\)(?:'
+                             r' *(?P<set_ext_community_soo_additive>(additive)))?$')
             m = p11.match(line)
             if m:
                 set_ext_community_soo_additive = m.groupdict()['set_ext_community_soo_additive']
@@ -385,7 +385,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
 
             # delete extcommunity rt in test
             p12 = re.compile(r'^\s*delete +extcommunity +rt *in'
-                             ' +(?P<set_ext_community_delete>[a-z]+)$')
+                             r' +(?P<set_ext_community_delete>[a-z]+)$')
             m = p12.match(line)
             if m:
                 rpl_route_policy_dict[name]['statements'][statements]['actions'] \
@@ -464,41 +464,41 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
             # if med eq 100 and local-preference eq 100 and ospf-area is 0 then
             # m.groupdict()[cond] == None - set to none if there is no parsed condition
             p19 = re.compile(r'^\s*(if|elseif|else) *(?P<condition1>\S+ \S+ \S+)'
-                             '( *and)?(?: *(?P<condition2>\S+ \S+ \S+))?( *and)?'
-                             '(?: *(?P<condition3>\S+ \S+ \S+))?( *and)?(?:'
-                             ' *(?P<condition4>\S+ \S+ \S+))?( *and)?(?:'
-                             ' *(?P<condition5>\S+ \S+ \S+))? *then$')
+                             r'( *and)?(?: *(?P<condition2>\S+ \S+ \S+))?( *and)?'
+                             r'(?: *(?P<condition3>\S+ \S+ \S+))?( *and)?(?:'
+                             r' *(?P<condition4>\S+ \S+ \S+))?( *and)?(?:'
+                             r' *(?P<condition5>\S+ \S+ \S+))? *then$')
             m = p19.match(line)
             if m:
                 for cond in m.groupdict().keys():
                     if cond == None or m.groupdict()[cond] == None:
                         continue
                     if 'origin is' in m.groupdict()[cond]:
-                        v = re.match('origin is (?P<match_origin_eq>[a-z]+)', m.groupdict()[cond])
+                        v = re.match(r'origin is (?P<match_origin_eq>[a-z]+)', m.groupdict()[cond])
                         match_origin_eq = v.groupdict()['match_origin_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_origin_eq'] = match_origin_eq
 
                     if 'med eq' in m.groupdict()[cond]:
-                        v = re.match('med eq (?P<match_med_eq>[0-9]+)', m.groupdict()[cond])
+                        v = re.match(r'med eq (?P<match_med_eq>[0-9]+)', m.groupdict()[cond])
                         match_med_eq = v.groupdict()['match_med_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_med_eq'] = int(v.groupdict()['match_med_eq'])
 
                     if 'local-preference eq' in m.groupdict()[cond]:
-                        v = re.match('local-preference eq (?P<match_local_pref_eq>[0-9]+)', m.groupdict()[cond])
+                        v = re.match(r'local-preference eq (?P<match_local_pref_eq>[0-9]+)', m.groupdict()[cond])
                         match_local_pref_eq = v.groupdict()['match_local_pref_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_local_pref_eq'] = match_local_pref_eq
 
                     if 'ospf-area is' in m.groupdict()[cond]:
-                        v = re.match('ospf-area is (?P<match_area_eq>(\d+\.\d+\.\d+\.\d+|[0-9]+))', m.groupdict()[cond])
+                        v = re.match(r'ospf-area is (?P<match_area_eq>(\d+\.\d+\.\d+\.\d+|[0-9]+))', m.groupdict()[cond])
                         match_area_eq = v.groupdict()['match_area_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_area_eq'] = match_area_eq
 
                     if 'next-hop in' in m.groupdict()[cond]:
-                        v = re.match('next-hop in (?P<match_nexthop_in>[0-9a-zA-Z-]+)', m.groupdict()[cond])
+                        v = re.match(r'next-hop in (?P<match_nexthop_in>[0-9a-zA-Z-]+)', m.groupdict()[cond])
                         match_nexthop_in = v.groupdict()['match_nexthop_in']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_nexthop_in'] = match_nexthop_in
@@ -507,25 +507,26 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                     # CMT-SBTP or community matches-any CMT-FP) then
                     if 'community matches-any' in m.groupdict()[cond]:
                         match_ext_community_list = re.findall(
-                            'community matches-any (?P<match_ext_community_list>[0-9a-zA-Z\-]+)', line)
+                            r'community matches-any (?P<match_ext_community_list>[0-9a-zA-Z\-]+)', line)
                         if len(match_ext_community_list) > 0:
                             rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                                 ['match_ext_community_list'] = match_ext_community_list
 
                     if 'as-path in' in m.groupdict()[cond]:
-                        v = re.match('as-path in (?P<match_as_path_list>[0-9a-zA-Z-]+)', m.groupdict()[cond])
-                        match_as_path_list = v.groupdict()['match_as_path_list']
-                        rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
-                            ['match_as_path_list'] = match_as_path_list
+                        v = re.match(r'as-path in (?P<match_as_path_list>[0-9a-zA-Z-]+)', m.groupdict()[cond])
+                        if v:
+                            match_as_path_list = v.groupdict()['match_as_path_list']
+                            rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
+                                ['match_as_path_list'] = match_as_path_list
 
                     if 'as-path length' in m.groupdict()[cond]:
-                        v = re.match('as-path length (?P<match_as_path_length_oper>[\w\W]+)', m.groupdict()[cond])
+                        v = re.match(r'as-path length (?P<match_as_path_length_oper>[\w\W]+)', m.groupdict()[cond])
                         match_as_path_length_oper = v.groupdict()['match_as_path_length_oper']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_as_path_length_oper'] = match_as_path_length_oper
 
                     if 'route-type is' in m.groupdict()[cond]:
-                        v = re.match('(evpn-route-type is|route-type is) (?P<match_level_eq>[\da-z-]+)', m.groupdict()[cond])
+                        v = re.match(r'(evpn-route-type is|route-type is) (?P<match_level_eq>[\da-z-]+)', m.groupdict()[cond])
                         match_level_eq = v.groupdict()['match_level_eq']
                         rpl_route_policy_dict[name]['statements'][statements]['conditions'] \
                             ['match_level_eq'] = match_level_eq
@@ -533,7 +534,7 @@ class ShowRplRoutePolicy(ShowRplRoutePolicySchema):
                     # if (destination in PE-LOOPBACKS) then
                     # elseif destination in (0.0.0.0/0 eq 32) then
                     if 'destination in' in m.groupdict()[cond]:
-                        match = re.search('destination in (?P<match_prefix_list>[0-9a-zA-Z-_]+)', m.groupdict()[cond])
+                        match = re.search(r'destination in (?P<match_prefix_list>[0-9a-zA-Z-_]+)', m.groupdict()[cond])
                         if match:
                             match_prefix_list = match.group(1)
                         else:

@@ -332,10 +332,10 @@ class ShowLispSessionCapabilityRLOC(ShowLispSessionCapabilityRLOCSchema):
         p24 = re.compile(r"^(?P<unknown_received>Unknown\s+vendor\s+type\s+skip)$")
 
         # Receive count:                1
-        p25 = re.compile("^Receive\s+count:\s+(?P<rx_count>\d+)$")
+        p25 = re.compile(r"^Receive\s+count:\s+(?P<rx_count>\d+)$")
 
         # Error count:                  0
-        p26 = re.compile("^Error\s+count:\s+(?P<err_count>\d+)$")
+        p26 = re.compile(r"^Error\s+count:\s+(?P<err_count>\d+)$")
 
         count1 = 0
         count2 = 0

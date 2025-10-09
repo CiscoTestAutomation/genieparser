@@ -24,6 +24,20 @@ IOSXE parsers for the following show commands:
    * show crypto ikev2 psh
    * show crypto ikev2 performance
    * show crypto map
+   * show crypto ipsec spi-lookup detail
+   * show crypto isakmp default policy
+   * show crypto isakmp sa {status}
+   * show crypto isakmp peer {peer_ip}
+   * show crypto isakmp sa count
+   * show crypto isakmp peers config
+   * show crypto ssl authorization policy
+   * show crypto ssl session profile
+   * show crypto pki crls
+   * show crypto pki crls download
+   * show crypto ipsec sa ipv6 detailed
+   * show crypto ikev2 diagnose error
+   * show crypto pki counters
+   * show crypto pki trustpool count downloaded
 """
 
 # Python
@@ -32,6 +46,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
+from genie.metaparser.util.schemaengine import ListOf
 
 # Genie Libs
 from genie.libs.parser.utils.common import Common
@@ -126,8 +141,8 @@ class ShowCryptoPkiCertificates(ShowCryptoPkiCertificatesSchema):
 
         # Serial Number: PID:WS-C3850-24P SN:FCW1947C0GF
         p9 = re.compile(r'^Serial +Number: *'
-                          'PID: *(?P<pid>[\w\-]+) +'
-                          'SN: *(?P<serial_number>[\w\-]+)$')
+                          r'PID: *(?P<pid>[\w\-]+) +'
+                          r'SN: *(?P<serial_number>[\w\-]+)$')
 
         # CRL Distribution Points: 
         #     http://www.cisco.com/security/pki/crl/cmca2.crl
@@ -1064,7 +1079,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
 
         #Peer: 11.0.1.2 port 500
         #Peer: 11.0.1.2 port 500 fvrf: (none) ivrf: (none)
-        p8=re.compile(r'^Peer\:\s+(?P<peer>[\d\.\:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
+        #Peer: 2001:DB8:ACAD:1::2 port 500
+        p8=re.compile(r'^Peer\:\s+(?P<peer>[0-9A-Fa-f\.\:]+)\s+port\s+(?P<port>\d+)(\s+fvrf\:\s+\(*(?P<fvrf>none|[^(]\S+)\)*\s+ivrf\:\s+\(*(?P<ivrf>none|[^(]\S+)\)*)?')
         
         # Phase1_id: 11.0.1.2
         p9=re.compile(r'^\s*Phase1\_id\:\s+(?P<phase_id>\S+)$')
@@ -1076,7 +1092,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         p11=re.compile(r'^\s*Session\s+ID\:\s+(?P<session_id>\d+)$')
 
         #IKEv1 SA: local 11.0.1.1/500 remote 11.0.1.2/500 Active
-        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[\d\.\:]+)\/(?P<local_port>\d+)')
+        #IKEv2 SA: local 2001:DB8:ACAD:1::1/500
+        p12=re.compile(r'^\s*(?P<version>IKE(v\d)*)*\s+SA\:\s+local\s+(?P<local>[0-9A-Fa-f\.\:]+)\/(?P<local_port>\d+)')
 
         #  Capabilities:(none) connid:1025 lifetime:03:04:13
         p13=re.compile(r'^\s*Capabilities\:\(*(?P<capabilities>\w+)+\)*\s+connid\:(?P<conn_id>\d+)\s+lifetime\:(?P<lifetime>[\d\:]+)$')
@@ -1094,7 +1111,8 @@ class ShowCryptoSessionSuperParser(ShowCryptoSessionSchema):
         p17=re.compile(r'^\s*Outbound\:\s+\#pkts\s+enc\'ed\s+(?P<outbound_pkts_enc>\d+)\s+drop\s+(?P<outbound_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<outbound_life_kb>[\w\s]+)\/(?P<outbound_life_secs>[\d a-z\/\,]+)$')
 
         #remote 2001:101:0:1::2/500 Active
-        p18=re.compile(r'.*remote\s+(?P<remote>[\d\.\:]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)')
+        #remote 2001:DB8:ACAD:1::2/500 Active
+        p18=re.compile(r'.*remote\s+(?P<remote>[0-9A-Fa-f\.\:]+)\/(?P<remote_port>\d+)\s+(?P<conn_status>\w+)')
         
         ret_dict = {}
         check_flag = 1
@@ -1359,7 +1377,7 @@ class ShowCryptoIpsecSaCount(ShowCryptoIpsecSaCountSchema):
             output = self.device.execute(self.cli_command)
         return_dict = {}
         # IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0
-        r1 = "^IPsec SA total: +(?P<ipsec_sa_total>[\d]+), +active: +(?P<active>[\d]+), +rekeying: +(?P<rekeying>[\d]+), +unused: +(?P<unused>[\d]+), +invalid: +(?P<invalid>[\d]+)$"
+        r1 = r"^IPsec SA total: +(?P<ipsec_sa_total>[\d]+), +active: +(?P<active>[\d]+), +rekeying: +(?P<rekeying>[\d]+), +unused: +(?P<unused>[\d]+), +invalid: +(?P<invalid>[\d]+)$"
         p1 = re.compile(r1)
         for line in output.splitlines():
             # IPsec SA total: 8, active: 8, rekeying: 0, unused: 0, invalid: 0
@@ -1437,99 +1455,99 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
         # 973       92.1.121.1/500        22.1.1.2/500          none/121             READY
-        r1 = "^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
+        r1 = r"^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
         p1 = re.compile(r1)
 
         # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK, QR
-        r2 = "^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
+        r2 = r"^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
         p2 = re.compile(r2)
 
         # Life/Active Time: 86400/12689 sec
-        r3 = "^Life+\S+Active Time: +(?P<life_time>[\d]+)\/(?P<active_time>[\d]+) +sec$"
+        r3 = r"^Life+\S+Active Time: +(?P<life_time>[\d]+)\/(?P<active_time>[\d]+) +sec$"
         p3 = re.compile(r3)
 
         # CE id: 76468, Session-id: 17155
-        r4 = "^CE id:+ (?P<ce_id>[\d]+), +Session-id: +(?P<session_id>[\d]+)$"
+        r4 = r"^CE id:+ (?P<ce_id>[\d]+), +Session-id: +(?P<session_id>[\d]+)$"
         p4 = re.compile(r4)
 
         # Status Description: Negotiation done
-        r5 = "^Status Description:+ (?P<status_description>[\w\d\s]+)$"
+        r5 = r"^Status Description:+ (?P<status_description>[\w\d\s]+)$"
         p5 = re.compile(r5)
 
         # Local spi: 000D3669857A0F82       Remote spi: E0419B1DB02DE6AE
-        r6 = "^Local spi: +(?P<local_spi>[\w\d]+) +Remote spi: +(?P<remote_spi>[\w\d]+)$"
+        r6 = r"^Local spi: +(?P<local_spi>[\w\d]+) +Remote spi: +(?P<remote_spi>[\w\d]+)$"
         p6 = re.compile(r6)
 
         # Local id: user2621@cisco.com
-        r7 = "^Local id: +(?P<local_id>[\w\d\S]+)$"
+        r7 = r"^Local id: +(?P<local_id>[\w\d\S]+)$"
         p7 = re.compile(r7)
 
         # Remote id: hostname.remoteid.example.com
-        r8 = "^Remote id: +(?P<remote_id>[\w\d\S]+)$"
+        r8 = r"^Remote id: +(?P<remote_id>[\w\d\S]+)$"
         p8 = re.compile(r8)
 
         # Local req msg id:  214            Remote req msg id:  6
-        r9 = "^Local req msg id: +(?P<local_reg_msg_id>[\d]+) +Remote req msg id: +(?P<remote_req_msg_id>[\d]+)$"
+        r9 = r"^Local req msg id: +(?P<local_reg_msg_id>[\d]+) +Remote req msg id: +(?P<remote_req_msg_id>[\d]+)$"
         p9 = re.compile(r9)
 
         # Local next msg id: 214            Remote next msg id: 6
-        r10 = "^Local next msg id: +(?P<local_next_msg_id>[\d]+) +Remote next msg id: +(?P<remote_next_msg_id>[\d]+)$"
+        r10 = r"^Local next msg id: +(?P<local_next_msg_id>[\d]+) +Remote next msg id: +(?P<remote_next_msg_id>[\d]+)$"
         p10 = re.compile(r10)
 
         # Local req queued:  214            Remote req queued:  6
-        r11 = "^Local req queued: +(?P<local_req_queued>[\d]+) +Remote req queued: +(?P<remote_req_queued>[\d]+)$"
+        r11 = r"^Local req queued: +(?P<local_req_queued>[\d]+) +Remote req queued: +(?P<remote_req_queued>[\d]+)$"
         p11 = re.compile(r11)
 
         # Local window:      5              Remote window:      5
-        r12 = "^Local window: +(?P<local_window>[\d]+) +Remote window: +(?P<remote_window>[\d]+)$"
+        r12 = r"^Local window: +(?P<local_window>[\d]+) +Remote window: +(?P<remote_window>[\d]+)$"
         p12 = re.compile(r12)
 
         # DPD configured for 60 seconds, retry 3
-        r13 = "^DPD configured for +(?P<dpd_configured_time>[\d]+) +seconds, retry +(?P<retry>[\d]+)$"
+        r13 = r"^DPD configured for +(?P<dpd_configured_time>[\d]+) +seconds, retry +(?P<retry>[\d]+)$"
         p13 = re.compile(r13)
 
         # Fragmentation not  configured.
-        r14 = "^Fragmentation +(?P<fragmentation>[\d\s\S]+)$"
+        r14 = r"^Fragmentation +(?P<fragmentation>[\d\s\S]+)$"
         p14 = re.compile(r14)
 
         # Dynamic Route Update: enabled
-        r15 = "^Dynamic Route Update: +(?P<dynamic_route_update>[\d\s\S]+)$"
+        r15 = r"^Dynamic Route Update: +(?P<dynamic_route_update>[\d\s\S]+)$"
         p15 = re.compile(r15)
 
         # Extended Authentication not configured.
-        r16 = "^Extended Authentication +(?P<extended_authentication>[\d\s\S]+)$"
+        r16 = r"^Extended Authentication +(?P<extended_authentication>[\d\s\S]+)$"
         p16 = re.compile(r16)
 
         # NAT-T is not detected
-        r17 = "^NAT-T is +(?P<nat_t>[\d\s\S]+)$"
+        r17 = r"^NAT-T is +(?P<nat_t>[\d\s\S]+)$"
         p17 = re.compile(r17)
 
         # Cisco Trust Security SGT is disabled
-        r18 = "^Cisco Trust Security SGT is +(?P<cisco_trust_security_sgt>[\d\s\S]+)$"
+        r18 = r"^Cisco Trust Security SGT is +(?P<cisco_trust_security_sgt>[\d\s\S]+)$"
         p18 = re.compile(r18)
 
         # Initiator of SA : Yes
-        r19 = "^Initiator of SA :+(?P<initiator_of_sa>[\d\s\S]+)$"
+        r19 = r"^Initiator of SA :+(?P<initiator_of_sa>[\d\s\S]+)$"
         p19 = re.compile(r19)
 
         # Pushed IP address: 8.1.9.4
-        r20 = "^Pushed IP address: +(?P<pushed_ip>[0-9\.]+)$"
+        r20 = r"^Pushed IP address: +(?P<pushed_ip>[0-9\.]+)$"
         p20 = re.compile(r20)
 
         # 10.0.0.0 255.0.0.0
-        r21 = "^(?P<remote_subnets>[0-9\.\s]+)$"
+        r21 = r"^(?P<remote_subnets>[0-9\.\s]+)$"
         p21 = re.compile(r21)
 
         # Quantum Resistance Enabled
-        r22 = "^Quantum Resistance +(?P<quantum_resistance>[\d\s\S]+)$"
+        r22 = r"^Quantum Resistance +(?P<quantum_resistance>[\d\s\S]+)$"
         p22 = re.compile(r22)
 
         # Quantum-Safe Encryption using PPK is enabled
-        r23 = "^Quantum-Safe Encryption using PPK is +(?P<quantum_resistance>[\d\s\S]+)$"
+        r23 = r"^Quantum-Safe Encryption using PPK is +(?P<quantum_resistance>[\d\s\S]+)$"
         p23 = re.compile(r23)
 
         # Quantum-safe Encryption using Manual PPK
-        r24 = "^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
+        r24 = r"^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
         p24 = re.compile(r24)
         
 
@@ -4656,7 +4674,8 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
             output = self.device.execute(self.cli_command)
 
         # interface: GigabitEthernet3
-        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d]+)$')
+        # interface: GigabitEthernet0/0/0
+        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d\/]+)$')
 
         # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
         p2 = re.compile(r'^Crypto map tag: (?P<crypto_map_tag>[\w\d\-]+), +local addr +(?P<local_addr>[\d\.]+)$')
@@ -5814,7 +5833,8 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
         ret_dict = {}
 
         # IPSEC profile nil_ips
-        p1 = re.compile(r'^IPSEC profile\s*(?P<profile_name>\w+)$')
+        # IPSEC profile DCCRT1012-IPSEC-PROFILE
+        p1 = re.compile(r'^IPSEC profile\s*(?P<profile_name>[\w\-]+)$')
 
         # IKEv2 Profile: nil_ike_prof
         p2 = re.compile(r'^IKEv2 Profile\s*:\s*(?P<ikev2_profile_name>\w+)$')
@@ -5835,7 +5855,8 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
         p7 = re.compile(r'^Transform sets={$')
 
         # nil_tfs:  { esp-aes esp-sha-hmac  } ,
-        p8 = re.compile(r'^(?P<transforset>\w+)\s*:\s*{\s*(?P<transform_set_name>[\w-]+)\s+(?P<transform_set_method>[\w-]+)\s*}\s*,$')
+        # RSITE-ipsec-proposal-set:  { esp-gcm 256  } ,
+        p8 = re.compile(r'^(?P<transforset>[\w\-]+)\s*:\s*{\s*(?P<transform_set_name>[\w-]+)\s+(?P<transform_set_method>[\w-]+)\s*}\s*,$')
 
         ret_dict = {}
         for line in output.splitlines():
@@ -7203,7 +7224,7 @@ class ShowCryptoIkev2Stats(ShowCryptoIkev2StatsSchema):
 
         # SA Strength Enforcement Rejects - incoming:        0 outgoing:        4
         p13 = re.compile(r'^SA Strength Enforcement Rejects -\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
-                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
+                         r'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -7431,7 +7452,7 @@ class ShowCryptoCallAdmissionStatistics(ShowCryptoCallAdmissionStatisticsSchema)
 
         # SA Strength Enforcement Rejects:  incoming:        0 outgoing:        0
         p13 = re.compile(r'^SA Strength Enforcement Rejects:\s+incoming:\s+(?P<sa_strength_enforce_reject_incoming>\d+)\s+'
-                         'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
+                         r'outgoing:\s+(?P<sa_strength_enforce_reject_outgoing>\d+)$')
 
         # initial return dictionary
 
@@ -9680,3 +9701,1551 @@ class ShowCryptoPkiCertificatesPemServer(ShowCryptoPkiCertificatesPemServerSchem
                     ret_dict[key_name] += line+'\n'
                 
         return ret_dict
+
+# =================================================
+#  Schema for 'show crypto ipsec spi-lookup detail'
+# =================================================
+class ShowCryptoIpsecSpiLookupDetailSchema(MetaParser):
+    """Schema for show crypto ipsec spi-lookup detail"""
+    schema = {
+        'active_spi_table': {
+            'spi_entries': {
+                Any(): {
+                    'prot': str,
+                    'local_address': str,
+                    'type': str,
+                    'handle': str,
+                    'vrf': str,
+                    'remote_address': str,
+                    'idb': str,
+                }
+            }
+        },
+        'transient_spi_table': {
+            'spi_entries': {
+                Any(): {
+                    'handle': str,
+                    'r': str,
+                    'time_created': str,
+                }
+            }
+        }
+    }
+
+# =======================================
+# Parser for
+#   'show crypto ipsec spi-lookup detail'
+# =======================================
+class ShowCryptoIpsecSpiLookupDetail(ShowCryptoIpsecSpiLookupDetailSchema):
+    """Parser for show crypto ipsec spi-lookup detail"""
+
+    cli_command = 'show crypto ipsec spi-lookup detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 3A4AAE22 ipsec 10.10.10.1 type 40003352 0 20.10.10.1 566
+        active_spi_entry_pattern = re.compile(
+            r'^(?P<spi>\S+)\s+(?P<prot>\S+)\s+(?P<local_address>\S+)\s+(?P<type>\S+)\s+'
+            r'(?P<handle>\S+)\s+(?P<vrf>\S+)\s+(?P<remote_address>\S+)\s+(?P<idb>\S+)$'
+        )
+
+        # 3A4AAE22 40003352 0 566
+        transient_spi_entry_pattern = re.compile(
+            r'^(?P<spi>\S+)\s+(?P<handle>\S+)\s+(?P<r>\S+)\s+(?P<time_created>\S+)$'
+        )
+
+        # Flags to determine which section we are in
+        active_spi_section = False
+        transient_spi_section = False
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Check for section headers
+            if line.startswith('Active SPI table'):
+                active_spi_section = True
+                transient_spi_section = False
+                parsed_dict.setdefault('active_spi_table', {})
+                parsed_dict['active_spi_table'].setdefault('spi_entries', {})
+                continue
+            elif line.startswith('Transient SPI table'):
+                active_spi_section = False
+                transient_spi_section = True
+                parsed_dict.setdefault('transient_spi_table', {})
+                parsed_dict['transient_spi_table'].setdefault('spi_entries', {})
+                continue
+
+            # Parse active SPI table entries
+            if active_spi_section:
+                match = active_spi_entry_pattern.match(line)
+                if match:
+                    result_dict = parsed_dict['active_spi_table']['spi_entries']
+                    spi = match.groupdict()['spi']
+                    prot = match.groupdict()['prot']
+                    local_address = match.groupdict()['local_address']
+                    spi_type = match.groupdict()['type']
+                    handle =  match.groupdict()['handle']
+                    vrf =  match.groupdict()['vrf']
+                    remote_address =  match.groupdict()['remote_address']
+                    idb =  match.groupdict()['idb']
+                    result_dict[spi] = {}
+                    result_dict[spi]['prot'] = prot
+                    result_dict[spi]['local_address'] = local_address
+                    result_dict[spi]['type'] = spi_type
+                    result_dict[spi]['handle'] = handle
+                    result_dict[spi]['vrf'] = vrf
+                    result_dict[spi]['remote_address'] = remote_address
+                    result_dict[spi]['idb'] = idb
+                    continue
+
+            # Parse transient SPI table entries
+            if transient_spi_section:
+                match = transient_spi_entry_pattern.match(line)
+                if match:
+                    result_dict = parsed_dict['transient_spi_table']['spi_entries']
+                    spi = match.groupdict()['spi']
+                    handle =  match.groupdict()['handle']
+                    r =  match.groupdict()['r']
+                    time_created =  match.groupdict()['time_created']
+                    result_dict[spi] = {}
+                    result_dict[spi]['handle'] = handle
+                    result_dict[spi]['r'] = r
+                    result_dict[spi]['time_created'] = time_created
+                    continue
+
+        return parsed_dict
+
+# ===============================================
+#  Schema for 'show crypto isakmp default policy'
+# ===============================================
+class ShowCryptoIsakmpDefaultPolicySchema(MetaParser):
+    """Schema for show crypto isakmp default policy"""
+    schema = {
+        'policies': {
+            Any(): {
+                'encryption_algorithm': str,
+                'hash_algorithm': str,
+                'authentication_method': str,
+                'diffie_hellman_group': str,
+                'lifetime': str,
+            }
+        }
+    }
+
+# =======================================
+# Parser for
+#   'show crypto isakmp default policy'
+# =======================================
+class ShowCryptoIsakmpDefaultPolicy(ShowCryptoIsakmpDefaultPolicySchema):
+    """Parser for show crypto isakmp default policy"""
+
+    cli_command = 'show crypto isakmp default policy'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Default protection suite of priority 65514
+        p1 = re.compile(r'^Default protection suite of priority (?P<priority>\d+)$')
+
+        # encryption algorithm:   Three key triple DES
+        p2 = re.compile(r'^encryption algorithm:\s+(?P<encryption_algorithm>.+)$')
+
+        # hash algorithm:         Message Digest 5
+        p3 = re.compile(r'^hash algorithm:\s+(?P<hash_algorithm>.+)$')
+
+        # authentication method:  Pre-Shared Key
+        p4 = re.compile(r'^authentication method:\s+(?P<authentication_method>.+)$')
+
+        # Diffie-Hellman group:   #2 (1024 bit)
+        p5 = re.compile(r'^Diffie-Hellman group:\s+(?P<diffie_hellman_group>.+)$')
+
+        # lifetime:               86400 seconds, no volume limit
+        p6 = re.compile(r'^lifetime:\s+(?P<lifetime>.+)$')
+
+        current_priority = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Default protection suite of priority 65514
+            m = p1.match(line)
+            if m:
+                current_priority = int(m.group('priority'))
+                parsed_dict.setdefault('policies', {})
+                parsed_dict['policies'].setdefault(current_priority, {})
+                continue
+
+            # encryption algorithm:   Three key triple DES
+            m = p2.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['encryption_algorithm'] = m.group('encryption_algorithm')
+                continue
+
+            # hash algorithm:         Message Digest 5
+            m = p3.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['hash_algorithm'] = m.group('hash_algorithm')
+                continue
+
+            # authentication method:  Pre-Shared Key
+            m = p4.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['authentication_method'] = m.group('authentication_method')
+                continue
+
+            # Diffie-Hellman group:   #2 (1024 bit)
+            m = p5.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['diffie_hellman_group'] = m.group('diffie_hellman_group')
+                continue
+
+            # lifetime:               86400 seconds, no volume limit
+            m = p6.match(line)
+            if m and current_priority is not None:
+                parsed_dict['policies'][current_priority]['lifetime'] = m.group('lifetime')
+                continue
+
+        return parsed_dict
+
+# ============================================
+#  Schema for 'show crypto isakmp sa {status}'
+# ============================================
+class ShowCryptoIsakmpSaStatusSchema(MetaParser):
+    """Schema for show crypto isakmp sa <>"""
+
+    schema = {
+        'isakmp_stats': {
+            Or('ipv4', 'ipv6'):{
+                int:{
+                    'dst': str,
+                    'src': str,
+                    'state': str,
+                    'conn_id': int,
+                    'slot': int,
+                    'status': str,
+                },
+            },
+        },
+    }
+
+# =======================================
+# Parser for
+#   'show crypto isakmp sa {status}'
+# =======================================
+class ShowCryptoIsakmpSaStatus(ShowCryptoIsakmpSaStatusSchema):
+    """Parser for show crypto isakmp sa <>"""
+
+    cli_command = "show crypto isakmp sa {status}"
+
+    def cli(self, status='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(status=status))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # IPv4 Crypto ISAKMP SA
+        # IPv6 Crypto ISAKMP SA
+        p1 = re.compile(r'^(?P<version>\S+) Crypto ISAKMP SA$')
+
+        # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 ACTIVE
+        # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 STDBY
+        p2 = re.compile(r'^(?P<dst>\S+)\s+(?P<src>\S+)\s+(?P<state>\S+)\s+'
+                        r'(?P<conn_id>\d+)\s+(?P<slot>\d+)\s+(?P<status>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip the header line
+            if line.startswith('dst'):
+                continue
+
+            # IPv4 Crypto ISAKMP SA
+            # IPv6 Crypto ISAKMP SA
+            m = p1.match(line)
+            if m:
+                ser_dict = parsed_dict.setdefault('isakmp_stats', {})
+                if m.groupdict()['version'] == "IPv4":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('ipv4', {})
+
+                if m.groupdict()['version'] == "IPv6":
+                    count = 0
+                    sub_dict = ser_dict.setdefault('ipv6', {})
+                continue
+
+            # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 ACTIVE
+            # 10.165.201.3   10.165.200.225 QM_IDLE              5    0 STDBY
+            m = p2.match(line)
+            if m:
+                count += 1
+                sub_dict.setdefault(count, {})
+                group = m.groupdict()
+                sub_dict[count] = {
+                    'dst': group['dst'],
+                    'src': group['src'],
+                    'state': group['state'],
+                    'conn_id': int(group['conn_id']),
+                    'slot': int(group['slot']),
+                    'status': group['status'],
+                }
+
+        return parsed_dict
+
+# ==============================================
+#  Schema for 'show crypto isakmp peer {peer_ip}'
+# ==============================================
+class ShowCryptoIsakmpPeerSchema(MetaParser):
+    """Schema for show crypto isakmp peer <>"""
+
+    schema = {
+        'peer_entries': {
+            int: {
+                'peer_ip': str,
+                'port': int,
+                'local_ip': str,
+                'phase_id': str,
+            }
+        }
+    }
+
+
+# =====================================
+# Parser for
+#   'show crypto isakmp peer {peer_ip}'
+# =====================================
+class ShowCryptoIsakmpPeer(ShowCryptoIsakmpPeerSchema):
+    """Parser for show crypto isakmp peer"""
+
+    cli_command = 'show crypto isakmp peer {peer_ip}'
+
+    def cli(self, peer_ip='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(peer_ip=peer_ip)
+            output = self.device.execute(cmd)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Peer: 1.1.1.2 Port: 500 Local: 1.1.1.1
+        p1 = re.compile(r'^Peer:\s+(?P<peer>\S+)\s+Port:\s+(?P<port>\d+)\s+Local:\s+(?P<local>\S+)$')
+
+        # Phase1 id: 1.1.1.2
+        p2 = re.compile(r'^Phase\d+\s+\w+:\s+(?P<phase_id>\S+)$')
+
+
+        # Iterate over each line in the output
+        count = 0
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Peer: 1.1.1.2 Port: 500 Local: 1.1.1.1
+            m = p1.match(line)
+            if m:
+                count += 1
+                parsed_dict.setdefault('peer_entries', {})
+                sub_dict = parsed_dict['peer_entries'].setdefault(count, {})
+                group = m.groupdict()
+                peer = group['peer']
+                parsed_dict['peer_entries'][count] = {
+                    'peer_ip': peer,
+                    'port': int(group['port']),
+                    'local_ip': group['local'],
+                }
+                continue
+
+            # Phase1 id: 1.1.1.2
+            m = p2.match(line)
+            if m and peer:
+                group = m.groupdict()
+                parsed_dict['peer_entries'][count]['phase_id'] = group['phase_id']
+                peer = ''
+                continue
+
+        return parsed_dict
+
+# ==============================================
+#  Schema for 'show crypto isakmp sa count'
+# ==============================================
+class ShowCryptoIsakmpSaCountSchema(MetaParser):
+    """Schema for show crypto isakmp sa count"""
+
+    schema = {
+        'active_isakmp_sas': int,
+        'standby_isakmp_sas': int,
+        'negotiating_isakmp_sas': int,
+        'dead_isakmp_sas': int,
+    }
+
+# =====================================
+# Parser for
+#   'show crypto isakmp sa count'
+# =====================================
+class ShowCryptoIsakmpSaCount(ShowCryptoIsakmpSaCountSchema):
+    """Parser for show crypto isakmp sa count"""
+
+    cli_command = 'show crypto isakmp sa count'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Active ISAKMP SA's: 0
+        p1 = re.compile(r'^Active ISAKMP SA\'s:\s+(?P<act_isa>\d+)$')
+
+        # Standby ISAKMP SA's: 0
+        p2 = re.compile(r'^Standby ISAKMP SA\'s:\s+(?P<stdby_isa>\d+)$')
+
+        # Currently being negotiated ISAKMP SA's: 0
+        p3 = re.compile(r'^Currently being negotiated ISAKMP SA\'s:\s+(?P<cur_isa>\d+)$')
+
+        # Dead ISAKMP SA's: 450
+        p4 = re.compile(r'^Dead ISAKMP SA\'s:\s+(?P<dead_isa>\d+)$')
+
+        # Parse each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Active ISAKMP SA's: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['active_isakmp_sas'] = int(group['act_isa'])
+                continue
+
+            # Standby ISAKMP SA's: 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['standby_isakmp_sas'] = int(group['stdby_isa'])
+                continue
+
+            # Currently being negotiated ISAKMP SA's: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['negotiating_isakmp_sas'] = int(group['cur_isa'])
+                continue
+
+            # Dead ISAKMP SA's: 450
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['dead_isakmp_sas'] = int(group['dead_isa'])
+                continue
+
+        return parsed_dict
+
+# ==============================================
+#  Schema for 'show crypto isakmp peers config'
+# ==============================================
+class ShowCryptoIsakmpPeersConfigSchema(MetaParser):
+    """Schema for show crypto isakmp peers config"""
+    schema = {
+        'peers': {
+            Any(): {
+                'key_exchange': str,
+                'authentication_method': str,
+                'encryption': str,
+                'hashing': str,
+                'dh_group': str,
+                'lifetime': int,
+                'local_id': str,
+                'remote_id': str,
+            }
+        }
+    }
+
+# =====================================
+# Parser for
+#   'show crypto isakmp peers config'
+# =====================================
+class ShowCryptoIsakmpPeersConfig(ShowCryptoIsakmpPeersConfigSchema):
+    """Parser for show crypto isakmp peers config"""
+
+    cli_command = 'show crypto isakmp peers config'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Peer: 192.168.1.1
+        # Peer: 192.168.2.1
+        p1 = re.compile(r'^Peer:\s+(?P<peer_ip>\S+)$')
+
+        # Key Exchange: IKEv1
+        p2 = re.compile(r'^Key Exchange:\s+(?P<key_exchange>\S+)$')
+
+        # Authentication Method: Pre-Shared Key
+        p3 = re.compile(r'^Authentication Method:\s+(?P<authentication_method>[\w\s-]+)$')
+
+        # Encryption: AES-256
+        p4 = re.compile(r'^Encryption:\s+(?P<encryption>\S+)$')
+
+        # Hashing: SHA-256
+        p5 = re.compile(r'^Hashing:\s+(?P<hashing>\S+)$')
+
+        # DH Group: Group 14
+        p6 = re.compile(r'^DH Group:\s+(?P<dh_group>[\w\s]+)$')
+
+        # Lifetime: 86400 seconds
+        p7 = re.compile(r'^Lifetime:\s+(?P<lifetime>\d+)\s+seconds$')
+
+        # Local ID: router.local
+        p8 = re.compile(r'^Local ID:\s+(?P<local_id>\S+)$')
+
+        # Remote ID: peer.remote
+        p9 = re.compile(r'^Remote ID:\s+(?P<remote_id>\S+)$')
+
+        current_peer = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Peer: 192.168.1.1
+            # Peer: 192.168.2.1
+            m = p1.match(line)
+            if m:
+                current_peer = m.group('peer_ip')
+                parsed_dict.setdefault('peers', {})
+                parsed_dict['peers'].setdefault(current_peer, {})
+                continue
+
+            # Key Exchange: IKEv2
+            m = p2.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['key_exchange'] = m.group('key_exchange')
+                continue
+
+            # Authentication Method: RSA-SIG
+            m = p3.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['authentication_method'] = m.group('authentication_method')
+                continue
+
+            # Encryption: AES-128
+            m = p4.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['encryption'] = m.group('encryption')
+                continue
+
+            # Hashing: SHA-1
+            m = p5.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['hashing'] = m.group('hashing')
+                continue
+
+            # DH Group: Group 5
+            m = p6.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['dh_group'] = m.group('dh_group')
+                continue
+
+            # Lifetime: 28800 seconds
+            m = p7.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['lifetime'] = int(m.group('lifetime'))
+                continue
+
+            # Local ID: router.local
+            m = p8.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['local_id'] = m.group('local_id')
+                continue
+
+            # Remote ID: peer.remote
+            m = p9.match(line)
+            if m and current_peer:
+                parsed_dict['peers'][current_peer]['remote_id'] = m.group('remote_id')
+                continue
+        
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto ssl authorization policy'
+# =================================================
+class ShowCryptoSslAuthorizationPolicySchema(MetaParser):
+    """Schema for show crypto ssl authorization policy"""
+    schema = {
+        'policies': {
+            Any(): {
+                'rule': str,
+                'user_group': str,
+                'permissions': str,
+                'source': str,
+                'destination': str,
+                'action': str,
+            }
+        }
+    }
+
+# ==================================================
+#  Parser for 'show crypto ssl authorization policy'
+# ==================================================
+class ShowCryptoSslAuthorizationPolicy(ShowCryptoSslAuthorizationPolicySchema):
+    """Parser for show crypto ssl authorization policy"""
+
+    cli_command = 'show crypto ssl authorization policy'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command to get the output
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Policy Name: EmployeePolicy
+        # Rule: AllowAccess
+        # User Group: Employees
+        # Permissions: Full Access
+        # Source: Internal Network
+        # Destination: All Networks
+        # Action: Permit
+        pat = re.compile(r'(?P<entity>[\w\s]+):\s+(?P<value>[\w\s]+)$')
+
+        current_policy = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Policy Name: EmployeePolicy
+            # Rule: AllowAccess
+            # User Group: Employees
+            # Permissions: Full Access
+            # Source: Internal Network
+            # Destination: All Networks
+            # Action: Permit
+            m = pat.match(line)
+            if m:
+                parsed_dict.setdefault('policies', {})
+                entity = m.groupdict()['entity']
+                if 'Policy Name' in entity:
+                    current_policy = m.groupdict()['value']
+                    parsed_dict['policies'].setdefault(current_policy, {})
+                else:
+                    entity = entity.lower().replace(' ', '_')
+                    parsed_dict['policies'][current_policy][entity] = m.groupdict()['value']
+
+
+        return parsed_dict
+
+# ==================================================
+#  Schema for 'show crypto ssl session profile'
+# ==================================================
+class ShowCryptoSslSessionProfileSchema(MetaParser):
+    """Schema for show crypto ssl session profile"""
+    schema = {
+        'profiles': {
+            Any(): {
+                'protocol': str,
+                'cipher_suite': str,
+                'authentication': str,
+                'session_timeout_in_seconds': int,
+                'renegotiation': str,
+                'keepalive_interval_in_seconds': int,
+            }
+        }
+    }
+
+
+# ==================================================
+#  Parser for 'show crypto ssl session profile'
+# ==================================================
+class ShowCryptoSslSessionProfile(ShowCryptoSslSessionProfileSchema):
+    """Parser for show crypto ssl session profile"""
+
+    cli_command = 'show crypto ssl session profile'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Profile Name: DefaultProfile
+        # Protocol: TLSv1.2
+        # Cipher Suite: AES256-SHA
+        # Authentication: Certificate
+        # Session Timeout: 3600 seconds
+        # Renegotiation: Enabled
+        # Keepalive Interval: 60 seconds
+        pat = re.compile(r'(?P<entity>[\w\s]+):\s+(?P<value>[\w\s\-\.]+)$')
+
+        current_profile = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Profile Name: DefaultProfile
+            # Protocol: TLSv1.2
+            # Cipher Suite: AES256-SHA
+            # Authentication: Certificate
+            # Session Timeout: 3600 seconds
+            # Renegotiation: Enabled
+            # Keepalive Interval: 60 seconds
+            m = pat.match(line)
+            if m:
+                parsed_dict.setdefault('profiles', {})
+                entity = m.groupdict()['entity']
+                if 'Profile Name' in entity:
+                    current_profile = m.groupdict()['value']
+                    parsed_dict['profiles'].setdefault(current_profile, {})
+                else:
+                    entity = entity.lower().replace(' ', '_')
+                    value = m.groupdict()['value']
+                    if 'seconds' in value:
+                        entity += '_in_seconds'
+                        value = value.split()[0]
+                        parsed_dict['profiles'][current_profile][entity] = int(value)
+                    else:
+                        parsed_dict['profiles'][current_profile][entity] = value
+
+
+        return parsed_dict
+
+# ==================================================
+#  Schema for 'ShowCryptoPkiCrls'
+# ==================================================
+class ShowCryptoPkiCrlsSchema(MetaParser):
+    """Schema for `ShowCryptoPkiCrls`"""
+    schema = {
+        'crl_issuer_name': str,
+        'last_update': str,
+        'next_update': str,
+        'crl_downloaded_at': str,
+        'retrieved_from': str,
+        'crl_der_size': int,
+        'crl_cache_status': str,
+        'parsed_crl_cache': {
+            'current_size': int,
+            'maximum_size': int
+        }
+    }
+
+# ==================================================
+#  Parser for 'ShowCryptoPkiCrls'
+# ==================================================
+class ShowCryptoPkiCrls(ShowCryptoPkiCrlsSchema):
+    """Parser for `ShowCryptoPkiCrls`"""
+
+    cli_command = 'show crypto pki crls'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_data = {}
+
+        # CRL Issuer Name:
+        # cn=root C=pki
+        p1 = re.compile(r'^\s*(?P<crl_issuer_name>.+)$')
+
+        # LastUpdate: 12:39:13 IST Jan 27 2025
+        p2 = re.compile(r'^LastUpdate:\s+(?P<last_update>.+)$')
+
+        # NextUpdate: 13:09:13 IST Jan 27 2025
+        p3 = re.compile(r'^NextUpdate:\s+(?P<next_update>.+)$')
+
+        # CRL downloaded at: 12:40:18 IST Jan 27 2025
+        p4 = re.compile(r'^CRL downloaded at:\s+(?P<crl_downloaded_at>.+)$')
+
+        # Retrieved from CRL Distribution Point:
+        #   ** CDP Not Published - Retrieved via SCEP
+        p5 = re.compile(r'^\s*Retrieved from CRL Distribution Point:\s*$')
+        p5_1 = re.compile(r'^\s*\*\*\s*(?P<retrieved_from>.+)$')
+
+        # CRL DER is 350 bytes
+        p6 = re.compile(r'^CRL DER is\s+(?P<crl_der_size>\d+)\s+bytes$')
+
+        # CRL is stored in parsed CRL cache
+        p7 = re.compile(r'^CRL is stored in parsed CRL cache$')
+
+        # Parsed CRL cache current size is 350 bytes
+        p8 = re.compile(r'^Parsed CRL cache current size is\s+(?P<current_size>\d+)\s+bytes$')
+
+        # Parsed CRL cache maximum size is 65536 bytes
+        p9 = re.compile(r'^Parsed CRL cache maximum size is\s+(?P<maximum_size>\d+)\s+bytes$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # CRL Issuer Name:
+            # cn=root C=pki
+            m = p1.match(line)
+            if m and 'crl_issuer_name' not in parsed_data:
+                parsed_data['crl_issuer_name'] = m.group('crl_issuer_name')
+                continue
+
+            # LastUpdate: 12:39:13 IST Jan 27 2025
+            m = p2.match(line)
+            if m:
+                parsed_data['last_update'] = m.group('last_update')
+                continue
+
+            # NextUpdate: 13:09:13 IST Jan 27 2025
+            m = p3.match(line)
+            if m:
+                parsed_data['next_update'] = m.group('next_update')
+                continue
+
+            # CRL downloaded at: 12:40:18 IST Jan 27 2025
+            m = p4.match(line)
+            if m:
+                parsed_data['crl_downloaded_at'] = m.group('crl_downloaded_at')
+                continue
+
+            # Retrieved from CRL Distribution Point:
+            m = p5.match(line)
+            if m:
+                continue
+
+            #   ** CDP Not Published - Retrieved via SCEP
+            m = p5_1.match(line)
+            if m:
+                parsed_data['retrieved_from'] = m.group('retrieved_from')
+                continue
+
+            # CRL DER is 350 bytes
+            m = p6.match(line)
+            if m:
+                parsed_data['crl_der_size'] = int(m.group('crl_der_size'))
+                continue
+
+            # CRL is stored in parsed CRL cache
+            m = p7.match(line)
+            if m:
+                parsed_data['crl_cache_status'] = 'stored in parsed CRL cache'
+                continue
+
+            # Parsed CRL cache current size is 350 bytes
+            m = p8.match(line)
+            if m:
+                parsed_data.setdefault('parsed_crl_cache', {})['current_size'] = int(m.group('current_size'))
+                continue
+
+            # Parsed CRL cache maximum size is 65536 bytes
+            m = p9.match(line)
+            if m:
+                parsed_data.setdefault('parsed_crl_cache', {})['maximum_size'] = int(m.group('maximum_size'))
+                continue
+
+        return parsed_data
+
+# =======================================
+# Schema for
+#   'show crypto pki crls download'
+# =======================================
+class ShowCryptoPkiCrlsDownloadSchema(MetaParser):
+    """Schema for show crypto pki crls download"""
+    schema = {
+        'trustpoints': {
+            Any(): {
+                Optional('crl_static_time_download_entries'): [str],
+                'crl_prepublish_time': str,
+                'crl_maximum_retry_attempts': int,
+                'crl_retry_time_interval': str,
+            }
+        }
+    }
+
+# =======================================
+# Parser for
+#   'show crypto pki crls download'
+# =======================================
+class ShowCryptoPkiCrlsDownload(ShowCryptoPkiCrlsDownloadSchema):
+    """Parser for show crypto pki crls download"""
+
+    cli_command = 'show crypto pki crls download'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # CRL download for trustpoints 
+        p1 = re.compile(r'^CRL download for trustpoints :$')
+
+        # Example: Trustpoint1
+        p2 = re.compile(r'^\s*(?P<trustpoint>\S+)$')  # Handle leading spaces for trustpoint
+
+        # Example: Mon 12:00
+        p3 = re.compile(r'^\s+(?P<time>\w+ \d{2}:\d{2})$')  # Match the time entries with spaces
+
+        # Example: CRL prepublish time : 30 minutes
+        p4 = re.compile(r'^CRL prepublish time\s+:\s+(?P<prepublish_time>\d+ minutes)$')  # Handle spaces
+
+        # Example: CRL maximum retry attempts : 5
+        p5 = re.compile(r'^CRL maximum retry attempts\s+:\s+(?P<max_retry_attempts>\d+)$')  # Handle spaces
+
+        # Example: CRL retry time interval : 15 minutes
+        p6 = re.compile(r'^CRL retry time interval\s+:\s+(?P<retry_time_interval>\d+ minutes)$')  # Handle spaces
+
+        current_trustpoint = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # This line indicates the start of the CRL download section.
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault('trustpoints', {})
+                continue
+
+            # Match trustpoint
+            # This line specifies the name of a trustpoint.
+            m = p2.match(line)
+            if m:
+                current_trustpoint = m.group('trustpoint')
+                trustpoint_dict = parsed_dict.setdefault('trustpoints', {}).setdefault(current_trustpoint, {})
+                continue
+
+            # Match static time download entries
+            # This line specifies a static time download entry for the current trustpoint.
+            m = p3.match(line)
+            if m and current_trustpoint:
+                time = m.group('time')
+                trustpoint_dict = parsed_dict['trustpoints'][current_trustpoint]
+                trustpoint_dict.setdefault('crl_static_time_download_entries', [])
+                trustpoint_dict['crl_static_time_download_entries'].append(time)
+
+            # Match prepublish time
+            # This line specifies the prepublish time for the current trustpoint.
+            m = p4.match(line)
+            if m and current_trustpoint:
+                trustpoint_dict['crl_prepublish_time'] = m.group('prepublish_time')
+                continue
+
+            # Match maximum retry attempts
+            # This line specifies the maximum retry attempts for the current trustpoint.
+            m = p5.match(line)
+            if m and current_trustpoint:
+                trustpoint_dict['crl_maximum_retry_attempts'] = int(m.group('max_retry_attempts'))
+                continue
+
+            # Match retry time interval
+            # This line specifies the retry time interval for the current trustpoint.
+            m = p6.match(line)
+            if m and current_trustpoint:
+                trustpoint_dict['crl_retry_time_interval'] = m.group('retry_time_interval')
+                continue
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show crypto ipsec sa ipv6 detailed'
+# =================================================
+class ShowCryptoIpsecSaIpv6DetailedSchema(MetaParser):
+    """Schema for `show crypto ipsec sa ipv6 detailed`"""
+    schema = {
+        'interfaces': {
+            Any(): {
+                'crypto_map_tag': str,
+                'local_addr': str,
+                'protected_vrf': str,
+                'identities': {
+                    Any(): {
+                        'local_ident': str,
+                        'remote_ident': {
+                            Any() : {
+                                'remote_ident': str,
+                                'current_peer': str,
+                                'port': int,
+                                'permit_flags': list,
+                                'pkts_encaps': int,
+                                'pkts_encrypt': int,
+                                'pkts_digest': int,
+                                'pkts_decaps': int,
+                                'pkts_decrypt': int,
+                                'pkts_verify': int,
+                                'local_crypto_endpt': str,
+                                'remote_crypto_endpt': str,
+                                'plaintext_mtu': int,
+                                'path_mtu': int,
+                                'ipv6_mtu': int,
+                                'ipv6_mtu_idb': str,
+                                'current_outbound_spi': str,
+                                'pfs': str,
+                                'dh_group': str,
+                                'inbound_esp_sas': {
+                                    'spi': str,
+                                    'transform': str,
+                                    'in_use_settings': list,
+                                    'conn_id': int,
+                                    'flow_id': str,
+                                    'sibling_flags': str,
+                                    'crypto_map': str,
+                                    'initiator': bool,
+                                    'sa_timing': str,
+                                    'iv_size': int,
+                                    'replay_detection_support': str,
+                                    'status': str,
+                                },
+                                'outbound_esp_sas': {
+                                    'spi': str,
+                                    'transform': str,
+                                    'in_use_settings': list,
+                                    'conn_id': int,
+                                    'flow_id': str,
+                                    'sibling_flags': str,
+                                    'crypto_map': str,
+                                    'initiator': bool,
+                                    'sa_timing': str,
+                                    'iv_size': int,
+                                    'replay_detection_support': str,
+                                    'status': str,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ================================================
+# Parser for 'show crypto ipsec sa ipv6 detailed'
+# ================================================
+class ShowCryptoIpsecSaIpv6Detailed(ShowCryptoIpsecSaIpv6DetailedSchema):
+    """Parser for `show crypto ipsec sa ipv6 detailed`"""
+
+    cli_command = 'show crypto ipsec sa ipv6 detailed'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # interface: Tunnel2002
+        p1 = re.compile(r'^interface: +(?P<interface>\S+)$')
+
+        # Crypto map tag: Tunnel2002-vesen-head-0, local addr 4180::56:0:1
+        p2 = re.compile(r'^Crypto map tag: +(?P<crypto_map_tag>[\S\s]+), +local addr +(?P<local_addr>\S+)$')
+
+        # protected vrf: (none)
+        p3 = re.compile(r'^protected vrf: +(?P<protected_vrf>\S+)$')
+
+        # local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+        p4 = re.compile(r'^local +ident \(addr/mask/prot/port\): +\((?P<local_ident>[\S\s]+)\)$')
+
+        # remote ident (addr/mask/prot/port): (4180::70:0:1/128/0/12346)
+        p5 = re.compile(r'^remote ident \(addr/mask/prot/port\): +\((?P<remote_ident>[\S\s]+)\)$')
+
+        # current_peer 4180::70:0:1 port 12346
+        p6 = re.compile(r'^current_peer +(?P<current_peer>\S+) +port +(?P<port>\d+)$')
+
+        # PERMIT, flags={origin_is_acl,}
+        p7 = re.compile(r'^PERMIT, +flags=\{(?P<permit_flags>[\S\s]+)\}$')
+
+        # #pkts encaps: 169162, #pkts encrypt: 169162, #pkts digest: 169162
+        p8 = re.compile(r'^#pkts encaps: +(?P<pkts_encaps>\d+), +#pkts encrypt: +(?P<pkts_encrypt>\d+), +#pkts digest: +(?P<pkts_digest>\d+)$')
+
+        # #pkts decaps: 169163, #pkts decrypt: 169163, #pkts verify: 169163
+        p9 = re.compile(r'^#pkts decaps: +(?P<pkts_decaps>\d+), +#pkts decrypt: +(?P<pkts_decrypt>\d+), +#pkts verify: +(?P<pkts_verify>\d+)$')
+
+        # local crypto endpt.: 4180::56:0:1,
+        p10 = re.compile(r'^local crypto endpt.: +(?P<local_crypto_endpt>\S+),$')
+
+        # remote crypto endpt.: 4180::70:0:1
+        p11 = re.compile(r'^remote crypto endpt.: +(?P<remote_crypto_endpt>\S+)$')
+
+        # plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+        p12 = re.compile(r'^plaintext mtu +(?P<plaintext_mtu>\d+), +path mtu +(?P<path_mtu>\d+), +ipv6 mtu +(?P<ipv6_mtu>\d+), +ipv6 mtu idb +(?P<ipv6_mtu_idb>\S+)$')
+        
+        # current outbound spi: 0x102(258)
+        p13 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
+
+        # PFS (Y/N): N, DH group: none
+        p14 = re.compile(r'^PFS \(Y/N\): +(?P<pfs>\S+), +DH group: +(?P<dh_group>\S+)$')
+
+        # spi: [Not Available]
+        p15 = re.compile(r'^spi: +(?P<spi>\[Not Available\])$')
+
+        # transform: esp-gcm 256 ,
+        p16 = re.compile(r'^transform: +(?P<transform>[\S\s]+),$')
+
+        # in use settings ={Transport UDP-Encaps, esn}
+        p17 = re.compile(r'^in use settings =\{(?P<in_use_settings>[\S\s]+)\}$')
+
+        # conn id: 2027, flow_id: ESG:27, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+        p18 = re.compile(r'^conn id: +(?P<conn_id>\d+), +flow_id: +(?P<flow_id>\S+), +sibling_flags +(?P<sibling_flags>\S+), +crypto map: +(?P<crypto_map>[\S\s]+), +initiator : +(?P<initiator>\S+)$')
+        
+        # sa timing: remaining key lifetime is not applicable
+        p19 = re.compile(r'^sa timing: +(?P<sa_timing>[\S\s]+)$')
+
+        # IV size: 8 bytes
+        p20 = re.compile(r'^IV size: +(?P<iv_size>\d+) +bytes$')
+
+        # replay detection support: Y
+        p21 = re.compile(r'^replay detection support: +(?P<replay_detection_support>\S+)$')
+
+        # Status: ACTIVE(ACTIVE)
+        p22 = re.compile(r'^Status: +(?P<status>[\S\s]+)$')
+
+        current_interface = None
+        current_identity = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # interface: Tunnel2002
+            m = p1.match(line)
+            if m:
+                current_interface = m.group('interface')
+                intf_dict = parsed_dict.setdefault('interfaces', {})
+                current_dict = intf_dict.setdefault(current_interface,{})
+                continue
+
+            # Crypto map tag: Tunnel2002-vesen-head-0, local addr 4180::56:0:1
+            m = p2.match(line)
+            if m:
+                current_dict['crypto_map_tag'] = m.group('crypto_map_tag')
+                current_dict['local_addr'] = m.group('local_addr')
+                continue
+
+            # protected vrf: (none)
+            m = p3.match(line)
+            if m:
+                current_dict['protected_vrf'] = m.group('protected_vrf')
+                continue
+
+            # local  ident (addr/mask/prot/port): (4180::56:0:1/128/0/12346)
+            m = p4.match(line)
+            if m:
+                current_identity = m.group('local_ident')
+                if 'identities' not in parsed_dict['interfaces'][current_interface]:
+                    ident_dict = current_dict.setdefault('identities',{})
+                if current_identity not in parsed_dict['interfaces'][current_interface]['identities']:
+                    current_ident = ident_dict.setdefault(current_identity, {})
+                    current_ident['local_ident'] = current_identity
+                continue
+
+            # remote ident (addr/mask/prot/port): (4180::70:0:1/128/0/12346)
+            m = p5.match(line)
+            if m:
+                remote_identity = m.group('remote_ident')
+                remote_ident = current_ident.setdefault('remote_ident', {})
+                current_remote_ident = remote_ident.setdefault(remote_identity, {})
+                current_remote_ident['remote_ident'] = remote_identity
+                continue
+
+            # current_peer 4180::70:0:1 port 12346
+            m = p6.match(line)
+            if m:
+                current_remote_ident['current_peer'] = m.group('current_peer')
+                current_remote_ident['port'] = int(m.group('port'))
+                continue
+
+            # PERMIT, flags={origin_is_acl,}
+            m = p7.match(line)
+            if m:
+                current_remote_ident['permit_flags'] = m.group('permit_flags').split(',')
+                continue
+
+            # #pkts encaps: 169162, #pkts encrypt: 169162, #pkts digest: 169162
+            m = p8.match(line)
+            if m:
+                current_remote_ident['pkts_encaps'] = int(m.group('pkts_encaps'))
+                current_remote_ident['pkts_encrypt'] = int(m.group('pkts_encrypt'))
+                current_remote_ident['pkts_digest'] = int(m.group('pkts_digest'))
+                continue
+
+            # #pkts decaps: 169163, #pkts decrypt: 169163, #pkts verify: 169163
+            m = p9.match(line)
+            if m:
+                current_remote_ident['pkts_decaps'] = int(m.group('pkts_decaps'))
+                current_remote_ident['pkts_decrypt'] = int(m.group('pkts_decrypt'))
+                current_remote_ident['pkts_verify'] = int(m.group('pkts_verify'))
+                continue
+
+            # local crypto endpt.: 4180::56:0:1,
+            m = p10.match(line)
+            if m:
+                current_remote_ident['local_crypto_endpt'] = m.group('local_crypto_endpt')
+                continue
+
+            # remote crypto endpt.: 4180::70:0:1
+            m = p11.match(line)
+            if m:
+                current_remote_ident['remote_crypto_endpt'] = m.group('remote_crypto_endpt')
+                continue
+
+            # plaintext mtu 1438, path mtu 1480, ipv6 mtu 1480, ipv6 mtu idb Tunnel2002
+            m = p12.match(line)
+            if m:
+                current_remote_ident['plaintext_mtu'] = int(m.group('plaintext_mtu'))
+                current_remote_ident['path_mtu'] = int(m.group('path_mtu'))
+                current_remote_ident['ipv6_mtu'] = int(m.group('ipv6_mtu'))
+                current_remote_ident['ipv6_mtu_idb'] = m.group('ipv6_mtu_idb')
+                continue
+
+            # current outbound spi: 0x102(258)
+            m = p13.match(line)
+            if m:
+                current_remote_ident['current_outbound_spi'] = m.group('current_outbound_spi')
+                continue
+
+            # PFS (Y/N): N, DH group: none
+            m = p14.match(line)
+            if m:
+                current_remote_ident['pfs'] = m.group('pfs')
+                current_remote_ident['dh_group'] = m.group('dh_group')
+                continue
+
+            # Match inbound esp sas
+            if 'inbound esp sas:' in line:
+                inbound_esp_sas_dict = current_remote_ident.setdefault('inbound_esp_sas', {})
+                continue
+
+            # Match outbound esp sas
+            if 'outbound esp sas:' in line:
+                outbound_esp_sas_dict = current_remote_ident.setdefault('outbound_esp_sas', {})
+                continue
+
+            # spi: [Not Available]
+            m = p15.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['spi'] = m.group('spi')
+                else:
+                    inbound_esp_sas_dict['spi'] = m.group('spi')
+
+            # transform: esp-gcm 256 ,
+            m = p16.match(line)
+            if m:                    
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['transform'] = m.group('transform')
+                else:
+                    inbound_esp_sas_dict['transform'] = m.group('transform')
+
+            # in use settings ={Transport UDP-Encaps, esn}
+            m = p17.match(line)
+            if m:
+                settings = m.group('in_use_settings').split(',')
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['in_use_settings'] = settings
+                else:
+                    inbound_esp_sas_dict['in_use_settings'] = settings
+
+            # conn id: 2027, flow_id: ESG:27, sibling_flags FFFFFFFF80000009, crypto map: Tunnel2002-vesen-head-0, initiator : False
+            m = p18.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['conn_id'] = int(m.group('conn_id'))
+                    outbound_esp_sas_dict['flow_id'] = m.group('flow_id')
+                    outbound_esp_sas_dict['sibling_flags'] = m.group('sibling_flags')
+                    outbound_esp_sas_dict['crypto_map'] = m.group('crypto_map')
+                    outbound_esp_sas_dict['initiator'] = m.group('initiator') == 'True'
+                else:
+                    inbound_esp_sas_dict['conn_id'] = int(m.group('conn_id'))
+                    inbound_esp_sas_dict['flow_id'] = m.group('flow_id')
+                    inbound_esp_sas_dict['sibling_flags'] = m.group('sibling_flags')
+                    inbound_esp_sas_dict['crypto_map'] = m.group('crypto_map')
+                    inbound_esp_sas_dict['initiator'] = m.group('initiator') == 'True'
+
+            # sa timing: remaining key lifetime is not applicable
+            m = p19.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['sa_timing'] = m.group('sa_timing')
+                else:
+                    inbound_esp_sas_dict['sa_timing'] = m.group('sa_timing')
+
+            # IV size: 8 bytes
+            m = p20.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['iv_size'] = int(m.group('iv_size'))
+                else:
+                    inbound_esp_sas_dict['iv_size'] = int(m.group('iv_size'))
+
+            # replay detection support: Y
+            m = p21.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['replay_detection_support'] = m.group('replay_detection_support')
+                else:
+                    inbound_esp_sas_dict['replay_detection_support'] = m.group('replay_detection_support')
+
+            # Status: ACTIVE(ACTIVE)
+            m = p22.match(line)
+            if m:
+                if 'outbound_esp_sas' in current_remote_ident:
+                    outbound_esp_sas_dict['status'] = m.group('status')
+                else:
+                    inbound_esp_sas_dict['status'] = m.group('status')
+
+        return parsed_dict
+
+
+# =================================================
+#  Schema for 'show crypto ikev2 diagnose error'
+# =================================================
+class ShowCryptoIkev2DiagnoseErrorSchema(MetaParser):
+    """Schema for `show crypto ikev2 diagnose error`"""
+    schema = {
+        'exit_path_table': {
+            'status': str,
+            'current_entry': int,
+            'deleted': int,
+            'max_allow': int,
+        },
+        Optional('errors'): {
+            int: {
+                'message': str,
+                'traceback': list,
+            }
+        }
+    }
+
+
+# ================================================
+# Parser for 'show crypto ikev2 diagnose error'
+# ================================================
+class ShowCryptoIkev2DiagnoseError(ShowCryptoIkev2DiagnoseErrorSchema):
+    """Parser for `show crypto ikev2 diagnose error`"""
+
+    cli_command = 'show crypto ikev2 diagnose error'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Exit Path Table - status: disable, current entry 1, deleted 0, max allow 50
+        p1 = re.compile(
+            r'^Exit Path Table - status: (?P<status>\w+), '
+            r'current entry (?P<current_entry>\d+), '
+            r'deleted (?P<deleted>\d+), '
+            r'max allow (?P<max_allow>\d+)$'
+        )
+
+        # Error(1): A supplied parameter is incorrect
+        p2 = re.compile(r'^Error\((?P<error_code>\d+)\): (?P<message>.+)$')
+        
+        #-Traceback= 1#331406e74d9f0b63997a672584b5e8c5 :5DE32C0BE000+C2CDC54 :5DE32C0BE000+C2FC4EA :5DE32C0BE000+C2F4C61 :5DE32C0BE000+7B5771C :5DE32C0BE000+7AFB3A4 :5DE32C0BE000+7AF3119 :5DE32C0BE000+7AF243F :5DE32C0BE000+7AEDE90
+        p3 = re.compile(r'^-Traceback= (?P<traceback>.+)$')
+
+        current_error_code = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Exit Path Table - status: disable, current entry 1, deleted 0, max allow 50
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                exit_path_table = parsed_dict.setdefault('exit_path_table', {})
+                exit_path_table['status'] = group['status']
+                exit_path_table['current_entry'] = int(group['current_entry'])
+                exit_path_table['deleted'] = int(group['deleted'])
+                exit_path_table['max_allow'] = int(group['max_allow'])
+                continue
+
+            # Error(1): A supplied parameter is incorrect
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_error_code = int(group['error_code'])
+                errors = parsed_dict.setdefault('errors', {})
+                error_entry = errors.setdefault(current_error_code, {})
+                error_entry['message'] = group['message']
+                error_entry['traceback'] = []
+                continue
+
+            #-Traceback= 1#331406e74d9f0b63997a672584b5e8c5 :5DE32C0BE000+C2CDC54 :5DE32C0BE000+C2FC4EA :5DE32C0BE000+C2F4C61 :5DE32C0BE000+7B5771C :5DE32C0BE000+7AFB3A4 :5DE32C0BE000+7AF3119 :5DE32C0BE000+7AF243F :5DE32C0BE000+7AEDE90
+            m = p3.match(line)
+            if m and current_error_code is not None:
+                group = m.groupdict()
+                errors[current_error_code]['traceback'].append(group['traceback'])
+                continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto pki counters'
+# =================================================
+class ShowCryptoPkiCountersSchema(MetaParser):
+    """Schema for `show crypto pki counters`"""
+    schema = {
+        'pki_sessions_started': int,
+        'pki_sessions_ended': int,
+        'pki_sessions_active': int,
+        'successful_validations': int,
+        'failed_validations': int,
+        'bypassed_validations': int,
+        'pending_validations': int,
+        'crls_checked': int,
+        'crl_fetch_attempts': int,
+        'crl_failed_attempts': int,
+        'crl_rejected_busy_fetching': int,
+        'aaa_authorizations': int,
+    }
+
+# =================================================
+#  Parser for 'show crypto pki counters'
+# =================================================
+class ShowCryptoPkiCounters(ShowCryptoPkiCountersSchema):
+    """Parser for `show crypto pki counters`"""
+
+    cli_command = 'show crypto pki counters'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # PKI Sessions Started: 12
+        p1 = re.compile(r'^PKI Sessions Started:\s*(?P<val>\d+)$')
+        # PKI Sessions Ended: 12
+        p2 = re.compile(r'^PKI Sessions Ended:\s*(?P<val>\d+)$')
+        # PKI Sessions Active: 0
+        p3 = re.compile(r'^PKI Sessions Active:\s*(?P<val>\d+)$')
+        # Successful Validations: 6
+        p4 = re.compile(r'^Successful Validations:\s*(?P<val>\d+)$')
+        # Failed Validations: 0
+        p5 = re.compile(r'^Failed Validations:\s*(?P<val>\d+)$')
+        # Bypassed Validations: 0
+        p6 = re.compile(r'^Bypassed Validations:\s*(?P<val>\d+)$')
+        # Pending Validations: 0
+        p7 = re.compile(r'^Pending Validations:\s*(?P<val>\d+)$')
+        # CRLs checked: 0
+        p8 = re.compile(r'^CRLs checked:\s*(?P<val>\d+)$')
+        # CRL - fetch attempts: 0
+        p9 = re.compile(r'^CRL - fetch attempts:\s*(?P<val>\d+)$')
+        # CRL - failed attempts: 0
+        p10 = re.compile(r'^CRL - failed attempts:\s*(?P<val>\d+)$')
+        # CRL - rejected busy fetching: 0
+        p11 = re.compile(r'^CRL - rejected busy fetching:\s*(?P<val>\d+)$')
+        # AAA authorizations: 0
+        p12 = re.compile(r'^AAA authorizations:\s*(?P<val>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # PKI Sessions Started: <number>
+            m = p1.match(line)
+            if m:
+                ret_dict['pki_sessions_started'] = int(m.group('val'))
+                continue
+            # PKI Sessions Ended: <number>
+            m = p2.match(line)
+            if m:
+                ret_dict['pki_sessions_ended'] = int(m.group('val'))
+                continue
+            # PKI Sessions Active: <number>
+            m = p3.match(line)
+            if m:
+                ret_dict['pki_sessions_active'] = int(m.group('val'))
+                continue
+            # Successful Validations: <number>
+            m = p4.match(line)
+            if m:
+                ret_dict['successful_validations'] = int(m.group('val'))
+                continue
+            # Failed Validations: <number>
+            m = p5.match(line)
+            if m:
+                ret_dict['failed_validations'] = int(m.group('val'))
+                continue
+            # Bypassed Validations: <number>
+            m = p6.match(line)
+            if m:
+                ret_dict['bypassed_validations'] = int(m.group('val'))
+                continue
+            # Pending Validations: <number>
+            m = p7.match(line)
+            if m:
+                ret_dict['pending_validations'] = int(m.group('val'))
+                continue
+            # CRLs checked: <number>
+            m = p8.match(line)
+            if m:
+                ret_dict['crls_checked'] = int(m.group('val'))
+                continue
+            # CRL - fetch attempts: <number>
+            m = p9.match(line)
+            if m:
+                ret_dict['crl_fetch_attempts'] = int(m.group('val'))
+                continue
+            # CRL - failed attempts: <number>
+            m = p10.match(line)
+            if m:
+                ret_dict['crl_failed_attempts'] = int(m.group('val'))
+                continue
+            # CRL - rejected busy fetching: <number>
+            m = p11.match(line)
+            if m:
+                ret_dict['crl_rejected_busy_fetching'] = int(m.group('val'))
+                continue
+            # AAA authorizations: <number>
+            m = p12.match(line)
+            if m:
+                ret_dict['aaa_authorizations'] = int(m.group('val'))
+                continue
+
+        return ret_dict
+        
+# =================================================
+#  Schema for 'show crypto pki trustpool | count Downloaded'
+# =================================================
+class ShowCryptoPkiTrustpoolCountDownloadedSchema(MetaParser):
+    """Schema for `show crypto pki trustpool | count Downloaded`"""
+    schema = {
+        'trustpool_downloaded_count': int,
+    }
+
+# =================================================
+#  Parser for 'show crypto pki trustpool | count Downloaded'
+# =================================================
+
+class ShowCryptoPkiTrustpoolCountDownloaded(ShowCryptoPkiTrustpoolCountDownloadedSchema):
+    """Parser for `show crypto pki trustpool | count Downloaded`"""
+
+    cli_command = 'show crypto pki trustpool | count Downloaded'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Number of lines which match regexp = 123
+        p1 = re.compile(r'^Number of lines which match regexp\s*=\s*(?P<count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Number of lines which match regexp = 123
+            m = p1.match(line)
+            if m:
+                parsed_dict['trustpool_downloaded_count'] = int(m.group('count'))
+                break
+
+        return parsed_dict

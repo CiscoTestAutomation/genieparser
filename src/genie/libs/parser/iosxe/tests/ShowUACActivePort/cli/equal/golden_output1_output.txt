@@ -1,0 +1,10 @@
+Uplink Autoconfig: Enable
+IfName       UID  State  L2   Created  SVI  IPAssign  IPState  Route  Static  Score
+Vlan1          1      3  Up   No       Yes  ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
+Vlan20        20      0  Up   Yes      No   ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
+Vlan77        77      0  Up   Yes      No   ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
+Vlan90        90      0  Up   Yes      No   ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
+Vlan91        91      3  Up   No       Yes  ( 1   1)  ( 9  7)  (0 0)  (0  0)  (3 2)
+Vlan92        92      3  Up   No       Yes  ( 1   1)  ( 9  7)  (0 0)  (0  0)  (3 2)
+Vlan100      100      0  Up   Yes      No   ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
+Gi1/0/1     4158      3  Up   No       Yes  ( 1   0)  (15  0)  (1 0)  (0  0)  (3 0)

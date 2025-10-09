@@ -1,0 +1,11 @@
+# sh controllers optics 0/0/0/2 appsel active
+Thu Jul  3 22:47:06.839 UTC
+
+ Instance           :1
+ App-ID             :1
+ Host-ID            :28  ETH 200GBASE-CR4 (Clause 136)
+ Media-ID           :1  ETH 10GBASE-LW (Clause 52)
+ Host Lane Count    :4
+ Media Lane Count   :4
+ Host Lane Assign   :0x11
+ Media Lane Assign  :0x0

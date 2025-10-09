@@ -1,0 +1,23 @@
+show cdp neighbors interface Eth1/3 detail
+----------------------------------------
+Device ID:Reg181-GX2-TOR1(FDO260300J7)
+System Name: Reg181-GX2-TOR1
+
+Interface address(es): 1
+    IPv4 Address: 20.58.219.5
+Platform: N9K-C9408, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/3, Port ID (outgoing port): Ethernet4/1
+Holdtime: 178 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 10.6(2)
+
+Advertisement Version: 2
+Duplex: full
+
+MTU: 1500
+Mgmt address(es):
+    IPv4 Address: 172.23.78.85
+Local Interface MAC: b0:c5:3c:dc:83:0c
+Remote Interface MAC: 80:24:8f:b0:b8:47
+DC_UUID: FDO260300J7

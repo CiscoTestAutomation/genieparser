@@ -1,0 +1,11 @@
+BGP is not configured or not up
+
+Total Port-Channel Count       : 3
+Total VLAN Count               : 300
+Total MAC Count                : 0
+
+
+Interface       ESI                      State
+--------------- ------------------------ ------------
+Po6             0150.F722.D491.0000.0600 Global Incomplete
+Po5             0170.1F53.9AB0.8000.0500 Global Incomplete

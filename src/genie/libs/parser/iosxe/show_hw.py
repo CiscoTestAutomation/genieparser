@@ -5,6 +5,11 @@ IOSXE parsers for the following show commands:
     * show hw-module usbflash1 security status
     * show hw-module {filesystem} security-lock status
     * show hardware led port {port} {mode}
+    * hw-module beacon RP {supervisor} status
+    * hw-module beacon slot {slot_num} status
+    * show hw-module subslot all oir
+    * show hw-module subslot {subslot} entity
+    * show platform hardware chassis rp {rp_state} fan-speed-control-data
 '''
 
 # Python
@@ -12,7 +17,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 # parser utils
 from genie.libs.parser.utils.common import Common
@@ -137,7 +142,8 @@ class ShowHardwareLedSchema(MetaParser):
     """
     schema = {
         Optional('current_mode'): str,
-        Optional('led_ecomode'): str,
+        Optional('led_auto_off'): str,
+        Optional('led_hw_state'): str,
         Optional('switch'): {
             Any():{
                 'system': str,
@@ -205,82 +211,88 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         root_dict = ret_dict
 
         # SWITCH: 1
-        p1 = re.compile('^SWITCH:\s+(?P<switch_num>\d+)$')
+        p1 = re.compile(r'^SWITCH:\s+(?P<switch_num>\d+)$')
 
         # SYSTEM: GREEN
-        p2 = re.compile('^SYSTEM:\s+(?P<system>\w+)$')
+        p2 = re.compile(r'^SYSTEM:\s+(?P<system>\w+)$')
 
         # BEACON: OFF
-        p3 = re.compile('^BEACON:\s+(?P<beacon>\w+)$')
+        p3 = re.compile(r'^BEACON:\s+(?P<beacon>\w+)$')
 
         # PORT STATUS: (124) Hu1/0/1:GREEN Hu1/0/2:OFF Hu1/0/3:GREEN Hu1/0/4:OFF Hu1/0/5:OFF Hu1/0/6:GREEN Hu1/0/7:OFF Hu1/0/8:OFF Hu1/0/9:OFF Hu1/0/10:GREEN Hu1/0/11:GREEN Hu1/0/12:GREEN Hu1/0/13:GREEN Hu1/0/14:GREEN Fou1/0/15:GREEN Fou1/0/16:GREEN Fou1/0/17:GREEN Fou1/0/18:GREEN Fou1/0/19:GREEN Fou1/0/20:GREEN Fou1/0/21:GREEN Fou1/0/22:GREEN Hu1/0/23:GREEN Hu1/0/24:GREEN Hu1/0/25:OFF Hu1/0/26:GREEN Hu1/0/27:GREEN Hu1/0/28:GREEN Hu1/0/29:GREEN Hu1/0/30:GREEN Hu1/0/31:OFF Hu1/0/32:GREEN Hu1/0/33:GREEN Hu1/0/34:GREEN Hu1/0/35:GREEN Hu1/0/36:GREEN
-        p4 = re.compile('^PORT STATUS:\s+\S+\s+(?P<led_ports>((\S+:\w+\s*))+)$')
+        p4 = re.compile(r'^PORT STATUS:\s+\S+\s+(?P<led_ports>((\S+:\w+\s*))+)$')
         
         #STATUS: (28) Gi1/0/1:FLASH_GREEN Gi1/0/2:BLACK Gi1/0/3:BLACK Gi1/0/4:BLACK Gi1/0/5:FLASH_GREEN Gi1/0/6:FLASH_GREEN Gi1/0/7:FLASH_GREEN Gi1/0/8:FLASH_GREEN Gi1/0/9:BLACK Gi1/0/10:FLASH_GREEN Gi1/0/11:FLASH_GREEN Gi1/0/12:BLACK Gi1/0/13:BLACK Gi1/0/14:BLACK Gi1/0/15:BLACK Gi1/0/16:BLACK Gi1/0/17:BLACK Gi1/0/18:BLACK Gi1/0/19:BLACK Gi1/0/20:BLACK Gi1/0/21:BLACK Gi1/0/22:BLACK Gi1/0/23:FLASH_GREEN Gi1/0/24:FLASH_GREEN Gi1/0/25:BLACK Gi1/0/26:BLACK Gi1/0/27:BLACK Gi1/0/28:BLACK
-        p4_1 = re.compile('^STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
+        p4_1 = re.compile(r'^STATUS:\s+\((?P<port_nums_in_status>\d+)\)+\s+(?P<led_ports>((\S+:[\w-]+\s*))+)$')
 
         # RJ45 CONSOLE: GREEN
-        p5 = re.compile('^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
+        p5 = re.compile(r'^RJ45 CONSOLE:\s+(?P<rj45_console>\w+)$')
 
         # FANTRAY 1 STATUS: GREEN
-        p6 = re.compile('^FANTRAY\s+(?P<fantray_num>\d+)\s+STATUS:\s+(?P<fantray_status>\w+)$')
+        p6 = re.compile(r'^FANTRAY\s+(?P<fantray_num>\d+)\s+STATUS:\s+(?P<fantray_status>\w+)$')
 
         # POWER-SUPPLY 1 BEACON: OFF
-        p7 = re.compile('^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
+        p7 = re.compile(r'^POWER-SUPPLY\s+(?P<power_supply_num>\d+)\s+BEACON:\s+(?P<power_supply_status>\w+)$')
         
         #DC-A: GREEN
-        p7_1 = re.compile('^DC-A:\s+(?P<dc_a>\w+)$')
+        p7_1 = re.compile(r'^DC-A:\s+(?P<dc_a>\w+)$')
 
         #DC-B: BLACK
-        p7_2 = re.compile('^DC-B:\s+(?P<dc_b>\w+)$')
+        p7_2 = re.compile(r'^DC-B:\s+(?P<dc_b>\w+)$')
 
         # SYSTEM PSU: AMBER
-        p8 = re.compile('^SYSTEM PSU:\s+(?P<system_psu>\w+)$')
+        p8 = re.compile(r'^SYSTEM PSU:\s+(?P<system_psu>\w+)$')
 
         # SYSTEM FAN: GREEN
-        p9 = re.compile('^SYSTEM FAN:\s+(?P<system_fan>\w+)$')
+        p9 = re.compile(r'^SYSTEM FAN:\s+(?P<system_fan>\w+)$')
 
         #EXPRESS-SETUP: BLACK
-        p10 = re.compile('^EXPRESS-SETUP:\s+(?P<express_setup>\w+)$')
+        p10 = re.compile(r'^EXPRESS-SETUP:\s+(?P<express_setup>\w+)$')
 
         # ALARM-OUT: GREEN
         # ALARM-IN1: GREEN
         # ALARM-IN2: GREEN
-        p11 = re.compile('^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
+        p11 = re.compile(r'^(?P<alarm>ALARM\-\w+):\s+(?P<alarm_color>\w+)$')
 
         # Current Mode: STATUS
-        p12 = re.compile('^Current Mode:\s+(?P<status>\w+)$')
+        p12 = re.compile(r'^Current Mode:\s+(?P<status>\w+)$')
 
-        # LED Ecomode: Enabled
-        p12_1 = re.compile('^LED Ecomode:\s+(?P<ecomode>\w+)$')
+        # LED Auto off: Disabled // this output changed as below and new line added for hardware state.
+        # LED auto-off: Enabled
+        p12_1 = re.compile(r'^LED auto-off:\s+(?P<auto_off>\w+)$')
+
+        # LED Hardware State: OFF
+        p12_2 = re.compile(r'^LED Hardware State:\s+(?P<hw_state>\w+)$')
+
+
 
         # MASTER: GREEN
-        p13 = re.compile('^MASTER:\s+(?P<master>\w+)$')
+        p13 = re.compile(r'^MASTER:\s+(?P<master>\w+)$')
 
         # DUPLEX: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
         # Tw1/0/4:GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
-        p14 = re.compile('^DUPLEX:\s+\S+\s+(?P<duplex>((\S+:\S+\s*))+)$')
+        p14 = re.compile(r'^DUPLEX:\s+\S+\s+(?P<duplex>((\S+:\S+\s*))+)$')
 
         # SPEED: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK 
         # Tw1/0/4:BLINK_GREEN Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK
-        p15 = re.compile('^SPEED:\s+\S+\s+(?P<speed>((\S+:\S+\s*))+)$')
+        p15 = re.compile(r'^SPEED:\s+\S+\s+(?P<speed>((\S+:\S+\s*))+)$')
 
         # STACK: (65) Tw1/0/1:FLASH_GREEN Tw1/0/2:BLACK Tw1/0/3:BLACK
         # Tw1/0/4:BLACK Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK
-        p16 = re.compile('^STACK:\s+\S+\s+(?P<stack_port>((\S+:\S+\s*))+)$')
+        p16 = re.compile(r'^STACK:\s+\S+\s+(?P<stack_port>((\S+:\S+\s*))+)$')
 
         # POE: (65) Tw1/0/1:BLACK Tw1/0/2:BLACK Tw1/0/3:BLACK Tw1/0/4:BLACK
         # Tw1/0/5:BLACK Tw1/0/6:BLACK Tw1/0/7:BLACK Tw1/0/8:BLACK Tw1/0/9:BLACK
-        p17 = re.compile('^POE:\s+\S+\s+(?P<poe>((\S+:\S+\s*))+)$')
+        p17 = re.compile(r'^POE:\s+\S+\s+(?P<poe>((\S+:\S+\s*))+)$')
 
         # STACK POWER: BLACK
-        p18 = re.compile('^STACK POWER:\s+(?P<stack_power>\w+)$')
+        p18 = re.compile(r'^STACK POWER:\s+(?P<stack_power>\w+)$')
 
         # XPS: BLACK
-        p19 = re.compile('^XPS:\s+(?P<xps>\w+)$')
+        p19 = re.compile(r'^XPS:\s+(?P<xps>\w+)$')
 
         # USB CONSOLE: BLACK
-        p20 = re.compile('^USB CONSOLE:\s+(?P<usb_console>\w+)$')
+        p20 = re.compile(r'^USB CONSOLE:\s+(?P<usb_console>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -408,11 +420,18 @@ class ShowHardwareLed(ShowHardwareLedSchema):
                 ret_dict.update({'current_mode' : group['status']})
                 continue
 
-            # LED Ecomode: Enabled
+            # LED Auto off: Disabled
             m = p12_1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict.update({'led_ecomode' : group['ecomode']})
+                ret_dict.update({'led_auto_off' : group['auto_off']})
+                continue
+
+            # LED Hardware State: OFF
+            m = p12_2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'led_hw_state' : group['hw_state']})
                 continue
 
             # MASTER: GREEN
@@ -490,6 +509,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         return ret_dict
 
 
+
 class ShowHardwareLedPortSchema(MetaParser):
     """
     Schema for show hardware led port {port}
@@ -513,7 +533,7 @@ class ShowHardwareLedPort(ShowHardwareLedPortSchema):
         ret_dict = {}
         
         # GREEN
-        p1 = re.compile('^(?P<port_status>\w+)$')
+        p1 = re.compile(r'^(?P<port_status>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -782,14 +802,18 @@ class HardwareModuleBeaconSlotStatusSchema(MetaParser):
 class HardwareModuleBeaconSlotStatus(HardwareModuleBeaconSlotStatusSchema):
     """Parser for hw-module beacon slot {slot_num} status"""
 
-    cli_command = "hw-module beacon slot {slot_num} status"
+    cli_command = ["hw-module beacon slot {slot_num} status", "hw-module beacon RP {supervisor} status"]
     
-    def cli(self, slot_num, output=None):
+    def cli(self, slot_num=None, supervisor=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command.format(slot_num=slot_num))
+            if slot_num:
+                output = self.device.execute(self.cli_command[0].format(slot_num=slot_num))
+            else:
+                output = self.device.execute(self.cli_command[1].format(supervisor=supervisor))
 
         # BLACK
-        p1 = re.compile(r'^(?P<slot_status>\w+)$')
+        # SOLID BLUE
+        p1 = re.compile(r'^(?P<slot_status>[\w\s]+)$')
 
         ret_dict = {}
         for line in output.splitlines():
@@ -801,4 +825,475 @@ class HardwareModuleBeaconSlotStatus(HardwareModuleBeaconSlotStatusSchema):
                 ret_dict['slot_status'] = m.groupdict()['slot_status']
                 continue
   
+        return ret_dict
+
+class ShowHwModuleSubslotOirSchema(MetaParser):
+    """Schema for show hw-module subslot {slot} oir"""
+    schema = {
+        'subslots': {
+            str: {
+                'model': str,
+                'operational_status': str,
+            }
+        }
+    }
+
+class ShowHwModuleSubslotOir(ShowHwModuleSubslotOirSchema):
+    """Parser for show hw-module subslot {slot} oir"""
+
+    cli_command = 'show hw-module subslot {slot} oir'
+
+    def cli(self, slot='', output=None):
+        if output is None:
+            # Execute the command on the device
+            output = self.device.execute(self.cli_command.format(slot=slot))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Define the regular expression pattern to match each line of the output
+        # subslot 0/0             ISR4451-X-4x1GE      ok 
+        p0 = re.compile(r'^subslot\s+(?P<subslot>\S+)\s+(?P<model>\S+)\s+(?P<operational_status>\S+)$')
+
+        # Iterate over each line in the output
+        for line in output.splitlines():
+            line = line.strip()
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            if not line:
+                continue
+
+            # subslot 0/0             ISR4451-X-4x1GE      ok
+            m = p0.match(line)
+            if m:
+                # Extract the matched groups
+                subslot = m.group('subslot')
+                model = m.group('model')
+                operational_status = m.group('operational_status')
+
+                # Use setdefault to avoid key errors
+                subslot_dict = parsed_dict.setdefault('subslots', {}).setdefault(subslot, {})
+                subslot_dict['model'] = model
+                subslot_dict['operational_status'] = operational_status
+
+        return parsed_dict
+
+# ==========================
+# Schema for:
+#  * 'show hw-module subslot {subslot} entity'
+# ==========================
+class ShowHwModuleSubslotEntitySchema(MetaParser):
+    """Schema for show hw-module subslot {subslot} entity"""
+
+    schema = {
+        'entity_state': {
+            'subslot': str,
+            'spa_type': str,
+            'spa_type_hex': str,
+            'last_spa_type': str,
+            'last_spa_type_hex': str,
+            'oper_status': str,
+            'oper_status_code': int,
+            'card_status': str,
+            'card_status_code': int,
+            'last_trap_spa_type': str,
+            'last_trap_spa_type_hex': str,
+            'last_trap_oper_status': str,
+            'last_trap_oper_status_code': int,
+            'last_spa_env_get_ok': bool,
+            'last_spa_env_read_time': int,
+            'last_spa_env_read_time_str': str,
+            'resync_reqd': bool,
+            'resync_count': int,
+            'spa_physical_index': int,
+            'spa_container_index': int,
+            Optional('transceiver'): {
+                Any(): {
+                    'container_index': int,
+                    Optional('module_entity_index'): int,
+                    Optional('port_index'): int,
+                    'chassis_index': int,
+                    'operational_status': str,
+                    'operational_status_code': int,
+                    Optional('non_zero_xcvr_sensors'): {
+                        Any(): int,
+                    },
+                },
+            },
+            Optional('non_zero_spa_temp_sensors'): {
+                Any(): int,
+            },
+            Optional('non_zero_spa_volt_sensors'): {
+                Any(): int,
+            },
+            Optional('non_zero_spa_power_sensors'): str,
+        },
+    }
+
+
+# ==========================
+# Parser for:
+#  * 'show hw-module subslot {subslot} entity'
+# ==========================
+class ShowHwModuleSubslotEntity(ShowHwModuleSubslotEntitySchema):
+    """Parser for show hw-module subslot {subslot} entity"""
+
+    cli_command = 'show hw-module subslot {subslot} entity'
+
+    def cli(self, subslot='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(subslot=subslot))
+
+        # Initial variables
+        ret_dict = {}
+        current_transceiver = None
+        current_transceiver_dict = None
+
+        # Entity state for SPA in subslot 0/1
+        p1 = re.compile(r'^Entity\s+state\s+for\s+SPA\s+in\s+subslot\s+(?P<subslot>\S+)$')
+
+        # SPA type:                 (0xC55) EPA-18X1GE
+        p2 = re.compile(r'^SPA\s+type:\s+\((?P<hex>0x\w+)\)\s+(?P<type>\S+)$')
+
+        # last spa type:            (0xC55) EPA-18X1GE
+        p3 = re.compile(r'^last\s+spa\s+type:\s+\((?P<hex>0x\w+)\)\s+(?P<type>\S+)$')
+
+        # oper_status:              (1) ok
+        p4 = re.compile(r'^oper_status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        # card status:              (2) full
+        p5 = re.compile(r'^card\s+status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        # last trap: spa type:      (0xC55) EPA-18X1GE
+        p6 = re.compile(r'^last\s+trap:\s+spa\s+type:\s+\((?P<hex>0x\w+)\)\s+(?P<type>\S+)$')
+
+        # last trap: oper status:   (1) ok
+        p7 = re.compile(r'^last\s+trap:\s+oper\s+status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        # last_spa_env_get_ok:      false
+        p8 = re.compile(r'^last_spa_env_get_ok:\s+(?P<status>true|false)$')
+
+        # last_spa_env_read_time:   (0) 145245938 msecs ago
+        p9 = re.compile(r'^last_spa_env_read_time:\s+\((?P<value>\d+)\)\s+(?P<time>\d+)\s+msecs\s+ago$')
+
+        # resync_reqd:              false
+        p10 = re.compile(r'^resync_reqd:\s+(?P<status>true|false)$')
+
+        # resync_count:             0
+        p11 = re.compile(r'^resync_count:\s+(?P<count>\d+)$')
+
+        # SPA physical index:       1520
+        p12 = re.compile(r'^SPA\s+physical\s+index:\s+(?P<index>\d+)$')
+
+        # SPA container index:      1028
+        p13 = re.compile(r'^SPA\s+container\s+index:\s+(?P<index>\d+)$')
+
+        # transceiver 0
+        p14 = re.compile(r'^transceiver\s+(?P<transceiver>\d+)$')
+
+        #   container index:        1571
+        p15 = re.compile(r'^container\s+index:\s+(?P<index>\d+)$')
+
+        #   module entity index:    1572
+        p16 = re.compile(r'^\s+module\s+entity\s+index:\s+(?P<index>\d+)$')
+
+        #   port index:             1573
+        p17 = re.compile(r'^\s+port\s+index:\s+(?P<index>\d+)$')
+
+        #   chassis index:          0
+        p18 = re.compile(r'^chassis\s+index:\s+(?P<index>\d+)$')
+
+        #   operational status:     (2) ok
+        p19 = re.compile(r'^operational\s+status:\s+\((?P<code>\d+)\)\s+(?P<status>\S+)$')
+
+        #   non-zero xcvr sensors:
+        p20 = re.compile(r'^\s+non-zero\s+xcvr\s+sensors:$')
+
+        #     sensor 0:     1599
+        p21 = re.compile(r'^\s+sensor\s+(?P<sensor>\d+):\s+(?P<index>\d+)$')
+
+        # non-zero SPA temp sensors:
+        p22 = re.compile(r'^non-zero\s+SPA\s+temp\s+sensors:$')
+
+        # sensor 0 has index 1546
+        p23 = re.compile(r'^sensor\s+(?P<sensor>\d+)\s+has\s+index\s+(?P<index>\d+)$')
+
+        # non-zero SPA volt sensors:
+        p24 = re.compile(r'^non-zero\s+SPA\s+volt\s+sensors:$')
+
+        # non-zero SPA power sensors:
+        p25 = re.compile(r'^non-zero\s+SPA\s+power\s+sensors:$')
+
+        # all power sensor indices are zero
+        p26 = re.compile(r'^all\s+power\s+sensor\s+indices\s+are\s+zero$')
+
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Entity state for SPA in subslot 0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict = ret_dict.setdefault('entity_state', {})
+                entity_dict['subslot'] = group['subslot']
+                continue
+
+            # SPA type:                 (0xC55) EPA-18X1GE
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['spa_type'] = group['type']
+                entity_dict['spa_type_hex'] = group['hex']
+                continue
+
+            # last spa type:            (0xC55) EPA-18X1GE
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_spa_type'] = group['type']
+                entity_dict['last_spa_type_hex'] = group['hex']
+                continue
+
+            # oper_status:              (1) ok
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['oper_status'] = group['status']
+                entity_dict['oper_status_code'] = int(group['code'])
+                continue
+
+            # card status:              (2) full
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['card_status'] = group['status']
+                entity_dict['card_status_code'] = int(group['code'])
+                continue
+
+            # last trap: spa type:      (0xC55) EPA-18X1GE
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_trap_spa_type'] = group['type']
+                entity_dict['last_trap_spa_type_hex'] = group['hex']
+                continue
+
+            # last trap: oper status:   (1) ok
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_trap_oper_status'] = group['status']
+                entity_dict['last_trap_oper_status_code'] = int(group['code'])
+                continue
+
+            # last_spa_env_get_ok:      false
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_spa_env_get_ok'] = group['status'] == 'true'
+                continue
+
+            # last_spa_env_read_time:   (0) 145245938 msecs ago
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['last_spa_env_read_time'] = int(group['time'])
+                entity_dict['last_spa_env_read_time_str'] = f"({group['value']}) {group['time']} msecs ago"
+                continue
+
+            # resync_reqd:              false
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['resync_reqd'] = group['status'] == 'true'
+                continue
+
+            # resync_count:             0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['resync_count'] = int(group['count'])
+                continue
+
+            # SPA physical index:       1520
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['spa_physical_index'] = int(group['index'])
+                continue
+
+            # SPA container index:      1028
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                entity_dict['spa_container_index'] = int(group['index'])
+                continue
+
+            # transceiver 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                current_transceiver = group['transceiver']
+                current_section = 'transceiver'
+                if 'transceiver' not in entity_dict:
+                    entity_dict['transceiver'] = {}
+                entity_dict['transceiver'][current_transceiver] = {}
+                current_transceiver_dict = entity_dict['transceiver'][current_transceiver]
+                continue
+
+            # For transceiver section
+            if current_section == 'transceiver' and current_transceiver_dict is not None:
+                #   container index:        1571
+                m = p15.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_transceiver_dict['container_index'] = int(group['index'])
+                    continue
+
+                #   module entity index:    1572
+                m = p16.match(line)
+                if m:
+                    group = m.groupdict()
+                    index = int(group['index'])
+                    if index != 0:  # Only include non-zero values
+                        current_transceiver_dict['module_entity_index'] = index
+                    continue
+
+                #   port index:             1573
+                m = p17.match(line)
+                if m:
+                    group = m.groupdict()
+                    index = int(group['index'])
+                    if index != 0:  # Only include non-zero values
+                        current_transceiver_dict['port_index'] = index
+                    continue
+
+                #   chassis index:          0
+                m = p18.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_transceiver_dict['chassis_index'] = int(group['index'])
+                    continue
+
+                #   operational status:     (2) ok
+                m = p19.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_transceiver_dict['operational_status'] = group['status']
+                    current_transceiver_dict['operational_status_code'] = int(group['code'])
+                    continue
+
+                #   non-zero xcvr sensors:
+                m = p20.match(line)
+                if m:
+                    # This line indicates start of sensor section
+                    continue
+
+                #     sensor 0:     1599
+                m = p21.match(line)
+                if m:
+                    group = m.groupdict()
+                    if 'non_zero_xcvr_sensors' not in current_transceiver_dict:
+                        current_transceiver_dict['non_zero_xcvr_sensors'] = {}
+                    current_transceiver_dict['non_zero_xcvr_sensors'][group['sensor']] = int(group['index'])
+                    continue
+
+            # non-zero SPA temp sensors:
+            m = p22.match(line)
+            if m:
+                current_section = 'temp_sensors'
+                continue
+
+            # non-zero SPA volt sensors:
+            m = p24.match(line)
+            if m:
+                current_section = 'volt_sensors'
+                continue
+
+            # non-zero SPA power sensors:
+            m = p25.match(line)
+            if m:
+                current_section = 'power_sensors'
+                continue
+
+            # all power sensor indices are zero
+            m = p26.match(line)
+            if m:
+                entity_dict['non_zero_spa_power_sensors'] = 'all power sensor indices are zero'
+                current_section = None
+                continue
+
+            # sensor 0 has index 1546
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                if current_section == 'temp_sensors':
+                    if 'non_zero_spa_temp_sensors' not in entity_dict:
+                        entity_dict['non_zero_spa_temp_sensors'] = {}
+                    entity_dict['non_zero_spa_temp_sensors'][group['sensor']] = int(group['index'])
+                elif current_section == 'volt_sensors':
+                    if 'non_zero_spa_volt_sensors' not in entity_dict:
+                        entity_dict['non_zero_spa_volt_sensors'] = {}
+                    entity_dict['non_zero_spa_volt_sensors'][group['sensor']] = int(group['index'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareChassisRpFanSpeedControlDataSchema(MetaParser):
+    """Schema for:
+       show platform hardware chassis rp {rp_state} fan-speed-control-data
+    """
+    schema = {
+        'slots': {
+            Any(): {  
+                'type': str,
+                'pwm': int,
+                Optional('io_pwm'): Or(str,int),
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareChassisRpFanSpeedControlData(ShowPlatformHardwareChassisRpFanSpeedControlDataSchema):
+    """Parser for:
+       show platform hardware chassis rp {rp_state} fan-speed-control-data
+    """
+
+    cli_command = 'show platform hardware chassis rp {rp_state} fan-speed-control-data'
+
+    def cli(self, rp_state='', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(rp_state=rp_state))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #    1   LC      76     102
+        #    5  SUP      76     N/A
+        p1 = re.compile(
+            r'^\s*(?P<slot>\d+)\s+(?P<type>\S+)\s+(?P<pwm>\d+)\s+(?P<io_pwm>(?:\d+|N/?A))\s*$',
+            re.IGNORECASE
+        )
+
+        for line in out.splitlines():
+            line = line.rstrip()
+
+            if not line or line.lstrip().startswith('Slot ') or set(line.strip()) == {'-'}:
+                continue
+
+            #   1   LC      76      91
+            #   3   LC      76      76
+            m = p1.match(line)
+            if m:
+                slot = int(m.group('slot'))
+                entry = ret_dict.setdefault('slots', {}).setdefault(slot, {})
+                entry['type'] = m.group('type')
+                entry['pwm'] = int(m.group('pwm'))
+                entry['io_pwm'] = m.group('io_pwm')
+
+                continue
+
         return ret_dict

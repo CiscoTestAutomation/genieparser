@@ -88,8 +88,8 @@ class ShowVlan(ShowVlanSchema):
         # 100  V100                             suspended
         # 105  Misc. Name                       active    Gi1/0/13, Gi1/0/14, Gi1/0/15, Gi1/0/16, Gi1/0/19
         p1 = re.compile(r'^(?P<vlan_id>[0-9]+)\s+(?P<name>(?=\S).*(?<=\S))'
-                         '\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
-                         '(?P<interfaces>[\s\S]+)?$')
+                         r'\s+(?P<status>(active|suspended|(.*)lshut|(.*)unsup)+)'
+                         r'(?P<interfaces>[\s\S]+)?$')
 
         #                                                Gi1/0/19, Gi1/0/20, Gi1/0/21, Gi1/0/22
         p2 = re.compile(r'^\s*(?P<space>\s{48})(?P<interfaces>[\w\s\/\,]+)?$')
@@ -98,9 +98,9 @@ class ShowVlan(ShowVlanSchema):
         # ---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
         # 1    enet  100001     1500  -      -      -        -    -        0      0
         p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<type>[a-zA-Z]+)'
-                        ' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
-                        ' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
-                        ' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
+                        r' +(?P<said>\d+) +(?P<mtu>[\d\-]+) +(?P<parent>[\w\-]+)?'
+                        r' +(?P<ring_no>[\w\-]+)? +(?P<bridge_no>[\w\-]+)? +(?P<stp>[\w\-]+)?'
+                        r' +(?P<bridge_mode>[\w\-]+)? +(?P<trans1>[\d\-]+) +(?P<trans2>[\d\-]+)$')
 
         # Remote SPAN VLANs
         # -------------------------------------
@@ -121,15 +121,15 @@ class ShowVlan(ShowVlanSchema):
         #         303       community
         # 101     402       non-operational
         p5 = re.compile(r'^\s*(?P<primary>[0-9a-zA-Z]+)? +(?P<secondary>\d+)'
-                        ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
+                        r' +(?P<type>[\w\-]+)( +(?P<interfaces>[\s\S]+))?')
 
         # VLAN AREHops STEHops Backup CRF
         # ---- ------- ------- ----------
         # 1003 7       7       off
         p6 = re.compile(r'^\s*(?P<vlan_id>\d+)\s+'
-                         '(?P<are_hops>\d+)\s+'
-                         '(?P<ste_hops>\d+)\s+'
-                         '(?P<backup_crf>\S+)\s*$')
+                         r'(?P<are_hops>\d+)\s+'
+                         r'(?P<ste_hops>\d+)\s+'
+                         r'(?P<backup_crf>\S+)\s*$')
 
         vlan_dict = {}
         primary = prev_line = ""
@@ -626,16 +626,16 @@ class ShowVlanId(ShowVlanIdSchema):
                                 r'(?:\s+(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)|([A-za-z0-9]+\:\d+(.*))))?')
         p2 = re.compile(r'(?P<ports>([A-Za-z\-]+[\/\d\-\:\.]+\d+)(.*)|([A-za-z0-9]+\:\d+(.*)))')
         p3 = re.compile(r'\d+ +'
-                    '(?P<type>\w+) +'
-                    '(?P<said>\d+) +'
-                    '(?P<mtu>\d+) +'
-                    '(?P<parent>\S+) +'
-                    '(?P<ring_no>\S+) +'
-                    '(?P<bridge_no>\S+) +'
-                    '(?P<stp>\S+) +'
-                    '(?P<brdg_mode>\S+) +'
-                    '(?P<trans1>\d+) +'
-                    '(?P<trans2>\d+)')
+                    r'(?P<type>\w+) +'
+                    r'(?P<said>\d+) +'
+                    r'(?P<mtu>\d+) +'
+                    r'(?P<parent>\S+) +'
+                    r'(?P<ring_no>\S+) +'
+                    r'(?P<bridge_no>\S+) +'
+                    r'(?P<stp>\S+) +'
+                    r'(?P<brdg_mode>\S+) +'
+                    r'(?P<trans1>\d+) +'
+                    r'(?P<trans2>\d+)')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1270,3 +1270,201 @@ class ShowVlanInternalUsage(ShowVlanInternalUsageSchema):
                 internal_vlan_dict[vlan]['usage'] = usage
                 continue
         return parsed_dict
+
+
+# =================================================
+# Schema for 'show vlans <vlan_id>' command
+# =================================================
+
+class ShowVlansSchema(MetaParser):
+    """Schema for: show vlans <vlan_id>"""
+
+    schema = {
+        'vlans': {
+            Any(): {
+                'vlan_id': str,
+                'encapsulation': str,
+                'protocols': {
+                    Any(): {
+                        'received': int,
+                        'transmitted': int,
+                    }
+                },
+                Optional('trunk_interfaces'): list,
+                Optional('subinterfaces'): {
+                    Any(): {
+                        'vlan_id': int,
+                        Optional('ip_address'): str,
+                        Optional('total_packets_input'): int,
+                        Optional('total_bytes_input'): int,
+                        Optional('total_packets_output'): int,
+                        Optional('total_bytes_output'): int,
+                    }
+                },
+                Optional('isl_subinterfaces'): str,
+            }
+        }
+    }
+
+
+# =================================================
+# Parser for 'show vlans <vlan_id>' command
+# =================================================
+
+class ShowVlans(ShowVlansSchema):
+    """Parser for: show vlans <vlan_id>"""
+
+    cli_command = ['show vlans {vlan_id}']
+
+    def cli(self, vlan_id="", output=None):
+
+        if output is None:
+            cmd = self.cli_command[0].format(vlan_id=vlan_id)
+            output = self.device.execute(cmd)
+
+        # VLAN ID: 901 (IEEE 802.1Q Encapsulation)
+        p1 = re.compile(r'^VLAN ID:\s+(?P<vlan_id>\d+)\s+\((?P<encapsulation>.*)\)$')
+
+        # Protocols Configured:          Received:        Transmitted:
+        #                     IP                  1                   0
+        p2 = re.compile(r'^(?P<protocol>\w+)\s+(?P<received>\d+)\s+(?P<transmitted>\d+)$')
+
+        # VLAN trunk interfaces for VLAN ID 901:
+        p3 = re.compile(r'^VLAN trunk interfaces for VLAN ID \d+:$')
+
+        # GigabitEthernet3.901
+        p4 = re.compile(r'^(?P<interface>[\w\.\/]+)$')
+
+        # GigabitEthernet3.901 (901)
+        p5 = re.compile(r'^(?P<interface>[\w\.\/]+)\s+\((?P<vlan_id>\d+)\)$')
+
+        # IP: 200.4.1.1
+        p6 = re.compile(r'^\s+IP:\s+(?P<ip_address>[\d\.]+)$')
+
+        # Total 2 packets, 128 bytes input
+        p7 = re.compile(r'^\s+Total\s+(?P<packets>\d+)\s+packets,\s+(?P<bytes>\d+)\s+bytes\s+input$')
+
+        # Total 2 packets, 110 bytes output
+        p8 = re.compile(r'^\s+Total\s+(?P<packets>\d+)\s+packets,\s+(?P<bytes>\d+)\s+bytes\s+output$')
+
+        # No subinterface configured with ISL VLAN ID 901
+        p9 = re.compile(r'^No subinterface configured with ISL VLAN ID (?P<vlan_id>\d+)$')
+
+        parsed_dict = {}
+        current_vlan = None
+        current_interface = None
+        in_trunk_section = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # VLAN ID: 901 (IEEE 802.1Q Encapsulation)
+            m = p1.match(line)
+            if m:
+                vlan_id = m.groupdict()['vlan_id']
+                encapsulation = m.groupdict()['encapsulation']
+                
+                if 'vlans' not in parsed_dict:
+                    parsed_dict['vlans'] = {}
+                
+                parsed_dict['vlans'][vlan_id] = {
+                    'vlan_id': vlan_id,
+                    'encapsulation': encapsulation,
+                    'protocols': {}
+                }
+                current_vlan = vlan_id
+                in_trunk_section = False
+                continue
+
+            # Protocols Configured:          Received:        Transmitted:
+            #                     IP                  1                   0
+            m = p2.match(line)
+            if m and current_vlan:
+                protocol = m.groupdict()['protocol']
+                received = int(m.groupdict()['received'])
+                transmitted = int(m.groupdict()['transmitted'])
+                
+                parsed_dict['vlans'][current_vlan]['protocols'][protocol] = {
+                    'received': received,
+                    'transmitted': transmitted
+                }
+                continue
+
+            # VLAN trunk interfaces for VLAN ID 901:
+            m = p3.match(line)
+            if m:
+                in_trunk_section = True
+                continue
+
+            # GigabitEthernet3.901
+            if in_trunk_section:
+                m = p4.match(line)
+                if m and '(' not in line:  # Simple interface name without vlan ID
+                    interface = m.groupdict()['interface']
+                    if current_vlan:
+                        if 'trunk_interfaces' not in parsed_dict['vlans'][current_vlan]:
+                            parsed_dict['vlans'][current_vlan]['trunk_interfaces'] = []
+                        parsed_dict['vlans'][current_vlan]['trunk_interfaces'].append(interface)
+                    continue
+
+            # GigabitEthernet3.901 (901)
+            m = p5.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                vlan_id_sub = int(m.groupdict()['vlan_id'])
+                current_interface = interface
+                
+                if current_vlan:
+                    if 'subinterfaces' not in parsed_dict['vlans'][current_vlan]:
+                        parsed_dict['vlans'][current_vlan]['subinterfaces'] = {}
+                    
+                    parsed_dict['vlans'][current_vlan]['subinterfaces'][interface] = {
+                        'vlan_id': vlan_id_sub
+                    }
+                
+                in_trunk_section = False
+                continue
+
+            #                     IP: 200.4.1.1
+            m = p6.match(line)
+            if m and current_interface and current_vlan:
+                ip_address = m.groupdict()['ip_address']
+                if 'subinterfaces' in parsed_dict['vlans'][current_vlan] and \
+                   current_interface in parsed_dict['vlans'][current_vlan]['subinterfaces']:
+                    parsed_dict['vlans'][current_vlan]['subinterfaces'][current_interface]['ip_address'] = ip_address
+                continue
+
+            #       Total 2 packets, 128 bytes input
+            m = p7.match(line)
+            if m and current_interface and current_vlan:
+                packets = int(m.groupdict()['packets'])
+                bytes_count = int(m.groupdict()['bytes'])
+                if 'subinterfaces' in parsed_dict['vlans'][current_vlan] and \
+                   current_interface in parsed_dict['vlans'][current_vlan]['subinterfaces']:
+                    parsed_dict['vlans'][current_vlan]['subinterfaces'][current_interface]['total_packets_input'] = packets
+                    parsed_dict['vlans'][current_vlan]['subinterfaces'][current_interface]['total_bytes_input'] = bytes_count
+                continue
+
+            #       Total 2 packets, 110 bytes output
+            m = p8.match(line)
+            if m and current_interface and current_vlan:
+                packets = int(m.groupdict()['packets'])
+                bytes_count = int(m.groupdict()['bytes'])
+                if 'subinterfaces' in parsed_dict['vlans'][current_vlan] and \
+                   current_interface in parsed_dict['vlans'][current_vlan]['subinterfaces']:
+                    parsed_dict['vlans'][current_vlan]['subinterfaces'][current_interface]['total_packets_output'] = packets
+                    parsed_dict['vlans'][current_vlan]['subinterfaces'][current_interface]['total_bytes_output'] = bytes_count
+                continue
+
+            # No subinterface configured with ISL VLAN ID 901
+            m = p9.match(line)
+            if m and current_vlan:
+                vlan_id_isl = m.groupdict()['vlan_id']
+                parsed_dict['vlans'][current_vlan]['isl_subinterfaces'] = f"No subinterface configured with ISL VLAN ID {vlan_id_isl}"
+                continue
+
+        return parsed_dict
+
+

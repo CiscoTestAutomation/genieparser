@@ -49,7 +49,9 @@ class ShowStackPowerSchema(MetaParser):
                 Optional('power_stack_detail'):{  
                     'stack_mode': str,
                     'stack_topology': str,
-                    Optional('stack_ecomode'): str,
+                    Optional('Stack_total_input_power'): int,
+                    Optional('stack_auto_off'): str,
+                    Optional('power_supply_auto_off'): str,
                     'switch': {
                         Any(): {
                             'power_budget': int,
@@ -61,7 +63,7 @@ class ShowStackPowerSchema(MetaParser):
                             'port_2_status': str,
                             'neighbor_on_port_1': str,
                             'neighbor_on_port_2': str,
-                            Optional('ecomode'): str,
+                            Optional('auto_off'): str,
                             Optional('capacity'): str,
                         },
                     },
@@ -86,6 +88,7 @@ class ShowStackPowerSchema(MetaParser):
             'total_consumed_power_poe': Or(int, float),
         },
     }
+
 
 
 class ShowStackPower(ShowStackPowerSchema):
@@ -204,7 +207,9 @@ class ShowPowerInlineSchema(MetaParser):
                 Optional('device'): str,
                 Optional('class'): str,
                 Optional('priority'): str,
-                Optional('max'): float
+                Optional('max'): float,
+                Optional('admin_max'): float,
+                Optional('admin_consumption'): float
             },
         },
         Optional('watts'): {
@@ -268,6 +273,15 @@ class ShowPowerInline(ShowPowerInlineSchema):
                         r'[Uu]sed\:(?P<used>[\d\.]+)\(\w+\)\s+'
                         r'[Rr]emaining\:(?P<remaining>[\d\.]+)\(\w+\)\s*$')
 
+        # Gi2/16    auto   power-deny 0.0     n/a                 n/a   4.0 
+        p4 = re.compile(r'^(?P<intf>\S+)\s+(?P<admin_state>\S+)\s+(?P<oper_state>[\w\-]+)\s+'
+                         r'(?P<power>[\d\.]+)\s+(?P<device>.+?)\s+(?P<class>\S+)\s+(?P<max>[\d\.]+)\s*$')
+                
+        # Gi2/16                 4.0                 15.4
+        p5 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s+'
+                        r'(?P<admin_max>[\d\.]+)\s+'
+                        r'(?P<admin_consumption>[\d\.]+)$')
+
         for line in out.splitlines():
             line = line.strip()
             
@@ -279,6 +293,8 @@ class ShowPowerInline(ShowPowerInlineSchema):
                 intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
                 intf_dict['power'] = float(group.pop('power'))
                 intf_dict['max'] = float(group.pop('max'))
+                intf_dict['device'] = group.pop('device').strip() # Capture and strip device
+                intf_dict['class'] = group.pop('class').strip()
                 intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
                 continue
 
@@ -318,6 +334,32 @@ class ShowPowerInline(ShowPowerInlineSchema):
                 stat_dict['available'] = float(group.pop('available'))
                 stat_dict['used'] = float(group.pop('used'))
                 stat_dict['remaining'] = float(group.pop('remaining'))
+
+            # Gi2/16    auto   power-deny 0.0     n/a                 n/a   4.0 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+
+                intf_dict['power'] = float(group.pop('power'))
+                intf_dict['max'] = float(group.pop('max'))
+                intf_dict['class'] = group.pop('class')  # Keep 'n/a' as is
+                intf_dict['device'] = group.pop('device').strip()  # Keep 'n/a' as is
+                
+                intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
+                continue
+
+            # Gi2/16                 4.0                 15.4
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                intf = Common.convert_intf_name(group.pop('intf'))
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
+
+                intf_dict['admin_max'] = float(group.pop('admin_max'))
+                intf_dict['admin_consumption'] = float(group.pop('admin_consumption'))
+                continue
             
         # Remove statistics if we don't have any interfaces
         if 'interface' not in ret_dict and 'watts' in ret_dict:
@@ -500,7 +542,7 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 r'(?P<switch_num>\d+) +'
                 r'(?P<power_supply_num>\d+)$')
 
-        #Power stack name: Powerstack-1
+        # Power stack name: Powerstack-1
         p2 = re.compile(r"^Power+\s+stack+\s+name:+\s+(?P<name>[\w\-]+)$")
 
         # Stack mode: Power sharing 
@@ -539,10 +581,13 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
         # Neighbor on port 2: 0000.0000.0000
         p14 = re.compile(r"^Neighbor+\s+on+\s+port+\s+2:+\s+(?P<neighbor_on_port_2>.*)$")
 
-        # Stack Ecomode: Disable
-        p15 = re.compile(r"^Stack Ecomode:+\s+(?P<stack_ecomode>\w+)$")
-        #Ecomode: FEP B auto offlined, capacity: 350 
-        p16 = re.compile(r"^Ecomode:\s+(?P<ecomode>.*),\s+capacity:\s+(?P<capacity>\w+)$")
+        # Stack Auto-off: Disable
+        p15 = re.compile(r"^Power+\s+Supply+\s+auto-off:+\s+(?P<power_supply_auto_off>\w+)$")
+
+        # Auto-off: FEP B auto offlined, capacity: 350 
+        p16 = re.compile(r"^Auto+\s+off:+\s+(?P<auto_off>.*),+\s+capacity:+\s+(?P<capacity>\w+)$")
+        
+        p17 = re.compile(r"^Stack+\s+total+\s+input+\s+power:+\s+(?P<Stack_total_input_power>\d+)$")
 
         for line in out.splitlines():
             line = line.strip()    
@@ -645,20 +690,26 @@ class ShowStackPowerDetail(ShowStackPowerSchema):
                 stack_dict_5['neighbor_on_port_2'] = match.group('neighbor_on_port_2')
                 continue
             
-            # Stack Ecomode: Disable            
+            # Power Supply auto-off: Disable            
             if p15.match(line):
                 match = p15.match(line)
-                stack_dict_3['stack_ecomode'] = match.group('stack_ecomode')
+                stack_dict_3['power_supply_auto_off'] = match.group('power_supply_auto_off')
                 continue
             
-            # Ecomode: FEP B auto offlined, capacity: 350 
+            # Auto off: FEP B auto offlined, capacity: 350 
             if p16.match(line):
                 match = p16.match(line)
-                stack_dict_5['ecomode'] = match.group('ecomode')
+                stack_dict_5['auto_off'] = match.group('auto_off')
                 stack_dict_5['capacity'] = match.group('capacity')
+                continue
+            
+            if p17.match(line):
+                match = p17.match(line)
+                stack_dict_3['Stack_total_input_power'] = int(match.group('Stack_total_input_power'))
                 continue
         
         return ret_dict
+
 
 class ShowPowerInlineConsumptionSchema(MetaParser):
     """
@@ -704,8 +755,8 @@ class ShowPowerInlineConsumption(ShowPowerInlineConsumptionSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<intf>[\w\-\/\.]+)\s*'
-                         '(?P<consumption_configured>\w+)\s+'
-                         '(?P<admin_consumption>[\d\.]+)$')
+                         r'(?P<consumption_configured>\w+)\s+'
+                         r'(?P<admin_consumption>[\d\.]+)$')
         
         
 
@@ -1633,7 +1684,8 @@ class ShowPowerInlineModule(ShowPowerInlineModuleSchema):
         # 1           675.0       16.6       658.4
         p1 = re.compile(r"^(?P<mod>\d+)\s+(?P<available_power>\S+)\s+(?P<used_power>\S+)\s+(?P<remaining_power>\S+)$")
         # Gi1/0/1   auto   off        0.0     n/a                 n/a   60.0 
-        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<admin>\w+)\s+(?P<oper>\w+)\s+(?P<power>\d+\.\d+)\s+(?P<device>[\S\s]+\S+)\s+(?P<class>\S+)\s+(?P<max>\S+)$")
+        # Gi1/0/24  static power-deny 6.9     n/a                 n/a   6.9
+        p2 = re.compile(r"^(?P<interface>\S+)\s+(?P<admin>\w+)\s+(?P<oper>[\w-]+)\s+(?P<power>\d+\.\d+)\s+(?P<device>\S+(?:\s+\S+)*)\s+(?P<class>\S+)\s+(?P<max>\S+)$")
 
 
         ret_dict = {}

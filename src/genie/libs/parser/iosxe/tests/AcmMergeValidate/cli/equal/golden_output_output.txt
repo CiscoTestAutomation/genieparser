@@ -1,0 +1,10 @@
+Config Validation of Configlet: flash:meta-new
+    Validation Stage 
+	Status : Fail
+	Time   : 3915 msec
+	Failed command: 
+	    enrollment pkcs12
+	Failed reason: 
+	    enrollment pkcs12
+	      ^
+	    % Invalid input detected at '^' marker.

@@ -1,0 +1,25 @@
+show forwarding distribution multicast route
+
+IPv4 Multicast Routing Table for table-id: 1
+Total number of groups: 0
+Legend:
+   C = Control Route
+   D = Drop Route
+   G = Local Group (directly connected receivers)
+   O = Drop on RPF Fail
+   P = Punt to supervisor
+   L = SRC behind L3
+   d = Decap Route
+   Es = Extranet src entry
+   Er = Extranet recv entry
+   Nf = VPC None-Forwarder
+   dm = MVPN Decap Route
+   em = MVPN Encap Route
+   IPre = Ingress Service-reflect Pre
+   EPre = Egress Service-reflect Pre
+   Pst = Ingress/Egress Service-reflect Post
+   Dci = Dci Core Route
+   V   = Source is Vipr
+   Rm  = Source is DCI Remote
+   PstUM  = Post translated UM NAT
+   Mdt  = Data Mdt

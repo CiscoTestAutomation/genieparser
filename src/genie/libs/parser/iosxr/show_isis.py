@@ -210,14 +210,14 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
 
         # 12a4           PO0/1/0/1        *PtoP*         Up    23       00:00:06 Capable  None
         p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
-                         '+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<bfd>(Up|Down|None|Init))$')
+                         r'+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<bfd>(Up|Down|None|Init))$')
 
         # Total adjacency count: 1
         p3 = re.compile(r'^Total +adjacency +count: +(?P<adjacency_count>(\d+))$')
 
         # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    26   22:30:26 Yes None None
         p4 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None)) +(?P<hold>\S+) '
-                         '+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<ipv4_bfd>([\s\w]+)) +(?P<ipv6_bfd>([\w\s]+))$')
+                         r'+(?P<changed>\S+) +(?P<nsf>\S+) +(?P<ipv4_bfd>([\s\w]+)) +(?P<ipv6_bfd>([\w\s]+))$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -347,7 +347,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         # R1_xe          Gi0/0/0/0.115    fa16.3eff.4f49 Up    24       L1L2 Capable
         p2 = re.compile(r'^(?P<system_id>\S+) +(?P<interface>\S+) +(?P<snpa>\S+) +(?P<state>(Up|Down|None|Init)+) +(?P<holdtime>\S+) '
-                         '+(?P<type>\S+) +(?P<ietf_nsf>\S+)$')
+                         r'+(?P<type>\S+) +(?P<ietf_nsf>\S+)$')
 
         # Total neighbor count: 1
         p3 = re.compile(r'^Total\sneighbor\scount:\s+(?P<neighbor_count>\S+)$')
@@ -579,7 +579,7 @@ class ShowIsis(ShowIsisSchema):
         # IPv6 Unicast
         # IPv4 Unicast VRF VRF1
         r13 = re.compile(r'(?P<topology>(IPv6|IPv4)\s+Unicast)'
-                          '(\s*VRF\s*(?P<topology_vrf>\S+))?')
+                          r'(\s*VRF\s*(?P<topology_vrf>\S+))?')
 
         # Level-1
         # Level-2
@@ -587,7 +587,7 @@ class ShowIsis(ShowIsisSchema):
 
         # Metric style (generate/accept): Wide/Wide
         r15 = re.compile(r'Metric\s+style\s*\(generate\/accept\)\s*:\s*'
-                          '(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
+                          r'(?P<generate_style>\w+)\/(?P<accept_style>\w+)')
 
         # Metric: 10
         r16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)')
@@ -603,22 +603,22 @@ class ShowIsis(ShowIsisSchema):
 
         # Advertise Passive Interface Prefixes Only: No
         r20 = re.compile(r'Advertise\s+Passive\s+Interface\s+Prefixes\s+Only'
-                          '\s*:\s*(?P<adv_passive_only>\S+)')
+                          r'\s*:\s*(?P<adv_passive_only>\S+)')
 
         # SRLB not allocated
         # SRLB allocated: 15000 - 15999
         r21 = re.compile(r'SRLB\s*(?P<srlb>[\w\s]+)'
-                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
+                          r'(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
         # SRGB allocated: 16000 - 81534
         # SRGB not allocated
         r22 = re.compile(r'SRGB\s*(?P<srgb>[\w\s]+)'
-                          '(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
+                          r'(\:\s*(?P<start>\d+)\s*\-\s*(?P<end>\d+))?')
 
         # Loopback0 is running actively (active in configuration)
         # GigabitEthernet0/0/0/0 is running actively (active in configuration)
         r23 = re.compile(r'(?P<interface>\S+)\s+is\s+(?P<running_state>[\s\w]+)'
-                          '\s+\((?P<configuration_state>[\w\s]+)\)')
+                          r'\s+\((?P<configuration_state>[\w\s]+)\)')
 
         # OSPF process 75688
         r24 = re.compile(r'^(?P<protocol>\S+) process +(?P<process>\d+)$')
@@ -980,7 +980,7 @@ class ShowIsisHostname(ShowIsisHostnameSchema):
         # 2     1720.18ff.0213 leaf-2.qa-site1
         # 2     1720.18ff.0250 tor-23.tenlab-cloud
         r2 = re.compile(r'(?P<level>[\d\,]+)\s+(?P<local_router>\**)\s+'
-                         '(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
+                         r'(?P<system_id>\S+)\s+(?P<dynamic_hostname>\S+)')
 
         parsed_output = {}
         vrf = 'default'
@@ -1717,7 +1717,7 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
 
         # IS-IS TEST Level 2 IPv4 Unicast Route Calculation Log
         r1 = re.compile(r'IS\-IS\s+(?P<instance>\S+)\s+Level\s+(?P<level>\d+)'
-                         '\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
+                         r'\s+(?P<address_family>.+)\s+Route\s+Calculation\s+Log')
 
         # --- Mon Oct  7 2019 ---
         r2 = re.compile(r'\-\-\-\s+(?P<log_date>[\s\w]+)\s+\-\-\-')
@@ -1728,8 +1728,8 @@ class ShowIsisSpfLog(ShowIsisSpfLogSchema):
         # 00:00:17.514   PRC     0    64     6      bla-host1.12-34 PREFIXBAD
         # 23:42:51.522 PPFRR     0    64     1                      PERPREFIXFRR
         r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<log_type>\S+)\s+(?P<time_ms>\d+)'
-                         '\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
-                         '(?P<first_trigger_lsp>\S*)\s+(?P<triggers>[\w\s]+)')
+                         r'\s+(?P<total_nodes>\d+)\s+(?P<trigger_count>\d+)\s+'
+                         r'(?P<first_trigger_lsp>\S*)\s+(?P<triggers>[\w\s]+)')
 
         parsed_output = {}
         log_index = 1
@@ -1985,8 +1985,8 @@ class ShowIsisSpfLogDetail(ShowIsisSpfLogDetailSchema):
         # All Priorities         0        -    0
         # All Priorities         0       0     0
         r12 = re.compile(r'(?P<priority_level>\w+)\s+Priorit(y|ies)\s*:*\s+'
-                          '(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
-                          '(?P<total>\d+)')
+                          r'(?P<reach>\d+)\s+(?P<unreach>\d+|\-)\s+'
+                          r'(?P<total>\d+)')
 
         # SR uloop:              No
         r13 = re.compile(r'^SR +uloop: +(?P<sr_uloop>\w+)$')
@@ -2307,7 +2307,7 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # ISIS isp Level 1 LSP log
         # Level 1 LSP log
         r1 = re.compile(r'(IS\-*IS\s+(?P<instance>.+)\s+)?Level\s+'
-                         '(?P<level>\d+)\s+LSP\s+log')
+                         r'(?P<level>\d+)\s+LSP\s+log')
 
         # --- Thu Sep 26 2019 ---
         # --- Mon Sep 30 2019 ---
@@ -2318,8 +2318,8 @@ class ShowIsisLspLog(ShowIsisLspLogSchema):
         # 16:15:03.822     2  BE2              DELADJ
         # 00:02:36         1
         r3 = re.compile(r'(?P<timestamp>[0-9\:\.]+)\s+(?P<count>\d+)\s*'
-                         '(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
-                         '(?P<triggers>[\w*\s]*)')
+                         r'(?P<interface>[A-Z]+[a-z]*[\/*\d\.]+)?\s*'
+                         r'(?P<triggers>[\w*\s]*)')
 
         parsed_output = {}
         log_date = ''
@@ -2784,7 +2784,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         # Measured Delay:           Min:- Avg:- Max:- usec
         # Normalized Delay:         Min:- Avg:- Max:- usec
         r63 = re.compile(r'^(?P<delay_name>[a-zA-Z ]+):\s+Min:(?P<min>[-\d]+)\s+'
-                         'Avg:(?P<avg>[-\d]+)\s+Max:(?P<max>[-\d]+)\s+usec$')
+                         r'Avg:(?P<avg>[-\d]+)\s+Max:(?P<max>[-\d]+)\s+usec$')
 
         parsed_output = {}
         interface_flag = False
@@ -3828,7 +3828,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
         # Metric: 40         IP-Extended-Interarea 10.7.8.0/24
         r15 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+IP\-Extended\-'
-                          'Interarea\s+(?P<ip_interarea>\S+)')
+                          r'Interarea\s+(?P<ip_interarea>\S+)')
 
         # Metric: 40         MT (IPv6 Unicast) IPv6-Interarea 2001:db8:10:7::/64
         r16 = re.compile(r'Metric\s*:\s*(?P<metric>\d+)\s+MT\s+\('
@@ -5614,9 +5614,12 @@ class ShowIsisDatabase(ShowIsisDatabaseSchema):
         # PE-9001-1.00-00 0x0000039f 0xa464 931 /1199 0/0/0
         # XRv9k-PE1.00-00     * 0x0000141f   0xfc84        432             0/0/0
         # AGG-PE-A.00-00        0x00001430   0x09c6        917             0/0/0
-        p3 = re.compile(r'^(?P<lspid>[A-Za-z\-0-9\.]+)\s+(?P<lsp_seq_num>[\w \*]+)\s+'
-                        r'(?P<lsp_checksum>\w+)\s+(?P<lsp_holdtime>\d+)\s+(?:\/'
-                        r'(?P<rcvd>[\d\*]+)\s+)?(?P<attach_bit>[\d]+)\/(?P<p_bit>[\d]+)\/(?P<overload_bit>[\d]+)$')
+        # P1.00-00 * 0x00000046 0x273f 43588/* 0/0/0
+        p3 = re.compile(r'^(?P<lspid>[A-Za-z0-9\-\s\.]+?)\s+'
+                r'(?P<lsp_seq_num>\*?\s*0x[0-9A-Fa-f]+)\s+'
+                r'(?P<lsp_checksum>0x[0-9A-Fa-f]+)\s+'
+                r'(?P<lsp_holdtime>\d+)(?:\s*\/\s*(?P<rcvd>[\d\*]+))?\s+'
+                r'(?P<attach_bit>\d+)\/(?P<p_bit>\d+)\/(?P<overload_bit>\d+)$')
 
         # Total Level-2 LSP count: 4 Local Level-2 LSP count: 1
         p4 = re.compile(r'^Total\s+Level-(?P<total_level>\d+)\s+LSP\s+count:\s+(?P<total_lsp_count>\d+)\s+'

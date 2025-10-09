@@ -1,0 +1,8 @@
+LISP IPv4 Mapping Cache for LISP 0 EID-table default (IID 1), 1 entries
+
+0.0.0.0/0, uptime: 00:58:48, expires: never, via static
+  Sources: static
+  State: forward-native, last modified: 00:58:48, map-source: local
+  Exempt, Packets out: 503(201990 bytes), counters are not accurate (~ 00:00:12 ago)
+  Configured as EID address space
+  Encapsulating to proxy ETR 

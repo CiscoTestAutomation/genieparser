@@ -1,0 +1,14 @@
+show ip nhrp self
+192.240.1.6/32 via 192.240.1.6
+   Tunnel11 created 00:55:35, never expire 
+   Type: static, Flags: router unique local 
+   NBMA address: 17.0.1.1
+    (no-socket) 
+Metadata Exchange Framework:
+ Type	State
+ 1   	Reset
+ MEF ext data:0x0
+ 2   	Reset
+ MEF ext data:0x0
+ 3   	Reset
+ MEF ext data:0x0

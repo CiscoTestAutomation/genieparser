@@ -1,0 +1,9 @@
+MLD Connected Group Membership for VRF "MCAST_VRF_A" - 4 total entries
+Type: S - Static, D - Dynamic, L - Local, T - SSM Translated, H - Host Proxy
+      * - Cache Only
+Group Address      Type Interface              Uptime    Expires   Last Reporter
+ff04:230:11:1::1   D   Vlan20                 23:20:22  00:03:50  fe80::10:22:1:10
+ff04:230:11:1::1   D   Vlan2                  23:20:22  00:02:36  fe80::10:23:4:30
+ff3e:232:11:1::1
+  10:11:1::10      D    Vlan20                 23:20:22  00:03:50  fe80::10:22:1:20
+  10:11:1::10      D    Vlan2                  23:20:22  00:02:36  fe80::10:23:4:40

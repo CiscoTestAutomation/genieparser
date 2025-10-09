@@ -1,7 +1,9 @@
 """show_platform.py
 
 NXOS parser class for below commands:
-       show version
+        show version
+        show inventory
+        show inventory <option>
         show processes cpu
         show processes cpu | include <include>
         show processes memory
@@ -143,7 +145,11 @@ class ShowVersion(ShowVersionSchema):
 
             # System version: 9.3(6)
             p5 = re.compile(r'^\s*system: +version +(?P<system_version>[\w.\(\)]+)$')
-            m = p5.match(line)
+
+            #system:    version 15.3(2b) [build 15.3(2b)]
+            p5_1 = re.compile(r'^\s*system: +version +(?P<system_version>[\w\.\(\)\[\]\s]+)$')
+
+            m = p5.match(line) or p5_1.match(line)
             if m:
                 system_version = str(m.groupdict()['system_version'])
 
@@ -378,30 +384,38 @@ class ShowVersion(ShowVersionSchema):
 
 class ShowInventorySchema(MetaParser):
     """Schema for show inventory"""
-    schema = {'name':
-                {Any():
-                    {'description': str,
-                     'slot': str,
-                     Optional('pid'): str,
-                     Optional('vid'): str,
-                     Optional('serial_number'): str}
-                },
+    schema = {
+        "name": {
+            Any(): {
+                "description": str,
+                "slot": str,
+                Optional("pid"): str,
+                Optional("vid"): str,
+                Optional("serial_number"): str,
             }
+        },
+    }
 
 
 class ShowInventory(ShowInventorySchema):
     """Parser for show inventory"""
 
-    cli_command = 'show inventory'
+    cli_command = [
+        'show inventory',
+        'show inventory {option}'
+    ]
 
-    def cli(self,output=None):
+    def cli(self, option=None, output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: executing, transforming, returning
         '''
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if option:
+                out = self.device.execute(self.cli_command[1].format(option=option))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -410,9 +424,21 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "Chassis", DESCR: "NX-OSv Chassis"
         # NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
         # NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
-        p1 = re.compile(r'^NAME: +\"(?P<name>[\S\s]+)\", +DESCR: +\"(?P<description>[\S\s]+)\"$')
+        # NAME: Ethernet1/1,  DESCR: CISCO-INNOLIGHT
+        p1 = re.compile(r'^NAME: +\"?(?P<name>.+?)\"?, +DESCR: +\"?(?P<description>.+?)\s*\"?$')
 
+        # Slot 30
         p1_1 = re.compile(r'^Slot +(?P<slot>\d+)$')
+        # Power Supply 5
+        p1_2 = re.compile(r'^Power Supply (?P<slot>\d+)$')
+        # Fan 2
+        p1_3 = re.compile(r'^Fan (?P<slot>\d+)$')
+        # Ethernet1/1
+        p1_4 = re.compile(r'(?P<name>\w+(?P<slot>\d+)/(?P<port>\d+))')
+
+        # NAME: "SAM 1",  DESCR: Service Accelarator Module
+        p1_5 = re.compile(r'^SAM +(?P<sam>\d+)$')
+
 
         # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
         # PID: N9K-C9300-FAN2 , VID: V01 , SN: N/A
@@ -421,22 +447,54 @@ class ShowInventory(ShowInventorySchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # NAME: "Chassis", DESCR: "NX-OSv Chassis"
+            # NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
+            # NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
+            # NAME: Ethernet1/1,  DESCR: CISCO-INNOLIGHT
             m = p1.match(line)
             if m:
                 name = m.groupdict()['name']
                 description = m.groupdict()['description']
+
+                # Match slot number, use prefix if power supply or fan
+                slot = 'None'
+                m1_1 = p1_1.match(name)
+                m1_2 = p1_2.match(name)
+                m1_3 = p1_3.match(name)
+                m1_4 = p1_4.match(name)
+                if m1_1:
+                    slot = m1_1.groupdict()['slot']
+                elif m1_2:
+                    slot = m1_2.groupdict()['slot']
+                    slot = f'PSU{slot}'
+                elif m1_3:
+                    slot = m1_3.groupdict()['slot']
+                    slot = f'FAN{slot}'
+                elif m1_4:
+                    slot = m1_4.groupdict()['slot']
+                    port = m1_4.groupdict()['port']
+                    name = f'{slot} transceiver {port}'
+                    slot = f'{slot}/{port}'
+
                 item_dict = inventory_dict.setdefault('name', {}).setdefault(name, {})
                 item_dict.update({'description': description})
 
                 m1 = p1_1.match(name)
                 if m1:
                     slot = m1.groupdict()['slot']
-                else:
-                    slot = 'None'
+
+                # NAME: "SAM 1",  DESCR: Service Accelarator Module
+                m2 = p1_5.match(name)
+                if m2:
+                    slot = m2.groupdict()['sam']
 
                 item_dict.update({'slot': slot})
                 continue
 
+            # PID: N9K-NXOSV , VID: , SN: 92XXRQ9UCZS
+            # PID: N9K-C9300-FAN2 , VID: V01 , SN: N/A
+            # PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
             m = p2.match(line)
             if m:
                 if m.groupdict()['pid']:
@@ -922,7 +980,23 @@ class ShowModuleSchema(MetaParser):
                        Optional('slot/world_wide_name'): str,
                        Optional('serial_number'): str}
                   },
-              }
+              Optional('sam'):
+                  {
+                    Optional(Any()): #Module
+                    {
+                        Optional(Any()): # SAM
+                        {
+                        Optional('module_type'): str,
+                        Optional('model'): str,
+                        Optional('status'): str,
+                        Optional('software'): str,
+                        Optional('hardware'): str,
+                        Optional('online_diag_status'): str,
+                        Optional('serial_number'): str
+                        }
+                    }
+                },
+            }
 
 class ShowModule(ShowModuleSchema):
     """Parser for show module"""
@@ -944,11 +1018,13 @@ class ShowModule(ShowModuleSchema):
         table_header = None
         header_type = None
         lem_hit = False
+
         parse_status = False
         rp_list = []
         map_dic = {}
-        
+
         # Mod  Ports  Module-Type                         Model              Status
+        # Mod SAM                   Module-Type                            Model           Status
         p1 = re.compile(r'^\s*Mod.*$')
 
         # Xbar Ports  Module-Type                         Model              Status
@@ -957,12 +1033,16 @@ class ShowModule(ShowModuleSchema):
         # Lem Ports             Module-Type                      Model           Status
         p2_1 = re.compile(r'^\s*Lem.*$')
 
+        # 1    1     DPU                       DPU-PART-NUM          ok
+        p2_3 = re.compile(r'^\s*(?P<module>\d+)\s+(?P<sam_number>\d+)\s+(?P<descr>Service Accelerator Module|DPU)\s+(?P<model>[A-Za-z0-9\-]+)\s+(?P<status>\S+)')
+
         # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
-        # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok  
+        # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok
         # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
         # 1    36   28x100/40G + 8x400G QSFP-DD Ethernet Module      N9K-C93600CD-GX
         p3 = re.compile(r'^(?P<number>[0-9]+)\s+(?P<ports>[0-9]+)\s+(?P<module_type>.+?)\s+'
                         r'((?P<model>[A-Z0-9v\-\+]+))?((\s+(?P<status>[a-z\- ]+)(\s\*)?)?)$')
+
 
         # 1 9.4(0)SK(0.135) 1.0 20:01:00:08:31:14:b7:60 to 20:10:00:08:31:14:b7:60
         # 7    10.3(2)IOV9(0.190)       1.0    LC7
@@ -980,6 +1060,11 @@ class ShowModule(ShowModuleSchema):
         #  active *
         p7 = re.compile(r'^\s*(?P<status>\S+)')
 
+        # 1    1    1.99.0-43                     FSJ2128000B      Pass
+        p8 = re.compile(r'^(?P<module>\d+)\s+(?P<sam_number>\d+)\s+(?P<software>\S+)'
+                        r'\s+(?P<hardware>\S+)?\s+(?P<serial_num>\S+)'
+                        r'(\s+(?P<diag_status>\S+))$')
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -989,6 +1074,8 @@ class ShowModule(ShowModuleSchema):
                 table_header = 'slot'
                 if 'slot' not in module_dict:
                     module_dict['slot'] = {}
+                if ('Mod DPU' in line or 'Mod SAM' in line) and 'sam' not in module_dict:
+                    module_dict['sam'] = {}
                 continue
 
             # Xbar Ports  Module-Type                         Model              Status
@@ -1008,8 +1095,23 @@ class ShowModule(ShowModuleSchema):
                     module_dict['lem'] = {}
                 continue
 
+
+            # 1    1     DPU                       N9324C-SE1U-DPU       ok
+            m = p2_3.match(line)
+            if m:
+                match_dict = m.groupdict()
+                mod = match_dict.get('module')
+                sam_num = match_dict.get('sam_number')
+                descr = match_dict.get('descr')
+                model = match_dict.get('model')
+                status = match_dict.get('status')
+                sam_dict_module = module_dict['sam'].setdefault(mod, {})
+                sam_dict_sam = sam_dict_module.setdefault(sam_num, {})
+                sam_dict_sam.update({'module_type': descr, 'model': model, 'status': status})
+                continue
+
             # 1 18 1/10/25/40G IPS, 4/8/16/32G FC/Sup-4 DS-C9220I-K9-SUP active *
-            # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok  
+            # 8    36   36x400G QSFP56-DD Ethernet Module                N9K-X9836DM-A         ok
             # 27   0    Supervisor Module                                N9K-C9800-SUP-A       active *
             # 1    36   28x100/40G + 8x400G QSFP-DD Ethernet Module      N9K-C93600CD-GX
             m = p3.match(line)
@@ -1166,6 +1268,26 @@ class ShowModule(ShowModuleSchema):
                 else:
                     module_dict['slot']['lc'][header_number][lc_name]['status'] = m.groupdict()['status'].strip()
                 parse_status = False
+
+            #1    1    1.99.0-43                     FDO283707X4      Pass
+            m = p8.match(line)
+            if m:
+                match_dict = m.groupdict()
+                mod = match_dict.get('module')
+                sam_num = match_dict.get('sam_number')
+                software = match_dict.get('software')
+                hardware = match_dict.get('hardware')
+                sn = match_dict.get('serial_num')
+                diag_status = match_dict.get('diag_status')
+                sam_dict = module_dict['sam']
+                sam_dict[mod][sam_num].update({
+                    'software': software,
+                    'online_diag_status': diag_status,
+                    'serial_number': sn
+                    })
+                if hardware: sam_dict[mod][sam_num].update({'hardware': hardware})
+
+                continue
 
         # The case of n9k virtual device where no module was showing "supervisor" in the module type
         if 'slot' in module_dict:
@@ -1518,7 +1640,10 @@ class ShowVdcMembershipStatus(ShowVdcMembershipStatusSchema):
             if m:
                 continue
 
-            p4 = re.compile(r'^\s*(?P<port_type>[a-zA-Z]+)(?P<port_number>[0-9a-z/\\(\)]+) +(?P<status>[A-Z]+)$')
+            # Eth1/1    OK
+            # Eth1/2(b) OK
+            # Eth1/13(b)OK
+            p4 = re.compile(r'^\s*(?P<port_type>[a-zA-Z]+)(?P<port_number>[0-9a-z/\\(\)]+) *(?P<status>[A-Z]+)$')
             m = p4.match(line)
             if m:
                 port_type = m.groupdict()['port_type']

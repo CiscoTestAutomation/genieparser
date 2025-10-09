@@ -1,0 +1,9 @@
+CRL download for trustpoints :
+                        root
+CRL static time download entries
+                         Thursday 12:30
+                         Thursday 13:52
+                         Thursday 14:24
+CRL prepublish time         : 0 minutes
+CRL maximum retry attempts  : 5
+CRL retry time interval     : 30 minutes

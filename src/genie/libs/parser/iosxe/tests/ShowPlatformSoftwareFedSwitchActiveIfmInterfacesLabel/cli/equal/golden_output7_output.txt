@@ -1,0 +1,9 @@
+Interface                         IF_ID               State             
+
+----------------------------------------------------------------------
+
+Null0                             0x00000001          READY             
+
+Loopback100                       0x000000b8          READY             
+
+CPP_Null                          0x0100000c          READY 

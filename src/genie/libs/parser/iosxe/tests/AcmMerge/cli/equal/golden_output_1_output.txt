@@ -1,0 +1,2 @@
+acm merge flash:aaa
+Error: File doesn't exist: flash:aaa

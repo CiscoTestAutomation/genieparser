@@ -119,18 +119,18 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
         # Output for router lisp 0
         # Output for router lisp 0 instance-id 101
         p1 = re.compile(r'Output +for +router +lisp +(?P<lisp_router_id>(\S+))'
-                         '(?: +instance-id +(?P<instance_id>(\d+)))?$')
+                         r'(?: +instance-id +(?P<instance_id>(\d+)))?$')
 
         # LISP Dynamic EID Information for VRF "red"
         p2 = re.compile(r'LISP +Dynamic +EID +Information +for +VRF'
-                         ' +"(?P<vrf>(\S+))"$')
+                         r' +"(?P<vrf>(\S+))"$')
 
         # Dynamic-EID name: 192
         p3 = re.compile(r'Dynamic-EID +name: +(?P<eid_id>(\S+))$')
 
         # Database-mapping EID-prefix: 192.168.0.0/24, locator-set RLOC
         p4 = re.compile(r'Database-mapping +EID-prefix: +(?P<dyn_eid>(\S+)),'
-                         ' +locator-set +(?P<locator_set_name>(\S+))$')
+                         r' +locator-set +(?P<locator_set_name>(\S+))$')
 
         # Registering more-specific dynamic-EIDs
         p5 = re.compile(r'Registering +more-specific +dynamic-EIDs$')
@@ -152,11 +152,11 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
 
         # Number of roaming dynamic-EIDs discovered: 1
         p8 = re.compile(r'Number +of +roaming +dynamic-EIDs +discovered:'
-                         ' +(?P<roam>(\d+))$')
+                         r' +(?P<roam>(\d+))$')
 
         # Last dynamic-EID discovered: 192.168.0.1, 01:17:25 ago
         p9 = re.compile(r'Last +dynamic-EID +discovered: +(?P<last>(\S+)),'
-                         ' +(?P<time>(\S+)) +ago$')
+                         r' +(?P<time>(\S+)) +ago$')
 
         # 192.168.0.1, GigabitEthernet5, uptime: 01:17:25
         # 192:168:0:1::, GigabitEthernet5, uptime: 01:17:25
@@ -165,7 +165,7 @@ class ShowLispDynamicEidDetail(ShowLispDynamicEidDetailSchema):
 
         #   last activity: 00:00:23, discovered by: Packet Reception
         p11 = re.compile(r'last +activity: +(?P<last>(\S+)), +discovered +by:'
-                          ' +(?P<discovered_by>([a-zA-Z\s]+))$')
+                          r' +(?P<discovered_by>([a-zA-Z\s]+))$')
 
         for line in out.splitlines():
             line = line.strip()

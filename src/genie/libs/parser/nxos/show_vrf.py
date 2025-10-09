@@ -112,8 +112,8 @@ class ShowVrfInterface(ShowVrfInterfaceSchema):
                 continue
 
             p2 = re.compile(r'^\s*(?P<intf_name>[a-zA-Z0-9\/]+)'
-                ' +(?P<vrf_name>[a-zA-Z0-9\-]+) +(?P<vrf_id>[0-9]+)'
-                ' +(?P<site_of_origin>[a-zA-Z0-9\-]+)?$')
+                r' +(?P<vrf_name>[a-zA-Z0-9\-]+) +(?P<vrf_id>[0-9]+)'
+                r' +(?P<site_of_origin>[a-zA-Z0-9\-]+)?$')
             m = p2.match(line)
             if m:
                 interface = m.groupdict()['intf_name']
@@ -178,8 +178,8 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
             # VRF-Name: VRF1, VRF-ID: 3, State: Up
             p1 = re.compile(r'^VRF\-Name: +(?P<vrf>[\w\-]+), +'
-                             'VRF-ID: +(?P<vrf_id>\d+), +'
-                             'State: +(?P<state>\w+)$')
+                             r'VRF-ID: +(?P<vrf_id>\d+), +'
+                             r'State: +(?P<state>\w+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -207,7 +207,7 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
             # Max Routes: 20000  Mid-Threshold: 17000
             p4 = re.compile(r'^Max +Routes: +(?P<max_routes>\d+) +'
-                             'Mid\-Threshold: +(?P<mid_threshold>\d+)$')
+                             r'Mid\-Threshold: +(?P<mid_threshold>\d+)$')
             m = p4.match(line)
             if m:
                 vrf_dict[vrf]['max_routes'] = int(m.groupdict()['max_routes'])
@@ -216,9 +216,9 @@ class ShowVrfDetail(ShowVrfDetailSchema):
 
             # Table-ID: 0x80000003, AF: IPv6, Fwd-ID: 0x80000003, State: Up
             p5 = re.compile(r'^Table\-ID: +(?P<table_id>\w+), +'
-                             'AF: +(?P<af>\w+), +'
-                             'Fwd\-ID: (?P<fwd_id>\w+), +'
-                             'State: +(?P<state>\w+)$')
+                             r'AF: +(?P<af>\w+), +'
+                             r'Fwd\-ID: (?P<fwd_id>\w+), +'
+                             r'State: +(?P<state>\w+)$')
             m = p5.match(line)
             if m:
                 af = m.groupdict()['af'].lower()

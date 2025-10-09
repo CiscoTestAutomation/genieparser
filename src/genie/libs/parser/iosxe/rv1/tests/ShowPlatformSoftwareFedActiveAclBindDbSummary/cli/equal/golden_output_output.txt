@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------
+If-Name         Feature     Protocol     Direction    CG-ID        Status
+--------------------------------------------------------------------------
+Gi2/0/31        Pacl          IPv4          Ingress     10           Success
+Vl50            Racl          IPv4          Ingress     40           Success
+Vl50            Racl          IPv4          Egress      41           Success
+Vl50            Racl          IPv6          Ingress     42           Success
+Vl50            Racl          IPv6          Egress      43           Success
+C1105577996     Cgacl         IPv4          Ingress     528          Success
+C1105577996     Cgacl         IPv6          Ingress     544          Success

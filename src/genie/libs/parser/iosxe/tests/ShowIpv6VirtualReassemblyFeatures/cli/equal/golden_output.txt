@@ -1,0 +1,3 @@
+NVI0:
+  IPV6 Virtual Fragment Reassembly (IPV6 VFR) Current Status is ENABLED [out]
+  Features to use if IPV6 VFR is Enabled:NAT64

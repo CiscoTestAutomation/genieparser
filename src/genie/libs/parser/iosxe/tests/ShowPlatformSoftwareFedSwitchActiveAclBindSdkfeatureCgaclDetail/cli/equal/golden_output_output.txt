@@ -1,0 +1,23 @@
+--------------------------------------------------------------
+         ACLs Bind details (programmed in datapath)
+--------------------------------------------------------------
+
+Interface Name: C611415248 
+   Direction: Ingress
+      Feature         : Cgacl
+      Protocol        : IPv4
+      CG ID           : 1552
+      CG Name         : pacl_gi2/0/10_v6!pacl_gi2/0/10_v4:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0
+
+Interface Name: C611415248 
+   Direction: Ingress
+      Feature         : Cgacl
+      Protocol        : IPv6
+      CG ID           : 1568
+      CG Name         : pacl_gi2/0/10_v6!pacl_gi2/0/10_v4:xACSACLx-IPV6-S1_PermitGW_DenyOther_V6-669eaa28!xACSACLx-IP-S1_PermitGW_DenyOther_V4-669eaa40:
+      Status          : Success
+      Src_og_lkup_hdl : 0
+      Dst_og_lkup_hdl : 0

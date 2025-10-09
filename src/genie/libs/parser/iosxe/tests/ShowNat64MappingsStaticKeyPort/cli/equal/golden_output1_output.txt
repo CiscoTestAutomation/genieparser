@@ -1,0 +1,10 @@
+Proto  Original IPv4         Translated IPv4
+       Translated IPv6       Original IPv6 
+----------------------------------------------------------------------------
+tcp    203.0.113.10:21       [2001:db8:abcd::1]:21
+       198.51.100.10:21      [2001:db8:abcd::2]:21
+
+tcp    203.0.113.20:21       [2001:db8:abcd::3]:21
+       198.51.100.20:21      [2001:db8:abcd::4]:21
+
+Total number of translations: 2

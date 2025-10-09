@@ -52,7 +52,7 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             out = output
             
         result_dict = {}
-        p1 = re.compile(r'^(?P<interface>Gig.+|Ten.+|Fast.+ |Port.+)')
+        p1 = re.compile(r'^(?P<interface>Gig.+|Ten.+|Fast.+ |Port.+ |Vlan.+)')
         p2 = re.compile(r'^(?P<protocol>[\w\-]+) +(?P<In_Packet_Count>[\d]+) +(?P<Out_Packet_Count>[\d]+)')
         p3 = re.compile(r'^(?P<In_Byte_Count>[\d]+) +(?P<Out_Byte_Count>[\d]+)')
         p4 = re.compile(r'^(?P<In_Bitrate>[\d]+) +(?P<Out_Bitrate>[\d]+)')
@@ -115,3 +115,89 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
         
 
         return result_dict
+
+# =================================================
+# Schema for 'show ip nbar protocol-pack active'
+# =================================================  
+class ShowIpNbarProtocolPackActiveSchema(MetaParser):
+    """
+        Schema for show ip nbar protocol-pack active
+    """
+    schema = {
+        'name': str,
+        'version': str,
+        'publisher': str,
+        'nbar_engine_version': int,
+        'state': str,
+    }
+
+# =================================================
+# Parser for 'show ip nbar protocol-pack active'
+# =================================================  
+class ShowIpNbarProtocolPackActive(ShowIpNbarProtocolPackActiveSchema):
+    """
+        Parser for show ip nbar protocol-pack active
+    """
+
+    cli_command = ["show ip nbar protocol-pack active"]
+
+    def cli(self, output = None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+
+        ret_dict = {}
+
+        # Name:                          Advanced Protocol Pack
+        p1 = re.compile(r'^Name:\s+(?P<name>(.+))$')
+
+        # Version:                       70.0
+        p2 = re.compile(r'^Version:\s+(?P<version>(\S+))$')
+
+        # Publisher:                     Cisco Systems Inc.
+        p3 = re.compile(r'^Publisher:\s+(?P<publisher>(.+))$')
+        
+        # NBAR Engine Version:           52
+        p4 = re.compile(r'^NBAR Engine Version:\s+(?P<nbar_engine_version>(\d+))$')
+
+        # State:                         Active
+        p5 = re.compile(r'^State:\s+(?P<state>(.+))$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Name:                          Advanced Protocol Pack
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['name'] = group['name']
+                continue
+            
+            # Version:                       70.0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['version'] = group['version']
+                continue  
+
+            # Publisher:                     Cisco Systems Inc.
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['publisher'] = group['publisher']
+                continue
+        
+            # NBAR Engine Version:           52
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['nbar_engine_version'] = int(group['nbar_engine_version'])
+                continue
+
+            # State:                         Active
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['state'] = group['state']
+                continue
+
+        return ret_dict

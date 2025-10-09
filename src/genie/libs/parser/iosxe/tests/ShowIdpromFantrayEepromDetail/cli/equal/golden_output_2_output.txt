@@ -1,0 +1,20 @@
+        EEPROM version           : 4
+        Compatible Type          : 0xFF
+        Controller Type          : 4577
+        Hardware Revision        : 0.5
+        Top Assy. Part Number    : 800-51430-01
+        Top Assy. Revision       : 05
+        PCB Part Number          : 73-20972-03
+        Board Revision           : 02
+        Deviation Number         : 0
+        PCB Serial Number        : FOX2813PQ4Z
+        Chassis Serial Number    : FOX2813PQ4Z
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        CLEI Code                :
+        Product Identifier (PID) : C9610-FAN
+        Version Identifier (VID) : V00
+        Chassis MAC Address      : 0000.0000.0000
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00

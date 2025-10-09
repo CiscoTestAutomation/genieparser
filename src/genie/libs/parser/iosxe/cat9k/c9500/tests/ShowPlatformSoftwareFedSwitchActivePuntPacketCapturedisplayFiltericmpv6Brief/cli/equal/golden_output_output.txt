@@ -1,0 +1,23 @@
+------ Punt Packet Number: 6, Timestamp: 2024/06/25 16:17:59.842 ------
+interface : phy: Port-channel10 [if-id: 0x0000058a], pal: Port-channel10 [if-id: 0x0000058a]
+misc info : cause: 58 [Layer2 bridge domain data packet], sub-cause: 11 [NONE], linktype: IPV6 [4]
+CE    hdr : dest mac: f4bd.9eff.fff0, src mac: f4bd.9eff.fff1, ethertype: 0x7106
+meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0, SSP: 0x55f
+meta  hdr : DSP: 0xffff, SLP: 0x800fb, DLP: 0xef
+ether hdr : dest mac: 3333.0000.0016, src mac: a0b4.39cd.70ff
+ether hdr : vlan: 100, ethertype: 0x8100
+ipv6  hdr : dest ip: ff02::16
+ipv6  hdr : src ip : fe80::a2b4:39ff:fecd:70ff
+ipv6  hdr : payload len: 36, hop count: 1, next hdr: 0
+
+------ Punt Packet Number: 7, Timestamp: 2024/06/25 16:17:59.832 ------
+interface : phy: Port-channel11 [if-id: 0x0000058b], pal: Port-channel11 [if-id: 0x0000058b]
+misc info : cause: 58 [Layer2 bridge domain data packet], sub-cause: 11 [NONE], linktype: IPV6 [4]
+CE    hdr : dest mac: f4bd.9eff.fff0, src mac: f4bd.9eff.fff1, ethertype: 0x7106
+meta  hdr : Nxt. Hdr: 0x1, Fwd. Hdr: 0, SSP: 0x55f
+meta  hdr : DSP: 0xffff, SLP: 0x800fb, DLP: 0xef
+ether hdr : dest mac: 3333.0000.0016, src mac: a0b4.39cd.70ff
+ether hdr : vlan: 300, ethertype: 0x8100
+ipv6  hdr : dest ip: ff02::18
+ipv6  hdr : src ip : fe80::a2b4:39ff:fecd:30fd
+ipv6  hdr : payload len: 18, hop count: 1, next hdr: 0

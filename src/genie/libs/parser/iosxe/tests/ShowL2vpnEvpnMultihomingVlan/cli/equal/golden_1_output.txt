@@ -1,0 +1,6 @@
+R1#show l2vpn evpn multihoming vlan 
+
+VLAN  ESI                      Switchport
+----- ------------------------ ------------------
+200   0300.1200.1200.1200.0001 FastEthernet0/0/1
+

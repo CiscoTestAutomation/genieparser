@@ -6,6 +6,7 @@ IOSXE parsers for the following show commands:
     * show cef uid
     * show cef path sets summary
     * show cef interface <interface>
+    * show cef table consistency-check
 """
 
 # Python
@@ -527,7 +528,8 @@ class ShowCefInterfaceInternalSchema(MetaParser):
                     Optional('ipv6'): {
                         Optional('discarded_packets'): int
                     }
-                }
+                },
+                Optional('ip_unicast_rpf_check'): bool,
             }
         }
     }
@@ -604,6 +606,9 @@ class ShowCefInterfaceInternal(ShowCefInterfaceInternalSchema):
         # Protocol discard for IPv4 - discarded packets: 0
         # Protocol discard for IPv6 - discarded packets: 0
         p21 = re.compile(r'^Protocol discard for\s+(?P<protocol>(IPv4|IPv6))\s+- discarded packets:\s+(?P<discarded_packets>\d+)$')
+
+        # IP unicast RPF check is enabled
+        p22 = re.compile(r'^IP unicast RPF check is enabled$')
 
         ret_dict = dict()
         subblock_flag = False
@@ -751,4 +756,228 @@ class ShowCefInterfaceInternal(ShowCefInterfaceInternalSchema):
                 block_dict['discarded_packets'] = int(m.groupdict()['discarded_packets'])
                 continue
 
+            # IP unicast RPF check is enabled
+            m = p22.match(line)
+            if m:
+                int_dict.update({'ip_unicast_rpf_check': True})
+                continue
+
         return ret_dict
+
+
+# ======================================
+# Schema for:
+#   * 'show cef table consistency-check'
+# ======================================
+class ShowCefTableConsistencyCheckSchema(MetaParser):
+
+    """ Schema for:
+        * 'show cef table consistency-check'
+    """
+
+    schema = {
+        'consistency_checker_master_control': str,
+        Optional('ipv4'): {
+            'table_consistency_checker_state': {
+                Any(): {
+                    'status': str,
+                    Optional('prefixes_checked'): int,
+                    Optional('check_interval'): int,
+                    'queries_sent': int,
+                    'queries_ignored': int,
+                    'queries_checked': int,
+                    'queries_iterated': int,
+                }
+            },
+            'checksum_data_checking': str,
+            'inconsistency_error_messages': str,
+            'inconsistency_auto_repair': str,
+            Optional('auto_repair_delay'): int,
+            Optional('auto_repair_holddown'): int,
+            'inconsistency_auto_repair_runs': int,
+            'inconsistency_statistics_confirmed': int,
+            'inconsistency_statistics_recorded': str,
+        },
+        Optional('ipv6'): {
+            'table_consistency_checker_state': {
+                Any(): {
+                    'status': str,
+                    Optional('prefixes_checked'): int,
+                    Optional('check_interval'): int,
+                    'queries_sent': int,
+                    'queries_ignored': int,
+                    'queries_checked': int,
+                    'queries_iterated': int,
+                }
+            },
+            'checksum_data_checking': str,
+            'inconsistency_error_messages': str,
+            'inconsistency_auto_repair': str,
+            Optional('auto_repair_delay'): int,
+            Optional('auto_repair_holddown'): int,
+            'inconsistency_auto_repair_runs': int,
+            'inconsistency_statistics_confirmed': int,
+            'inconsistency_statistics_recorded': str,
+        },
+        Optional('binding_label'): {
+            'table_consistency_checker_state': {
+                Any(): {
+                    'status': str,
+                    Optional('prefixes_checked'): int,
+                    Optional('check_interval'): int,
+                    'queries_sent': int,
+                    'queries_ignored': int,
+                    'queries_checked': int,
+                    'queries_iterated': int,
+                }
+            },
+            'checksum_data_checking': str,
+            'inconsistency_error_messages': str,
+            'inconsistency_auto_repair': str,
+            Optional('auto_repair_delay'): int,
+            Optional('auto_repair_holddown'): int,
+            'inconsistency_auto_repair_runs': int,
+            'inconsistency_statistics_confirmed': int,
+            'inconsistency_statistics_recorded': str,
+        }
+    }
+
+
+# ======================================
+# Parser for:
+#   * 'show cef table consistency-check'
+# ======================================
+class ShowCefTableConsistencyCheck(ShowCefTableConsistencyCheckSchema):
+
+    ''' Parser for:
+        * 'show cef table consistency-check'
+    '''
+
+    cli_command = 'show cef table consistency-check'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        parsed_dict = {}
+
+        # Consistency checker master control: enabled
+        p1 = re.compile(r'^Consistency\s+checker\s+master\s+control:\s+(?P<control>\w+)$')
+
+        # IPv4:, IPv6:, Binding-Label:
+        p2 = re.compile(r'^(?P<section>IPv4|IPv6|Binding-Label):$')
+
+        #  lc-detect: disabled
+        #  full-scan-rib-ios: enabled [1000 prefixes checked every 60s]
+        p3 = re.compile(r'^\s+(?P<checker_type>[\w-]+):\s+(?P<status>\w+)(?:\s+\[(?P<prefixes>\d+)\s+prefixes\s+checked\s+every\s+(?P<interval>\d+)s\])?$')
+
+        #   0/0/0/0 queries sent/ignored/checked/iterated
+        p4 = re.compile(r'^\s+(?P<sent>\d+)\/(?P<ignored>\d+)\/(?P<checked>\d+)\/(?P<iterated>\d+)\s+queries\s+sent/ignored/checked/iterated$')
+
+        # Checksum data checking disabled
+        p5 = re.compile(r'^\s+Checksum\s+data\s+checking\s+(?P<status>\w+)$')
+
+        # Inconsistency error messages are disabled
+        p6 = re.compile(r'^\s+Inconsistency\s+error\s+messages\s+are\s+(?P<status>\w+)$')
+
+        # Inconsistency auto-repair is enabled (10s delay, 300s holddown)
+        p7 = re.compile(r'^\s+Inconsistency\s+auto-repair\s+is\s+(?P<status>\w+)(?:\s+\((?P<delay>\d+)s\s+delay,\s+(?P<holddown>\d+)s\s+holddown\))?$')
+
+        # Inconsistency auto-repair runs: 0
+        p8 = re.compile(r'^\s+Inconsistency\s+auto-repair\s+runs:\s+(?P<runs>\d+)$')
+
+        # Inconsistency statistics: 0 confirmed, 0/16 recorded
+        p9 = re.compile(r'^\s+Inconsistency\s+statistics:\s+(?P<confirmed>\d+)\s+confirmed,\s+(?P<recorded>\S+)\s+recorded$')
+
+        current_section = None
+        current_checker = None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # Match master control
+            m = p1.match(line)
+            if m:
+                parsed_dict['consistency_checker_master_control'] = m.groupdict()['control']
+                continue
+
+            # Match section headers (IPv4, IPv6, Binding-Label)
+            m = p2.match(line)
+            if m:
+                section = m.groupdict()['section'].lower().replace('-', '_')
+                current_section = section
+                parsed_dict[current_section] = {}
+                parsed_dict[current_section]['table_consistency_checker_state'] = {}
+                continue
+
+            # Match checker types
+            m = p3.match(line)
+            if m and current_section:
+                checker_type = m.groupdict()['checker_type']
+                status = m.groupdict()['status']
+                prefixes = m.groupdict().get('prefixes')
+                interval = m.groupdict().get('interval')
+                
+                current_checker = checker_type
+                checker_dict = parsed_dict[current_section]['table_consistency_checker_state'][checker_type] = {}
+                checker_dict['status'] = status
+                
+                if prefixes:
+                    checker_dict['prefixes_checked'] = int(prefixes)
+                if interval:
+                    checker_dict['check_interval'] = int(interval)
+                continue
+
+            # Match query statistics
+            m = p4.match(line)
+            if m and current_section and current_checker:
+                checker_dict = parsed_dict[current_section]['table_consistency_checker_state'][current_checker]
+                checker_dict['queries_sent'] = int(m.groupdict()['sent'])
+                checker_dict['queries_ignored'] = int(m.groupdict()['ignored'])
+                checker_dict['queries_checked'] = int(m.groupdict()['checked'])
+                checker_dict['queries_iterated'] = int(m.groupdict()['iterated'])
+                continue
+
+            # Match checksum data checking
+            m = p5.match(line)
+            if m and current_section:
+                parsed_dict[current_section]['checksum_data_checking'] = m.groupdict()['status']
+                continue
+
+            # Match inconsistency error messages
+            m = p6.match(line)
+            if m and current_section:
+                parsed_dict[current_section]['inconsistency_error_messages'] = m.groupdict()['status']
+                continue
+
+            # Match inconsistency auto-repair
+            m = p7.match(line)
+            if m and current_section:
+                status = m.groupdict()['status']
+                delay = m.groupdict().get('delay')
+                holddown = m.groupdict().get('holddown')
+                
+                parsed_dict[current_section]['inconsistency_auto_repair'] = status
+                if delay:
+                    parsed_dict[current_section]['auto_repair_delay'] = int(delay)
+                if holddown:
+                    parsed_dict[current_section]['auto_repair_holddown'] = int(holddown)
+                continue
+
+            # Match auto-repair runs
+            m = p8.match(line)
+            if m and current_section:
+                parsed_dict[current_section]['inconsistency_auto_repair_runs'] = int(m.groupdict()['runs'])
+                continue
+
+            # Match inconsistency statistics
+            m = p9.match(line)
+            if m and current_section:
+                parsed_dict[current_section]['inconsistency_statistics_confirmed'] = int(m.groupdict()['confirmed'])
+                parsed_dict[current_section]['inconsistency_statistics_recorded'] = m.groupdict()['recorded']
+                continue
+
+        return parsed_dict

@@ -83,10 +83,10 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
         # User debug info : CLI Session Lock
 
         p4 = re.compile(r'^\s*User +debug +info +: '\
-		'+(?P<user_debug_info>(\w+ *)+)$')
+		r'+(?P<user_debug_info>(\w+ *)+)$')
         # Look Active time (in Sec) : 63
         p5 = re.compile(r'^\s*Lock +(a|A)ctive +time +\(in +Sec\) +: '\
-                '+(?P<lock_active_time_in_sec>\d+)$')
+                r'+(?P<lock_active_time_in_sec>\d+)$')
         # Parser Configure Lock
         p6 = re.compile(r'^\s*Parser +Configure +Lock$')
         
@@ -111,11 +111,11 @@ class ShowConfigurationLock(ShowConfigurationLockSchema):
         # Pending Requests  : 0
         # Pending Requests:0
         p13 = re.compile(r'^\s*Pending +Requests *: '\
-		'*(?P<pending_requests>\d+)$')
+		r'*(?P<pending_requests>\d+)$')
         # User debug info   : 0
         # User debug info:0
         p14 = re.compile(r'^\s*User +debug +info *: '\
-		'*(?P<user_debug_info>[\w\W]+)$')
+		r'*(?P<user_debug_info>[\w\W]+)$')
         # Session idle state : TRUE
         p15 = re.compile(r'^Session +idle +state *: *(?P<session_idle_state>[\w]+)$')
         # No of exec cmds getting executed : 0

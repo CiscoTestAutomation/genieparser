@@ -1,0 +1,11 @@
+{
+	"switch": 1,
+	"portchannelnum": 10,
+	"sourcemac": "0218.ba87.edd1 0218.ba87.edd1",
+	"sourceipv6": "e80::2e36:f8ff:fe4b:e227",
+	"destinationipv6": "e80::2e36:f8ff:fe4b:e227",
+	"ipv6_fl": 3,
+	"next_header": 23,
+	"sour_port": 44,
+        "dest_port": 55
+}

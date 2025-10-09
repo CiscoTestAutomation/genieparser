@@ -1,0 +1,194 @@
+expected_output = {
+    "mfib":{
+        1:{
+            "attrs":{
+                "asic":{
+                    0:{
+                        "mcid_oid_asic":3560
+                    }
+                },
+                "cpu_credit":1,
+                "ec_seed":4,
+                "fset_aux_urid":"0x0",
+                "fset_urid_hash":"0x30000000000015f4 ( 3539c42d )",
+                "gid":8212,
+                "hw_asic_info":{
+                    0:{
+                        "enable_rpf_check":1,
+                        "punt_and_forward":1,
+                        "punt_on_rpf_fail":1,
+                        "rpf_port_oid":1487,
+                        "rpfid":0,
+                        "use_rpfid":0
+                    }
+                },
+                "hw_flag":"InHw",
+                "ios_f_ifs":1,
+                "mlist_f_ifs":1,
+                "mlist_flags":"None",
+                "mlist_hndl_id":"0x118812855f8 ( 0x20000544 )",
+                "mlist_urid":"0x1000000000000e51",
+                "npi_mroute_ent":"0x118810633f8",
+                "oif_count":2,
+                "oif_details":[
+                    {
+                        "adjid":"AdjID",
+                        "interface":"Interface",
+                        "parentif":"ParentIf",
+                        "hwflag":"HwFlag",
+                        "flags":"Flags      IntfType       MsgType",
+                        "intf_type":None,
+                        "msg_type":None
+                    },
+                    {
+                        "adjid":"0xf80053e6",
+                        "interface":"Tu1",
+                        "parentif":"--------",
+                        "hwflag":"Cpu",
+                        "flags":"A         ",
+                        "intf_type":"HW_UNSUPP",
+                        "msg_type":"NORMAL"
+                    },
+                    {
+                        "adjid":"0xf8005481",
+                        "interface":"Vl13",
+                        "parentif":"--------",
+                        "hwflag":"---",
+                        "flags":"F NS      ",
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    },
+                    {
+                        "adjid":"AdjID",
+                        "interface":"Interface",
+                        "parentif":"ParentIf",
+                        "hwflag":"HwFlag",
+                        "flags":"Flags      IntfType       MsgType",
+                        "intf_type":None,
+                        "msg_type":None
+                    },
+                    {
+                        "adjid":"0xf8005471",
+                        "interface":"Vl12",
+                        "parentif":"--------",
+                        "hwflag":"---",
+                        "flags":"A         ",
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    },
+                    {
+                        "adjid":"0xf8005481",
+                        "interface":"Vl13",
+                        "parentif":"--------",
+                        "hwflag":"---",
+                        "flags":"F NS      ",
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    }
+                ],
+                "pps_approx":0,
+                "rpf_adjacency_id":"0xf80053e6",
+                "svi_fwd_ifs":1,
+                "total_packets":0
+            },
+            "group":"225.0.0.1",
+            "mvrf":0,
+            "source":"*"
+        },
+        2:{
+            "attrs":{
+                "asic":{
+                    0:{
+                        "mcid_oid_asic":3543
+                    }
+                },
+                "cpu_credit":0,
+                "ec_seed":6,
+                "fset_aux_urid":"0x0",
+                "fset_urid_hash":"0x30000000000015ed ( 1afea43b )",
+                "gid":8204,
+                "hw_asic_info":{
+                    0:{
+                        "enable_rpf_check":1,
+                        "punt_and_forward":0,
+                        "punt_on_rpf_fail":1,
+                        "rpf_port_oid":3476,
+                        "rpfid":0,
+                        "use_rpfid":0
+                    }
+                },
+                "hw_flag":"InHw",
+                "ios_f_ifs":1,
+                "mlist_f_ifs":1,
+                "mlist_flags":"None",
+                "mlist_hndl_id":"0x11881063548 ( 0x20000545 )",
+                "mlist_urid":"0x1000000000000e52",
+                "npi_mroute_ent":"0x118812c5e20",
+                "oif_count":2,
+                "oif_details":[
+                    {
+                        "adjid":"AdjID",
+                        "interface":"Interface",
+                        "parentif":"ParentIf",
+                        "hwflag":"HwFlag",
+                        "flags":"Flags      IntfType       MsgType",
+                        "intf_type":None,
+                        "msg_type":None
+                    },
+                    {
+                        "adjid":"0xf80053e6",
+                        "interface":"Tu1",
+                        "parentif":"--------",
+                        "hwflag":"Cpu",
+                        "flags":"A         ",
+                        "intf_type":"HW_UNSUPP",
+                        "msg_type":"NORMAL"
+                    },
+                    {
+                        "adjid":"0xf8005481",
+                        "interface":"Vl13",
+                        "parentif":"--------",
+                        "hwflag":"---",
+                        "flags":"F NS      ",
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    },
+                    {
+                        "adjid":"AdjID",
+                        "interface":"Interface",
+                        "parentif":"ParentIf",
+                        "hwflag":"HwFlag",
+                        "flags":"Flags      IntfType       MsgType",
+                        "intf_type":None,
+                        "msg_type":None
+                    },
+                    {
+                        "adjid":"0xf8005471",
+                        "interface":"Vl12",
+                        "parentif":"--------",
+                        "hwflag":"---",
+                        "flags":"A         ",
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    },
+                    {
+                        "adjid":"0xf8005481",
+                        "interface":"Vl13",
+                        "parentif":"--------",
+                        "hwflag":"---",
+                        "flags":"F NS      ",
+                        "intf_type":"SVI_IF",
+                        "msg_type":"NORMAL"
+                    }
+                ],
+                "pps_approx":15999,
+                "rpf_adjacency_id":"0xf8005471",
+                "svi_fwd_ifs":2,
+                "total_packets":5072172
+            },
+            "group":"225.0.0.1",
+            "mvrf":0,
+            "source":"11.11.11.2"
+        }
+    }
+}

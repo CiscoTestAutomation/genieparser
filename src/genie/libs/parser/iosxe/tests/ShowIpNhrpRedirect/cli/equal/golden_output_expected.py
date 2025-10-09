@@ -1,0 +1,31 @@
+expected_output = {
+    "entries":{
+        "10.0.0.2/32":{
+            "ip":"10.0.0.2/32",
+            "via":"192.168.1.2",
+            "type":"dynamic",
+            "flags":"authoritative",
+            "nbma_address":"192.168.1.2",
+            "hold_time":600,
+            "authentication":"enabled"
+        },
+        "10.0.0.3/32":{
+            "ip":"10.0.0.3/32",
+            "via":"192.168.1.3",
+            "type":"dynamic",
+            "flags":"authoritative",
+            "nbma_address":"192.168.1.3",
+            "hold_time":540,
+            "authentication":"enabled"
+        },
+        "10.0.0.4/32":{
+            "ip":"10.0.0.4/32",
+            "via":"192.168.1.4",
+            "type":"dynamic",
+            "flags":"authoritative",
+            "nbma_address":"192.168.1.4",
+            "hold_time":480,
+            "authentication":"enabled"
+        }
+    }
+}

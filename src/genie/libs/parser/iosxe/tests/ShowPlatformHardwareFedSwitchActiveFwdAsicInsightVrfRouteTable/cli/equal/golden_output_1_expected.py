@@ -1,0 +1,40 @@
+expected_output = {
+    'vrf_route_table': {
+        0: {
+            'ip_version': 4,
+            'routes': [
+                {'ip_prefix': '111.3.3.193/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865529365976'},
+                {'ip_prefix': '111.3.3.165/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865569591240'},
+                {'ip_prefix': '111.3.3.161/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865569637976'},
+                {'ip_prefix': '111.3.3.149/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865569587048'},
+                {'ip_prefix': '111.3.3.137/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865569608536'},
+                {'ip_prefix': '111.3.3.117/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865569623288'},
+            ],
+        },
+        2: {
+            'ip_version': 6,
+            'routes': [
+                {'ip_prefix': '14.1.0.255/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865530382056'},
+                {'ip_prefix': '14.1.0.0/24', 'dest_type': 'host', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '0'},
+                {'ip_prefix': '14.1.0.0/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865571485592'},
+                {'ip_prefix': '14.1.0.1/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865571713720'},
+                {'ip_prefix': '127.0.0.0/8', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': 'drop', 'class_id': 0, 'drop': True, 'route_user_data': '104865571498168'},
+                {'ip_prefix': '240.0.0.0/4', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': 'drop', 'class_id': 0, 'drop': True, 'route_user_data': '104865571481560'},
+                {'ip_prefix': '255.255.255.255/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865532813496'},
+                {'ip_prefix': '224.0.0.0/4', 'dest_type': 'NONE', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '0'},
+                {'ip_prefix': '0.0.0.0/8', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': 'drop', 'class_id': 0, 'drop': True, 'route_user_data': '104865571437400'},
+                {'ip_prefix': '0.0.0.0/32', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865530735336'},
+                {'ip_prefix': '0.0.0.0/0', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': 'drop', 'class_id': 0, 'drop': True, 'route_user_data': '104865529984360'},
+                {'ip_prefix': '100.4.1.1/32', 'dest_type': 'NONE', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865570972488'},
+                {'ip_prefix': 'fe80::/10', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865529079240'},
+                {'ip_prefix': 'ff00::/8', 'dest_type': 'NONE', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '0'},
+                {'ip_prefix': '::/0', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': '', 'class_id': 0, 'drop': True, 'route_user_data': '104865528141176'},
+                {'ip_prefix': '14:1::/120', 'dest_type': 'host', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '0'},
+                {'ip_prefix': '::/128', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': '', 'class_id': 0, 'drop': True, 'route_user_data': '104865557729784'},
+                {'ip_prefix': '::1/128', 'dest_type': 'next_hop_gid', 'dest_id': 3, 'dest_info': '', 'class_id': 0, 'drop': True, 'route_user_data': '104865557729784'},
+                {'ip_prefix': '14:1::1/128', 'dest_type': 'for_us', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865572404296'},
+                {'ip_prefix': '100::4:1:1/128', 'dest_type': 'NONE', 'dest_id': 0, 'dest_info': 'N/A', 'class_id': 0, 'drop': False, 'route_user_data': '104865530976568'},
+            ],
+        },
+    },
+}

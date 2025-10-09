@@ -1,0 +1,15 @@
+PRP-channel: PR1
+------------
+Layer type = L2 
+Ports: 2    Maxports = 2
+Port state = prp-channel is Inuse
+Protocol = Enabled  
+Ports in the group:
+1) Port: Gi1/1
+Logical slot/port = 1/1 Port state = Inuse 
+    Protocol = Enabled
+2) Port: Gi1/2
+Logical slot/port = 1/2 Port state = Inuse 
+    Protocol = Enabled
+
+

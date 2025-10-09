@@ -1,0 +1,61 @@
+HW Target vlan 30    HW policy signature 0001DF9F policies#:1 rules 14 sig 0001DF9F 
+
+SW policy default feature Device-tracking - Active 
+
+ 
+
+Rule DHCP4 CLIENT Protocol UDP mask 00000400 action PUNT match1 0 match2 67#feat:1 
+
+feature Device-tracking 
+
+Rule DHCP4 SERVER SOURCE Protocol UDP mask 00001000 action PUNT match1 0 match2 68#feat:1 
+
+feature Device-tracking 
+
+Rule DHCP4 SERVER Protocol UDP mask 00000800 action PUNT match1 67 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule ARP Protocol IPV4 mask 00004000 action PUNT match1 0 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule DHCP SERVER SOURCE Protocol UDP mask 00000200 action PUNT match1 0 match2 546#feat:1 
+
+feature Device-tracking 
+
+Rule DHCP CLIENT Protocol UDP mask 00000080 action PUNT match1 0 match2 547#feat:1 
+
+feature Device-tracking 
+
+Rule DHCP SERVER Protocol UDP mask 00000100 action PUNT match1 547 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule RS Protocol ICMPV6 mask 00000004 action PUNT match1 133 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule RA Protocol ICMPV6 mask 00000008 action PUNT match1 134 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule NS Protocol ICMPV6 mask 00000001 action PUNT match1 135 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule NA Protocol ICMPV6 mask 00000002 action PUNT match1 136 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule REDIR Protocol ICMPV6 mask 00000010 action PUNT match1 137 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule DAR Protocol ICMPV6 mask 00008000 action PUNT match1 157 match2 0#feat:1 
+
+feature Device-tracking 
+
+Rule DAC Protocol ICMPV6 mask 00010000 action PUNT match1 158 match2 0#feat:1 
+
+feature Device-tracking 

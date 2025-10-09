@@ -59,7 +59,6 @@ class ShowIsisNodeLocators(ShowIsisNodeLocatorsSchema):
             else:
                 output = self.device.execute(self.cli_command[0])
 
-        print(output) 
         # initial return dictionary
         ret_dict = {}
         host_dict = {}

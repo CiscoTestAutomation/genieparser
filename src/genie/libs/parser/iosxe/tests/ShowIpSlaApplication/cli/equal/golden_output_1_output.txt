@@ -1,0 +1,23 @@
+	IP Service Level Agreements
+Version: Round Trip Time MIB 2.2.0, Infrastructure Engine-III
+
+Supported Operation Types:
+	icmpEcho, path-echo, path-jitter, udpEcho, tcpConnect, http
+	dns, udpJitter, dhcp, ftp, lsp Group, icmpJitter, lspPing
+	lspTrace, 802.1agEcho VLAN, EVC, Port
+	802.1agJitter VLAN, EVC, Port, pseudowirePing, y1731Delay
+	y1731Loss, y1731SyntheticLoss,, udpApp, wspApp, mcast
+	generic, https
+
+Supported Features:
+	IPSLAs Event Publisher
+
+IP SLAs low memory water mark: 1623380481
+Estimated system max number of entries: 140423
+
+Estimated number of configurable operations: 139923
+Number of Entries configured  : 500
+Number of active Entries      : 500
+Number of pending Entries     : 0
+Number of inactive Entries    : 0
+Time of last change in whole IP SLAs: 22:34:37.309 PST Sun Feb 9 2025

@@ -1,0 +1,23 @@
+expected_output = {
+    'acl_groups': {
+        'ACCSEC': '0x0',
+        'AUTHACL': '0x0',
+        'CGACL': '0x0',
+        'FNF_L3': '0x0',
+        'FNF_PORT': '0x0',
+        'FNF_VLAN': '0x0',
+        'L2SN_PORT': '0x0',
+        'MRR0_LIF': '0x0',
+        'MRR0_PORT': '0x0',
+        'MRR1_LIF': '0x0',
+        'MRR1_PORT': '0x0',
+        'MRR2_LIF': '0x0',
+        'MRR2_PORT': '0x0',
+        'PACL': '0x0',
+        'SRCGRD': '0x0',
+        'VACL': '0x0',
+    },
+    'asic': 1,
+    'direction': 'Ingress',
+    'pkt_fmt': 'ETH',
+}

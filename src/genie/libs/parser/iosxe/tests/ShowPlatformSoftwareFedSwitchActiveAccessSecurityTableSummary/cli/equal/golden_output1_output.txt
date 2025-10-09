@@ -1,0 +1,12 @@
+Access Security Table Summary
+
+
+MAC Client Port and MAC entries:
+
+     Interface    MAC              Logical-ID Position   Asic# Auth-Act           Restore-Auth-Act   Flag         Drop   Ovrd-VLAN  Policy   Policy-OID Packets
+---- ------------ ---------------- ---------- ---------- ----- ------------------ ------------------ ------------ ------ ---------- -------- ---------- ----------
+   1 Gi3/0/10     0000.0033.33DB   0          4096       0     FWD_ALL_LRN_DATA   None               NONE         No     50         IPv4v6   3840       394
+   2 Gi3/0/10     0000.0033.33DC   1          4097       0     FWD_ALL_LRN_DATA   None               NONE         No     50         IPv4v6   4483       393
+   3 Gi3/0/10     0000.0033.33DD   2          4098       0     FWD_ALL_LRN_DATA   None               NONE         No     50         IPv4v6   4524       393
+
+

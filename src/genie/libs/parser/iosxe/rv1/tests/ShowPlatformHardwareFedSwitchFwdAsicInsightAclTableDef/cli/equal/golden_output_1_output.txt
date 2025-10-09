@@ -1,0 +1,32 @@
++--------------+--------------------------+-----------------------------------+----------------------+-------------------------+--------------+-----------------+----------------------+
+|     ACL Info |          ACL Key Profile |              ACL Match Key Fields |           Range Info | ACL Command Profile OID | ACL Commands | Source PCL Info | Destination PCL Info |
++--------------+--------------------------+-----------------------------------+----------------------+-------------------------+--------------+-----------------+----------------------+
+| acl_oid:1319 | acl_key_profile_oid:1227 |                          IPV4_SIP |    acl_range_cookie: |                         |              |                 |                      |
+|  acl_cookie: |  acl_key_profile_cookie: |                          IPV4_DIP | acl_range_direction: |                         |              |                 |                      |
+|              |                          |                               TOS |     acl_range_count: |                         |              |                 |                      |
+|              |                          |                          PROTOCOL |                      |                         |              |                 |                      |
+|              |                          |                        IPV4_FLAGS |                      |                         |              |                 |                      |
+|              |                          |                               TTL |                      |                         |              |                 |                      |
+|              |                          |                             SPORT |                      |                         |              |                 |                      |
+|              |                          |                             DPORT |                      |                         |              |                 |                      |
+|              |                          |                         TCP_FLAGS |                      |                         |              |                 |                      |
+|              |                          |                          MSG_CODE |                      |                         |              |                 |                      |
+|              |                          |                          MSG_TYPE |                      |                         |              |                 |                      |
+|              |                          |                         IS_ROUTED |                      |                         |              |                 |                      |
+|              |                          |                      IS_INJECT_UP |                      |                         |              |                 |                      |
+|              |                          |             IS_STP_STATE_BLOCKING |                      |                         |              |                 |                      |
+|              |                          |                                   |                      |                         |              |                 |                      |
+| acl_oid:1321 | acl_key_profile_oid:1244 |                          IPV4_SIP |    acl_range_cookie: |                         |              |                 |                      |
+|  acl_cookie: |  acl_key_profile_cookie: |                          IPV4_DIP | acl_range_direction: |                         |              |                 |                      |
+|              |                          |                               TOS |     acl_range_count: |                         |              |                 |                      |
+|              |                          |                          PROTOCOL |                      |                         |              |                 |                      |
+|              |                          |                        IPV4_FLAGS |                      |                         |              |                 |                      |
+|              |                          |                               TTL |                      |                         |              |                 |                      |
+|              |                          |                             SPORT |                      |                         |              |                 |                      |
+|              |                          |                             DPORT |                      |                         |              |                 |                      |
+|              |                          |                         TCP_FLAGS |                      |                         |              |                 |                      |
+|              |                          |                          MSG_CODE |                      |                         |              |                 |                      |
+|              |                          |                          MSG_TYPE |                      |                         |              |                 |                      |
+|              |                          |                         IS_ROUTED |                      |                         |              |                 |                      |
+|              |                          |                      IS_INJECT_UP |                      |                         |              |                 |                      |
+|              |                          |                                   |                      |                         |              |                 |                      |

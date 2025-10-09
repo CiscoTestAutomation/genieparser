@@ -1,0 +1,241 @@
+show lisp instance-id 11 ipv6 publication detail
+Publication Information for LISP 0 EID-table vrf prov1 (IID 11)
+ * Indicates the selected rlocs used by consumers
+
+  EID-prefix: ::/0
+    First published:      00:05:08
+    Last published:       00:04:52
+    State:                unknown-eid-forward
+    Exported to:          none
+
+    Publisher 4:2:1::1.4342
+      last published 00:04:52, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state unknown-eid-forward
+      xTR-ID 0xE5C0A419-0x2B4D3BDF-0xEE3A0DCA-0x441F597F
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Locator   Pri/Wgt  State     Encap-IID   Domain-ID/MH-ID   Metric
+      1:3:1::1     1/50   up        -                   1/11      0
+      1:3:2::1     1/50   up        -                   1/11      0
+      2:5:1::1     1/100  up        -                   2/22      0
+
+    Publisher 1:2:1::1.4342
+      last published 00:05:08, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state unknown-eid-forward
+      xTR-ID 0xE5C0A419-0x2B4D3BDF-0xEE3A0DCA-0x441F597F
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Locator   Pri/Wgt  State     Encap-IID   Domain-ID/MH-ID   Metric
+      1:3:1::1     1/50   up        -                   1/11      0
+      1:3:2::1     1/50   up        -                   1/11      0
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:1::1      1/50   up        -          0       1:2:1::1
+      1:3:1::1      1/50   up        -          1       4:2:1::1
+      1:3:2::1      1/50   up        -          0       1:2:1::1
+      1:3:2::1      1/50   up        -          1       4:2:1::1
+      2:5:1::1      1/100  up        -          1       4:2:1::1
+
+  EID-prefix: 11:1:1::1/128
+    First published:      00:05:08
+    Last published:       00:04:54
+    State:                complete
+    Exported to:          none
+
+    Publisher 4:2:1::1.4342
+      last published 00:04:54, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      xTR-ID 0x82E42571-0x26EB3C24-0x8929C732-0xE539F297
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:3::1     1/50   up        -          [0]
+
+    Publisher 1:2:1::1.4342
+      last published 00:05:08, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      xTR-ID 0x82E42571-0x26EB3C24-0x8929C732-0xE539F297
+      site-ID unspecified
+      Domain-ID 1
+      Multihoming-ID 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:3::1     1/50   up        -          [-]
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:3::1*     1/50   up        -          0       1:2:1::1
+      1:3:3::1      1/50   up        -          1       4:2:1::1
+
+  EID-prefix: 21:1:1::/96
+    First published:      00:01:56
+    Last published:       00:01:56
+    State:                complete
+    Exported to:          map-cache, RIB
+
+    Publisher 1:2:1::1.4342
+      last published 00:01:56, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      SGT 211
+      xTR-ID 0x6F2A92D0-0x145ECA8A-0xF1C24AB4-0xE8A4F310
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 21
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        21         [-]
+      1:3:2::1     1/50   up        21         [-]
+
+    Publisher 4:2:1::1.4342
+      last published 00:01:56, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      SGT 211
+      xTR-ID 0x6F2A92D0-0x145ECA8A-0xF1C24AB4-0xE8A4F310
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 21
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        21         [-]
+      1:3:2::1     1/50   up        21         [-]
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:1::1      1/50   up        21         ext     1:2:1::1
+      1:3:1::1      1/50   up        21         ext     4:2:1::1
+      1:3:2::1*     1/50   up        21         ext     1:2:1::1
+      1:3:2::1      1/50   up        21         ext     4:2:1::1
+
+  EID-prefix: 21:1:2::/96
+    First published:      00:01:56
+    Last published:       00:01:56
+    State:                complete
+    Exported to:          map-cache, RIB
+
+    Publisher 4:2:1::1.4342
+      last published 00:01:56, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      SGT 212
+      xTR-ID 0x6F2A92D0-0x145ECA8A-0xF1C24AB4-0xE8A4F310
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 21
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        21         [-]
+      1:3:2::1     1/50   up        21         [-]
+
+    Publisher 1:2:1::1.4342
+      last published 00:01:56, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      SGT 212
+      xTR-ID 0x6F2A92D0-0x145ECA8A-0xF1C24AB4-0xE8A4F310
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 21
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        21         [-]
+      1:3:2::1     1/50   up        21         [-]
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:1::1      1/50   up        21         ext     1:2:1::1
+      1:3:1::1      1/50   up        21         ext     4:2:1::1
+      1:3:2::1*     1/50   up        21         ext     1:2:1::1
+      1:3:2::1      1/50   up        21         ext     4:2:1::1
+
+  EID-prefix: 21:2:1::/96
+    First published:      00:01:54
+    Last published:       00:01:54
+    State:                complete
+    Exported to:          map-cache, RIB
+
+    Publisher 1:2:1::1.4342
+      last published 00:01:54, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      xTR-ID 0xE5C0A419-0x2B4D3BDF-0xEE3A0DCA-0x441F597F
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 21
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        21         [-]
+
+    Publisher 4:2:1::1.4342
+      last published 00:01:54, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      xTR-ID 0x9F725593-0x164CF828-0x76FAFC86-0x7180604E
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 21
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      2:5:1::1     1/50   up        21         [-]
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:1::1      1/50   up        21         ext     1:2:1::1
+      2:5:1::1*     1/50   up        21         ext     4:2:1::1
+
+  EID-prefix: 22:1:1::/96
+    First published:      00:01:56
+    Last published:       00:01:56
+    State:                complete
+    Exported to:          map-cache, RIB
+
+    Publisher 4:2:1::1.4342
+      last published 00:01:56, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      SGT 221
+      xTR-ID 0x6F2A92D0-0x145ECA8A-0xF1C24AB4-0xE8A4F310
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 22
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        22         [-]
+      1:3:2::1     1/50   up        22         [-]
+
+    Publisher 1:2:1::1.4342
+      last published 00:01:56, TTL never, Expires: never
+      publisher epoch 0, entry epoch 0
+      entry-state complete
+      SGT 221
+      xTR-ID 0x6F2A92D0-0x145ECA8A-0xF1C24AB4-0xE8A4F310
+      site-ID unspecified
+      Domain-ID extranet
+      Multihoming-ID unspecified
+      Extranet-IID 22
+      Publish-mode publish-extranet instance-id 11
+      Locator   Pri/Wgt  State     Encap-IID  RDP
+      1:3:1::1     1/50   up        22         [-]
+      1:3:2::1     1/50   up        22         [-]
+
+  Merge Locator Information
+      Locator    Pri/Wgt  State     Encap-IID  RDP-Len Src-Address
+      1:3:1::1      1/50   up        22         ext     1:2:1::1
+      1:3:1::1      1/50   up        22         ext     4:2:1::1
+      1:3:2::1*     1/50   up        22         ext     1:2:1::1
+      1:3:2::1      1/50   up        22         ext     4:2:1::1

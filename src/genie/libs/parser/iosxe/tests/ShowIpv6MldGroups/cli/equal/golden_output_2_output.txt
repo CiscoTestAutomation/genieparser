@@ -1,0 +1,13 @@
+show ipv6 mld groups
+MLD Connected Group Membership
+Group Address                           Interface                                             Uptime    Expires
+FF8E::                                  Vlan100                                              00:02:31  00:03:59
+FF8E::1                                 Vlan100                                              00:02:31  00:03:59
+FF8E::2                                 Vlan100                                              00:02:31  00:03:59
+FF8E::3                                 Vlan100                                              00:02:31  00:03:59
+FF8E::4                                 Vlan100                                              00:02:31  00:03:59
+FF8E::5                                 Vlan100                                              00:02:31  00:03:59
+FF8E::6                                 Vlan100                                              00:02:31  00:03:59
+FF8E::7                                 Vlan100                                              00:02:31  00:03:59
+FF8E::8                                 Vlan100                                              00:02:31  00:03:59
+FF8E::9                                 Vlan100                                              1d01h     00:03:59

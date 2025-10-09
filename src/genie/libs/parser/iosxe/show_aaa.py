@@ -158,7 +158,7 @@ class ShowAAServersSchema(MetaParser):
                             },
                         },
                     },
-                    'requests_per_minute_past_24_hours': {
+                    Optional('requests_per_minute_past_24_hours'): {
                         'average': int,
                         'level_type': {
                             Any(): {

@@ -1,0 +1,48 @@
+expected_output = {
+    'meraki_device_registration': {
+        'devices': {
+            '1': {
+                'cloud_id': 'XXXX-XXXX-XXXX',
+                'mac_address': 'XX:XX:XX:XX:XX:XX',
+                'pid': 'C9200L-24P-4G',
+                'serial_number': 'XXXXXXXXXXX',
+                'status': 'Registered',
+                'timestamp(utc)': '2025-06-12 15:04:22',
+            },
+        },
+        'url': 'https://example.meraki.com/nodes/register',
+    },
+    'meraki_tunnel_config': {
+        'client_ipv6_addr': 'XXXX:XXXX:XXXX:X:XXXX:XXXX:XXXX:XXX',
+        'config_server': 'example-config.meraki.com',
+        'fetch_state': 'Config fetch succeeded',
+        'last_fetch(utc)': '2025-06-16 22:35:06',
+        'network_name': 'Example Network - switch',
+        'next_fetch(utc)': '2025-06-16 23:49:10',
+        'primary': 'primary.nt.meraki.com',
+        'secondary': 'secondary.nt.meraki.com',
+    },
+    'meraki_tunnel_interface': {
+        'rx_drop_packets': 0,
+        'rx_drop_packets_delta': 1,
+        'rx_errors': 0,
+        'rx_errors_delta': 2,
+        'rx_packets': 461647,
+        'rx_packets_delta': 18,
+        'status': 'Enable',
+        'tx_drop_packets': 0,
+        'tx_drop_packets_delta': 3,
+        'tx_errors': 0,
+        'tx_errors_delta': 4,
+        'tx_packets': 441107,
+        'tx_packets_delta': 17,
+    },
+    'meraki_tunnel_state': {
+        'client_last_restart(utc)': '2025-06-16 22:35:06',
+        'primary': 'Up',
+        'primary_last_change(utc)': '2025-06-16 22:35:12',
+        'secondary': 'Up',
+        'secondary_last_change(utc)': '2025-06-16 22:35:12',
+    },
+    'service_meraki_connect': 'enable',
+}

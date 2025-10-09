@@ -1,0 +1,7 @@
+For address family: IPv6 Unicast
+BGP router identifier 2.2.2.2, local AS number 200
+BGP table version is 3097305, main routing table version 3097305
+809576 networks peaked at 20:52:52 Aug 14 2025 EST (00:00:07.996 ago)
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+1000:192:168:0:1::1
+                4          100       0       0        1    0    0 00:00:07 Idle

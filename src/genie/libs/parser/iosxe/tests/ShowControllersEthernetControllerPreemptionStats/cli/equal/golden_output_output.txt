@@ -1,0 +1,36 @@
+Gi1/4
+-----------------------------------------------------------------------------
+                                    Express counters     Preemptable counters
+-----------------------------------------------------------------------------
+Total frames received               0                    0                   
+64 byte frames                      0                    0                   
+65 to 127 byte frames               0                    0                   
+128 to 255 byte frames              0                    0                   
+256 to 511 byte frames              0                    0                   
+512 to 1023 byte frames             0                    0                   
+1024 to 1518 byte frames            0                    0                   
+1519 to 2047 byte frames            0                    0                   
+2048 to 4095 byte frames            0                    0                   
+4096 to 8191 byte frames            0                    0                   
+8192 to 16383 byte frames           0                    0                   
+16384 to 32767 byte frames          0                    0                   
+32768 to Mtu byte frames            0                    0                   
+Init fragment frame count           N/A                  0                   
+Contd fragment frame count          N/A                  0  
+
+Total frames transmitted            0                    0                   
+64 byte frames                      0                    0                   
+65 to 127 byte frames               0                    0                   
+128 to 255 byte frames              0                    0                   
+256 to 511 byte frames              0                    0                   
+512 to 1023 byte frames             0                    0                   
+1024 to 1518 byte frames            0                    0                   
+1519 to 2047 byte frames            0                    0                   
+2048 to 4095 byte frames            0                    0                   
+4096 to 8191 byte frames            0                    0                   
+8192 to 16383 byte frames           0                    0                   
+16384 to 32767 byte frames          0                    0                   
+32768 to Mtu byte frames            0                    0                   
+Init fragment frame count           N/A                  0                   
+Contd fragment frame count          N/A                  0                   
+-----------------------------------------------------------------------------

@@ -297,7 +297,7 @@ class ShowIpArpSummaryVrfAll(ShowIpArpSummaryVrfAllSchema):
 
 		# Incomplete : 0 (Throttled : 0)
 		p2 = re.compile(r'^\s*Incomplete +: +(?P<incomplete>\w+)'
-			' +\(Throttled +: +(?P<throttled>\w+)\)$')
+			r' +\(Throttled +: +(?P<throttled>\w+)\)$')
 
 		# Unknown    : 0
 		p3 = re.compile(r'^\s*Unknown +: +(?P<unknown>[\d]+)$')

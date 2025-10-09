@@ -1,0 +1,5 @@
+Domain g8032_domain, Service number 10: notify G.8032 Controller, EFD triggered
+    ID Interface  SrvcInst Defect        Threshold     Triggered?
+  ---- ---------- -------- ------------- ------------- ----------
+    52 Gi1/4      N/A      None          DefMACstatus  No        
+    61 Gi1/3      N/A      DefRemoteCCM  DefMACstatus  Yes

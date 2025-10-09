@@ -1,0 +1,11 @@
+Router# show mpls traffic-eng fast-reroute database
+Tunnel head end item frr information:
+Protected tunnel              In-label Out intf/label   FRR intf/label   Status
+Tunnel500                     Tun hd   AT4/0.100:Untagg Tu501:20         ready  
+Prefix item frr information:
+Prefix             Tunnel     In-label Out intf/label    FRR intf/label  Status
+10.0.0.8/32        Tu500      18       AT4/0.100:Pop ta  Tu501:20        ready  
+10.0.8.8/32        Tu500      19       AT4/0.100:Untagg  Tu501:20        ready  
+10.8.9.0/24        Tu500      22       AT4/0.100:Untagg  Tu501:20        ready  
+LSP midpoint item frr information:
+LSP identifier     In-label Out     intf/label     FRR intf/label     Status

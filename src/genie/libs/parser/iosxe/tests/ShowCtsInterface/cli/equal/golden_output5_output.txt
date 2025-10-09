@@ -1,0 +1,8 @@
+Interface GigabitEthernet1/0/1:
+    CTS is disabled.
+
+    L3 IPM:   disabled.
+
+    Vlan sgt-map 
+        Index : 0   Vlan : 1   SGT : 100
+        Index : 1   Vlan : 2   SGT : 500

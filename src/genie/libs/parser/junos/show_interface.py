@@ -94,8 +94,8 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
         # em1.0                   up    up   inet     10.0.0.4/8
         # fxp0                    up    up
         p1 =  re.compile(r'^(?P<interface>\S+) +(?P<admin_state>\w+) +(?P<link_state>\w+) *'
-                          '(?P<protocol>\S+)? *(?P<local>[\w\.\:\/]+)?( *'
-                          '[\-\>]+? *(?P<remote>[\w\.\:\/]+))?$')
+                          r'(?P<protocol>\S+)? *(?P<local>[\w\.\:\/]+)?( *'
+                          r'[\-\>]+? *(?P<remote>[\w\.\:\/]+))?$')
 
 
         #                                             172.16.64.1/2
@@ -104,7 +104,7 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
         #                                    tnp      0x4
         #                                             10.11.11.11         --> 0/0
         p2 =  re.compile(r'^((?P<protocol>\S+) +)?(?P<local>((\d+\.[\d\.\/]+)|(\w+\:[\w\:\/]+)|(0x\d+))+)'
-                          ' *(([\-\>]+) *(?P<remote>[\w\.\:\/]+))?$')
+                          r' *(([\-\>]+) *(?P<remote>[\w\.\:\/]+))?$')
         #                                    multiservice
         p3 = re.compile(r'^((?P<protocol>\S+))$')
 

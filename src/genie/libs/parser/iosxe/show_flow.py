@@ -7,6 +7,9 @@ IOSXE parsers for the following show commands:
     * show flow monitor {flow_monitor_name} statistics
     * show flow monitor
     * show flow monitor sdwan_flow_monitor cache filter interface input <> ipv4 source address <>
+    * 'show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table'
+    * 'show flow monitor {monitor_name} cache sort application name top {top_count}'
+    * 'show flow monitor {monitor_name} cache sort connection {connetion_type} counter bytes network long top {top_count}'
 '''
 
 # Python
@@ -40,12 +43,29 @@ class ShowFlowMonitorSchema(MetaParser):
                             Any(): {
                                 'trns_src_port': int,
                                 'trns_dst_port': int,
-                                'ip_tos': str,
-                                'ip_port': int,
-                                'bytes_long': int,
+                                Optional('ip_tos'): str,
+                                Optional('ip_port'): int,
+                                Optional('bytes_long'): int,
                                 'pkts_long': int,
+                                Optional('time_abs_first'): str,
+                                Optional('time_abs_last'): str,
+                                Optional('bytes_layer2_long'): int,
+                                Optional('intf_input'): str,
+                                Optional('ip_prot'): int,
                             }
                         }
+                    }
+                }
+            }
+        },
+        Optional('datalink_mac_src_addr'): {
+            Any(): {
+                'datalink_mac_dst_addr': {
+                    Any(): {
+                        'bytes_long': int,
+                        'time_abs_first': str,
+                        'time_abs_last': str,
+                        'bytes_layer2_long': int
                     }
                 }
             }
@@ -91,11 +111,31 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
         # Flows aged:                                   0
         p6 = re.compile(r'^Flows +aged: +(?P<flows_aged>\d+)$')
 
-        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
-        p7 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
-                        '(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +'
-                        '(?P<ip_tos>\S+) +(?P<ip_port>\d+) +(?P<bytes_long>\d+) +'
-                        '(?P<pkts_long>\d+)$')
+        # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100 
+        p7 = re.compile(r'^(?P<ipv4_src_addr>\S+)\s+(?P<ipv4_dst_addr>\S+)\s+(?P<trns_src_port>\d+)\s+(?P<trns_dst_port>\d+)\s+(?P<ip_tos>\S+)\s+(?P<ip_port>\d+)\s+(?P<bytes_long>\d+)\s+(?P<pkts_long>\d+)$')
+
+        # 102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0                    1
+        p8 = re.compile(r'^(?P<ipv4_src_addr>\S+)\s+'
+                 r'(?P<ipv4_dst_addr>\S+)\s+'
+                 r'(?P<trns_src_port>\d+)\s+'
+                 r'(?P<trns_dst_port>\d+)\s+'
+                 r'(?P<intf_input>\S+)\s+'
+                 r'(?P<ip_prot>\d+)\s+'
+                 r'(?P<pkts_long>\d+)\s+'
+                 r'(?P<time_abs_first>\S+)\s+'
+                 r'(?P<time_abs_last>\S+)\s+'
+                 r'(?P<bytes_layer2_long>\d+)$')
+        #0000.0000.002E               0000.0001.0101                              19596    05:36:26.968   05:37:30.968                 27264
+        p9 = re.compile(
+            r'^(?P<datalink_mac_src_addr>[0-9A-Fa-f\.]+)\s+'
+            r'(?P<datalink_mac_dst_addr>[0-9A-Fa-f\.]+)\s+'
+            r'(?P<bytes_long>\d+)\s+'
+            r'(?P<time_abs_first>\d{2}:\d{2}:\d{2}\.\d{3})\s+'
+            r'(?P<time_abs_last>\d{2}:\d{2}:\d{2}\.\d{3})\s+'
+            r'(?P<bytes_layer2_long>\d+)$'
+        )
+
+
         for line in out.splitlines():
 
             line = line.strip()
@@ -143,7 +183,8 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                 continue
 
             # 10.4.1.10         10.4.10.1                    0              0  0xC0         89                   100                     1
-            m = p7.match(line)
+            # 102.1.1.52       101.1.1.52                   0              0  Po10                       61                     1    11:22:19.297   11:22:19.297                     0                    1
+            m = p7.match(line) or p8.match(line)
             if m:
                 group = m.groupdict()
 
@@ -155,18 +196,47 @@ class ShowFlowMonitor(ShowFlowMonitorSchema):
                     setdefault(group['ipv4_dst_addr'], {}).\
                     setdefault('index', {}).\
                     setdefault(index, {})
-
                 ipv4_dst_addr_dict.update({'trns_src_port': int(group['trns_src_port'])})
                 ipv4_dst_addr_dict.update({'trns_dst_port': int(group['trns_dst_port'])})
-                ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
-                ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
-                ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
+                if 'intf_input' in group:
+                    ipv4_dst_addr_dict.update({'intf_input': group['intf_input']})
+                if 'ip_prot' in group:
+                    ipv4_dst_addr_dict.update({'ip_prot': int(group['ip_prot'])})
+                if 'ip_port' in group:
+                    ipv4_dst_addr_dict.update({'ip_port': int(group['ip_port'])})
                 ipv4_dst_addr_dict.update({'pkts_long': int(group['pkts_long'])})
+                if 'time_abs_first' in group:
+                    ipv4_dst_addr_dict.update({'time_abs_first': group['time_abs_first']})
+                if 'time_abs_last' in group:
+                    ipv4_dst_addr_dict.update({'time_abs_last': group['time_abs_last']})
+                if 'bytes_layer2_long' in group:
+                    ipv4_dst_addr_dict.update({'bytes_layer2_long': int(group['bytes_layer2_long'])})
+                if 'ip_tos' in group:
+                    ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
+                if 'bytes_long' in group:
+                    ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
 
                 dst_addr_index.update({group['ipv4_dst_addr']: index})
 
                 continue
+            #0000.0000.002E               0000.0001.0101                              19596    05:36:26.968   05:37:30.968                 27264
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                mac_dst_addr_dict = ret_dict.setdefault('datalink_mac_src_addr', {}) \
+                    .setdefault(group['datalink_mac_src_addr'], {}) \
+                    .setdefault('datalink_mac_dst_addr', {}) \
+                    .setdefault(group['datalink_mac_dst_addr'], {})
 
+
+                mac_dst_addr_dict.update({
+                    'bytes_long': int(group['bytes_long']),
+                    'time_abs_first': group['time_abs_first'],
+                    'time_abs_last': group['time_abs_last'],
+                    'bytes_layer2_long': int(group['bytes_layer2_long'])
+                })
+                continue
+    
         return ret_dict
 
 
@@ -228,6 +298,9 @@ class ShowFlowMonitorCacheSchema(MetaParser):
                 Optional('datalink_mac_dst_input'): str,
                 Optional('interface_input'): str,
                 Optional('datalink_mac_dst_output'): str,
+                Optional('connection_initiator'): str,
+                Optional('connection_server_nw_bytes_counter'): int,
+                Optional('connection_client_nw_bytes_counter'): int,
             },
         },
         Optional('proto_entries'): {
@@ -267,6 +340,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         ret_dict = {}
         index = 0
         match = {}
+        entry_dict = {}
 
         # entry_dict intializes on p8 or p9 condition
         # but some output doesn't match these conditions.
@@ -407,6 +481,15 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
 
         # DATALINK MAC DESTINATION ADDRESS OUTPUT:  1000.0E2A.4F57
         p39 = re.compile(r'^DATALINK MAC DESTINATION ADDRESS OUTPUT:\s+(?P<datalink_mac_dst_output>[\w\s\.]+)$')
+        
+        # connection initiator:                     Reverse initiator
+        p40 = re.compile(r'^connection initiator:\s+(?P<connection_initiator>.*)$')
+
+        # connection server network bytes counter:  495314
+        p41 = re.compile(r'^connection server network bytes counter:\s+(?P<connection_server_nw_bytes_counter>\d+)$')
+        
+        # connection client network bytes counter:  0
+        p42 = re.compile(r'^connection client network bytes counter:\s+(?P<connection_client_nw_bytes_counter>\d+)$')   
 
         for line in output.splitlines():
             line = line.strip()
@@ -563,6 +646,7 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
             m = p17.match(line)
             if m:
                 group = m.groupdict()
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'trns_src_port': int(group['trns_src_port'])})
                 continue
 
@@ -726,7 +810,28 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
                 entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
                 entry_dict.update({'datalink_mac_dst_output': group['datalink_mac_dst_output']})
                 continue
-
+            
+            # connection initiator:                     Reverse initiator
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'connection_initiator': group['connection_initiator']})
+                continue
+        
+            # connection server network bytes counter:  495314    
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'connection_server_nw_bytes_counter': int(group['connection_server_nw_bytes_counter'])})
+                continue
+                
+            # connection client network bytes counter:  0    
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict.update({'connection_client_nw_bytes_counter': int(group['connection_client_nw_bytes_counter'])})
+                continue
+                
         return ret_dict
 
 class ShowFlowMonitorCacheRecord(ShowFlowMonitorCache):
@@ -744,6 +849,814 @@ class ShowFlowMonitorCacheRecord(ShowFlowMonitorCache):
 
         return super().cli(name=name, output=out)
 
+
+# =================================================================================================================================
+# Schema for:
+#  * 'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table'
+#  * 'show flow monitor {name} cache sort counter bytes long top {value} format table'
+#  * 'show flow monitor {name} cache sort counter packets long top {value} format table'
+#  * 'show flow monitor {name} cache sort flow direction top {value} format table'
+#  * 'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink dot1q priority top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink ethertype top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 tos top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 ttl top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 version top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 version top {value} format table'
+#  * 'show flow monitor {name} cache sort transport tcp flags top {value} format table'
+#  * 'show flow monitor {name} cache sort transport {port} top {value} format table'
+
+#  * 'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} counter bytes long top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} counter packets long top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} flow direction top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 version top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 version top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} transport {port} top {value} format table'
+# =================================================================================================================================
+class ShowFlowMonitorCacheSortOrderSchema(MetaParser):
+    ''' Schema for:
+            * 'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table'
+            * 'show flow monitor {name} cache sort counter bytes long top {value} format table'
+            * 'show flow monitor {name} cache sort counter packets long top {value} format table'
+            * 'show flow monitor {name} cache sort flow direction top {value} format table'
+            * 'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink dot1q priority top {value} format table'
+            * 'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink ethertype top {value} format table'
+            * 'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 tos top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 ttl top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 version top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 version top {value} format table'
+            * 'show flow monitor {name} cache sort transport tcp flags top {value} format table'
+            * 'show flow monitor {name} cache sort transport {port} top {value} format table'
+
+            * 'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} counter bytes long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} counter packets long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} flow direction top {value} format table'
+            * 'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 version top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 version top {value} format table'
+            * 'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table'
+            * 'show flow monitor {name} cache sort {order} transport {port} top {value} format table'
+    '''
+    schema = {
+        "processed_flow": int,
+        "aggregated_flow": int,
+        "showing_flow": int,
+        Optional('datalink_flows'): {
+            Any(): {
+                'datalink_ethertype': str,
+                Optional('datalink_vlan_input'): int,
+                Optional('datalink_dot1q_vlan_input'): int,
+                Optional('datalink_mac_source_address_input'): str,
+                Optional('datalink_mac_destination_address_input'): str,
+                Optional('datalink_dot1q_vlan_output'): int,
+                Optional('datalink_mac_destination_address_output'): str,
+                Optional('datalink_vlan_output'): int,
+                'datalink_dot1q_priority': int,
+                'bytes_long': int,
+                'pkts_long': int,
+                'time_abs_first': str,
+                'time_abs_last': str,
+                'bytes_layer2_long': int,
+            }
+        },
+        Optional('ipv4_src_addr'): {
+            Any(): {
+                'ipv4_dst_addr': {
+                    Any(): {
+                        'index': {
+                            Any(): {
+                                Optional('trns_src_port'): int,
+                                Optional('trns_dst_port'): int,
+                                Optional('flow_dirn'): str,
+                                Optional('ip_version'): int,
+                                Optional('ip_tos'): str,
+                                Optional('ip_prot'): int,
+                                Optional('ip_ttl'): int,
+                                Optional('tcp_flags'): str,
+                                Optional('bytes_long'): int,
+                                Optional('pkts_long'): int,
+                                Optional('time_abs_first'): str,
+                                Optional('time_abs_last'): str,
+                                Optional('bytes_layer2_long'): int,
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        Optional('ipv6_src_addr'): {
+            Any(): {
+                'ipv6_dst_addr': {
+                    Any(): {
+                        'index': {
+                            Any(): {
+                                Optional('trns_src_port'): int,
+                                Optional('trns_dst_port'): int,
+                                Optional('flow_dirn'): str,
+                                Optional('ip_version'): int,
+                                Optional('ip_prot'): int,
+                                Optional('ip_tos'): str,
+                                Optional('ip_ttl'): int,
+                                Optional('tcp_flags'): str,
+                                Optional('bytes_long'): int,
+                                Optional('pkts_long'): int,
+                                Optional('time_abs_first'): str,
+                                Optional('time_abs_last'): str,
+                                Optional('bytes_layer2_long'): int,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===================================================================================================================================
+# Super Parser for:
+#  * 'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table'
+#  * 'show flow monitor {name} cache sort counter bytes long top {value} format table'
+#  * 'show flow monitor {name} cache sort counter packets long top {value} format table'
+#  * 'show flow monitor {name} cache sort flow direction top {value} format table'
+#  * 'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink dot1q priority top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink ethertype top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 tos top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 ttl top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv4 version top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table'
+#  * 'show flow monitor {name} cache sort ipv6 version top {value} format table'
+#  * 'show flow monitor {name} cache sort transport tcp flags top {value} format table'
+#  * 'show flow monitor {name} cache sort transport {port} top {value} format table'
+
+#  * 'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} counter bytes long top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} counter packets long top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} flow direction top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv4 version top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} ipv6 version top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table'
+#  * 'show flow monitor {name} cache sort {order} transport {port} top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderSuperParser(ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table'
+            * 'show flow monitor {name} cache sort counter bytes long top {value} format table'
+            * 'show flow monitor {name} cache sort counter packets long top {value} format table'
+            * 'show flow monitor {name} cache sort flow direction top {value} format table'
+            * 'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink dot1q priority top {value} format table'
+            * 'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink ethertype top {value} format table'
+            * 'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 tos top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 ttl top {value} format table'
+            * 'show flow monitor {name} cache sort ipv4 version top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 version top {value} format table'
+            * 'show flow monitor {name} cache sort transport tcp flags top {value} format table'
+            * 'show flow monitor {name} cache sort transport {port} top {value} format table'
+
+            * 'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} counter bytes long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} counter packets long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} flow direction top {value} format table'
+            * 'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv4 version top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 version top {value} format table'
+            * 'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table'
+            * 'show flow monitor {name} cache sort {order} transport {port} top {value} format table'
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort counter bytes long top {value} format table',
+                   'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table',
+                   'show flow monitor {name} cache sort counter packets long top {value} format table',
+                   'show flow monitor {name} cache sort flow direction top {value} format table',
+                   'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table',
+                   'show flow monitor {name} cache sort datalink dot1q priority top {value} format table',
+                   'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table',
+                   'show flow monitor {name} cache sort datalink ethertype top {value} format table',
+                   'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table',
+                   'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table',
+                   'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table',
+                   'show flow monitor {name} cache sort ipv4 protocol top {value} format table',
+                   'show flow monitor {name} cache sort ipv4 tos top {value} format table',
+                   'show flow monitor {name} cache sort ipv4 ttl top {value} format table',
+                   'show flow monitor {name} cache sort ipv4 version top {value} format table',
+                   'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table',
+                   'show flow monitor {name} cache sort ipv6 protocol top {value} format table',
+                   'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table',
+                   'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table',
+                   'show flow monitor {name} cache sort ipv6 version top {value} format table',
+                   'show flow monitor {name} cache sort transport tcp flags top {value} format table',
+                   'show flow monitor {name} cache sort transport {port} top {value} format table',
+
+                   'show flow monitor {name} cache sort {order} counter bytes long top {value} format table',
+                   'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table',
+                   'show flow monitor {name} cache sort {order} counter packets long top {value} format table',
+                   'show flow monitor {name} cache sort {order} flow direction top {value} format table',
+                   'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table',
+                   'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table',
+                   'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table',
+                   'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table',
+                   'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table',
+                   'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv4 version top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table',
+                   'show flow monitor {name} cache sort {order} ipv6 version top {value} format table',
+                   'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table',
+                   'show flow monitor {name} cache sort {order} transport {port} top {value} format table']
+
+    def cli(self, command=None,output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+        out = output
+        ret_dict = {}
+        datalink_flow_idx_counter = 0
+        dst_addr_index = {}
+        ipv6_addr_index = {}
+        # Processed 1032 flows
+        p1 = re.compile(r'^Processed (?P<processed_flow>[\d]+) flows?$')
+        # Aggregated to 479 flows
+        p2 = re.compile(r'^Aggregated to (?P<aggregated_flow>[\d]+) flows?$')
+        # Showing the top 2 flows
+        # Showing the top flow
+        p3 = re.compile(r'^Showing the top (?P<showing_flow>[\d]+)?\s*flows?$')
+        # 0xFFFF       20       0       0  0000.0000.0002               0000.0000.0001       4367276       8597    16:11:46.689   16:11:47.048       4367276
+        p4 = re.compile(r'^(?P<datalink_ethertype>0x[0-9a-fA-F]+) +(?P<datalink_vlan_input>\d+) +(?P<datalink_dot1q_vlan_input>\d+) +'
+                        r'(?P<datalink_dot1q_priority>\d+) +(?P<datalink_mac_source_address_input>\S+) +(?P<datalink_mac_destination_address_input>\S+) +(?P<bytes_long>\d+) +'
+                        r'(?P<pkts_long>\S+) +(?P<time_abs_first>\S+) +(?P<time_abs_last>\S+) +(?P<bytes_layer2_long>\d+)$')
+        # 0xFFFF       0       0  0000.0000.0001       0       42992928492       84631749    16:11:00.439   17:41:03.495       42992928492
+        p5 = re.compile(
+            r'^(?P<datalink_ethertype>0x[0-9a-fA-F]+) +'
+            r'(?P<datalink_dot1q_vlan_output>\d+) +'
+            r'(?P<datalink_dot1q_priority>\d+) +'
+            r'(?P<datalink_mac_destination_address_output>\S+) +'
+            r'(?P<datalink_vlan_output>\d+) +'
+            r'(?P<bytes_long>\d+) +'
+            r'(?P<pkts_long>\d+) +'
+            r'(?P<time_abs_first>\S+) +'
+            r'(?P<time_abs_last>\S+) +'
+            r'(?P<bytes_layer2_long>\d+)$'
+        )
+        # 100.70.5.47      100.20.1.71       0       0  Input       4  0x00         61      64  0x0D       7165340       14105    17:16:54.066   19:46:58.909       7165340
+        p6 = re.compile(r'^(?P<ipv4_src_addr>\S+) +(?P<ipv4_dst_addr>\S+) +'
+                        r'(?P<trns_src_port>\d+) +(?P<trns_dst_port>\d+) +(?P<flow_dirn>\S+) +(?P<ip_version>\d+) +'
+                        r'(?P<ip_tos>\S+) +(?P<ip_prot>\d+) +(?P<ip_ttl>\d+) +(?P<tcp_flags>\S+) +(?P<bytes_long>\d+) +'
+                        r'(?P<pkts_long>\d+) +(?P<time_abs_first>\S+) +(?P<time_abs_last>\S+) +(?P<bytes_layer2_long>\d+)$')
+        # 100:70::B46       100:20::75E       0       0  Input       6       59  0x00        64  0x00       7165340       14105    17:16:54.771   16:17:40.707       7165340
+        p7 = re.compile(
+                        r'^(?P<ipv6_src_addr>\S+)\s+(?P<ipv6_dst_addr>\S+)\s+'
+                        r'(?P<trns_src_port>\d+)\s+(?P<trns_dst_port>\d+)\s+(?P<flow_dirn>\S+)\s+(?P<ip_version>6)\s+'
+                        r'(?P<ip_prot>\d+)\s+(?P<ip_tos>\S+)\s+(?P<ip_ttl>\d+)\s+(?P<tcp_flags>\S+)\s+'
+                        r'(?P<bytes_long>\d+)\s+(?P<pkts_long>\d+)\s+(?P<time_abs_first>\S+)\s+(?P<time_abs_last>\S+)\s+'
+                        r'(?P<bytes_layer2_long>\d+)$')
+        for line in out.splitlines():
+            line = line.strip()
+            # Processed 1032 flows
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'processed_flow': int(group['processed_flow'])})
+                continue
+            # Aggregated to 479 flows
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'aggregated_flow': int(group['aggregated_flow'])})
+                continue
+            # Showing the top 2 flows
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                showing_flow = group.get('showing_flow')
+                if showing_flow:
+                    ret_dict.update({'showing_flow': int(group['showing_flow'])})
+                else:
+                    ret_dict.update({'showing_flow': 1})
+                continue
+            # 0xFFFF       20       0       0  0000.0000.0002               0000.0000.0001       4367276       8597    16:11:46.689   16:11:47.048       4367276
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                datalink_flow_idx_counter += 1
+                datalink_flows_dict = ret_dict.setdefault('datalink_flows', {})
+                current_datalink_flow = datalink_flows_dict.setdefault(str(datalink_flow_idx_counter), {})
+                current_datalink_flow.update({
+                    'datalink_ethertype': group['datalink_ethertype'],
+                    'datalink_vlan_input': int(group['datalink_vlan_input']),
+                    'datalink_dot1q_vlan_input': int(group['datalink_dot1q_vlan_input']),
+                    'datalink_dot1q_priority': int(group['datalink_dot1q_priority']),
+                    'datalink_mac_source_address_input': group['datalink_mac_source_address_input'],
+                    'datalink_mac_destination_address_input': group['datalink_mac_destination_address_input'],
+                    'bytes_long': int(group['bytes_long']),
+                    'pkts_long': int(group['pkts_long']),
+                    'time_abs_first': group['time_abs_first'],
+                    'time_abs_last': group['time_abs_last'],
+                    'bytes_layer2_long': int(group['bytes_layer2_long']),
+                })
+                continue
+            # 0xFFFF       0       0  0000.0000.0001       0       42992928492       84631749    16:11:00.439   17:41:03.495       42992928492
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                datalink_flow_idx_counter += 1
+                datalink_flows_dict = ret_dict.setdefault('datalink_flows', {})
+                current_datalink_flow = datalink_flows_dict.setdefault(str(datalink_flow_idx_counter), {})
+                current_datalink_flow.update({
+                    'datalink_ethertype': group['datalink_ethertype'],
+                    'datalink_dot1q_vlan_output': int(group['datalink_dot1q_vlan_output']),
+                    'datalink_dot1q_priority': int(group['datalink_dot1q_priority']),
+                    'datalink_mac_destination_address_output': group['datalink_mac_destination_address_output'],
+                    'datalink_vlan_output': int(group['datalink_vlan_output']),
+                    'bytes_long': int(group['bytes_long']),
+                    'pkts_long': int(group['pkts_long']),
+                    'time_abs_first': group['time_abs_first'],
+                    'time_abs_last': group['time_abs_last'],
+                    'bytes_layer2_long': int(group['bytes_layer2_long']),
+                })
+                continue
+            # 100.70.5.47      100.20.1.71       0       0  Input       4  0x00         61      64  0x0D       7165340       14105    17:16:54.066   19:46:58.909       7165340
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                index = dst_addr_index.get(group['ipv4_dst_addr'], 0) + 1
+                ipv4_dst_addr_dict = ret_dict.setdefault('ipv4_src_addr', {}).\
+                    setdefault(group['ipv4_src_addr'], {}).\
+                    setdefault('ipv4_dst_addr', {}).\
+                    setdefault(group['ipv4_dst_addr'], {}).\
+                    setdefault('index', {}).\
+                    setdefault(index, {})
+                ipv4_dst_addr_dict.update({'trns_src_port': int(group['trns_src_port'])})
+                ipv4_dst_addr_dict.update({'trns_dst_port': int(group['trns_dst_port'])})
+                ipv4_dst_addr_dict.update({'flow_dirn': group['flow_dirn']})
+                ipv4_dst_addr_dict.update({'ip_version': int(group['ip_version'])})
+                ipv4_dst_addr_dict.update({'ip_tos': group['ip_tos']})
+                ipv4_dst_addr_dict.update({'ip_prot': int(group['ip_prot'])})
+                ipv4_dst_addr_dict.update({'ip_ttl': int(group['ip_ttl'])})
+                ipv4_dst_addr_dict.update({'tcp_flags': group['tcp_flags']})
+                ipv4_dst_addr_dict.update({'bytes_long': int(group['bytes_long'])})
+                ipv4_dst_addr_dict.update({'pkts_long': int(group['pkts_long'])})
+                ipv4_dst_addr_dict.update({'time_abs_first': group['time_abs_first']})
+                ipv4_dst_addr_dict.update({'time_abs_last': group['time_abs_last']})
+                ipv4_dst_addr_dict.update({'bytes_layer2_long': int(group['bytes_layer2_long'])})
+                dst_addr_index.update({group['ipv4_dst_addr']: index})
+                continue
+        
+            # 100:70::B46       100:20::75E       0       0  Input       6       59  0x00        64  0x00       7165340       14105    17:16:54.771   16:17:40.707       7165340
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                index = ipv6_addr_index.get(group['ipv6_dst_addr'], 0) + 1
+                ipv6_dst_addr_dict = ret_dict.setdefault('ipv6_src_addr', {}).\
+                    setdefault(group['ipv6_src_addr'], {}).\
+                    setdefault('ipv6_dst_addr', {}).\
+                    setdefault(group['ipv6_dst_addr'], {}).\
+                    setdefault('index', {}).\
+                    setdefault(index, {})
+                ipv6_dst_addr_dict.update({
+                    'trns_src_port': int(group['trns_src_port']),
+                    'trns_dst_port': int(group['trns_dst_port']),
+                    'flow_dirn': group['flow_dirn'],
+                    'ip_version': int(group['ip_version']),
+                    'ip_prot': int(group['ip_prot']),
+                    'ip_tos': group['ip_tos'],
+                    'ip_ttl': int(group['ip_ttl']),
+                    'tcp_flags': group['tcp_flags'],
+                    'bytes_long': int(group['bytes_long']),
+                    'pkts_long': int(group['pkts_long']),
+                    'time_abs_first': group['time_abs_first'],
+                    'time_abs_last': group['time_abs_last'],
+                    'bytes_layer2_long': int(group['bytes_layer2_long']),
+                })
+                ipv6_addr_index[group['ipv6_dst_addr']] = index
+                continue
+            
+        return ret_dict
+
+
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table'
+# * 'show flow monitor {name} cache sort {order} counter bytes long top {value} format table'
+# * 'show flow monitor {name} cache sort {order} counter packets long top {value} format table'
+
+# * 'show flow monitor {name} cache sort counter bytes long top {value} format table'
+# * 'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table'
+# * 'show flow monitor {name} cache sort counter packets long top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderCounter(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} counter bytes layer2 long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} counter bytes long top {value} format table'
+            * 'show flow monitor {name} cache sort {order} counter packets long top {value} format table'
+
+            * 'show flow monitor {name} cache sort counter bytes long top {value} format table'
+            * 'show flow monitor {name} cache sort counter bytes layer2 long top {value} format table'
+            * 'show flow monitor {name} cache sort counter packets long top {value} format table'
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} counter {counter_type} long top {value} format table',
+                   'show flow monitor {name} cache sort {order} counter {counter_type} {layer2} long top {value} format table',
+
+                   'show flow monitor {name} cache sort counter {counter_type} long top {value} format table',
+                   'show flow monitor {name} cache sort counter {counter_type} {layer2} long top {value} format table']
+
+    def cli(self, name, counter_type, value, layer2=False, order=None, output=None):
+        if output is None:
+            if order:
+                if layer2:
+                        cmd = self.cli_command[1].format(name=name, order=order, counter_type=counter_type, layer2="layer2", value=value)
+                else:
+                    cmd = self.cli_command[0].format(name=name, order=order, counter_type=counter_type, value=value)
+            else:
+                if layer2:
+                        cmd = self.cli_command[1].format(name=name, counter_type=counter_type, layer2="layer2", value=value)
+                else:
+                    cmd = self.cli_command[0].format(name=name, counter_type=counter_type, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
+
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} flow direction top {value} format table'
+# * 'show flow monitor {name} cache sort flow direction top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderFlow(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} flow direction top {value} format table'
+            * 'show flow monitor {name} cache sort flow direction top {value} format table'
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} flow direction top {value} format table',
+                   'show flow monitor {name} cache sort flow direction top {value} format table']
+
+    def cli(self, name, value, order=None, output=None):
+        if output is None:
+            if order:
+                cmd = self.cli_command[1].format(name=name, value=value, order=order)
+            else:
+                cmd = self.cli_command[0].format(name=name, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
+
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table'
+# * 'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderTimestamp(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table',
+            * 'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table'
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} timestamp absolute {time} top {value} format table',
+                    'show flow monitor {name} cache sort timestamp absolute {time} top {value} format table']
+
+    def cli(self, name, time, value, order=None, output=None):
+        if output is None:
+            if order:
+                cmd = self.cli_command[1].format(name=name, time=time, value=value, order=order)
+            else:
+                cmd = self.cli_command[0].format(name=name, time=time, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
+    
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table'
+# * 'show flow monitor {name} cache sort {order} transport {port} top {value} format table'
+# * 'show flow monitor {name} cache sort transport tcp flags top {value} format table'
+# * 'show flow monitor {name} cache sort transport {port} top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderTransport(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} transport tcp flags top {value} format table'
+            * 'show flow monitor {name} cache sort {order} transport {port} top {value} format table'
+            * 'show flow monitor {name} cache sort transport tcp flags top {value} format table'
+            * 'show flow monitor {name} cache sort transport {port} top {value} format table'
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} transport tcp flags top {value} format table',
+                    'show flow monitor {name} cache sort {order} transport {port} top {value} format table',
+                    'show flow monitor {name} cache sort transport tcp flags top {value} format table',
+                    'show flow monitor {name} cache sort transport {port} top {value} format table']
+
+    def cli(self, name, value, order=None, port=None,output=None):
+        if output is None:
+            if order:
+                if port:
+                    cmd = self.cli_command[1].format(name=name, order=order, port=port, value=value)
+                else:
+                    cmd = self.cli_command[0].format(name=name, order=order, value=value)
+            else:
+                if port:
+                    cmd = self.cli_command[3].format(name=name, port=port, value=value)
+                else:
+                    cmd = self.cli_command[2].format(name=name, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
+
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table'
+# * 'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table'
+# * 'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table'
+# * 'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table'
+# * 'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table'
+
+# * 'show flow monitor {name} cache sort datalink dot1q priority top {value} format table'
+# * 'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table'
+# * 'show flow monitor {name} cache sort datalink ethertype top {value} format table'
+# * 'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table'
+# * 'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderDatalink(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} datalink dot1q priority top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink dot1q vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink ethertype top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink mac {destination} address {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort {order} datalink vlan {direction} top {value} format table'
+
+            * 'show flow monitor {name} cache sort datalink dot1q priority top {value} format table'
+            * 'show flow monitor {name} cache sort datalink dot1q vlan {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink ethertype top {value} format table'
+            * 'show flow monitor {name} cache sort datalink mac {destination} address {direction} top {value} format table'
+            * 'show flow monitor {name} cache sort datalink vlan {direction} top {value} format table'
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} datalink {protocol} priority top {value} format table',
+                    'show flow monitor {name} cache sort {order} datalink {protocol} vlan {direction} top {value} format table',
+                    'show flow monitor {name} cache sort {order} datalink {protocol} top {value} format table',
+                    'show flow monitor {name} cache sort {order} datalink {protocol} {destination} address {direction} top {value} format table',
+                    'show flow monitor {name} cache sort {order} datalink {protocol} {direction} top {value} format table',
+
+                    'show flow monitor {name} cache sort datalink {protocol} priority top {value} format table',
+                    'show flow monitor {name} cache sort datalink {protocol} vlan {direction} top {value} format table',
+                    'show flow monitor {name} cache sort datalink {protocol} top {value} format table',
+                    'show flow monitor {name} cache sort datalink {protocol} {destination} address {direction} top {value} format table',
+                    'show flow monitor {name} cache sort datalink {protocol} {direction} top {value} format table']
+
+    def cli(self, name, protocol, value, direction=None, destination=None, order=None, output=None):
+        if output is None:
+            if order:
+                if destination and direction:
+                    cmd = self.cli_command[8].format(name=name, order=order, protocol=protocol, destination=destination, direction=direction, value=value)
+                elif protocol=="dot1q":
+                    if direction:
+                        cmd = self.cli_command[6].format(name=name, order=order, protocol=protocol, direction=direction, value=value)
+                    else:
+                        cmd = self.cli_command[5].format(name=name, order=order, protocol=protocol, value=value)
+                elif protocol=="vlan" and direction:
+                    cmd = self.cli_command[9].format(name=name, order=order, protocol=protocol, direction=direction, value=value)
+                else:
+                    cmd = self.cli_command[7].format(name=name, order=order, protocol=protocol, value=value)
+            else:
+                if destination and direction:
+                    cmd = self.cli_command[3].format(name=name, protocol=protocol, destination=destination, direction=direction, value=value)
+                elif protocol=="dot1q":
+                    if direction:
+                        cmd = self.cli_command[1].format(name=name, protocol=protocol, direction=direction, value=value)
+                    else:
+                        cmd = self.cli_command[0].format(name=name, protocol=protocol, value=value)
+                elif protocol=="vlan" and direction:
+                    cmd = self.cli_command[4].format(name=name, protocol=protocol, direction=direction, value=value)
+                else:
+                    cmd = self.cli_command[2].format(name=name, protocol=protocol, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
+
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv4 version top {value} format table'
+
+# * 'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table'
+# * 'show flow monitor {name} cache sort ipv4 protocol top {value} format table'
+# * 'show flow monitor {name} cache sort ipv4 tos top {value} format table'
+# * 'show flow monitor {name} cache sort ipv4 ttl top {value} format table'
+# * 'show flow monitor {name} cache sort ipv4 version top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderIPv4(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} ipv4 {destination} address top {value} format table',
+            * 'show flow monitor {name} cache sort {order} ipv4 protocol top {value} format table',
+            * 'show flow monitor {name} cache sort {order} ipv4 tos top {value} format table',
+            * 'show flow monitor {name} cache sort {order} ipv4 ttl top {value} format table',
+            * 'show flow monitor {name} cache sort {order} ipv4 version top {value} format table',
+
+            * 'show flow monitor {name} cache sort ipv4 {destination} address top {value} format table',
+            * 'show flow monitor {name} cache sort ipv4 protocol top {value} format table',
+            * 'show flow monitor {name} cache sort ipv4 tos top {value} format table',
+            * 'show flow monitor {name} cache sort ipv4 ttl top {value} format table',
+            * 'show flow monitor {name} cache sort ipv4 version top {value} format table',
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} ipv4 {feature} address top {value} format table',
+                    'show flow monitor {name} cache sort {order} ipv4 {feature} top {value} format table',
+                    'show flow monitor {name} cache sort ipv4 {feature} address top {value} format table',
+                    'show flow monitor {name} cache sort ipv4 {feature} top {value} format table']
+
+    def cli(self, name, feature, value, order=None, output=None):
+        if output is None:
+            if order:
+                if feature == "source" or feature =="destination":
+                    cmd = self.cli_command[0].format(name=name, order=order, feature=feature, value=value)
+                else:
+                    cmd = self.cli_command[1].format(name=name, order=order, feature=feature, value=value)
+            else:
+                if feature == "source" or feature =="destination":
+                    cmd = self.cli_command[2].format(name=name, feature=feature, value=value)
+                else:
+                    cmd = self.cli_command[3].format(name=name, feature=feature, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
+
+# ===================================================================================================================================
+# Parser for:
+# * 'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table'
+# * 'show flow monitor {name} cache sort {order} ipv6 version top {value} format table'
+
+# * 'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table'
+# * 'show flow monitor {name} cache sort ipv6 protocol top {value} format table'
+# * 'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table'
+# * 'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table'
+# * 'show flow monitor {name} cache sort ipv6 version top {value} format table'
+# ===================================================================================================================================
+class ShowFlowMonitorCacheSortOrderIPv6(ShowFlowMonitorCacheSortOrderSuperParser, ShowFlowMonitorCacheSortOrderSchema):
+    ''' Parser for:
+            * 'show flow monitor {name} cache sort {order} ipv6 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 hop-limit top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 traffic-class top {value} format table'
+            * 'show flow monitor {name} cache sort {order} ipv6 version top {value} format table'
+    
+            * 'show flow monitor {name} cache sort ipv6 {destination} address top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 protocol top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 hop-limit top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 traffic-class top {value} format table'
+            * 'show flow monitor {name} cache sort ipv6 version top {value} format table'
+
+    '''
+
+    cli_command = ['show flow monitor {name} cache sort {order} ipv6 {feature} address top {value} format table',
+                    'show flow monitor {name} cache sort {order} ipv6 {feature} top {value} format table',
+                    'show flow monitor {name} cache sort ipv6 {feature} address top {value} format table',
+                    'show flow monitor {name} cache sort ipv6 {feature} top {value} format table']
+
+    def cli(self, name, feature, value, order=None, output=None):
+        if output is None:
+            if order:
+                if feature == "source" or feature =="destination":
+                    cmd = self.cli_command[0].format(name=name, order=order, feature=feature, value=value)
+                else:
+                    cmd = self.cli_command[1].format(name=name, order=order, feature=feature, value=value)
+            else:
+                if feature == "source" or feature =="destination":
+                    cmd = self.cli_command[0].format(name=name, feature=feature, value=value)
+                else:
+                    cmd = self.cli_command[1].format(name=name, feature=feature, value=value)
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        # Call super
+        return super().cli(output=show_output, command=cmd)
 
 class ShowFlowExporterStatisticsSchema(MetaParser):
     """ Schema for:
@@ -2519,4 +3432,783 @@ class ShowFlowMonitorCacheFilterInterfaceIPv4(ShowFlowMonitorCacheFilterInterfac
                 group = m.groupdict()
                 flow_dict['application_name'] = group['application_name']
 
+        return ret_dict
+
+
+class ShowSamplerSchema(MetaParser):
+    """schema for 'show sampler {sampler name }'"""
+    schema = {
+        "export_id":{
+            Any():{
+                "description": str,
+                "type": str,
+                "rate":str,
+                "samples": int,
+                "requests": int,
+                "users": str,
+            }
+        }
+    }
+
+class ShowSampler(ShowSamplerSchema):
+    """parser for the command ' show sampler {sampler name}'"""
+
+    cli_command = 'show sampler {name}'
+
+    def cli(self, name='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Export_ID     Description	Type		rate		samples		requests   users
+        # 2	         Userdefined	Random		1outof1000	0		0	flowmonitorm4(ip,Vl100,Input)0outof0
+        p1 = re.compile(r"^(?P<export_id>\d+)\s+(?P<description>.+?)\s+(?P<type>\S+)\s+(?P<rate>.+?)\s+(?P<samples>\d+)\s+(?P<requests>\d+)\s+(?P<users>.+?)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Export_ID     Description	Type		rate		samples		requests   users
+            # 2	        Userdefined	    Random		1outof1000	0		0	flowmonitorm4(ip,Vl100,Input)0outof0
+            
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                export_id_dict = (
+                    ret_dict.setdefault("export_id",{}).setdefault(group["export_id"], {})
+                )
+                export_id_dict.update(
+                    {
+                        "description": group["description"],
+                        "type": group["type"],
+                        "rate":group["rate"],
+                        "samples": int(group["samples"]),
+                        "requests": int(group["requests"]),
+                        "users": group["users"],
+                    }
+                )
+            continue
+            
+        return ret_dict
+
+
+class ShowFlowMonitorS1InputCacheFilterSchema(MetaParser):
+    ''' Schema for 
+        * show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table
+    '''
+    schema = {
+        'cache_type': str,
+        'cache_size': int,
+        'current_entries': int,
+        'flows_added': int,
+        'flows_aged': {
+            'total': int,
+            Optional('active_timeout_secs'): int,
+            Optional('active_timeout'): int,
+            Optional('inactive_timeout_secs'): int,
+            Optional('inactive_timeout'): int,
+
+        },
+        'entries':{
+            Any(): {
+                'src_addr': str,
+                'dst_addr': str,
+                'interface': str,
+                'flow_cts_src_group_tag': int,
+                'flow_cts_dst_group_tag': int,
+                'ip_version': int,
+                'ip_prot': int,
+                'ip_ttl': int,
+                'pkts_long': int,
+            }
+        }
+    }
+
+class ShowFlowMonitorS1InputCacheFilter(ShowFlowMonitorS1InputCacheFilterSchema):
+    ''' Parser for 
+        * show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version} destination address {dst_addr} format table
+    '''
+    
+    cli_command = 'show flow monitor {name} cache filter {ip_version} source address {src_addr} {ip_version_2} destination address {dst_addr} format table'
+
+    def cli(self, name, ip_version, src_addr, dst_addr, ip_version_2=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name, ip_version=ip_version, src_addr=src_addr, dst_addr=dst_addr, ip_version_2=ip_version_2)
+            output = self.device.execute(cmd)
+
+        # Cache type: Normal (Platform cache)
+        p1 = re.compile(r'^Cache +type:\s+(?P<cache_type>[\S\s]+)$')
+
+        # Cache size: 10000
+        p2 = re.compile(r'^Cache +size:\s+(?P<cache_size>\d+)$')
+
+        # Current entries: 6
+        p3 = re.compile(r'^Current +entries:\s+(?P<current_entries>\d+)$')
+
+        # Flows added: 78
+        p4 = re.compile(r'^Flows +added:\s+(?P<flows_added>\d+)$')
+
+        # Flows aged: 72
+        p5 = re.compile(r'^Flows +aged:\s+(?P<flows_aged>\d+)$')
+
+        # Active timeout (60 secs) 36
+        p6 = re.compile(r"^Active timeout +\((?P<active_timeout_secs>\d+) secs\) +(?P<active_timeout>\d+)$")
+
+        # Inactive timeout (60 secs) 36
+        p7 = re.compile(r"^Inactive timeout +\((?P<inactive_timeout_secs>\d+) secs\) +(?P<inactive_timeout>\d+)$")
+
+        # 100:1::123	   200:1::123	  Tw1/0/25	          100	                      0	              6	          59	   63	    13746
+        # 100.1.1.123      200.1.1.123     Tw1/0/25           100                         0               4           61       64       13978
+        p8 = re.compile(r'^(?P<src_addr>(\d+\.\d+\.\d+\.\d+|[a-fA-F0-9:]+))\s+(?P<dst_addr>(\d+\.\d+\.\d+\.\d+|[a-fA-F0-9:]+))\s+(?P<interface>\S+)\s+(?P<flow_cts_src_group_tag>\d+)\s+(?P<flow_cts_dst_group_tag>\d+)\s+(?P<ip_version>\d+)\s+(?P<ip_prot>\d+)\s+(?P<ip_ttl>\d+)\s+(?P<pkts_long>\d+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Cache type: Normal (Platform cache)
+            m = p1.match(line)
+            if m:
+                ret_dict['cache_type'] = m.groupdict()['cache_type']
+                continue
+
+            # Cache size
+            m = p2.match(line)
+            if m:
+                ret_dict['cache_size'] = int(m.groupdict()['cache_size'])
+                continue
+
+            # Current entries
+            m = p3.match(line)
+            if m:
+                ret_dict['current_entries'] = int(m.groupdict()['current_entries'])
+                continue
+
+            # Flows added
+            m = p4.match(line)
+            if m:
+                ret_dict['flows_added'] = int(m.groupdict()['flows_added'])
+                continue
+
+            # Flows aged
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('flows_aged', {})['total'] = int(m.groupdict()['flows_aged'])
+                continue
+
+            # Active timeout 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'].update({k: int(v) for k, v in group.items()})
+                continue
+
+            # Inactive timeout
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['flows_aged'].update({k: int(v) for k, v in group.items()})
+                continue
+            
+            # 100:1::123	   200:1::123	  Tw1/0/25	          100	                      0	              6	          59	   63	    13746
+            # 100.1.1.123      200.1.1.123      Tw1/0/25           100                       0                4           61       64       13978
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                index = len(ret_dict.get('entries', {})) + 1
+                entry_dict = ret_dict.setdefault('entries', {}).setdefault(index, {})
+                entry_dict.update({
+                    'src_addr': group['src_addr'],
+                    'dst_addr': group['dst_addr'],
+                    'interface':  (group['interface']),
+                    'flow_cts_src_group_tag': int(group['flow_cts_src_group_tag']),
+                    'flow_cts_dst_group_tag': int(group['flow_cts_dst_group_tag']),
+                    'ip_version': int(group['ip_version']),
+                    'ip_prot': int(group['ip_prot']),
+                    'ip_ttl': int(group['ip_ttl']),
+                    'pkts_long': int(group['pkts_long']),
+                })
+        
+        return ret_dict
+        
+        
+class ShowRunningConfigFlowMonitorExpandSchema(MetaParser):
+    """Schema for 'show running-config flow monitor {name} expand'"""
+    schema = {
+        'flow_monitor': {
+            Any(): {
+                'record': str,
+                'exporters': ListOf(str),
+                'cache_entries': int,
+            }
+        },
+        'flow_record': {
+            Any(): {
+                'matches': ListOf(str),
+                Optional('collects'): ListOf(str),
+            }
+        },
+        'flow_exporter': {
+            Any(): {
+                'destination': str,
+                'source': str,
+                'dscp': int,
+                'ttl': int,
+                'transport_protocol': str,
+                'port': int,
+                Optional('match_counter_packets_long_gt'): int,
+                Optional('export_protocol'): str,
+            }
+        }
+    }
+
+class ShowRunningConfigFlowMonitorExpand(ShowRunningConfigFlowMonitorExpandSchema):
+    """Parser for 'show running-config flow monitor {monitor_name} expand'"""
+
+    cli_command = 'show running-config flow monitor {monitor_name} expand'
+
+    def cli(self, monitor_name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(monitor_name=monitor_name)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_section = None
+
+        # flow record DreamLine-Record
+        p1 = re.compile(r'^flow\s+record\s+(?P<record_name>\S+)$')
+
+        # match ipv4 protocol
+        # match datalink mac source address input
+        p2 = re.compile(r'^match\s+(?P<match_field>.*)$')
+
+        # collect counter bytes
+        p3 = re.compile(r'^collect\s+(?P<collect_field>.*)$')
+
+        # flow exporter DDoS-Exporter
+        p4 = re.compile(r'^flow\s+exporter\s+(?P<exporter_name>\S+)$')
+
+        # destination 220.64.0.236
+        p5 = re.compile(r'^destination\s+(?P<destination>\S+)$')
+
+        # source Loopback0
+        p6 = re.compile(r'^source\s+(?P<source>\S+)$')
+
+        # dscp 57
+        p7 = re.compile(r'^dscp\s+(?P<dscp>\d+)$')
+
+        # ttl 67
+        p8 = re.compile(r'^ttl\s+(?P<ttl>\d+)$')
+
+        # transport udp 5000
+        p9 = re.compile(r'^transport\s+(?P<protocol>\S+)\s+(?P<port>\d+)$')
+
+        # match counter packets long gt 456677
+        p10 = re.compile(r'^match\s+counter\s+packets\s+long\s+gt\s+(?P<match_counter_packets_long_gt>\d+)$')
+
+        # export-protocol ipfix
+        p11 = re.compile(r'^export-protocol\s+(?P<export_protocol>\S+)$')
+
+        # flow monitor DreamLine-Monitor
+        p12 = re.compile(r'^flow\s+monitor\s+(?P<monitor_name>\S+)$')
+
+        # exporter DDoS-Exporter
+        p13 = re.compile(r'^exporter\s+(?P<exporter_name>\S+)$')
+
+        # cache entries 40000
+        p14 = re.compile(r'^cache\s+entries\s+(?P<cache_entries>\d+)$')
+
+        # record DreamLine-Record
+        p15 = re.compile(r'^record\s+(?P<record_name>\S+)$')
+
+        for line in output.splitlines():
+
+            line = line.strip()
+
+            # flow record DreamLine-Record
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                record_name = group['record_name']
+                record_dict = ret_dict.setdefault('flow_record', {}).setdefault(record_name, {})
+                current_section = 'flow_record'
+                continue
+
+            # match ipv4 protocol
+            m = p2.match(line)
+            if m and current_section == 'flow_record':
+                group = m.groupdict()
+                matches = record_dict.setdefault('matches', [])
+                matches.append(group['match_field'])
+                continue
+
+            # collect counter bytes
+            m = p3.match(line)
+            if m and current_section == 'flow_record':
+                group = m.groupdict()
+                collects = record_dict.setdefault('collects', [])
+                collects.append(group['collect_field'])
+                continue
+
+            # flow exporter DDoS-Exporter
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                exporter_name = group['exporter_name']
+                exporter_dict = ret_dict.setdefault('flow_exporter', {}).setdefault(exporter_name, {})
+                current_section = 'flow_exporter'
+                continue
+
+            # destination 220.64.0.236
+            m = p5.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['destination'] = group['destination']
+                continue
+
+            # source Loopback0
+            m = p6.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['source'] = group['source']
+                continue
+
+            # dscp 57
+            m = p7.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['dscp'] = int(group['dscp'])
+                continue
+
+            # ttl 67
+            m = p8.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['ttl'] = int(group['ttl'])
+                continue
+
+            # transport udp 5000
+            m = p9.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['transport_protocol'] = group['protocol']
+                exporter_dict['port'] = int(group['port'])
+                continue
+
+            # match counter packets long gt 456677
+            m = p10.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['match_counter_packets_long_gt'] = int(group['match_counter_packets_long_gt'])
+                continue
+
+            # export-protocol ipfix
+            m = p11.match(line)
+            if m and current_section == 'flow_exporter':
+                group = m.groupdict()
+                exporter_dict['export_protocol'] = group['export_protocol']
+                continue
+
+            # flow monitor DreamLine-Monitor
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                monitor_name = group['monitor_name']
+                monitor_dict = ret_dict.setdefault('flow_monitor', {}).setdefault(monitor_name, {})
+                current_section = 'flow_monitor'
+                continue
+
+            # exporter DDoS-Exporter
+            m = p13.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                exporters = monitor_dict.setdefault('exporters', [])
+                exporters.append(group['exporter_name'])
+                continue
+
+            # cache entries 40000
+            m = p14.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                monitor_dict['cache_entries'] = int(group['cache_entries'])
+                continue
+
+            # record DreamLine-Record
+            m = p15.match(line)
+            if m and current_section == 'flow_monitor':
+                group = m.groupdict()
+                monitor_dict['record'] = group['record_name']
+                continue
+
+        return ret_dict
+        
+class ShowFlowInterfaceSchema(MetaParser):
+    """Schema for 'show flow interface'"""
+    schema = {
+        'interface': {
+            Any(): {
+                'fnf': {
+                    Any(): {  # Monitor name
+                        'direction': {
+                            Any(): {  # Input or Output
+                                'traffic': {
+                                    'type': str,
+                                    Optional('sampler'): str,
+                                    Optional('status'): str,
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+class ShowFlowInterface(ShowFlowInterfaceSchema):
+    """Parser for 'show flow interface'"""
+
+    cli_command = 'show flow interface'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Interface Vlan300
+        p1 = re.compile(r'^Interface\s+(?P<interface>\S+)$')
+
+        # FNF:  monitor:          FlowMonitor-1
+        p2 = re.compile(r'^FNF:\s+monitor:\s+(?P<monitor>\S+)$')
+
+        # direction:        Input
+        p3 = re.compile(r'^direction:\s+(?P<direction>\S+)$')
+
+        # traffic(ip):      sampler Netflow-Sample
+        # traffic(ip):      on
+        p4 = re.compile(r'^traffic\((?P<type>\S+)\):\s*(sampler\s+(?P<sampler>\S+)|(?P<status>on))$')
+
+        current_interface = None
+        current_monitor = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Interface Vlan300
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_interface = group['interface']
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                continue
+
+            # FNF:  monitor:          FlowMonitor-1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_monitor = group['monitor']
+                fnf_dict = intf_dict.setdefault('fnf', {}).setdefault(current_monitor, {})
+                continue
+
+            # direction:        Input
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                direction = group['direction']
+                direction_dict = fnf_dict.setdefault('direction', {}).setdefault(direction, {})
+                continue
+
+            # traffic(ip):      sampler Netflow-Sample
+            # traffic(ip):      on
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                traffic_dict = direction_dict.setdefault('traffic', {})
+                traffic_dict['type'] = group['type']
+                if group.get('sampler'):
+                    traffic_dict['sampler'] = group['sampler']
+                elif group.get('status') == 'on':
+                    traffic_dict['status'] = 'on'
+                continue
+
+        return ret_dict
+        
+# =========================================================
+# schema for 'show flow monitor {monitor_name} cache sort application name top {top_count}'
+#            'show flow monitor {monitor_name} cache sort connection client counter bytes network long top {top_count}'
+# =========================================================
+
+class ShowFlowMonitorCacheSortSchema(MetaParser):
+    """
+    Schema for:
+        show flow monitor {monitor_name} cache sort application name top {top_count}
+        show flow monitor {monitor_name} cache sort connection client counter bytes network long top {top_count} 
+    """
+    schema = {
+        'index': {
+            Any(): {  
+                'trns_source_port': int,
+                'trns_destination_port': int,
+                'connection_ipv4_initiator_address': str,
+                'connection_ipv4_responder_address': str,
+                'connection_responder_port': int,
+                'flow_obs_point_id': int,
+                'ip_version': int,
+                'ip_protocol': int,
+                'application_name': str,
+                'interface_input': str,
+                'flow_direction': str,
+                'flow_cts_source_group_tag': int,
+                'counter_bytes_long': int,
+                'timestamp_abs_first': str,
+                'timestamp_abs_last': str,
+                'connection_initiator': str,
+                'connection_count_new': int,
+                'connection_server_packets_counter': int,
+                'connection_client_packets_counter': int,
+                'connection_initiator_port': int,
+                'connection_server_network_bytes_counter': int,
+                'connection_client_network_bytes_counter': int,
+            }
+        }
+    }
+
+# =========================================================
+# Parser for 'show flow monitor {monitor_name} cache sort application name top {top_count}'
+#            'show flow monitor {monitor_name} cache sort connection client counter bytes network long top {top_count}'
+# =========================================================
+
+class ShowFlowMonitorCacheSort(ShowFlowMonitorCacheSortSchema):
+
+    cli_command = [
+        'show flow monitor {monitor_name} cache sort application name top {top_count}',
+        'show flow monitor {monitor_name} cache sort connection {connetion_type} counter bytes network long top {top_count}'
+        ]
+
+    def cli(self, monitor_name='',top_count='',connetion_type=''):
+
+        if connetion_type:
+            output = self.device.execute(self.cli_command[1].format(monitor_name=monitor_name, top_count=top_count, connetion_type=connetion_type))
+
+        else:
+            output = self.device.execute(self.cli_command[0].format(monitor_name=monitor_name, top_count=top_count))
+
+        # Initialize dictionary to hold parsed data
+        ret_dict = {}
+        
+        # Flow counter
+        index = 0
+        
+        # Current flow dict pointer
+        index_dict = None
+        
+        # TRNS SOURCE PORT:                         68 
+        p1 = re.compile(r'^TRNS SOURCE PORT:\s+(?P<trns_source_port>\d+)$')
+        
+        # TRNS DESTINATION PORT:                    67 
+        p2 = re.compile(r'^TRNS DESTINATION PORT:\s+(?P<trns_destination_port>\d+)$')
+        
+        # CONNECTION IPV4 INITIATOR ADDRESS:        0.0.0.1 
+        p3 = re.compile(r'^CONNECTION IPV4 INITIATOR ADDRESS:\s+(?P<connection_ipv4_initiator_address>[\d\.]+)$')
+        
+        # CONNECTION IPV4 RESPONDER ADDRESS:        255.255.255.255 
+        p4 = re.compile(r'^CONNECTION IPV4 RESPONDER ADDRESS:\s+(?P<connection_ipv4_responder_address>[\d\.]+)$')
+        
+        # CONNECTION RESPONDER PORT:                67 
+        p5 = re.compile(r'^CONNECTION RESPONDER PORT:\s+(?P<connection_responder_port>\d+)$')
+        
+        # FLOW OBSPOINT ID:                         9 
+        p6 = re.compile(r'^FLOW OBSPOINT ID:\s+(?P<flow_obs_point_id>\d+)$')
+        
+        # IP VERSION:                               4 
+        p7 = re.compile(r'^IP VERSION:\s+(?P<ip_version>\d+)$')
+        
+        # IP PROTOCOL:                              17 
+        p8 = re.compile(r'^IP PROTOCOL:\s+(?P<ip_protocol>\d+)$')
+        
+        # APPLICATION NAME:                         layer7 dhcp 
+        p9 = re.compile(r'^APPLICATION NAME:\s+(?P<application_name>.+)$')
+        
+        # interface input:                          Gi3/0/1 
+        p10 = re.compile(r'^interface input:\s+(?P<interface_input>.+)$')
+        
+        # flow direction:                           Input 
+        p11 = re.compile(r'^flow direction:\s+(?P<flow_direction>.+)$')
+        
+        # flow cts source group tag:                0 
+        p12 = re.compile(r'^flow cts source group tag:\s+(?P<flow_cts_source_group_tag>\d+)$')
+        
+        # counter bytes long:                       248000
+        p13 = re.compile(r'^counter bytes long:\s+(?P<counter_bytes_long>\d+)$')
+        
+        # timestamp abs first:                      02:24:07.000
+        p14 = re.compile(r'^timestamp abs first:\s+(?P<timestamp_abs_first>.+)$')
+        
+        # timestamp abs last:                       02:24:17.000 
+        p15 = re.compile(r'^timestamp abs last:\s+(?P<timestamp_abs_last>.+)$')
+        
+        # connection initiator:                     Initiator 
+        p16 = re.compile(r'^connection initiator:\s+(?P<connection_initiator>.+)$')
+        
+        # connection count new:                     0
+        p17 = re.compile(r'^connection count new:\s+(?P<connection_count_new>\d+)$')
+        
+        # connection server packets counter:        0 
+        p18 = re.compile(r'^connection server packets counter:\s+(?P<connection_server_packets_counter>\d+)$')
+        
+        # connection client packets counter:        500 
+        p19 = re.compile(r'^connection client packets counter:\s+(?P<connection_client_packets_counter>\d+)$')
+        
+        # connection initiator port:                68 
+        p20 = re.compile(r'^connection initiator port:\s+(?P<connection_initiator_port>\d+)$')
+        
+        # connection server network bytes counter:  0 
+        p21 = re.compile(r'^connection server network bytes counter:\s+(?P<connection_server_network_bytes_counter>\d+)$')
+        
+        # connection client network bytes counter:  248000 
+        p22 = re.compile(r'^connection client network bytes counter:\s+(?P<connection_client_network_bytes_counter>\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+                
+            # TRNS SOURCE PORT:                         68 
+            m = p1.match(line)
+            if m:
+                index += 1
+                index_dict = ret_dict.setdefault("index", {}).setdefault(index, {})
+                index_dict['trns_source_port'] = int(m.group('trns_source_port'))
+                continue
+        
+            if index_dict is None:
+                continue
+            
+            # TRNS DESTINATION PORT:                    67 
+            m = p2.match(line)
+            if m:
+                index_dict['trns_destination_port'] = int(m.group('trns_destination_port'))
+                continue
+            
+            # CONNECTION IPV4 INITIATOR ADDRESS:        0.0.0.1 
+            m = p3.match(line)
+            if m:
+                index_dict['connection_ipv4_initiator_address'] = m.group('connection_ipv4_initiator_address')
+                continue
+        
+            # CONNECTION IPV4 RESPONDER ADDRESS:        255.255.255.255 
+            m = p4.match(line)
+            if m:
+                index_dict['connection_ipv4_responder_address'] = m.group('connection_ipv4_responder_address')
+                continue
+        
+            # CONNECTION RESPONDER PORT:                67 
+            m = p5.match(line)
+            if m:
+                index_dict['connection_responder_port'] = int(m.group('connection_responder_port'))
+                continue
+        
+            # FLOW OBSPOINT ID:                         9 
+            m = p6.match(line)
+            if m:
+                index_dict['flow_obs_point_id'] = int(m.group('flow_obs_point_id'))
+                continue
+        
+            # IP VERSION:                               4 
+            m = p7.match(line)
+            if m:
+                index_dict['ip_version'] = int(m.group('ip_version'))
+                continue
+        
+            # IP PROTOCOL:                              17 
+            m = p8.match(line)
+            if m:
+                index_dict['ip_protocol'] = int(m.group('ip_protocol'))
+                continue
+        
+            # APPLICATION NAME:                         layer7 dhcp 
+            m = p9.match(line)
+            if m:
+                index_dict['application_name'] = m.group('application_name')
+                continue
+        
+            # interface input:                          Gi3/0/1 
+            m = p10.match(line)
+            if m:
+                index_dict['interface_input'] = m.group('interface_input')
+                continue
+        
+            # flow direction:                           Input 
+            m = p11.match(line)
+            if m:
+                index_dict['flow_direction'] = m.group('flow_direction')
+                continue
+        
+            # flow cts source group tag:                0 
+            m = p12.match(line)
+            if m:
+                index_dict['flow_cts_source_group_tag'] = int(m.group('flow_cts_source_group_tag'))
+                continue
+        
+            # counter bytes long:                       248000 
+            m = p13.match(line)
+            if m:
+                index_dict['counter_bytes_long'] = int(m.group('counter_bytes_long'))
+                continue
+        
+            # timestamp abs first:                      02:24:07.000
+            m = p14.match(line)
+            if m:
+                index_dict['timestamp_abs_first'] = m.group('timestamp_abs_first')
+                continue
+        
+            # timestamp abs last:                       02:24:17.000 
+            m = p15.match(line)
+            if m:
+                index_dict['timestamp_abs_last'] = m.group('timestamp_abs_last')
+                continue
+        
+            # connection initiator:                     Initiator 
+            m = p16.match(line)
+            if m:
+                index_dict['connection_initiator'] = m.group('connection_initiator')
+                continue
+        
+            # connection count new:                     0 
+            m = p17.match(line)
+            if m:
+                index_dict['connection_count_new'] = int(m.group('connection_count_new'))
+                continue
+        
+            # connection server packets counter:        0 
+            m = p18.match(line)
+            if m:
+                index_dict['connection_server_packets_counter'] = int(m.group('connection_server_packets_counter'))
+                continue
+        
+            # connection client packets counter:        500 
+            m = p19.match(line)
+            if m:
+                index_dict['connection_client_packets_counter'] = int(m.group('connection_client_packets_counter'))
+                continue
+        
+            # connection initiator port:                68 
+            m = p20.match(line)
+            if m:
+                index_dict['connection_initiator_port'] = int(m.group('connection_initiator_port'))
+                continue
+        
+            # connection server network bytes counter:  0 
+            m = p21.match(line)
+            if m:
+                index_dict['connection_server_network_bytes_counter'] = int(m.group('connection_server_network_bytes_counter'))
+                continue
+        
+            # connection client network bytes counter:  248000 
+            m = p22.match(line)
+            if m:
+                index_dict['connection_client_network_bytes_counter'] = int(m.group('connection_client_network_bytes_counter'))
+                continue
+                
         return ret_dict

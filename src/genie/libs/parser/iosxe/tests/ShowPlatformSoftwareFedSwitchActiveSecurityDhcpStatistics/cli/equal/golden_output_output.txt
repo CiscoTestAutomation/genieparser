@@ -1,0 +1,4 @@
+Name                              OID       Packets Hits  
+--------------------------------------------------------
+DHCP Snoop VLAN                   561       0             
+Other stats

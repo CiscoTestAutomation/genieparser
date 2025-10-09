@@ -1,0 +1,7 @@
+show ipv6 mfib vrf vrf1 summary
+VRF vrf1
+ 75 prefixes (75/0/0 fwd/non-fwd/deleted)
+ 60 ioitems (60/0/0 fwd/non-fwd/deleted)
+ Forwarding prefixes: [10 (S,G), 19 (*,G), 46 (*,G/m)]
+ Table id 0x1E000002, instance 0x719A2B8D6830
+ Database: epoch 0

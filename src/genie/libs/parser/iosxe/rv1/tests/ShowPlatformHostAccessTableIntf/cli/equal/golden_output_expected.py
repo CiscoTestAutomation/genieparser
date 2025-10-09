@@ -1,0 +1,32 @@
+expected_output = {
+    "current_feature":"psec",
+    "default":"ask",
+    "vlan":{
+        10:[
+            {
+                "src_address":"0000.0000.0001",
+                "access_mode":"permit",
+                "feature":"psec",
+                "type":"dynamic"
+            },
+            {
+                "src_address":"0000.0000.0003",
+                "access_mode":"permit",
+                "feature":"psec",
+                "type":"dynamic"
+            },
+            {
+                "src_address":"0000.0000.0005",
+                "access_mode":"permit",
+                "feature":"psec",
+                "type":"dynamic"
+            },
+            {
+                "src_address":"0000.0000.0007",
+                "access_mode":"permit",
+                "feature":"psec",
+                "type":"dynamic"
+            }
+        ]
+    }
+}

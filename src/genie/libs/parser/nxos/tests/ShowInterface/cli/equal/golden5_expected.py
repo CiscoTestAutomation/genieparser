@@ -11,5 +11,6 @@ expected_output = {
                 'port_channel_member': False,
             },
             'types': '100/1000/10000 Ethernet',
+            'link_down_reason': 'Link not connected'
         },
     }
