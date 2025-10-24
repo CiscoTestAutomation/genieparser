@@ -378,7 +378,7 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         # ntp server 10.3.254.100 prefer
         p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>\S+))? "
                          r"+(?P<address>[\w\.\:]+)( +source +"
-                         r"(?P<source_interface>[\w]+))?(?P<prefer> prefer)?$")
+                         r"(?P<source_interface>[\w]+))?( +key +(?P<key>\S+))?(?P<prefer> prefer)?$")
 
         for line in out.splitlines():
             line = line.strip()
