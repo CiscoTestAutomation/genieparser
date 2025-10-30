@@ -1,0 +1,142 @@
+TenGigabitEthernet0/0/0 rvartr101 e1/9  rack  107-37 N2C-BE VRF
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+       Other         5106      2230137         5138      1964273           0            0            0            0
+          IP    338457249 167816970857    403143873  57956524883     3274000          774       847000          593
+         ARP          135         8100          135         8100           0            0            0            0
+        LLDP         4971      2222037         5003      1956173           0            0            0            0
+TenGigabitEthernet0/1/0 rvartr101 e1/21 Rack 107-37 NRG VRF
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+       Other         5106      2240079         5138      1959270           0            0            0            0
+          IP    381356839 126948444814    664982649 370327269434     1148000          307      7418000         1584
+         ARP          135         8100          135         8100           0            0            0            0
+        LLDP         4971      2231979         5003      1951170           0            0            0            0
+TenGigabitEthernet1/0/0 rvartr102 e1/9  rack 207-37 N2C-BE VRF
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+       Other         5106      2230137         5138      1959270           0            0            0            0
+          IP    325005411 157348328540    387857211 108103397434     3273000          791      2365000         1419
+         ARP          135         8100          135         8100           0            0            0            0
+        LLDP         4971      2222037         5003      1951170           0            0            0            0
+TenGigabitEthernet1/1/0 rvartr102 e1/21 Rack 207-37  NRG VRF
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+       Other         5106      2240079         5138      1964273           0            0            0            0
+          IP    412136589  94935119130        95813      8034918     3217000         1740            0            0
+         ARP          135         8100          135         8100           0            0            0            0
+        LLDP         4971      2231979         5003      1956173           0            0            0            0
+GigabitEthernet0 rvartr001_002 eth 1/44
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP        25051      1853314      1617107    605785532           0            0        24000            7
+         ARP        98549      5912940          548        32880           0            0            0            0
+        LLDP            0            0        10036      3733392           0            0            0            0
+Loopback0 Router-ID
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP          672        62644          672        62644           0            0            0            0
+Loopback1 External VPN peering address
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP          672        62644          672        62644           0            0            0            0
+Loopback2 External BGP peering address
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP          672        62644          672        62644           0            0            0            0
+Tunnel3 SVTI to XXXX
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP    251293253  29461147054    166645644  78101624305      119000          104        31000           57
+Tunnel4 Tunnel to LAB-DR, EUROPE
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP       572804     62566815       575926     63164261           0            0            0            1
+Tunnel5 Tunnel to LAB, Arkansas, India
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP       180719      9369841       181541      9444110           0            1            0            1
+Tunnel7 SVTI to BAY PRI
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP       179860     13450037       201101     10419536           0            1            0            1
+Tunnel8 SVTI to BAY SEC
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP       179880     13451274       201191     10424293           0            1            0            1
+Tunnel9 Tunnel to LONA_UK Secondary
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP            0            0          672        62644           0            0            0            0
+Tunnel10 Tunnel to GRE_PRIS_WEST Secondary
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP     19680326   2164494900     14388523   5226520320           0            0            0            1
+Tunnel11 GRE  Tunnel to NUVA-DMP
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+          IP        31059      2286134        31689      2360983           0            0            0            0
