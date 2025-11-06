@@ -1,0 +1,103 @@
+show isis hostname vrf all
+
+IS-IS Process: 65100 dynamic hostname table VRF: osatm
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8050  oshdci001-DCI
+  2      0101.0006.8051  oshdci002-DCI
+  2      0101.0006.8052  ohidci001-DCI
+  2      0101.0006.8053  ohidci002-DCI
+  1      0101.0006.8054* sebdci001-dci
+  2      0101.0006.8055  sebdci002-dci
+  2      0101.0006.8056  sojdci001-dci
+  2      0101.0006.8057  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: odeprod
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8040  oshdci001-DCI
+  2      0101.0006.8041  oshdci002-DCI
+  2      0101.0006.8042  ohidci001-DCI
+  2      0101.0006.8043  ohidci002-DCI
+  1      0101.0006.8044* sebdci001-dci
+  2      0101.0006.8045  sebdci002-dci
+  2      0101.0006.8046  sojdci001-dci
+  2      0101.0006.8047  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: excontrol
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8020  oshdci001-DCI
+  2      0101.0006.8021  oshdci002-DCI
+  2      0101.0006.8022  ohidci001-DCI
+  2      0101.0006.8023  ohidci002-DCI
+  1      0101.0006.8024* sebdci001-dci
+  2      0101.0006.8025  sebdci002-dci
+  2      0101.0006.8026  sojdci001-dci
+  2      0101.0006.8027  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: default
+  Level  System ID       Dynamic hostname
+
+IS-IS Process: 65100 dynamic hostname table VRF: oos-be
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8080  oshdci001-DCI
+  2      0101.0006.8081  oshdci002-DCI
+  2      0101.0006.8082  ohidci001-DCI
+  2      0101.0006.8083  ohidci002-DCI
+  1      0101.0006.8084* sebdci001-dci
+  2      0101.0006.8085  sebdci002-dci
+  2      0101.0006.8086  sojdci001-dci
+  2      0101.0006.8087  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: oon-hybrid
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8060  oshdci001-DCI
+  2      0101.0006.8061  oshdci002-DCI
+  2      0101.0006.8062  ohidci001-DCI
+  2      0101.0006.8063  ohidci002-DCI
+  1      0101.0006.8064* sebdci001-dci
+  2      0101.0006.8065  sebdci002-dci
+  2      0101.0006.8066  sojdci001-dci
+  2      0101.0006.8067  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: exnotprod
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8030  oshdci001-DCI
+  2      0101.0006.8031  oshdci002-DCI
+  2      0101.0006.8032  ohidci001-DCI
+  2      0101.0006.8033  ohidci002-DCI
+  1      0101.0006.8034* sebdci001-dci
+  2      0101.0006.8035  sebdci002-dci
+  2      0101.0006.8036  sojdci001-dci
+  2      0101.0006.8037  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: exrestrict
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8000  oshdci001-DCI
+  2      0101.0006.8001  oshdci002-DCI
+  2      0101.0006.8002  ohidci001-DCI
+  2      0101.0006.8003  ohidci002-DCI
+  1      0101.0006.8004* sebdci001-dci
+  2      0101.0006.8005  sebdci002-dci
+  2      0101.0006.8006  sojdci001-dci
+  2      0101.0006.8007  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: exwan-netconf
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8070  oshdci001-DCI
+  2      0101.0006.8071  oshdci002-DCI
+  2      0101.0006.8072  ohidci001-DCI
+  2      0101.0006.8073  ohidci002-DCI
+  1      0101.0006.8074* sebdci001-dci
+  2      0101.0006.8075  sebdci002-dci
+  2      0101.0006.8076  sojdci001-dci
+  2      0101.0006.8077  sojdci002-dci
+
+IS-IS Process: 65100 dynamic hostname table VRF: exuuser
+  Level  System ID       Dynamic hostname
+  2      0101.0006.8010  oshdci001-DCI
+  2      0101.0006.8011  oshdci002-DCI
+  2      0101.0006.8012  ohidci001-DCI
+  2      0101.0006.8013  ohidci002-DCI
+  1      0101.0006.8014* sebdci001-dci
+  2      0101.0006.8015  sebdci002-dci
+  2      0101.0006.8016  sojdci001-dci
+  2      0101.0006.8017  sojdci002-dci

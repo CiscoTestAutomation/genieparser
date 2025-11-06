@@ -65,7 +65,7 @@ class ShowIsisSchema(MetaParser):
                         'resolution_of_l3_to_l2': str,
                         'sr_ipv4': str,
                         'sr_ipv6': str,
-                        'supported_interfaces': list,
+                        Optional('supported_interfaces'): list,
                         'topology': {
                             Any(): {
                                 'address_family': {
@@ -169,7 +169,8 @@ class ShowIsis(ShowIsisSchema):
 
         # Area address(es) :
         #     49.0001
-        p17 = re.compile(r'^(?P<area>[\d\.]+)$')
+        #     49.fe51
+        p17 = re.compile(r'^\s*(?P<area>([a-fA-F0-9.]+\.[a-fA-F0-9.]+)|None)$')
 
         # Process is up and running
         p18 = re.compile(r'^Process +is +(?P<process>[\S\s]+)$')
@@ -520,7 +521,7 @@ class ShowIsisInterfaceSchema(MetaParser):
             Any(): { # process_id
                 'vrf': {
                     Any(): {
-                        'interfaces': {
+                        Optional('interfaces'): {
                             Any(): {
                                 'name': str,
                                 'status': str,
@@ -549,7 +550,7 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 Optional('passive'): str,
                                 Optional('mtu'): int,
                                 Optional('lsp_interval_ms'): int,
-                                'levels': {
+                                Optional('levels'): {
                                     Any(): { # 1, 2
                                         Optional('metric'): str,
                                         Optional('designated_is'): str,
@@ -1060,7 +1061,7 @@ class ShowIsisAdjacencySchema(MetaParser):
             Any(): {
                 'vrf': {
                     Any(): {
-                        'interfaces': {
+                        Optional('interfaces'): {
                             Any(): {
                                 'adjacencies': {
                                     Any(): {
@@ -1163,7 +1164,7 @@ class ShowIsisHostnameSchema(MetaParser):
             Any(): {
                 'vrf': {
                     Any(): {
-                        'hostname_db': {
+                        Optional('hostname_db'): {
                             'hostname': {
                                 Any(): {
                                     'hostname': str,
@@ -1257,7 +1258,7 @@ class ShowIsisHostnameDetailSchema(MetaParser):
             Any(): {
                 'vrf': {
                     Any(): {
-                        'hostname_db': {
+                        Optional('hostname_db'): {
                             'hostname': {
                                 Any(): {
                                     'hostname': str,

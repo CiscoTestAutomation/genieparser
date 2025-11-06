@@ -1,0 +1,1010 @@
+show isis interface vrf all
+
+IS-IS process: 65100 VRF: osatm
+loopback105, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.54, IP subnet: 10.101.68.54/32
+  IPv6 address:
+    3620:82:e000:50::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:50::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback105
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback105
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.105, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.154, IP subnet: 10.101.68.154/31
+  IPv6 address:
+    3620:82:e000:52::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:52::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.105
+  BFD IPv6 is locally disabled for Interface port-channel1.105
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x16069000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 0.083558
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:41   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.105, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.108, IP subnet: 10.101.69.108/31
+  IPv6 address:
+    3620:82:e000:52::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:52::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.105
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.105
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A001069, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:04
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:31   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.105, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.53, IP subnet: 10.101.69.52/31
+  IPv6 address:
+    3620:82:e000:52::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:52::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.105
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.105
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A081069, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:05
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:41   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: odeprod
+loopback104, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.44, IP subnet: 10.101.68.44/32
+  IPv6 address:
+    3620:82:e000:40::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:40::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback104
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback104
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.104, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.144, IP subnet: 10.101.68.144/31
+  IPv6 address:
+    3620:82:e000:42::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:42::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.104
+  BFD IPv6 is locally disabled for Interface port-channel1.104
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x16068000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:08
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:20   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.104, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.106, IP subnet: 10.101.69.106/31
+  IPv6 address:
+    3620:82:e000:42::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:42::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.104
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.104
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A001068, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:07
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:01:00   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.104, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.51, IP subnet: 10.101.69.50/31
+  IPv6 address:
+    3620:82:e000:42::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:42::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.104
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.104
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A081068, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:03
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:34   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: excontrol
+loopback102, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.24, IP subnet: 10.101.68.24/32
+  IPv6 address:
+    3620:82:e000:20::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:20::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback102
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback102
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.102, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.124, IP subnet: 10.101.68.124/31
+  IPv6 address:
+    3620:82:e000:22::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:22::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.102
+  BFD IPv6 is locally disabled for Interface port-channel1.102
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x16066000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:03
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:34   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.102, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.102, IP subnet: 10.101.69.102/31
+  IPv6 address:
+    3620:82:e000:22::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:22::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.102
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.102
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A001066, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:08
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:16   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.102, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.47, IP subnet: 10.101.69.46/31
+  IPv6 address:
+    3620:82:e000:22::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:22::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.102
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.102
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A081066, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 0.858851
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:48   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: default
+
+IS-IS process: 65100 VRF: oos-be
+loopback108, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.84, IP subnet: 10.101.68.84/32
+  IPv6 address:
+    3620:82:e000:80::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:80::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback108
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback108
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.108, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.184, IP subnet: 10.101.68.184/31
+  IPv6 address:
+    3620:82:e000:82::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:82::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.108
+  BFD IPv6 is locally disabled for Interface port-channel1.108
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1606C000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:05
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:46   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.108, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.170, IP subnet: 10.101.69.170/31
+  IPv6 address:
+    3620:82:e000:82::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:82::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.108
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.108
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A00106C, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:07
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:13   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.108, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.155, IP subnet: 10.101.69.154/31
+  IPv6 address:
+    3620:82:e000:82::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:82::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.108
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.108
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A08106C, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:01
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:37   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: oon-hybrid
+loopback106, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.64, IP subnet: 10.101.68.64/32
+  IPv6 address:
+    3620:82:e000:60::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:60::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback106
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback106
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.106, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.164, IP subnet: 10.101.68.164/31
+  IPv6 address:
+    3620:82:e000:62::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:62::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.106
+  BFD IPv6 is locally disabled for Interface port-channel1.106
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1606A000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:07
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:43   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.106, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.110, IP subnet: 10.101.69.110/31
+  IPv6 address:
+    3620:82:e000:62::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:62::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.106
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.106
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A00106A, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:01
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  0.900716   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.106, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.55, IP subnet: 10.101.69.54/31
+  IPv6 address:
+    3620:82:e000:62::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:62::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.106
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.106
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A08106A, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:05
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:31   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: exnotprod
+loopback103, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.34, IP subnet: 10.101.68.34/32
+  IPv6 address:
+    3620:82:e000:30::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:30::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback103
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback103
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.103, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.134, IP subnet: 10.101.68.134/31
+  IPv6 address:
+    3620:82:e000:32::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:32::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.103
+  BFD IPv6 is locally disabled for Interface port-channel1.103
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x16067000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:08
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:31   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.103, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.104, IP subnet: 10.101.69.104/31
+  IPv6 address:
+    3620:82:e000:32::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:32::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.103
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.103
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A001067, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:04
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:12   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.103, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.49, IP subnet: 10.101.69.48/31
+  IPv6 address:
+    3620:82:e000:32::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:32::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.103
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.103
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A081067, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:07
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:01   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: exrestrict
+loopback100, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.4, IP subnet: 10.101.68.4/32
+  IPv6 address:
+    3620:82:e000::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback100
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback100
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.100, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.104, IP subnet: 10.101.68.104/31
+  IPv6 address:
+    3620:82:e000:2::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:2::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.100
+  BFD IPv6 is locally disabled for Interface port-channel1.100
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x16064000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:02
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:10   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.100, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.98, IP subnet: 10.101.69.98/31
+  IPv6 address:
+    3620:82:e000:2::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:2::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.100
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.100
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A001064, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:06
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:48   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.100, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.43, IP subnet: 10.101.69.42/31
+  IPv6 address:
+    3620:82:e000:2::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:2::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.100
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.100
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A081064, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:01
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:26   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: exwan-netconf
+loopback107, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.74, IP subnet: 10.101.68.74/32
+  IPv6 address:
+    3620:82:e000:70::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:70::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback107
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback107
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.107, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.174, IP subnet: 10.101.68.174/31
+  IPv6 address:
+    3620:82:e000:72::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:72::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.107
+  BFD IPv6 is locally disabled for Interface port-channel1.107
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1606B000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:03
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:29   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.107, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.168, IP subnet: 10.101.69.168/31
+  IPv6 address:
+    3620:82:e000:72::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:72::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.107
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.107
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A00106B, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:01
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:53   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.107, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.153, IP subnet: 10.101.69.152/31
+  IPv6 address:
+    3620:82:e000:72::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:72::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.107
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.107
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A08106B, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:03
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:19   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
+
+
+IS-IS process: 65100 VRF: exuuser
+loopback101, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.14, IP subnet: 10.101.68.14/32
+  IPv6 address:
+    3620:82:e000:10::4/128 [VALID]
+  IPv6 subnet:  3620:82:e000:10::4/128
+  IPv6 link-local address: fe80::f6db:e6ff:fe4a:6333
+  Level1
+     No auth type set
+    No auth check
+  Level2
+     No auth type set
+    No auth check
+  Index: 0x0002, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally disabled for Interface loopback101
+  BFD does not support AF IPv4
+  BFD IPv6 is locally disabled for Interface loopback101
+  BFD does not support AF IPv6
+  MTR is disabled
+  Passive level: level-1-2
+  Level      Metric
+  1               1
+  2               1
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        1       no   UP    DN       yes      DN       yes
+
+port-channel1.101, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.68.114, IP subnet: 10.101.68.114/31
+  IPv6 address:
+    3620:82:e000:12::4/127 [VALID]
+  IPv6 subnet:  3620:82:e000:12::4/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     No auth type set
+    No auth check
+  Index: 0x0001, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface port-channel1.101
+  BFD IPv6 is locally disabled for Interface port-channel1.101
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x16065000, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:06
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1       5     60  00:00:24   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        5       yes  UP    UP       yes      UP       yes
+
+Ethernet1/2.101, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.100, IP subnet: 10.101.69.100/31
+  IPv6 address:
+    3620:82:e000:12::1e/127 [VALID]
+  IPv6 subnet:  3620:82:e000:12::1e/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0003, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet1/2.101
+  BFD IPv6 is locally disabled for Interface Ethernet1/2.101
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A001065, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:08
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     140     60  00:00:26   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        140     yes  UP    UP       yes      UP       yes
+
+Ethernet2/2.101, Interface status: protocol-up/link-up/admin-up
+  IP address: 10.101.69.45, IP subnet: 10.101.69.44/31
+  IPv6 address:
+    3620:82:e000:12::17/127 [VALID]
+  IPv6 subnet:  3620:82:e000:12::16/127
+  IPv6 link-local address: fe80::2de:fbff:fef2:ee41
+     Auth type:MD5
+    Auth keychain: ISISKeyChain
+    Auth check set
+  Index: 0x0004, Local Circuit ID: 0x01, Circuit Type: L2
+  BFD IPv4 is locally enabled for Interface Ethernet2/2.101
+  BFD IPv6 is locally disabled for Interface Ethernet2/2.101
+  MTR is disabled
+  Passive level: level-1
+  Extended Local Circuit ID: 0x1A081065, P2P Circuit ID: 0000.0000.0000.00
+  Retx interval: 5, Retx throttle interval: 66 ms
+  LSP interval: 33 ms, MTU: 9216
+  MTU check OFF on P2P interface
+  P2P Adjs: 1, AdjsUp: 1, Priority 64
+  Hello Interval: 10, Multi: 3, Next IIH: 00:00:01
+  MT    Adjs   AdjsUp  Metric   CSNP  Next CSNP  Last LSP ID
+  1          0        0       1     60  Inactive   ffff.ffff.ffff.ff-ff
+  2          1        1     700     60  00:00:28   ffff.ffff.ffff.ff-ff
+  Topologies enabled:
+    L  MT  Metric  MetricCfg  Fwdng IPV4-MT  IPV4Cfg  IPV6-MT  IPV6Cfg
+    1  0        1       no   UP    DN       no       DN       no
+    2  0        700     yes  UP    UP       yes      UP       yes
