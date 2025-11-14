@@ -1093,7 +1093,7 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
         #100.100.100.5   1743         88893           51    0         27.200  bps  1
         #(*,G)           0            0               0     0         0.000   bps  2
         p8 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
-                        r'(?P<bitrate>[0-9.]+) +bps +(?P<oifs>[0-9]+)$')
+                        r'(?P<bitrate>[0-9.]+) +(?P<bitrate_unit>[kmgt]?bps) +(?P<oifs>[0-9]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1139,8 +1139,23 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
                 continue
             m = p8.match(line)
             if m:
+                # Capture the values
+                bitrate_value = float(m.groupdict()['bitrate'])
+                bitrate_unit = m.groupdict()['bitrate_unit']
+                
+                # Convert to bps
+                conversion_factors = {
+                    'bps': 1,
+                    'kbps': 1000,
+                    'mbps': 1000000,
+                    'gbps': 1000000000,
+                    'tbps': 1000000000000
+                }
+                
+                bitrate_in_bps = bitrate_value * conversion_factors.get(bitrate_unit, 1)
+                
                 src_dict = group_dict.setdefault('source',{}).setdefault(m.groupdict()['source'],{})
-                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': float(m.groupdict()['bitrate']),'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
+                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': bitrate_in_bps,'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
                 continue
         return mroute_dict
 
@@ -1231,7 +1246,7 @@ class ShowIpv6MrouteSummary(ShowIpv6MrouteSummarySchema):
         #2001:180:1:57::1181  968          49478           51    0     0.000   bps  1
         #(*,G)           0            0               0     0         0.000   bps  2
         p8 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
-                        r'(?P<bitrate>[0-9.]+) +bps +(?P<oifs>[0-9]+)$')
+                        r'(?P<bitrate>[0-9.]+) +(?P<bitrate_unit>[kmgt]?bps) +(?P<oifs>[0-9]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1276,7 +1291,22 @@ class ShowIpv6MrouteSummary(ShowIpv6MrouteSummarySchema):
                 continue
             m = p8.match(line)
             if m:
+                # Capture the values
+                bitrate_value = float(m.groupdict()['bitrate'])
+                bitrate_unit = m.groupdict()['bitrate_unit']
+                
+                # Convert to bps
+                conversion_factors = {
+                    'bps': 1,
+                    'kbps': 1000,
+                    'mbps': 1000000,
+                    'gbps': 1000000000,
+                    'tbps': 1000000000000
+                }
+                
+                bitrate_in_bps = bitrate_value * conversion_factors.get(bitrate_unit, 1)
+                
                 src_dict = group_dict.setdefault('source',{}).setdefault(m.groupdict()['source'],{})
-                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': float(m.groupdict()['bitrate']),'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
+                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': bitrate_in_bps,'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
                 continue
         return mroute_dict
