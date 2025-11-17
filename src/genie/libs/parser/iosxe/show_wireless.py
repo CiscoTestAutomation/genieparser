@@ -5660,3 +5660,170 @@ class ShowWirelessMeshApBackhaul(ShowWirelessMeshApBackhaulSchema):
                 continue
 
         return ret_dict
+
+# =============================================
+# Schema for 'show wireless iot-coexistence summary'
+# =============================================
+class ShowWirelessIotCoexistenceSummarySchema(MetaParser):
+    """Schema for show wireless iot-coexistence summary"""
+
+    schema = {
+        Optional('ap_list'): {
+            Any(): {
+                'radio_mac': str,
+                'coex_admin_state': str,
+                'coex_oper_state': str,
+                'iot_counters': {
+                    Optional('tx_pkts'): int,
+                    Optional('rx_pkts'): int,
+                    Optional('crc_errors'): int,
+                    Optional('low_pri_requests'): int,
+                    Optional('high_pri_requests'): int,
+                    Optional('low_pri_denied'): int,
+                    Optional('high_pri_denied'): int,
+                    Optional('low_pri_tx_abort'): int,
+                    Optional('high_pri_tx_abort'): int
+                }
+            }
+        }
+    }
+
+# =============================================
+# Parser for 'show wireless iot-coexistence summary'
+# =============================================
+class ShowWirelessIotCoexistenceSummary(ShowWirelessIotCoexistenceSummarySchema):
+    """Parser for show wireless iot-coexistence summary
+    
+    Sample output:
+    
+    # show wireless iot-coexistence summary
+    AP Name           Radio MAC        Admin State  Oper State   Tx Pkts  Rx Pkts  CRC Errors  Low Pri Requests  High Pri Requests  Low Pri Denied  High Pri Denied  Low Pri Tx Abort  High Pri Tx Abort
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    APCC6E.2AFC.B310  c418.fcbe.41e0   Enabled      Enabled      11546    11490    0           386               386                38              19               14                11
+    AP3C57.31C5.983C  4ca6.4d23.0f60   Disabled     Disabled
+    APCC9C.3EE7.4F50  00df.1d87.6d60   Enabled      Not Supported
+    
+    Empty output:
+    
+    # show wireless iot-coexistence summary
+    AP Name           Radio MAC        Admin State  Oper State   Tx Pkts  Rx Pkts  CRC Errors  Low Pri Requests  High Pri Requests  Low Pri Denied  High Pri Denied  Low Pri Tx Abort  High Pri Tx Abort
+    ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    """
+
+    cli_command = 'show wireless iot-coexistence summary'
+
+    def cli(self, output=None):
+        """Parsing logic for CLI command
+        
+        Args:
+            output (str): Command output. If None, executes command on device.
+        
+        Returns:
+            dict: Parsed AP data with COEX states and counters.
+                  Returns {} if no APs found (valid empty state).
+        """
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize result dictionary
+        show_wireless_iot_coexistence_summary_dict = {}
+
+        # Regex patterns for parsing
+        # Pattern 1: AP(s) with counters
+        # Example: APCC6E.2AFC.B310 c418.fcbe.41e0 Enabled Enabled 11546 11490 0 386 386 38 19 14 11
+        p_ap_with_counters = re.compile(
+            r'^(?P<ap_name>\S+)\s+'
+            r'(?P<radio_mac>[\da-f]{4}\.[\da-f]{4}\.[\da-f]{4})\s+'
+            r'(?P<admin_state>\S+)\s+'
+            r'(?P<oper_state>(?:\S+\s+)*?\S+?)\s+'
+            r'(?P<tx_pkts>\d+)\s+'
+            r'(?P<rx_pkts>\d+)\s+'
+            r'(?P<crc_errors>\d+)\s+'
+            r'(?P<low_pri_requests>\d+)\s+'
+            r'(?P<high_pri_requests>\d+)\s+'
+            r'(?P<low_pri_denied>\d+)\s+'
+            r'(?P<high_pri_denied>\d+)\s+'
+            r'(?P<low_pri_tx_abort>\d+)\s+'
+            r'(?P<high_pri_tx_abort>\d+)\s*$'
+        )
+
+        # Pattern 2: AP(s) without counters 
+        # Example: AP3C57.31C5.983C 4ca6.4d23.0f60 Disabled Disabled
+        # Example: APCC9C.3EE7.4F50 00df.1d87.6d60 Enabled Not Supported
+        p_ap_without_counters = re.compile(
+            r'^(?P<ap_name>\S+)\s+'
+            r'(?P<radio_mac>[\da-f]{4}\.[\da-f]{4}\.[\da-f]{4})\s+'
+            r'(?P<admin_state>\S+)\s+'
+            r'(?P<oper_state>.+?)\s*$'
+        )
+
+        # Pattern 3: Separator line (marks start of data section)
+        p_separator = re.compile(r'^-{20,}')
+
+        # State flag to track when we're past the header
+        data_section_started = False
+
+        # Parse output line by line
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Detect separator line
+            if p_separator.match(line):
+                data_section_started = True
+                continue
+
+            # Only process lines after separator
+            if not data_section_started:
+                continue
+
+            # Try matching AP with counters first 
+            match = p_ap_with_counters.match(line)
+            if match:
+                # Initialize ap_list if first AP found
+                if 'ap_list' not in show_wireless_iot_coexistence_summary_dict:
+                    show_wireless_iot_coexistence_summary_dict['ap_list'] = {}
+                
+                group = match.groupdict()
+                ap_name = group['ap_name']
+                show_wireless_iot_coexistence_summary_dict['ap_list'][ap_name] = {
+                    'radio_mac': group['radio_mac'],
+                    'coex_admin_state': group['admin_state'],
+                    'coex_oper_state': group['oper_state'],
+                    'iot_counters': {
+                        'tx_pkts': int(group['tx_pkts']),
+                        'rx_pkts': int(group['rx_pkts']),
+                        'crc_errors': int(group['crc_errors']),
+                        'low_pri_requests': int(group['low_pri_requests']),
+                        'high_pri_requests': int(group['high_pri_requests']),
+                        'low_pri_denied': int(group['low_pri_denied']),
+                        'high_pri_denied': int(group['high_pri_denied']),
+                        'low_pri_tx_abort': int(group['low_pri_tx_abort']),
+                        'high_pri_tx_abort': int(group['high_pri_tx_abort'])
+                    }
+                }
+                continue
+
+            # Try matching AP without counters 
+            match = p_ap_without_counters.match(line)
+            if match:
+                # Initialize ap_list if first AP found
+                if 'ap_list' not in show_wireless_iot_coexistence_summary_dict:
+                    show_wireless_iot_coexistence_summary_dict['ap_list'] = {}
+                
+                group = match.groupdict()
+                ap_name = group['ap_name']
+                show_wireless_iot_coexistence_summary_dict['ap_list'][ap_name] = {
+                    'radio_mac': group['radio_mac'],
+                    'coex_admin_state': group['admin_state'],
+                    'coex_oper_state': group['oper_state'].strip(),
+                    'iot_counters': {}
+                }
+
+        # Return empty dict if no APs found, otherwise return parsed data
+        return show_wireless_iot_coexistence_summary_dict
