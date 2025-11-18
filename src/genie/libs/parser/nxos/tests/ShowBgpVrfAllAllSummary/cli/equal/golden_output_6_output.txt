@@ -1,0 +1,50 @@
+show bgp vrf all all summary
+
+BGP summary information for VRF hgtref, address family IPv4 Unicast
+BGP router identifier 10.167.68.54, local AS number 65100
+BGP table version is 96073, IPv4 Unicast config peers 9, capable peers 9
+5312 network entries and 26682 paths using 3839280 bytes of memory
+BGP attribute entries [463/77784], BGP AS path entries [283/8242]
+BGP community entries [437/24892], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.167.68.50    4 65100   52705   44731    96073    0    0    6d13h 4951
+10.167.68.51    4 65100   52681   44731    96073    0    0    6d12h 4951
+10.167.68.52    4 65100   54474   44727    96073    0    0     1w2d 4157
+10.167.68.53    4 65100   54518   44726    96073    0    0     1w2d 4157
+10.167.68.55    4 65100   44729   44727    96073    0    0     2w1d 2
+10.167.68.56    4 65100   53129   44731    96073    0    0     1w1d 4230
+10.167.68.57    4 65100   53197   44731    96073    0    0     1w1d 4230
+10.167.70.123   4 4230103023
+                          44738   47436    96073    0    0     2w1d 2
+10.167.70.137   4 4230103023
+                          44738   47437    96073    0    0     2w1d 2
+
+BGP summary information for VRF hgtref, address family IPv6 Unicast
+BGP router identifier 10.167.68.54, local AS number 65100
+BGP table version is 13, IPv6 Unicast config peers 9, capable peers 7
+0 network entries and 0 paths using 0 bytes of memory
+BGP attribute entries [0/0], BGP AS path entries [0/0]
+BGP community entries [437/24892], BGP clusterlist entries [0/0]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+1227:81:e000:50::
+                4 65100   44728   44731       13    0    0    6d13h 0
+1227:81:e000:50::1
+                4 65100   44728   44731       13    0    0    6d12h 0
+1227:81:e000:50::2
+                4 65100   44725   44727       13    0    0     1w2d 0
+1227:81:e000:50::3
+                4 65100   44726   44726       13    0    0     1w2d 0
+1227:81:e000:50::5
+                4 65100   44725   44727       13    0    0     2w1d 0
+1227:81:e000:50::6
+                4 65100   44727   44731       13    0    0     1w1d 0
+1227:81:e000:50::7
+                4 65100   44729   44730       13    0    0     1w1d 0
+1227:81:e000:54:2000::1
+                4 4130103024
+                              0       0        0    0    0     2w1d Active
+1227:81:e000:54:2000::3
+                4 4130103024
+                              0       0        0    0    0     2w1d Idle
