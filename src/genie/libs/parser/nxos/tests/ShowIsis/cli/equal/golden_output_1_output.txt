@@ -1,0 +1,617 @@
+show isis vrf all
+
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: osatm
+  System ID : 0101.0006.8054  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe51
+  Process is up and running
+  VRF ID: 3
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback105
+    port-channel1.105
+    Ethernet1/2.105
+    Ethernet2/2.105
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: odeprod
+  System ID : 0101.0006.8044  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe50
+  Process is up and running
+  VRF ID: 4
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback104
+    port-channel1.104
+    Ethernet1/2.104
+    Ethernet2/2.104
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: excontrol
+  System ID : 0101.0006.8024  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe4e
+  Process is up and running
+  VRF ID: 5
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback102
+    port-channel1.102
+    Ethernet1/2.102
+    Ethernet2/2.102
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: default
+  System ID : None  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally disabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    None
+  Process is disabled because :
+    NET is not specified
+  VRF ID: 1
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: oos-be
+  System ID : 0101.0006.8084  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe54
+  Process is up and running
+  VRF ID: 6
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback108
+    port-channel1.108
+    Ethernet1/2.108
+    Ethernet2/2.108
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: oon-hybrid
+  System ID : 0101.0006.8064  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe52
+  Process is up and running
+  VRF ID: 7
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback106
+    port-channel1.106
+    Ethernet1/2.106
+    Ethernet2/2.106
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: exnotprod
+  System ID : 0101.0006.8034  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe4f
+  Process is up and running
+  VRF ID: 8
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback103
+    port-channel1.103
+    Ethernet1/2.103
+    Ethernet2/2.103
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: exrestrict
+  System ID : 0101.0006.8004  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe4c
+  Process is up and running
+  VRF ID: 9
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback100
+    port-channel1.100
+    Ethernet1/2.100
+    Ethernet2/2.100
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: exwan-netconf
+  System ID : 0101.0006.8074  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe53
+  Process is up and running
+  VRF ID: 10
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback107
+    port-channel1.107
+    Ethernet1/2.107
+    Ethernet2/2.107
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+
+ISIS process : 65100
+ Instance number :  1
+ UUID: 1090519320
+ Process ID 10492
+VRF: exuuser
+  System ID : 0101.0006.8014  IS-Type : L1-L2
+  SAP : 412  Queue Handle : 12
+  Maximum LSP MTU: 1492
+  Stateful HA enabled
+  Graceful Restart enabled. State: Inactive
+  Last graceful restart status : none
+  Start-Mode Complete
+  BFD IPv4 is globally enabled for ISIS process: 65100
+  BFD IPv6 is globally disabled for ISIS process: 65100
+  Topology-mode is base
+  Metric-style : advertise(wide), accept(narrow, wide)
+  Area address(es) :
+    49.fe4d
+  Process is up and running
+  VRF ID: 11
+  Stale routes during non-graceful controlled restart
+  Enable resolution of L3->L2 address for ISIS adjacency
+  SR IPv4 is not configured and disabled for ISIS process: 65100
+  SR IPv6 is not configured and disabled for ISIS process: 65100
+SRv6 feature not present
+  Interfaces supported by IS-IS :
+    loopback101
+    port-channel1.101
+    Ethernet1/2.101
+    Ethernet2/2.101
+  Topology : 0
+  Address family IPv4 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 4
+    Adjacency check disabled
+    Distance : 115
+    Default-information not originated
+  Topology : 2
+  Address family IPv4 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Address family IPv6 unicast :
+    Number of interface : 0
+    Distance : 115
+    Default-information not originated
+  Level1
+  No auth type and keychain
+  Auth check set
+  Level2
+  No auth type and keychain
+  Auth check set
+  L1 Next SPF: Inactive
+  L2 Next SPF: Inactive
+  Attached bits
+   MT-0 L-1: Att 0 Spf-att 0 Cfg 1 Adv-att 0
+   MT-0 L-2: Att 0 Spf-att 0 Cfg 1 Adv-att 0
