@@ -103,9 +103,11 @@ class ShowDmvpn(ShowDmvpnSchema):
                         r' +(?P<state>[a-zA-Z]+)'
                         r' +(?P<time>(\d+\w)+|never|[0-9\:]+)'
                         r' +(?P<attrb>(\w)+)$')
+        # 1 2001:DB8:1201::222
+        p3a = re.compile(r'^(?P<ent>(\d+)) +(?P<peers>([a-zA-Z0-9\:\.]+))$')
 
         # Defines the "for" loop, to pattern match each line of output
-
+        v6_v4 = False
         for line in out.splitlines():
             line = line.strip()
 
@@ -126,6 +128,17 @@ class ShowDmvpn(ShowDmvpnSchema):
                 interface_dict['type'] = group['type']
                 interface_dict['nhrp_peers'] = int(group['nhrp_peers'])
                 continue
+            
+            # 1 2001:DB8:1201::222
+            m = p3a.match(line)
+            if m:
+                group = m.groupdict()
+                v6_peer= interface_dict.setdefault('ent', {}).setdefault(int(group['ent']), {}).\
+                                                                setdefault('peers', {}).\
+                                                                setdefault(group['peers'], {})
+                v6_v4 = True
+                continue
+
 
             #   Ent  Peer NBMA Addr Peer Tunnel Add State  UpDn Tm Attrb
             # ----- --------------- --------------- ----- -------- -----
@@ -137,6 +150,18 @@ class ShowDmvpn(ShowDmvpnSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                # 192.2.1.1    UP 17:56:26     D
+                if v6_v4:
+                    # This is to handle the v6 over v4 case
+                    
+                    attrb = group['attrb']
+                    tunnel_addr_dict = v6_peer.setdefault('tunnel_addr', {}).\
+                                                        setdefault(group['tunnel_addr'], {})
+                    attrb_dict = tunnel_addr_dict.setdefault('attrb', {}).\
+                                                    setdefault(attrb, {})
+                    attrb_dict['time'] = group['time']
+                    attrb_dict['state'] = group['state']
+                    continue
 
                 # 1 172.29.0.1          172.30.90.1   IKE     3w5d     S
                 if group['ent'] and group['peers']:
@@ -196,12 +221,12 @@ class ShowDmvpnCountStatusSchema(MetaParser):
 # ================================================
 class ShowDmvpnCountStatus(ShowDmvpnCountStatusSchema):
  
-    cli_command = ['show dmvpn | count Status: {service}', 'show dmvpn | count {service}']
+    cli_command = ['show dmvpn | count {service}', 'show dmvpn | count Status: {service}']
 
 
     def cli(self, ipv6= False, service='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[int(ipv6)])
+            output = self.device.execute(self.cli_command[int(ipv6)].format(service=service))
         dict_count = {}
 
         # Number of lines which match regexp = 2648
@@ -218,3 +243,121 @@ class ShowDmvpnCountStatus(ShowDmvpnCountStatusSchema):
                 dict_count['count'] = count
 
         return dict_count
+
+# ==============================
+# Schema for
+#   'show dmvpn ipv6'
+#   'show dmvpn ipv6 interface {interface}'
+# ==============================
+class ShowDmvpnipv6Schema(MetaParser):
+    """
+    Schema for
+        * 'show dmvpn ipv6'
+        * 'show dmvpn ipv6 interface {interface}'
+    """
+
+    # These are the key-value pairs to add to the parsed dictionary
+    schema = {
+        'interfaces': {
+            str: {  # Interface name, e.g., 'Tunnel1'
+                'type': str,
+                'nhrp_peers': int,
+                'peers': {
+                    str: {  # Peer IPv6 address, e.g., '2001:DB8:1202::222'
+                        'tunnel_addr': str,
+                        'ipv6_target_network': str,
+                        'ent': int,
+                        'status': str,
+                        'updn_time': str,
+                        'cache_attrib': str,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowDmvpnIpv6(ShowDmvpnipv6Schema):
+    """ Parser for 
+        * 'show dmvpn ipv6'
+        * 'show dmvpn ipv6 interface {interface}'
+    """
+    cli_command = ['show dmvpn ipv6', 'show dmvpn ipv6 interface {interface}']
+    def cli(self, interface='', output=None):
+        if output is None:
+            if interface:
+                output = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+        # Initializes the Python dictionary variable
+        parsed_dict = {}
+
+        # Interface: Tunnel1, IPv6 NHRP Details
+        p1 = re.compile(r'Interface: +(?P<interfaces>\S+),')
+
+        # Type:Hub, Total NBMA Peers (v4/v6): 2
+        p2 = re.compile(r'Type:(?P<type>\S+),'
+                        r' +Total NBMA Peers .*: (?P<nhrp_peers>(\d+))$')
+
+        # 1.Peer NBMA Address: 2001:DB8:1202::222
+        p3 = re.compile(r'^(?P<ent>(\d+))\.Peer NBMA Address\: +(?P<peers>([a-zA-Z0-9\:\.]+))$')
+        
+        # Tunnel IPv6 Address: FD00:192::1102
+        p4 = re.compile(r'Tunnel IPv6 Address: +(?P<tunnel_addr>[a-zA-Z0-9\:\.]+)$')
+        
+        # IPv6 Target Network: FD00:192::1102/128
+        # IPv6 Target Network: FD00:192::1201/128 (ivrf)
+        p5 = re.compile(r'IPv6 Target Network: +(?P<target_network>[a-zA-Z0-9\:\.]+/\d+)')
+        
+        # # Ent: 1, Status: UP, UpDn Time: 01:28:21, Cache Attrib: D
+        p6 = re.compile(r'# Ent: +(?P<ent>(\d+)), Status: +(?P<status>\S+), UpDn Time: +(?P<updn_time>\S+), Cache Attrib: +(?P<cache_attrib>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Interface: Tunnel1, IPv6 NHRP Details
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                interface = groups['interfaces']
+                interface_dict = parsed_dict.setdefault('interfaces', {}).\
+                                             setdefault(interface, {})
+                continue
+            # Type:Hub, Total NBMA Peers (v4/v6): 2
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict['type'] = groups['type']
+                interface_dict['nhrp_peers'] = int(groups['nhrp_peers'])
+                continue
+            # 1.Peer NBMA Address: 2001:DB8:1202::222
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                ent = groups['ent']
+                peers = groups['peers']
+                peer_addr_dict = interface_dict.setdefault('peers', {}).\
+                                                setdefault(peers, {})
+                continue
+            # Tunnel IPv6 Address: FD00:192::1102
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                peer_addr_dict['tunnel_addr'] = groups['tunnel_addr']
+                continue
+            # IPv6 Target Network: FD00:192::1102/128
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                peer_addr_dict['ipv6_target_network'] = groups['target_network']
+                continue
+            # # Ent: 1, Status: UP, UpDn Time: 01:28:21, Cache Attrib: D
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                peer_addr_dict['ent'] = int(groups['ent'])
+                peer_addr_dict['status'] = groups['status']
+                peer_addr_dict['updn_time'] = groups['updn_time']
+                peer_addr_dict['cache_attrib'] = groups['cache_attrib']
+                continue
+        return parsed_dict

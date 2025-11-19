@@ -1,0 +1,7 @@
+                                         Current              Bundled
+Slot  Device Name / Model           Firmware Version      Firmware Version    Mismatch
+----- ----------------------------- --------------------- ------------------- ---------
+ FT1  Fantray                       25010624              25010624            No
+ FT2  Fantray                       25010624              25010624            No
+ FT3  Fantray                       25010624              25010624            No
+ FT4  Fantray                       25010624              25010624            No

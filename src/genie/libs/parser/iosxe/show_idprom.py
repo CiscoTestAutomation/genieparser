@@ -31,7 +31,7 @@ class ShowIdpromSchema(MetaParser):
     """
 
     schema = {
-        'switch': {
+        Optional('switch'): {
             Any() : {
                 'module_idprom' : {
                     Any(): {
@@ -65,7 +65,6 @@ class ShowIdpromSchema(MetaParser):
                         'top_assy_part_number' : str,
                         'top_assy_revision': str,
                         'deviation_number' : int,
-
                         'pcb_serial_number' : str,
                         'rma_test_history' : str,
                         'rma_number' : str,
@@ -76,7 +75,6 @@ class ShowIdpromSchema(MetaParser):
                         'manufacturing_test_data': str,
                         'field_diagnostics_data' : str,
                         'environment_monitor_data' : str,
-
                         'max_power_output_watts' : int
                     }                    
                 } ,
@@ -88,12 +86,14 @@ class ShowIdpromSchema(MetaParser):
                         'top_assy_part_number' : str,
                         'top_assy_revision': str,
                         'deviation_number' : int,
-
                         'pcb_serial_number' : str,
                         'clei_code' : str,
                         'pid' : str,
                         'vid' : str,
-                        'manufacturing_test_data': str,
+                        Optional('manufacturing_test_data'): str,
+                        Optional('environment_monitor_data') : str,
+                        Optional('max_power_requirement_watts'): int,
+                        Optional('typical_power_requirement_watts'): int,
                     }                     
                 }
             }
@@ -121,6 +121,10 @@ class ShowIdprom(ShowIdpromSchema):
 
         # output dictionary initialised
         result_dict = {}
+        switch = None
+        switch_dict = None
+        switch_id_dict = {}
+        idprom_type_id_dict = {}
 
         # possible regex patterns below:
 
@@ -218,6 +222,11 @@ class ShowIdprom(ShowIdpromSchema):
             if m:
                 group = m.groupdict()
                 number = group['number']
+
+                if switch_dict is None:
+                    switch = '1'
+                    switch_dict = result_dict.setdefault('switch', {})
+                    switch_id_dict = switch_dict.setdefault(switch, {})
                 idprom_type_dict = switch_id_dict.setdefault('module_idprom', {})
                 idprom_type_id_dict = idprom_type_dict.setdefault(number, {})
                 continue
@@ -227,6 +236,11 @@ class ShowIdprom(ShowIdpromSchema):
             if m:
                 group = m.groupdict()
                 number = group['number']
+
+                if switch_dict is None:
+                    switch = '1'
+                    switch_dict = result_dict.setdefault('switch', {})
+                    switch_id_dict = switch_dict.setdefault(switch, {})
                 idprom_type_dict = switch_id_dict.setdefault('power_supply_idprom', {})
                 idprom_type_id_dict = idprom_type_dict.setdefault(number, {})
                 continue
@@ -236,6 +250,11 @@ class ShowIdprom(ShowIdpromSchema):
             if m:
                 group = m.groupdict()
                 number = group['number']
+
+                if switch_dict is None:
+                    switch = '1'
+                    switch_dict = result_dict.setdefault('switch', {})
+                    switch_id_dict = switch_dict.setdefault(switch, {})
                 idprom_type_dict = switch_id_dict.setdefault('fantray_idprom', {})
                 idprom_type_id_dict = idprom_type_dict.setdefault(number, {})
                 continue

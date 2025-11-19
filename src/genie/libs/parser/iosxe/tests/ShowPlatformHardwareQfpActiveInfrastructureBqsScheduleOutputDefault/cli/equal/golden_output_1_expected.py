@@ -1,0 +1,43 @@
+expected_output = {
+    "GigabitEthernet1": {
+        "if_h": 6,
+        "qfp": "0.0",
+        "num_queues_schedules": 1,
+        "schedule_specifics": {
+            "index": {
+                "0": {
+                    "sid": "0x8b",
+                    "name": "GigabitEthernet1",
+                    "parq_software_control_info": {
+                        "sid": "0x8b",
+                        "parent_sid": "0x8a",
+                        "evfc_fc_id": "0xffff",
+                        "fc_sid": "0xfffff",
+                        "obj_id": "0x12",
+                        "parent_obj_id": "0x11",
+                        "debug_name": "GigabitEthernet1",
+                        "num_entries_active": 1,
+                        "num_children_max": 1,
+                        "presize_hint": 0,
+                        "sw_flags": "0x0802002a",
+                        "sw_state": "0x00000801",
+                        "orig_min": 0,
+                        "min": 0,
+                        "min_qos": 0,
+                        "min_dflt": 1050000000,
+                        "orig_max": 0,
+                        "max": 1050000000,
+                        "max_qos": 0,
+                        "max_dflt": 1050000000,
+                        "share": 105,
+                        "plevel": 0,
+                        "service_fragment": "False",
+                        "port_uidb": 65530,
+                        "priority": 0,
+                        "defer_obj_refcnt": 0,
+                    },
+                },
+            },
+        },
+    },
+}

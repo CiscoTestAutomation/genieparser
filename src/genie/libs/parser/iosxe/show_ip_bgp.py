@@ -50,6 +50,7 @@
     * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} advertised-routes
     * show ip bgp neighbors {neighbor} received prefix-filter
     * show ip bgp {address_family} vrf {vrf} neighbors {neighbor} received prefix-filter
+    * show ip bgp {address_family} all label
 """
 
 # Python
@@ -1765,3 +1766,103 @@ class ShowIpBgpNeighborReceivedPrefixFilter(ShowIpBgpNeighborReceivedPrefixFilte
                 continue
 
         return result_dict
+
+# ======================================
+# Schema for:
+#   * 'show ip bgp {address_family} all label'
+# ======================================
+class ShowIpBgpAllLabelSchema(MetaParser):
+
+    """ Schema for:
+        * 'show ip bgp {address_family} all label'
+    """
+
+    schema = {
+        'route_distinguisher': {
+            Any(): {
+                Optional('vrf_name'): str,
+                'prefix': {
+                    Any(): {
+                        'next_hop': str,
+                        'in_label': str,
+                        'out_label': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================================
+# Parser for:
+#   * 'show ip bgp {address_family} all label'
+# ======================================
+class ShowIpBgpAllLabel(ShowIpBgpAllLabelSchema):
+
+    ''' Parser for:
+        * 'show ip bgp {address_family} all label'
+    '''
+
+    cli_command = 'show ip bgp {address_family} all label'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        parsed_dict = {}
+
+        # Route Distinguisher: 10:10 (vpn2)
+        p1 = re.compile(r'^Route\s+Distinguisher:\s+(?P<rd>\S+)(\s+\((?P<vrf_name>\w+)\))?$')
+
+        # 3.3.3.0/24       100.0.0.3       nolabel/21
+        # 6.6.6.0/24       6.6.6.10        16/aggregate(vpn2)
+        # 33.33.33.11/32   100.0.0.3       nolabel/22
+        # 0.0.0.0          100.0.0.3       nolabel/20
+        p2 = re.compile(r'^(?P<prefix>\S+)\s+(?P<next_hop>\S+)\s+(?P<in_label>\S+)\/(?P<out_label>\S+)$')
+
+        current_rd = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Route Distinguisher: 10:10 (vpn2)
+            m = p1.match(line)
+            if m:
+                rd = m.groupdict()['rd']
+                vrf_name = m.groupdict().get('vrf_name')
+                current_rd = rd
+
+                # Initialize Route Distinguisher structure
+                if 'route_distinguisher' not in parsed_dict:
+                    parsed_dict['route_distinguisher'] = {}
+                if current_rd not in parsed_dict['route_distinguisher']:
+                    parsed_dict['route_distinguisher'][current_rd] = {}
+                    if vrf_name:
+                        parsed_dict['route_distinguisher'][current_rd]['vrf_name'] = vrf_name
+                    parsed_dict['route_distinguisher'][current_rd]['prefix'] = {}
+                continue
+
+            # 3.3.3.0/24       100.0.0.3       nolabel/21
+            # 6.6.6.0/24       6.6.6.10        16/aggregate(vpn2)
+            # 33.33.33.11/32   100.0.0.3       nolabel/22
+            # 0.0.0.0          100.0.0.3       nolabel/20
+            m = p2.match(line)
+            if m and current_rd is not None:
+                prefix = m.groupdict()['prefix']
+                next_hop = m.groupdict()['next_hop']
+                in_label = m.groupdict()['in_label']
+                out_label = m.groupdict()['out_label']
+
+                parsed_dict['route_distinguisher'][current_rd]['prefix'][prefix] = {
+                    'next_hop': next_hop,
+                    'in_label': in_label,
+                    'out_label': out_label
+                }
+                continue
+
+        return parsed_dict
+
+

@@ -1,0 +1,18 @@
+show ip bgp vpnv4 all label
+
+   Network          Next Hop      In label/Out label
+Route Distinguisher: 10:10 (vpn2)
+   3.3.3.0/24       100.0.0.3       nolabel/21
+   6.6.6.0/24       6.6.6.10        16/aggregate(vpn2)
+   33.33.33.11/32   100.0.0.3       nolabel/22
+   66.66.66.10/32   6.6.6.10        17/nolabel
+   74.0.0.0         6.6.6.10        18/nolabel
+   84.0.0.0         100.0.0.3       nolabel/23
+   100.0.0.10/32    6.6.6.10        19/nolabel
+   100.0.0.11/32    100.0.0.3       nolabel/24
+Route Distinguisher: 21:21
+   0.0.0.0          100.0.0.3       nolabel/20
+   3.3.3.0/24       100.0.0.3       nolabel/21
+   33.33.33.11/32   100.0.0.3       nolabel/22
+   84.0.0.0         100.0.0.3       nolabel/23
+   100.0.0.11/32    100.0.0.3       nolabel/24

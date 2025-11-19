@@ -1,0 +1,31 @@
+king_9200L_7M_Stack#show platform software fed switch active swc statistics 
+==========================
+SWC Upload Statistics:
+==========================
+ 1: Last file uploaded          :   
+ 2: Time of upload              :   
+ 3: Current file uploading      :   
+ 4: Files queued for upload     :  202510151103_2, 202510151104_3, 202510151105_2, 202510151104_2, 202510151106_2 
+ 5: Number of files queued      :  5 
+ 6: Last failed upload          :  202510151102_2 
+ 7: Files failed to upload      :  411 
+ 8: Files successfully uploaded :  0 
+==========================
+SWC File Creation Statistics:
+==========================
+ 9: Last file created           :  202510151107_2
+10: Time of creation            :  10/15/25 11:07:03 UTC 
+==========================
+SWC Flow Statistics:
+==========================
+11: Number of flows in prev file:  64000 
+12: Number of flows in curr file:  48000 
+13: Invalid dropped flows       :  0 
+14: Error dropped flows         :  0 
+==========================
+SWC Flags:
+==========================
+15: Is Registered               :  Registered 
+16: Delete debug                :  Disabled 
+17: Exporter delete debug       :  Disabled 
+18: Certificate Validation      :  Enabled

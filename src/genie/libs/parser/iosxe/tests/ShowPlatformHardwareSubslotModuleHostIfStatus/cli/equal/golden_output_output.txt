@@ -1,0 +1,13 @@
+NPU global_info:
+CP_MAC:     0x6c.8b.d3.d7.f7.0e
+FFP_MAC:    0x6c.8b.d3.d7.f7.0e
+FC_MAC: 0x6c.8b.d3.d7.f7.0e
+Module_MAC: 0xec.1d.8b.fe.34.e2
+DSP_MAC:    N/A
+TX PRIORITY:  0x03
+CP VLAN ID:    0xc9 0x2f
+FFP LP VLAN ID:  0x29 0x2e
+FFP HP1 VLAN ID: 0x89 0x2e
+FFP HP2 VLAN ID: 0xa9 0x2e
+FC VLAN ID: 0xe9 0x2e
+Max MTU 10240

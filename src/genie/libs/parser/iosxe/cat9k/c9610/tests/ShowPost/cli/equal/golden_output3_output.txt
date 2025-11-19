@@ -1,0 +1,10 @@
+Stored system POST messages:
+
+Switch 2
+---------
+
+Wed Sep 17 09:15:11 2025 POST: Module: 1 Mac Loopback Begin
+Wed Sep 17 09:15:11 2025 POST: Module: 1 Mac Loopback: loopback Test: End, Status Passed
+
+Wed Sep 17 09:15:40 2025 POST: Module: 1 Mac Loopback Begin
+Wed Sep 17 09:15:43 2025 POST: Module: 1 Mac Loopback: loopback Test: End, Status Passed

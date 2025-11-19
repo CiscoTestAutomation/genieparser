@@ -1,0 +1,8 @@
+Certificate Server ios_ra:
+    Server's configuration is locked  (enter "shut" to unlock it)
+    Server configured in RA mode
+    RA cert fingerprint: AAB882C5 B43BFE17 E46E855F 0BC54931
+    Granting mode is: auto
+    Current primary storage dir: nvram:
+    Current storage dir for .crl files: tftp://6.28.19.3
+    Database Level: Minimum - no cert data written to storage

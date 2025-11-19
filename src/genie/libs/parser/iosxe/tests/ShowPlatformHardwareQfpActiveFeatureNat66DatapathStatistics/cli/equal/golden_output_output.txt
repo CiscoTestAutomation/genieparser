@@ -1,0 +1,28 @@
+in2out xlated pkts 1022
+out2in xlated pkts 112
+NAT66_DROP_SC_INVALID_PKT 0
+NAT66_DROP_SC_BAD_DGLEN 0
+NAT66_DROP_SC_PLU_FAIL 28
+NAT66_DROP_SC_PROCESS_V6_ERR 0
+NAT66_DROP_SC_INVALID_EMBEDDED 0
+NAT66_DROP_SC_SRC_RT 0
+NAT66_DROP_SC_NOT_ENABLED 0
+NAT66_DROP_SC_NO_GPM 0
+NAT66_DROP_SC_LOOP 0
+NAT66_DROP_SC_LIMIT 0
+NAT66_DROP_SC_ADDR_IN_USE 0
+in2out_pkts 1050 out2in_pkts 174
+in2out_pkts_untrans 28 out2in_pkts_untrans 0
+in2out_lookup_pass 1022 out2in_lookup_pass 112
+in2out_lookup_fail 28 out2in_lookup_fail 0
+mem_alloc_fail 0 prefix_fail 0
+total prefix count 1
+egress prefix count 0
+in2out_src_local 0
+out2in_dst_local 62
+in2out_icmp_err 0
+out2in_icmp_err 112
+in2out_frag 0
+out2in_frag 0
+out2in_nd 0
+in2out_api_xlated 0

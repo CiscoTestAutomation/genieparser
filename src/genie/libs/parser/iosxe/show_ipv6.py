@@ -1938,7 +1938,8 @@ class ShowIpv6NhrpSummary(ShowIpv6NhrpSummarySchema):
             out = output
         
         #IPv6 NHRP cache 4 entries, 3072 bytes
-        p1 = re.compile(r'^IPv6 +NHRP +cache +(?P<nhrp_entries>[\d]+) +entries, +(?P<size>[\d]+)')
+        #IPv6 NHRP cache 1 entry, 784 bytes
+        p1 = re.compile(r'^IPv6 +NHRP +cache +(?P<nhrp_entries>\d+) +entr(?:y|ies), +(?P<size>\d+)')
         #2 static 2 dynamic 0 incomplete
         p2 = re.compile(r'^(?P<total_static_entries>[\d]+) +static +(?P<total_dynamic_entries>[\d]+) +dynamic +(?P<total_incomplete_entries>[\d]+) +incomplete')
         #4 Remote

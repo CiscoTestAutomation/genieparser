@@ -1,0 +1,84 @@
+Registration: Registered
+Name              Id     Data       Last Poll   
+----------------------------------------------
+HotSwap: P_MB     70      344       21:51:20    
+HotSwap: V_MB     71    11980       21:51:20    
+HotSwap: P_DB     72      216       21:51:20    
+HotSwap: V_DB     73    12026       21:51:20    
+Temp: CPUcore:0   74       33       21:51:20    
+Temp: CPUcore:1   75       35       21:51:20    
+Temp: CPUcore:2   76       37       21:51:20    
+Temp: CPUcore:3   77       33       21:51:20    
+Temp: CPUcore:4   78       31       21:51:20    
+Temp: CPUcore:5   79       34       21:51:20    
+Temp: CPUcore:6   80       35       21:51:20    
+Temp: CPUcore:7   81       33       21:51:20    
+Temp: InltL_MB    82       26       21:51:20    
+Temp: InltR_MB    83       23       21:51:20    
+Temp: OtltL_MB    84       32       21:51:20    
+Temp: OtltR_MB    85       29       21:51:20    
+Temp: InltL_DB    86       24       21:51:20    
+Temp: InltR_DB    87       22       21:51:20    
+Temp: OtltL_DB    88       28       21:51:20    
+Temp: OtltR_DB    89       28       21:51:20    
+Temp: CPUDB_MB    90       32       21:51:20    
+Temp: K1_O_L_MB   91       33       21:51:20    
+Temp: K1_O_R_MB   92       25       21:51:20    
+Temp: IOFPGA_MB   93       32       21:51:20    
+Temp: K0_O_R_MB   94       27       21:51:20    
+Temp: TMFPGA_MB   95       26       21:51:20    
+Temp: GB_O_MB     96       27       21:51:20    
+Temp: K0_O_L_MB   97       31       21:51:20    
+Temp: MEM_CPUDB   98       27       21:51:20    
+Temp: SB_CPUDB    99       27       21:51:20    
+Temp: VCC_CPUDB   100      27       21:51:20    
+Temp: FL_CPUDB    101      27       21:51:20    
+Temp: PWR_CPUDB   102      27       21:51:20    
+Temp: S1_I_00     103      32       21:51:20    
+Temp: S1_I_01     104      34       21:51:20    
+Temp: S1_I_02     105      35       21:51:20    
+Temp: S1_I_03     106      34       21:51:20    
+Temp: S1_I_04     107      37       21:51:20    
+Temp: S1_I_05     108      33       21:51:20    
+Temp: S1_I_06     109      37       21:51:20    
+Temp: S1_I_07     110      37       21:51:20    
+Temp: S1_I_08     111      40       21:51:20    
+Temp: S1_I_09     112      41       21:51:20    
+Temp: S1_K0_00    113      48       21:51:20    
+Temp: S1_K0_01    114      48       21:51:20    
+Temp: S1_K0_02    115      48       21:51:20    
+Temp: S1_K0_03    116      48       21:51:20    
+Temp: S1_K0_04    117      48       21:51:20    
+Temp: S1_K0_05    118      48       21:51:20    
+Temp: S1_K0_06    119      48       21:51:20    
+Temp: S1_K1_00    120      48       21:51:20    
+Temp: S1_K1_01    121      48       21:51:20    
+Temp: S1_K1_02    122      48       21:51:20    
+Temp: S1_K1_03    123      48       21:51:20    
+Temp: S1_K1_04    124      48       21:51:20    
+Temp: S1_K1_05    125      48       21:51:20    
+Temp: S1_K1_06    126      48       21:51:20    
+Temp: S1_K2_00    127      48       21:51:20    
+Temp: S1_K2_01    128      48       21:51:20    
+Temp: S1_K2_02    129      48       21:51:20    
+Temp: S1_K2_03    130      48       21:51:20    
+Temp: S1_K2_04    131      48       21:51:20    
+Temp: S1_K2_05    132      48       21:51:20    
+Temp: S1_K2_06    133      48       21:51:20    
+Temp: S1_K3_00    134      48       21:51:20    
+Temp: S1_K3_01    135      48       21:51:20    
+Temp: S1_K3_02    136      48       21:51:20    
+Temp: S1_K3_03    137      48       21:51:20    
+Temp: S1_K3_04    138      48       21:51:20    
+Temp: S1_K3_05    139      48       21:51:20    
+Temp: S1_K3_06    140      48       21:51:20    
+SUM_MB_GB         141     127       21:51:20    
+SUM_MB_KP0        142      88       21:51:20    
+SUM_MB_KP1        143      90       21:51:20    
+SUM_DB_KP2        144      88       21:51:20    
+SUM_DB_KP3        145      94       21:51:20    
+Temp: FPIO-1      146  -55903       21:51:20    
+Temp: FPIO-2      147  -55903       21:51:20    
+Temp: FPIO-3      148  -55903       21:51:20    
+Temp: FPIO-4      149  -55903       21:51:20    
+Temp: FPIO-5      150  -55903       21:51:20   

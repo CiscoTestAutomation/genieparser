@@ -1,0 +1,21 @@
+Inspect Parameter Map: global, Index 1
+Parameter Map Type: Parameter-Map
+    Global Parameter-Map
+    Alerts: On, Audits: Off, Drop-Log: Off
+    HSL Mode: V9, Host: 10.1.1.1:9000, Port: 54174, Template: 300 sec
+    Session Rate High: 2147483647, Session Rate Low: 2147483647, Time Duration: 60 sec
+    Half-Open:
+      High: 2147483647, Low: 2147483647, Host: 4294967295, Host Block Time: 0
+    Inactivity Times [sec]:
+      DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+    TCP Timeouts [sec]:
+      SYN wait time: 30, FIN wait time: 1
+    TCP RST pkt control:
+      half-open: On, half-close: On, idle: On
+    UDP Timeout [msec]:
+      UDP Half-open time: 30000
+    Max Sessions: Unlimited
+    Number of Simultaneous Packet per Sessions: 0
+    Syn Cookie and Resource Management:
+      Global Syn Flood Limit: 4294967295
+      Global Total Session : 4294967295

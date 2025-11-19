@@ -1,0 +1,59 @@
+RP0: online, statistics updated 2 seconds ago
+Load Average: healthy
+  1-Min: 0.81, status: healthy, under 32.00
+  5-Min: 1.07, status: healthy, under 32.00
+  15-Min: 0.82, status: healthy, under 32.00
+Memory (kb): healthy
+  Total: 32586296
+  Used: 3321760 (10%), status: healthy
+  Free: 29264536 (90%)
+  Committed: 9506744 (29%), under 95%
+Per-core Statistics
+CPU0: CPU Utilization (percentage of time spent)
+  User:  0.79, System:  1.29, Nice:  0.00, Idle: 97.90
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU1: CPU Utilization (percentage of time spent)
+  User:  0.70, System:  1.20, Nice:  0.00, Idle: 98.10
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU2: CPU Utilization (percentage of time spent)
+  User:  0.10, System:  1.10, Nice:  0.00, Idle: 98.80
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU3: CPU Utilization (percentage of time spent)
+  User:  0.00, System:  0.00, Nice:  0.00, Idle:100.00
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU4: CPU Utilization (percentage of time spent)
+  User:  1.00, System:  0.50, Nice:  0.00, Idle: 98.50
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU5: CPU Utilization (percentage of time spent)
+  User:  0.19, System:  0.00, Nice:  0.00, Idle: 99.80
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU6: CPU Utilization (percentage of time spent)
+  User:  6.78, System:  0.99, Nice:  0.00, Idle: 92.21
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU7: CPU Utilization (percentage of time spent)
+  User:  1.60, System:  1.30, Nice:  0.00, Idle: 97.10
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU8: CPU Utilization (percentage of time spent)
+  User:  0.60, System:  0.20, Nice:  0.00, Idle: 99.20
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU9: CPU Utilization (percentage of time spent)
+  User:  0.00, System:  0.00, Nice:  0.00, Idle:100.00
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU10: CPU Utilization (percentage of time spent)
+  User:  0.30, System:  0.30, Nice:  0.00, Idle: 99.40
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU11: CPU Utilization (percentage of time spent)
+  User:  0.00, System:  0.00, Nice:  0.00, Idle:100.00
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU12: CPU Utilization (percentage of time spent)
+  User:  0.89, System:  0.39, Nice:  0.00, Idle: 98.70
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU13: CPU Utilization (percentage of time spent)
+  User:  0.00, System:  0.00, Nice:  0.00, Idle:100.00
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU14: CPU Utilization (percentage of time spent)
+  User:  0.10, System:  1.10, Nice:  0.00, Idle: 98.80
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00
+CPU15: CPU Utilization (percentage of time spent)
+  User:  0.00, System:  0.00, Nice:  0.00, Idle:100.00
+  IRQ:  0.00, SIRQ:  0.00, IOwait:  0.00

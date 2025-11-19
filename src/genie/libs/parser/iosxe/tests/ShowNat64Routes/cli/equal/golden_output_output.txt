@@ -1,0 +1,5 @@
+IPv4 Prefix        Adj. Address    Enabled  VRF      Output IF
+   Global IPv6 Prefix
+
+27.1.1.10/32       0.0.0.3         TRUE    0         Gi0/0/4
+   TRUE   2001::/96

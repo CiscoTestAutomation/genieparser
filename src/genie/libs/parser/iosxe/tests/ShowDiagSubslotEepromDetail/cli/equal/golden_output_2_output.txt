@@ -1,0 +1,25 @@
+SPA EEPROM data for subslot 1/0:
+
+EEPROM version : 4
+Compatible Type : 0xFF
+Controller Type : 3012
+Hardware Revision : 1.0
+PCB Part Number : 73-15667-07
+Top Assy. Part Number : 800-40597-02
+Board Revision : B0
+Deviation Number : 0
+Fab Part Number : 28-11352-04
+Fab Version : 04
+PCB Serial Number : FOC22032B37
+RMA Test History : 00
+RMA Number : 0-0-0-0
+RMA History : 00
+Product Identifier (PID) : SM-X-6X1G
+Version Identifier (VID) : V02
+CLEI Code : IPU3BA8CAA
+Base MAC Address : 50 0F 80 01 C3 F8
+MAC Address block size : 10
+Environment Monitor Data : 40 0B E3 43 00 4B
+Platform features : 02 01 01 4B 00 01 01 00
+01 03 00
+

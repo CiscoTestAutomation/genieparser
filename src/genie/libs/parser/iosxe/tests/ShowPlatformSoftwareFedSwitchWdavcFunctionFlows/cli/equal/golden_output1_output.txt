@@ -1,0 +1,20 @@
+show platform software fed switch 1 wdavc function wdavc_ft_show_all_flows_seg_ui
+CurrFlows=3, Watermark=3
+
+IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+    |                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1   |10.10.1.166                             |66.220.146.224                          |52059|80   |1    |6    |0   |60   HW|unknown                         |Full    |Real Flow|Yes     |0x01   |True  |True  |40    |2     |
+    SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+    -------------------------------------------------------------------------------------------------------------------------------------------------------
+    0       |1050   |1050     |Ingress |0       |True    |True   |True   |0      |0        VV|0       |0       |1758196432000|1758196531000|24190  |292    |0       |
+    1       |1050   |1050     |Ingress |0       |False   |True   |True   |0      |0        VV|0       |0       |1758196432000|1758196531000|24190  |292    |0       |
+2   |20.0.0.1                                |30.0.0.1                                |80   |52059|1    |6    |0   |360  HW|http                            |Full    |Real Flow|Yes     |0x01   |True  |True  |20    |3     |
+    SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+    -------------------------------------------------------------------------------------------------------------------------------------------------------
+    0       |1050   |----     |Ingress |0       |True    |True   |True   |0      |4        VV|0       |0       |1758196434000|1758196529000|193824 |180    |0       |
+3   |20.0.0.1                                |30.0.0.1                                |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|Yes     |0x01   |True  |True  |20    |3     |
+
+    SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+    -------------------------------------------------------------------------------------------------------------------------------------------------------
+    0       |1050   |----     |Ingress |0       |True    |True   |True   |0      |3        VV|0       |0       |1758196434000|1758196527000|12642  |151    |0       |

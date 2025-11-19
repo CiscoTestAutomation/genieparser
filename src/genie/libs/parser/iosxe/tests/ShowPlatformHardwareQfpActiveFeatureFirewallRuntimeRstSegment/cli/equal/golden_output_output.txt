@@ -1,0 +1,4 @@
+fw tcp session termination RST segment control:
+  halfopen:  RST sent 0, blocked 0
+  idle:      RST sent 0, blocked 0
+  halfclose: RST sent 0, blocked 0

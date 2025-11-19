@@ -1,0 +1,4 @@
+show platform hardware cpp active feature firewall session create 1 10
+
+Number of sessions read: 0
+Return code: 4

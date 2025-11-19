@@ -1,0 +1,9 @@
+BRIEF STATUS DISPLAY :----
+
+AUDIT RULE SET                	: STATUS
+------------------------------------------------------
+DNS_CLIENT_FILES              	: disable
+KERNEL_MODULE_MGMT            	: disable
+SYSTEM_SOFTWARE               	: disable
+USER_GROUP_CONFIG_FILES       	: disable
+USER_PRIVILEGE_MGMT           	: disable

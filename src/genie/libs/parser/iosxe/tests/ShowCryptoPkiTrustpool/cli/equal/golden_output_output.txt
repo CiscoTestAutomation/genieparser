@@ -1,0 +1,281 @@
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 04302A0B364CE2DA93
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Basic Assurance Root CA 2099
+    o=Cisco
+  Subject: 
+    cn=Cisco Manufacturing CA III
+    o=Cisco
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/cbarc2099.crl
+  Validity Date: 
+    start date: 19:28:06 UTC Jul 5 2017
+    end   date: 19:19:28 UTC May 26 2099
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 01A65AF15EE994EBE1
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Basic Assurance Root CA 2099
+    o=Cisco
+  Subject: 
+    cn=Cisco Basic Assurance Root CA 2099
+    o=Cisco
+  Validity Date: 
+    start date: 19:19:29 UTC May 26 2017
+    end   date: 19:19:29 UTC May 26 2099
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 0A6475524CD8617C62
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA 2099
+    o=Cisco
+  Subject: 
+    o=Cisco
+    cn=High Assurance SUDI CA
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/crca2099.crl
+  Validity Date: 
+    start date: 20:28:08 UTC Aug 11 2016
+    end   date: 20:58:27 UTC Aug 9 2099
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 019A335878CE16C1C1
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA 2099
+    o=Cisco
+  Subject: 
+    cn=Cisco Root CA 2099
+    o=Cisco
+  Validity Date: 
+    start date: 20:58:28 UTC Aug 9 2016
+    end   date: 20:58:28 UTC Aug 9 2099
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 0A0142800000014523C844B500000002
+  Certificate Usage: Signature
+  Issuer: 
+    cn=IdenTrust Commercial Root CA 1
+    o=IdenTrust
+    c=US
+  Subject: 
+    cn=IdenTrust Commercial Root CA 1
+    o=IdenTrust
+    c=US
+  Validity Date: 
+    start date: 18:12:23 UTC Jan 16 2014
+    end   date: 18:12:23 UTC Jan 16 2034
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 0509
+  Certificate Usage: Signature
+  Issuer: 
+    cn=QuoVadis Root CA 2
+    o=QuoVadis Limited
+    c=BM
+  Subject: 
+    cn=QuoVadis Root CA 2
+    o=QuoVadis Limited
+    c=BM
+  Validity Date: 
+    start date: 18:27:00 UTC Nov 24 2006
+    end   date: 18:23:33 UTC Nov 24 2031
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 18DAD19E267DE8BB4A2158CDCC6B3B4A
+  Certificate Usage: Signature
+  Issuer: 
+    cn=VeriSign Class 3 Public Primary Certification Authority - G5
+    ou=(c) 2006 VeriSign
+     Inc. - For authorized use only
+    ou=VeriSign Trust Network
+    o=VeriSign
+     Inc.
+    c=US
+  Subject: 
+    cn=VeriSign Class 3 Public Primary Certification Authority - G5
+    ou=(c) 2006 VeriSign
+     Inc. - For authorized use only
+    ou=VeriSign Trust Network
+    o=VeriSign
+     Inc.
+    c=US
+  Validity Date: 
+    start date: 00:00:00 UTC Nov 8 2006
+    end   date: 23:59:59 UTC Jul 16 2036
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 01
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco RXC-R2
+    o=Cisco Systems
+    c=US
+  Subject: 
+    cn=Cisco RXC-R2
+    o=Cisco Systems
+    c=US
+  Validity Date: 
+    start date: 21:46:56 UTC Jul 9 2014
+    end   date: 21:46:56 UTC Jul 9 2034
+  Associated Trustpoints: RXC_Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 61096E7D00000000000C
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA 2048
+    o=Cisco Systems
+  Subject: 
+    cn=ACT2 SUDI CA
+    o=Cisco
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/crca2048.crl
+  Validity Date: 
+    start date: 17:56:57 UTC Jun 30 2011
+    end   date: 20:25:42 UTC May 14 2029
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 01
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Licensing Root CA
+    o=Cisco
+  Subject: 
+    cn=Cisco Licensing Root CA
+    o=Cisco
+  Validity Date: 
+    start date: 19:48:47 UTC May 30 2013
+    end   date: 19:48:47 UTC May 30 2038
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 01
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Licensing Root - DEV
+    o=Cisco
+  Subject: 
+    cn=Licensing Root - DEV
+    o=Cisco
+  Validity Date: 
+    start date: 21:55:43 UTC Apr 24 2013
+    end   date: 21:55:43 UTC Apr 24 2033
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 02
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA M2
+    o=Cisco
+  Subject: 
+    cn=Cisco Manufacturing CA SHA2
+    o=Cisco
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/crcam2.crl
+  Validity Date: 
+    start date: 13:50:58 UTC Nov 12 2012
+    end   date: 13:00:17 UTC Nov 12 2037
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 01
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA M2
+    o=Cisco
+  Subject: 
+    cn=Cisco Root CA M2
+    o=Cisco
+  Validity Date: 
+    start date: 13:00:18 UTC Nov 12 2012
+    end   date: 13:00:18 UTC Nov 12 2037
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 6A6967B3000000000003
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA 2048
+    o=Cisco Systems
+  Subject: 
+    cn=Cisco Manufacturing CA
+    o=Cisco Systems
+  CRL Distribution Points: 
+    http://www.cisco.com/security/pki/crl/crca2048.crl
+  Validity Date: 
+    start date: 22:16:01 UTC Jun 10 2005
+    end   date: 20:25:42 UTC May 14 2029
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 5FF87B282B54DC8D42A315B568C9ADFF
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA 2048
+    o=Cisco Systems
+  Subject: 
+    cn=Cisco Root CA 2048
+    o=Cisco Systems
+  Validity Date: 
+    start date: 20:17:12 UTC May 14 2004
+    end   date: 20:25:42 UTC May 14 2029
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In
+
+CA Certificate
+  Status: Available
+  Certificate Serial Number (hex): 2ED20E7347D333834B4FDD0DD7B6967E
+  Certificate Usage: Signature
+  Issuer: 
+    cn=Cisco Root CA M1
+    o=Cisco
+  Subject: 
+    cn=Cisco Root CA M1
+    o=Cisco
+  Validity Date: 
+    start date: 21:50:24 UTC Nov 18 2008
+    end   date: 21:59:46 UTC Nov 18 2033
+  Associated Trustpoints: Trustpool 
+  Trustpool: Built-In

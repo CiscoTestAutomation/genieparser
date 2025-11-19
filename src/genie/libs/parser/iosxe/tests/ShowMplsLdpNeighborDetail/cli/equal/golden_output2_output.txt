@@ -1,0 +1,26 @@
+    Epcot_AB#show mpls ldp neighbor detail
+    Peer LDP Ident: 192.168.20.2:0; Local LDP Ident 2.2.2.2:0
+	TCP connection: 192.168.20.2.11669 - 2.2.2.2.646
+	Password: not required, none, in use
+	State: Oper; Msgs sent/rcvd: 92/93; Downstream; Last TIB rev sent 11
+	Up time: 01:14:13; UID: 51; Peer Id 0
+	LDP discovery sources:
+	  Port-channel20; Src IP addr: 192.168.20.2 
+	    holdtime: 15000 ms, hello interval: 5000 ms
+	  Targeted Hello 2.2.2.2 -> 192.168.20.2, active, passive;
+	    holdtime: infinite, hello interval: 10000 ms
+        Addresses bound to peer LDP Ident:
+          192.168.20.2    3.3.3.3         192.168.30.1    
+	Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
+	Clients: Dir Adj Client
+	LDP Session Protection enabled, state: Ready
+	    duration: 86400 seconds
+	NSR: Not Ready
+	Capabilities Sent:
+	  [ICCP (type 0x0405) MajVer 1 MinVer 0]
+	  [Dynamic Announcement (0x0506)]
+	  [Typed Wildcard (0x050B)]
+	Capabilities Received:
+          [ICCP (type 0x0405) MajVer 1 MinVer 0]
+	  [Dynamic Announcement (0x0506)]
+	  [Typed Wildcard (0x050B)]

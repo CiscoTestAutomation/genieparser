@@ -9,13 +9,13 @@ import math
 import logging
 import warnings
 import importlib
-import pkg_resources
 from packaging import version
 from inspect import getfullargspec
 from json.decoder import JSONDecodeError
 
 from pyats.log.utils import banner
 from pyats.configuration import configuration as cfg
+from pyats.utils.import_utils import get_entry_points
 
 from genie.abstract.package import AbstractTree, DEFAULT_ABSTRACT_ORDER
 from genie.abstract import Lookup
@@ -198,7 +198,7 @@ def _load_parser_json():
         ext_parser_packages_from_env = ext_parser_package_env.split(',')
         ext_parser_packages.extend(ext_parser_packages_from_env)
 
-    for ep in pkg_resources.iter_entry_points(ENTRY_POINT_NAME):
+    for ep in get_entry_points(ENTRY_POINT_NAME):
         parser_package = ep.load()
         if callable(parser_package):
             log.warning(
@@ -206,7 +206,7 @@ def _load_parser_json():
                 'Please create an abstracted package instead.')
             _load_parser_callable(parser_package, parser_data)
         else:
-            ext_parser_packages.append(ep.module_name)
+            ext_parser_packages.append(ep.module)
 
     # remove duplicates
     ext_parser_packages = set(ext_parser_packages)

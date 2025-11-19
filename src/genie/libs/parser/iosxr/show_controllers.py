@@ -23,7 +23,7 @@ from genie.libs.parser.utils.common import Common
 
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 
 # ==========================================================================================
@@ -1669,6 +1669,318 @@ class ShowControllersOpticsAppselActive(ShowControllersOpticsAppselActiveSchema)
 
         return result_dict
 
+# ==================================================================
+# Parser for 'show controller optics {R/S/I/P} prbs-capability-info'
+# ==================================================================
+class ShowControllersOpticsPRBSCapabilitySchema(MetaParser):
+    """Schema for:
+        * show controllers optics {port} prbs-capability-info
+    """
+    
+    schema = {
+        Optional('name'): str,
+        Optional('not_available'): str,
+        Optional('prbs_capability'): {
+            Optional('supported'): {
+                Optional('mode'): list,
+                Optional('pattern'): list,
+                Optional('direction'): list,
+                Optional('error_inject'): list,
+            }
+        }
+    }
+
+# ===============================================================
+# Parser for 'show controller optics {port} prbs-capability-info'
+# ===============================================================
+class ShowControllersOpticsPRBSCapability(ShowControllersOpticsPRBSCapabilitySchema):
+    """Parser for:
+        * show controller optics {port} prbs-capability-info
+    """
+
+    cli_command = "show controller optics {port} prbs-capability-info"
+
+    def cli(self, port, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Check for "not available" message
+        p0 = re.compile(r'^PRBS +capability +information +is +(?P<not_available>not +available.*)')
+        # Mode: Source | Sink | Source-Sink
+        p1 = re.compile(r'^Mode: +(?P<modes>[\w\s\|\-]+)$')
+        # Pattern: PN13Q | PN15 | PN15Q | PN31 | PN31Q | SSPRQ
+        p2 = re.compile(r'^Pattern: +(?P<patterns>[\w\s\|\-]+)$')
+        # Direction: Line | System
+        p3 = re.compile(r'^Direction: +(?P<directions>[\w\s\|\-]+)$')
+        # Error-Inject: None
+        p4 = re.compile(r'^Error-Inject: +(?P<error_inject>[\w\s\|\-]+)$')
+        # Unsupported Combinations:
+        p5 = re.compile(r'^Unsupported +Combinations: +(?P<unsupported>[\w\s\|\-]+)$')
+
+        # Process each line
+        for line in out.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+
+            # Check for "not available" message first
+            m = p0.match(line)
+            if m:
+                # Reset the parsed_dict to only contain the not_available message
+                parsed_dict = {}
+                parsed_dict['name'] = f'{port}'  # Add the port name
+                parsed_dict['not_available'] = m.group('not_available')
+                return parsed_dict
+
+            prbs_dict = parsed_dict.setdefault('prbs_capability', {})
+            supported_dict = prbs_dict.setdefault('supported', {})
+            parsed_dict['name'] = f'{port}'  # Add the port name
+
+            # Mode: Source | Sink | Source-Sink
+            m = p1.match(line)
+            if m:
+                modes = [x.strip() for x in m.group('modes').split('|')]
+                supported_dict['mode'] = modes
+                continue
+
+            # Pattern: PN13Q | PN15 | PN15Q | PN31 | PN31Q | SSPRQ
+            m = p2.match(line)
+            if m:
+                patterns = [x.strip() for x in m.group('patterns').split('|')]
+                supported_dict['pattern'] = patterns
+                continue
+
+            # Direction: Line | System
+            m = p3.match(line)
+            if m:
+                directions = [x.strip() for x in m.group('directions').split('|')]
+                supported_dict['direction'] = directions
+                continue
+
+            # Error-Inject: None
+            m = p4.match(line)
+            if m:
+                error_inject = [x.strip() for x in m.group('error_inject').split('|')]
+                supported_dict['error_inject'] = error_inject
+                continue
+
+        return parsed_dict
+
+# =======================================================
+# Schema for 'show controller optics {port} prbs-info'
+# =======================================================
+class ShowControllersOpticsPRBSInfoSchema(MetaParser):
+    """Schema for:
+        * show controllers optics {port} prbs-info
+    """
+    
+    schema = {
+        Optional('name'): str,
+        Optional('not_available'): str,  # Add this field for when PRBS info is not available
+        Optional('prbs_details'): {
+            Optional('test'): str,
+            Optional('mode'): str,
+            Optional('pattern'): str,
+            Optional('status'): str,
+            Optional('direction'): str,
+            Optional('configured_time'): {
+                Optional('datetime'): str,
+                Optional('elapsed'): str
+            },
+            Optional('first_lock_time'): {
+                Optional('datetime'): str,
+                Optional('elapsed'): str
+            },
+            Optional('counter_updated_time'): {
+                Optional('datetime'): str,
+                Optional('elapsed'): str
+            },
+            Optional('lanes'): {
+                Optional(Any()): {
+                    Optional('snr'): Or(float, '-'),
+                    Optional('max_snr'): Or(float, '-'),
+                    Optional('error_count'): Or(int, '-'),
+                    Optional('total_bits'): Or(int, '-'),
+                    Optional('ber'): str,
+                    Optional('max_ber'): str,
+                    Optional('lock_status'): str,
+                    Optional('lost_count'): Or(int, '-'),
+                    Optional('found_count'): Or(int, '-'),
+                    Optional('lock_time'): Or(int, '-'),
+                    Optional('lock_lost_timestamp'): str
+                }
+            }
+        }
+    }
+
+# =======================================================
+# Parser for 'show controller optics {port} prbs-info'
+# =======================================================
+class ShowControllersOpticsPRBSInfo(ShowControllersOpticsPRBSInfoSchema):
+    """Parser for:
+        * show controllers optics {port} prbs-info
+    """
+
+    cli_command = 'show controllers optics {port} prbs-info'
+
+    def cli(self, port, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(port=port))
+        else:
+            out = output
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        #PRBS Test                       : Enabled
+        p0 = re.compile(r'^PRBS +information +is +(?P<not_available>not +available.*)')
+        # PRBS Test                       : Enabled
+        p1 = re.compile(r'^PRBS +Test\s+: +(?P<test>\w+)$')
+        # PRBS Mode                       : Source-Sink
+        p2 = re.compile(r'^PRBS +Mode\s+: +(?P<mode>[\w-]+)$')
+        # PRBS Pattern                    : PN15Q
+        p3 = re.compile(r'^PRBS +Pattern\s+: +(?P<pattern>\w+)$')
+        # PRBS Status                     : Unlocked
+        p4 = re.compile(r'^PRBS +Status\s+: +(?P<status>\w+)$')
+        # PRBS Direction                  : Line
+        p5 = re.compile(r'^PRBS +Direction\s+: +(?P<direction>\w+)$')
+        # PRBS Configured Time            : 22 Sep 17:08:25 (90 seconds elapsed)
+        p6 = re.compile(r'^PRBS +Configured +Time\s+: +(?P<datetime>[\w\s:]+) +\((?P<elapsed>[\w\s]+) +elapsed\)$')
+        # PRBS First Lock Established Time: 22 Sep 17:08:35 (76 seconds elapsed)
+        p7 = re.compile(r'^PRBS +First +Lock +Established +Time: +(?P<datetime>[\w\s:]+) +\((?P<elapsed>[\w\s]+) +elapsed\)$')
+        # PRBS Counter Last Updated Time  : 22 Sep 17:09:05 (4 seconds elapsed)
+        p8 = re.compile(r'^PRBS +Counter +Last +Updated +Time\s+: +(?P<datetime>[\w\s:]+) +\((?P<elapsed>[\w\s]+) +elapsed\)$')
+        # Lane   SNR     Max SNR   Error Count   Total Bits          BER          Max BER
+        p9 = re.compile(r'^\s*(?P<lane>\d+)\s+(?P<snr>[\d.]+|-)\s+(?P<max_snr>[\d.]+|-)\s+'
+                       r'(?P<error_count>[\d]+|-)\s+(?P<total_bits>[\d]+|-)\s+'
+                       r'(?P<ber>[\d.e+-]+)\s+(?P<max_ber>[\d.e+-]+)\s*$')
+        # Lane   Lock Status   Lost Count   Found Count   Lock Time(s)   Lock Lost Timestamp
+        p10 = re.compile(r'^\s*(?P<lane>\d+)\s+(?P<lock_status>\w+)\s+(?P<lost_count>[\d]+|-)\s+'
+                        r'(?P<found_count>[\d]+|-)\s+(?P<lock_time>[\d]+|-)(?:\s+(?P<lock_lost_timestamp>[\w\s:]+|-))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            if not line:
+                continue
+
+            parsed_dict['name'] = f'{port}'  # Add the port name
+
+            # Check for "not available" message first
+            m = p0.match(line)
+            if m:
+                parsed_dict['not_available'] = m.group('not_available')
+                return parsed_dict
+
+            # Create prbs_details dict if any match is found
+            prbs_dict = parsed_dict.setdefault('prbs_details', {})                
+            # PRBS Test            : Enabled
+            m = p1.match(line)
+            if m:
+                prbs_dict['test'] = m.group('test')
+                continue
+
+            # PRBS Mode            : Source-Sink
+            m = p2.match(line)
+            if m:
+                prbs_dict['mode'] = m.group('mode')
+                continue
+
+            # PRBS Pattern            : PN23Q
+            m = p3.match(line)
+            if m:
+                prbs_dict['pattern'] = m.group('pattern')
+                continue
+
+            # PRBS Status            : Locked
+            m = p4.match(line)
+            if m:
+                prbs_dict['status'] = m.group('status')
+                continue
+
+            # PRBS Direction            : Line
+            m = p5.match(line)
+            if m:
+                prbs_dict['direction'] = m.group('direction')
+                continue
+
+            # PRBS Configured Time            : 22 Sep 17:02:43 (26 seconds elapsed)
+            m = p6.match(line)
+            if m:
+                config_dict = prbs_dict.setdefault('configured_time', {})
+                config_dict['datetime'] = m.group('datetime')
+                config_dict['elapsed'] = m.group('elapsed')
+                continue
+
+            # PRBS First Lock Established Time: 22 Sep 17:02:47 (22 seconds elapsed)
+            m = p7.match(line)
+            if m:
+                lock_dict = prbs_dict.setdefault('first_lock_time', {})
+                lock_dict['datetime'] = m.group('datetime')
+                lock_dict['elapsed'] = m.group('elapsed')
+                continue
+
+            # PRBS Counter Last Updated Time  : 22 Sep 17:03:06 (3 seconds elapsed)
+            m = p8.match(line)
+            if m:
+                counter_dict = prbs_dict.setdefault('counter_updated_time', {})
+                counter_dict['datetime'] = m.group('datetime')
+                counter_dict['elapsed'] = m.group('elapsed')
+                continue
+
+            # Lane performance data
+            m = p9.match(line)
+            if m:
+                lane = m.group('lane')
+                lane_dict = prbs_dict.setdefault('lanes', {}).setdefault(lane, {})
+
+                # Handle numeric fields that can be '-'
+                for field, value in [
+                    ('snr', m.group('snr')),
+                    ('max_snr', m.group('max_snr')),
+                    ('error_count', m.group('error_count')),
+                    ('total_bits', m.group('total_bits'))
+                ]:
+                    if value != '-':
+                        lane_dict[field] = float(value) if field in ['snr', 'max_snr'] else int(value)
+                    else:
+                        lane_dict[field] = value
+
+                # Handle string fields
+                lane_dict['ber'] = m.group('ber')
+                lane_dict['max_ber'] = m.group('max_ber')
+                continue
+
+            # Lock status data
+            m = p10.match(line)
+            if m:
+                lane = m.group('lane')
+                lane_dict = prbs_dict.setdefault('lanes', {}).setdefault(lane, {})
+                lane_dict['lock_status'] = m.group('lock_status')
+
+                # Handle numeric fields that can be '-'
+                for field, value in [
+                    ('lost_count', m.group('lost_count')),
+                    ('found_count', m.group('found_count')),
+                    ('lock_time', m.group('lock_time'))
+                ]:
+                    if value != '-':
+                        lane_dict[field] = int(value)
+                    else:
+                        lane_dict[field] = value
+
+                # Handle optional timestamp
+                if m.group('lock_lost_timestamp'):
+                    lane_dict['lock_lost_timestamp'] = m.group('lock_lost_timestamp')
+                continue
+
+        return parsed_dict
 
 # ===============================================================================
 # Schema for 'show controllers fia diagshell 0 "diag egr_calendars" location all'
@@ -1935,5 +2247,5 @@ class ShowControllersFiaDiagshellDiagCosqQpairEgpMap(ShowControllersFiaDiagshell
                 continue
 
         return ret_dict
-        
+
 # vim: ft=python ts=8 sw=4 et

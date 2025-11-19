@@ -1,0 +1,16 @@
+Stored system POST messages:
+
+Switch C9610R
+--------------
+
+Wed Nov 15 12:21:59 2023 POST: Module: 9 Mac Loopback Begin
+Wed Nov 15 12:22:03 2023 POST: Module: 9 Mac Loopback: loopback Test: End, Status Passed
+
+Wed Nov 15 12:22:03 2023 POST: Module: 3 Mac Loopback Begin
+Wed Nov 15 12:22:06 2023 POST: Module: 3 Mac Loopback: loopback Test: End, Status Passed
+
+Wed Nov 15 12:22:06 2023 POST: Module: 1 Mac Loopback Begin
+Wed Nov 15 12:22:09 2023 POST: Module: 1 Mac Loopback: loopback Test: End, Status Passed
+
+Wed Nov 15 12:22:09 2023 POST: Module: 4 Mac Loopback Begin
+Wed Nov 15 12:22:13 2023 POST: Module: 4 Mac Loopback: loopback Test: End, Status Passed

@@ -587,8 +587,12 @@ class ShowMplsLdpNeighborSchema(MetaParser):
                                         Optional('mldp_multipoint_to_multipoint'): str,
                                         Optional('typed_wildcard'): str,
                                     },
-
                                 },
+                                Optional('mpls_ldp_session_protection') : {
+                                        'enabled': bool,
+                                        'state': str,
+                                        'duration_seconds': int,
+                                    }
                             },
                         },
                     }
@@ -642,7 +646,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         #     LDP discovery sources:
         #       GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
         #       ATM3/0.1
-        p5 = re.compile(r'^(?P<interface>[A-Za-z]+[\d/.]+)((,|;) +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
+        p5 = re.compile(r'^(?P<interface>[\w\-/.]+)((,|;) +Src +IP +addr: *(?P<src_ip_address>[\d\.]+))?$')
 
         #       holdtime: 15000 ms, hello interval: 5000 ms
         p5_1 = re.compile(r'^holdtime: *(?P<holdtime>\d+) +ms, +hello +interval: *(?P<hello_interval>\d+) +ms$')
@@ -656,6 +660,12 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
         # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
         p8 = re.compile(r'^Peer +holdtime: *(?P<peer_holdtime>\d+) +ms; +KA +interval: *(?P<ka_interval>\d+) +ms;'
                          r' +Peer +state: +(?P<peer_state>\S+)$')
+        
+        # LDP Session Protection enabled, state: Ready
+        p8_1 = re.compile(r'^LDP +Session +Protection +(?P<protection_status>\w+), +state: +(?P<protection_state>\w+)$')
+
+        # duration: 86400 seconds
+        p8_2 = re.compile(r'^duration: *(?P<duration>\d+) +seconds$')
 
         # Password: not required, none, in use
         p9 = re.compile(r'^Password: +(?P<password>[\S\s]+)$')
@@ -730,7 +740,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
             #  GigabitEthernet0/0/0, Src IP addr: 10.169.197.93
             m = p5.match(line)
-            if m:
+            if m and not address_bound_flag:
                 group = m.groupdict()
                 ldp_source_dict = peer_dict.setdefault('ldp_discovery_sources',{}).\
                                             setdefault('interface',{}).\
@@ -769,15 +779,41 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             # Peer holdtime: 180000 ms; KA interval: 60000 ms; Peer state: estab
             m = p8.match(line)
             if m:
+                address_bound_flag = False
                 group = m.groupdict()
                 peer_dict.update({'peer_holdtime_ms': int(group['peer_holdtime'])})
                 peer_dict.update({'ka_interval_ms': int(group['ka_interval'])})
                 peer_dict.update({'peer_state': group['peer_state']})
                 continue
+            
+            # LDP Session Protection enabled, state: Ready
+            m = p8_1.match(line)
+            if m:
+                group = m.groupdict()
+                mpls_ldp_session_protection = peer_dict.setdefault('mpls_ldp_session_protection', {})
+                mpls_ldp_session_protection.update({
+                    'enabled': True if group['protection_status'].lower() == 'enabled' else False,
+                    'state': group['protection_state'],
+                })
+                continue
+
+            # duration: 86400 seconds
+            m = p8_2.match(line)
+            if m:
+                group = m.groupdict()
+                mpls_ldp_session_protection = peer_dict.setdefault('mpls_ldp_session_protection', {})
+                try:
+                    mpls_ldp_session_protection['duration_seconds'] = int(group['duration'])
+                except ValueError:
+                    # handle special case if duration is 'infinite' or non-integer
+                    mpls_ldp_session_protection['duration_seconds'] = None
+                continue
+
 
             # Password: not required, none, in use
             m = p9.match(line)
             if m:
+                address_bound_flag = False
                 group = m.groupdict()
                 peer_dict.update({'password': group['password']})
                 continue
@@ -785,6 +821,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             # NSR: Not Ready
             m = p10.match(line)
             if m:
+                address_bound_flag = False
                 group = m.groupdict()
                 peer_dict.update({'nsr': group['nsr']})
                 continue
@@ -792,6 +829,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             # Capabilities Sent:
             m = p11.match(line)
             if m:
+                address_bound_flag = False
                 received_flag = False
                 sent_flag = True
                 temp_dict = peer_dict.setdefault('capabilities', {}).setdefault('sent', {})
@@ -839,6 +877,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
             # Capabilities Received:
             m = p17.match(line)
             if m:
+                address_bound_flag = False
                 received_flag = True
                 sent_flag = False
                 temp_dict = peer_dict.setdefault('capabilities', {}).setdefault('received', {})

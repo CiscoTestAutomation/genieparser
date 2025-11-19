@@ -1,0 +1,5 @@
+ Class Map type inspect match-all parent (id 1)
+   Match access-group  101
+   Match class-map child1
+   Match class-map child2
+   Match class-map child3

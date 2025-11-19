@@ -1,0 +1,1 @@
+expected_output = {'management_interface': 'GigabitEthernet0/0'}

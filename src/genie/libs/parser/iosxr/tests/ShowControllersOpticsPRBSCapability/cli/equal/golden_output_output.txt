@@ -1,0 +1,11 @@
+RP/0/RP0/CPU0:ios#show controllers optics 0/2/0/28 prbs-capability-info 
+Thu Sep  4 21:03:18.361 UTC
+
+Supported:
+    Mode: Source | Sink | Source-Sink 
+    Pattern: PN13Q | PN15 | PN15Q | PN31 | PN31Q | SSPRQ 
+    Direction: Line | System 
+    Error-Inject: None
+
+Unsupported Combinations:
+    None

@@ -1,0 +1,7 @@
+show crypto pki server ios_rootca crl
+Certificate Revocation List:
+    Issuer: cn=RCA1 C=pki
+    This Update: 22:27:54 IST Oct 23 2025
+    Next Update: 04:27:54 IST Oct 24 2025
+    Number of CRL entries: 0
+    CRL size: 353 bytes

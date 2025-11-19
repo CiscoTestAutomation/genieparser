@@ -1,0 +1,39 @@
+DSP  DSP                DSPWARE CURR  BOOT                         PAK     TX/RX
+TYPE NUM CH CODEC       VERSION STATE STATE   RST AI VOICEPORT TS ABORT  PACK COUNT
+==== === == ======== ========== ===== ======= === == ========= == ===== ============
+
+------------------------------- FLEX VOICE CARD 0/1 -------------------------------------
+                        *DSP ACTIVE VOICE CHANNELS*
+DSP    DSPWARE              VOX DSP                    SIG DSP           PAK       TX/RX
+TYPE   VERSION    CODEC     NUM CH TS  VOICEPORT SLOT  NUM CH TS  RST AI ABRT    PACK COUNT
+====== ========== ========  === == === ========= ===== === == === === == ==== =============
+---------------------------- END OF FLEX VOICE CARD 0/1 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 0/2 -------------------------------------
+                        *DSP ACTIVE VOICE CHANNELS*
+DSP    DSPWARE              VOX DSP                    SIG DSP           PAK       TX/RX
+TYPE   VERSION    CODEC     NUM CH TS  VOICEPORT SLOT  NUM CH TS  RST AI ABRT    PACK COUNT
+====== ========== ========  === == === ========= ===== === == === === == ==== =============
+---------------------------- END OF FLEX VOICE CARD 0/2 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 0/3 -------------------------------------
+                        *DSP ACTIVE VOICE CHANNELS*
+DSP    DSPWARE              VOX DSP                    SIG DSP           PAK       TX/RX
+TYPE   VERSION    CODEC     NUM CH TS  VOICEPORT SLOT  NUM CH TS  RST AI ABRT    PACK COUNT
+====== ========== ========  === == === ========= ===== === == === === == ==== =============
+---------------------------- END OF FLEX VOICE CARD 0/3 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 0/4 -------------------------------------
+                        *DSP ACTIVE VOICE CHANNELS*
+DSP    DSPWARE              VOX DSP                    SIG DSP           PAK       TX/RX
+TYPE   VERSION    CODEC     NUM CH TS  VOICEPORT SLOT  NUM CH TS  RST AI ABRT    PACK COUNT
+====== ========== ========  === == === ========= ===== === == === === == ==== =============
+---------------------------- END OF FLEX VOICE CARD 0/4 ---------------------------------
+
+------------------------------- FLEX VOICE CARD 1/0 -------------------------------------
+                        *DSP ACTIVE VOICE CHANNELS*
+DSP    DSPWARE              VOX DSP                    SIG DSP           PAK       TX/RX
+TYPE   VERSION    CODEC     NUM CH TS  VOICEPORT SLOT  NUM CH TS  RST AI ABRT    PACK COUNT
+====== ========== ========  === == === ========= ===== === == === === == ==== =============
+SP2700 62.3.4     g729r8    001 01 000 1/0/2     1/0   001 03 002   0  0    0       738/845
+---------------------------- END OF FLEX VOICE CARD 1/0 ---------------------------------

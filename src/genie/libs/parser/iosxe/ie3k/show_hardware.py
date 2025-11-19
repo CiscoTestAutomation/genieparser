@@ -161,7 +161,7 @@ class ShowHardwareLedSchema(MetaParser):
     """
     schema = {
         Optional('current_mode'): str,        
-        'system':str,
+        Optional('system'):str,
         'status':{
             str: str
         },
@@ -189,6 +189,8 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('rj45_console'): str,
         Optional('usb_console'): str,
         Optional('console'): str,
+        Optional('eip_mod'): str,
+        Optional('eip_net'): str,
     }     
                        
 class ShowHardwareLed(ShowHardwareLedSchema):
@@ -244,7 +246,6 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # MODE-DUPLEX: BLACK
         # MODE-REDUNDANCY: BLACK
         # MODE-STACK: BLACK
-        #p11 = re.compile(r'^(?P<mode>MODE\-\w+):\s+(?P<mode_color>\w+)$')
         p11 = re.compile(r'^MODE-(?P<mode>\w+):\s+(?P<mode_color>\w+)$')
 
         # USB-TYPE-A-HOST: BLACK
@@ -253,7 +254,6 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # STACK-ACTIVE: BLACK
         # STACK-A: BLACK
         # STACK-B: BLACK
-        #p13 = re.compile(r'^(?P<stack>\S+):\s+(?P<stack_color>\w+)$')
         p13 = re.compile(r'^STACK-(?P<name>ACTIVE|A|B):\s+(?P<stack_color>\w+)$')
 
         # RJ45 CONSOLE: GREEN
@@ -264,6 +264,12 @@ class ShowHardwareLed(ShowHardwareLedSchema):
 
         # CONSOLE: BLACK
         p16 = re.compile(r'^CONSOLE:\s+(?P<console>\w+)$')
+
+        # EIP-MOD: GREEN
+        p17 = re.compile(r'^EIP-MOD:\s+(?P<eip_mod>\w+)$')
+
+        # EIP-NET: BLACK
+        p18 = re.compile(r'^EIP-NET:\s+(?P<eip_net>\w+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -354,7 +360,6 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                #ret_dict.update({group['mode'].lower() : group['mode_color']})
                 ret_dict[f"mode_{group['mode'].lower()}"] = group['mode_color']
                 continue
 
@@ -371,7 +376,6 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                #ret_dict.update({'stack_' + group['stack'].lower() : group['stack_color']})
                 ret_dict[f"stack_{group['name'].lower()}"] = group['stack_color']
                 continue
 
@@ -394,6 +398,20 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             if m:
                 group = m.groupdict()
                 ret_dict.update({'console' : group['console']})
+                continue
+
+            # EIP-MOD: GREEN
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'eip_mod' : group['eip_mod']})
+                continue
+
+            # EIP-NET: BLACK
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'eip_net' : group['eip_net']})
                 continue
 
         return ret_dict

@@ -1,0 +1,67 @@
+Process and Memory
+---------------------------------
+Mem: 46468K used, 14468K free, 0K shrd, 0K buff, 32764K cached
+CPU:   0% usr   0% sys   0% nic 100% idle   0% io   0% irq   0% sirq
+Load average: 0.06 0.03 0.00 3/20 10258
+  PID  PPID USER     STAT   VSZ %MEM %CPU COMMAND
+  158   157 0        R     146m 246%   0% [cisco_fortitude]
+  156   155 0        S    35060  58%   0% [save_cisco_fort]
+    1     0 0        S     3452   6%   0% sh
+10251 10250 0        S     3080   5%   0% /bin/sh ./fortitude_moduleinfo.sh Proc
+10250   158 0        S     3016   5%   0% sh -c ./fortitude_moduleinfo.sh "Proce
+10252 10251 0        R     3016   5%   0% /usr/bin/top -b -n 1 -d 30
+  157   155 0        S     1852   3%   0% ./Supervisory
+  155     1 0        S     1788   3%   0% ./Supervisory
+    2     0 0        SW<      0   0%   0% [kthreadd]
+    3     2 0        SW<      0   0%   0% [ksoftirqd/0]
+    4     2 0        SW<      0   0%   0% [events/0]
+    5     2 0        SW<      0   0%   0% [khelper]
+    6     2 0        SW<      0   0%   0% [kblockd/0]
+    7     2 0        SW       0   0%   0% [pdflush]
+    8     2 0        SW       0   0%   0% [pdflush]
+    9     2 0        SW<      0   0%   0% [kswapd0]
+   10     2 0        SW<      0   0%   0% [aio/0]
+   19     2 0        SW<      0   0%   0% [mtdblockd]
+
+
+
+Interrupts
+---------------------------------
+           CPU0
+  2:          0            MIPS  WinPath interrupt controller
+  7:      55317            MIPS  timer
+  8:          0     WinPath-PIC  sys_err_handler
+  9:          0     WinPath-PIC  sys_err_handler
+ 10:          0     WinPath-PIC  sys_err_handler
+ 11:          0     WinPath-PIC  sys_err_handler
+ 12:          0     WinPath-PIC  sys_err_handler
+ 36:          0     WinPath-PIC  FPGAInt
+ 37:          0     WinPath-PIC  FramerInt
+ 50:        544     WinPath-PIC  serial
+ 63:      30189     WinPath-PIC  ser_qs_handler
+
+ERR:          0
+
+
+System status
+---------------------------------
+cpu  115 0 611 21404 0 0 0 0 0
+cpu0 115 0 611 21404 0 0 0 0 0
+intr 86063 0 0 0 0 0 0 0 55326 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 544 0 0 0 0 0 0 0 0 0 0 0 0 30193 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ctxt 205235
+btime 0
+processes 10236
+procs_running 2
+procs_blocked 0
+
+
+KLM Module status
+---------------------------------
+klm_mmap 5917008 4 - Live 0xc05ff000
+klm_ds0dump 2848 0 - Live 0xc0bb2000
+dmesg 544 0 - Live 0xc0bbb000 (P)
+pmc_adapter 1856 0 - Live 0xc0bc5000
+max4422 2112 0 - Live 0xc0bd0000
+
+WDDI Memory:          8732064
+Qnode Status:        65276

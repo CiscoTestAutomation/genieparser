@@ -1,0 +1,118 @@
+Module 1 Idprom:
+
+	Controller Type          : 4639
+	Hardware Revision        : 0.3
+	Top Assy. Part Number    : 68-105000-02
+	Top Assy. Revision       : 14
+	PCB Part Number          : 73-21526-03
+	Board Revision           : 03
+	Deviation Number         : 524585
+	PCB Serial Number        : FDO29110H89
+	RMA Test History         : 00
+	RMA Number               : 0-0-0-0
+	RMA History              : 00
+	CLEI Code                : TBD
+	Product Identifier (PID) : C9550-96L4D
+	Version Identifier (VID) : V00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+	Base MAC Address         : 40 F4 9F 71 08 00
+	Environment Monitor Data : 06 00 00 00 35 A4 9F 00
+	                           82
+	Max Power Requirement    : 1183 Watts
+	Typical Power Requirement: 858 Watts
+Power Supply 1 Idprom:
+
+	Controller Type          : 4602
+	Hardware Revision        : 0.1
+	Top Assy. Part Number    : 341-101600-01
+	Top Assy. Revision       : 02
+	Deviation Number         : 0
+	PCB Serial Number        : MEG29020225
+	RMA Test History         : 00
+	RMA Number               : 0-0-0-0
+	RMA History              : 00
+	CLEI Code                : TBD
+	Product Identifier (PID) : C9K-PWR-1100WAC
+	Version Identifier (VID) : V00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+	Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+	Environment Monitor Data : 02 00 44 C4 4C 00 AA
+	Max Power Output         : 1100 Watts
+Power Supply 2 Idprom:
+
+	Controller Type          : 4602
+	Hardware Revision        : 0.1
+	Top Assy. Part Number    : 341-101600-01
+	Top Assy. Revision       : 02
+	Deviation Number         : 0
+	PCB Serial Number        : MEG2902025J
+	RMA Test History         : 00
+	RMA Number               : 0-0-0-0
+	RMA History              : 00
+	CLEI Code                : TBD
+	Product Identifier (PID) : C9K-PWR-1100WAC
+	Version Identifier (VID) : V00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+	Field Diagnostics Data   : 00 00 00 00 00 00 00 00
+	Environment Monitor Data : 02 00 44 C4 4C 00 AA
+	Max Power Output         : 1100 Watts
+Fantray 1 Idprom:
+
+	Controller Type          : 4678
+	Hardware Revision        : 0.1
+	Top Assy. Part Number    : 800-108178-01
+	Top Assy. Revision       : 03
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	PCB Serial Number        : ACI29111LCK
+	CLEI Code                : TBD
+	Product Identifier (PID) : C9550-FAN-2U-R
+	Version Identifier (VID) : V00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+	Environment Monitor Data : 06 00 00 00 04 80 57 00
+	                           1F
+	Max Power Requirement    : 87 Watts
+	Typical Power Requirement: 72 Watts
+Fantray 2 Idprom:
+
+	Controller Type          : 4678
+	Hardware Revision        : 0.1
+	Top Assy. Part Number    : 800-108178-01
+	Top Assy. Revision       : 03
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	PCB Serial Number        : ACI29111KGW
+	CLEI Code                : TBD
+	Product Identifier (PID) : C9550-FAN-2U-R
+	Version Identifier (VID) : V00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+	Environment Monitor Data : 06 00 00 00 04 80 57 00
+	                           1F
+	Max Power Requirement    : 87 Watts
+	Typical Power Requirement: 72 Watts
+Fantray 3 Idprom:
+
+	Controller Type          : 4678
+	Hardware Revision        : 0.1
+	Top Assy. Part Number    : 800-108178-01
+	Top Assy. Revision       : 03
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	Deviation Number         : 0
+	PCB Serial Number        : ACI29111LCD
+	CLEI Code                : TBD
+	Product Identifier (PID) : C9550-FAN-2U-R
+	Version Identifier (VID) : V00
+	Manufacturing Test Data  : 00 00 00 00 00 00 00 00
+	Environment Monitor Data : 06 00 00 00 04 80 57 00
+	                           1F
+	Max Power Requirement    : 87 Watts
+	Typical Power Requirement: 72 Watts

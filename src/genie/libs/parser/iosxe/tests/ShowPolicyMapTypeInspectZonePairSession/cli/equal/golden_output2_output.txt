@@ -1,0 +1,19 @@
+show policy-map type inspect zone-pair session
+  Zone-pair: in-to-out
+  Service-policy inspect : pl4
+
+    Class-map: cl4 (match-all)
+      Match: protocol msrpc
+      Match: protocol tcp
+      Inspect
+
+        Terminating Sessions
+         Session ID 0x00000001 (61.0.0.10:35176)=>(170.100.1.3:135) msrpc SIS_CLOSED
+          Created 00, Last heard 00
+          Bytes sent (initiator:responder) [72:1]
+
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop (default action)
+        0 packets, 0 bytes

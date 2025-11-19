@@ -1,0 +1,98 @@
+DSP groups on slot 0/1 slot id 1
+dsp 1:
+  State: UP, firmware: 60.1.4
+  Max signal/voice channel: 8/8
+  Max credits: 120, Voice credits: 120, Video credits: 0
+  num_of_sig_chnls_allocated: 8
+  Transcoding channels allocated: 0
+  Group: FLEX_GROUP_VOICE, complexity: FLEX
+    Shared credits: 120, reserved credits: 0
+    Signaling channels allocated: 8
+    Voice channels allocated: 0
+    Credits used (rounded-up): 0
+  Slot: 0/1
+  Device idx: 0
+  Dsp Type: DM8147
+
+
+DSP groups on slot 0/2 slot id 2
+dsp 1:
+  State: UP, firmware: 60.1.4
+  Max signal/voice channel: 8/8
+  Max credits: 120, Voice credits: 120, Video credits: 0
+  num_of_sig_chnls_allocated: 4
+  Transcoding channels allocated: 0
+  Group: FLEX_GROUP_VOICE, complexity: FLEX
+    Shared credits: 120, reserved credits: 0
+    Signaling channels allocated: 4
+    Voice channels allocated: 0
+    Credits used (rounded-up): 0
+  Slot: 0/2
+  Device idx: 0
+  Dsp Type: DM8147
+
+
+DSP groups on slot 0/3 slot id 3
+dsp 1:
+  State: UP, firmware: 60.1.4
+  Max signal/voice channel: 8/8
+  Max credits: 120, Voice credits: 120, Video credits: 0
+  num_of_sig_chnls_allocated: 6
+  Transcoding channels allocated: 0
+  Group: FLEX_GROUP_VOICE, complexity: FLEX
+    Shared credits: 120, reserved credits: 0
+    Signaling channels allocated: 6
+    Voice channels allocated: 0
+    Credits used (rounded-up): 0
+  Slot: 0/3
+  Device idx: 0
+  Dsp Type: DM8147
+
+
+DSP groups on slot 0/4 slot id 4
+dsp 1:
+  State: UP, firmware: 60.1.4
+  Max signal/voice channel: 64/64
+  Max credits: 960, Voice credits: 960, Video credits: 0
+  num_of_sig_chnls_allocated: 0
+  Transcoding channels allocated: 0
+  Group: FLEX_GROUP_VOICE, complexity: FLEX
+    Shared credits: 960, reserved credits: 0
+    Signaling channels allocated: 0
+    Voice channels allocated: 0
+    Credits used (rounded-up): 0
+  Slot: 0/4
+  Device idx: 0
+  Dsp Type: SP2700
+
+
+DSP groups on slot 1/0 slot id 5
+dsp 1:
+  State: UP, firmware: 60.1.4
+  Max signal/voice channel: 64/64
+  Max credits: 960, Voice credits: 960, Video credits: 0
+  num_of_sig_chnls_allocated: 18
+  Transcoding channels allocated: 0
+  Group: FLEX_GROUP_VOICE, complexity: FLEX
+    Shared credits: 960, reserved credits: 0
+    Signaling channels allocated: 18
+    Voice channels allocated: 0
+    Credits used (rounded-up): 0
+  Slot: 1/0
+  Device idx: 0
+  Dsp Type: SP2700
+
+dsp 2:
+  State: UP, firmware: 60.1.4
+  Max signal/voice channel: 64/64
+  Max credits: 960, Voice credits: 960, Video credits: 0
+  num_of_sig_chnls_allocated: 0
+  Transcoding channels allocated: 0
+  Group: FLEX_GROUP_VOICE, complexity: FLEX
+    Shared credits: 960, reserved credits: 0
+    Signaling channels allocated: 0
+    Voice channels allocated: 0
+    Credits used (rounded-up): 0
+  Slot: 1/0
+  Device idx: 0
+  Dsp Type: SP2700

@@ -1,0 +1,15 @@
+Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
+        N - NATed, L - Local, X - No Socket
+        T1 - Route Installed, T2 - Nexthop-override, B - BGP
+        C - CTS Capable, I2 - Temporary
+        # Ent --> Number of NHRP entries with same NBMA peer
+        NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
+        UpDn Time --> Up or Down Time for a Tunnel
+==========================================================================
+
+Interface: Tunnel1, IPv6 NHRP Details 
+Type:Spoke, Total NBMA Peers (v4/v6): 1
+    1.Peer NBMA Address: 2001:DB8:1101::222
+        Tunnel IPv6 Address: FD00:192::1101
+        IPv6 Target Network: FD00:192::1101/128
+        # Ent: 1, Status: UP, UpDn Time: 3d05h, Cache Attrib: S

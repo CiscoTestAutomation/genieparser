@@ -1,0 +1,32 @@
+show platform software bp crimson content oper
+Node    Priority   Negotiation State
+1       1          Done
+
+Node    Domain    Mode
+1       1         Aggregation
+
+Oper SVL Ports:
+Interface                     Link   if_id   Status   Prot   Speed    Sync            SVLState   Slot:Bay:Port   Type
+FiftyGigE1/0/1                1      3       Up       P      10gbps   BP-Owns         Created    1:0:1           SFP-10GBase-CU1M
+FiftyGigE1/0/2                1      4       Up       P      10gbps   BP-Owns         Created    1:0:2           SFP-10GBase-CU1M
+FiftyGigE1/0/4                1      107     Up       P      10gbps   BP-Owns         Created    1:0:4           SFP-10GBase-CU1M
+
+Oper DAD Ports:
+Interface                     Link   if_id   Status   Prot   Speed    Sync            SVLState   Slot:Bay:Port   Type
+FiftyGigE1/0/3                0      5       Up       M      10gbps   BP-Owns         Created    1:0:3           SFP-10GBase-CU1M
+
+Node    Priority   Negotiation State
+2       1          Done
+
+Node    Domain    Mode
+2       1         Aggregation
+
+Oper SVL Ports:
+Interface                     Link   if_id   Status   Prot   Speed    Sync            SVLState   Slot:Bay:Port   Type
+FiftyGigE2/0/1                1      3       Up       P      10gbps   BP-Owns         Created    1:0:1           SFP-10GBase-CU1M
+FiftyGigE2/0/2                1      4       Up       P      10gbps   BP-Owns         Created    1:0:2           SFP-10GBase-CU1M
+FiftyGigE2/0/4                1      107     Up       P      10gbps   BP-Owns         Created    1:0:4           SFP-10GBase-CU1M
+
+Oper DAD Ports:
+Interface                     Link   if_id   Status   Prot   Speed    Sync            SVLState   Slot:Bay:Port   Type
+FiftyGigE2/0/3                0      5       Up       M      10gbps   BP-Owns         Created    1:0:3           SFP-10GBase-CU1M

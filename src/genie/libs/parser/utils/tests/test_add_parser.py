@@ -1,8 +1,8 @@
 import logging
 import unittest
-import pkg_resources
 from unittest.mock import Mock, patch
 
+import pyats.utils.import_utils
 from genie.libs.parser.utils import common
 
 
@@ -22,7 +22,7 @@ class TestAddParser(unittest.TestCase):
 
         self.assertIsNone(common.parser_data)
 
-        with patch.object(pkg_resources, 'iter_entry_points') as mock_entrypoints:
+        with patch.object(common, 'get_entry_points') as mock_entrypoints:
             mock_entrypoints.return_value = [mock_package]
             common._load_parser_json()
 
@@ -41,7 +41,7 @@ class TestAddParser(unittest.TestCase):
 
         self.assertIsNone(common.parser_data)
 
-        with patch.object(pkg_resources, 'iter_entry_points') as mock_entrypoints:
+        with patch.object(common, 'get_entry_points') as mock_entrypoints:
             mock_entrypoints.return_value = [mock_package]
             common._load_parser_json()
 
