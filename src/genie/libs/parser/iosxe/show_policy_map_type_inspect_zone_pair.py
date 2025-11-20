@@ -124,7 +124,8 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
 
         parsed_dict={}
 
-
+        pending_packets_bytes = None
+        class_map_action_dict = None
         for line in out.splitlines():
 
             #Zone-pair: GREEN->DEFAULT
@@ -133,7 +134,8 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
                 #{'zone_pair_name':'GREEN->DEFAULT'}
                 groups=m1.groupdict()
                 zone_pair_dict= parsed_dict.setdefault('zone_pair', {}).setdefault(groups['zone_pair_name'], {})
-
+                pending_packets_bytes = None
+                class_map_action_dict = None
             #Service-policy inspect : TEST
             m2= p2.match(line)
             if m2:
@@ -142,7 +144,8 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
                 service_policy_dict = zone_pair_dict.\
                     setdefault('service_policy_inspect', {}).\
                     setdefault(groups['service_policy_inspect'], {})
-            
+                pending_packets_bytes = None
+                class_map_action_dict = None
             # Class-map: TEST (match-any)
             m3= p3.match(line)
             if m3:
@@ -154,7 +157,8 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
                     setdefault(groups['class_map_name'], {})
 
                 class_map_dict.update({'class_map_type': groups['class_map_type']})
-
+                pending_packets_bytes = None
+                class_map_action_dict = None
             # Match: access-group name HBN2
             m4= p4.match(line)
             if m4:
@@ -162,6 +166,19 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
                 groups=m4.groupdict()
                 class_map_match_list = class_map_dict.setdefault('class_map_match', [])
                 class_map_match_list.append(groups['class_map_match'])
+                
+            # 0 packets, 0 bytes
+            m13 = p13.match(line)
+            if m13:
+                groups = m13.groupdict()
+                pending_packets_bytes = {
+                    'total_packets': int(groups['packets_total']),
+                    'total_bytes': int(groups['bytes_total'])
+                }
+                # If we already have an action context, apply it immediately
+                if class_map_action_dict is not None:
+                    class_map_action_dict.update(pending_packets_bytes)
+                    pending_packets_bytes = None
 
             #Inspect #Pass #Drop
             m5= p5.match(line)
@@ -171,6 +188,10 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
                 class_map_action_dict = class_map_dict.\
                     setdefault('class_map_action', {}).\
                     setdefault(groups['class_map_action'], {})
+                if pending_packets_bytes is not None:
+                    class_map_action_dict.update(pending_packets_bytes)
+                    pending_packets_bytes = None
+                continue
 
             # Session creations since subsystem startup or last reset 5004458
             m6= p6.match(line)
@@ -235,16 +256,7 @@ class ShowPolicyMapTypeInspectZonePair(ShowPolicyMapTypeInspectZonePairSchema):
                 class_map_action_dict.update({
                     'last_half_open_session_total': int(groups['last_half_open_session_total'])
                 })
-            #0 packets, 0 bytes
-            m13= p13.match(line)
-            if m13:
-                #{'packets_total':0,'bytes_total':0}
-                groups=m13.groupdict()
-                class_map_action_dict.update({
-                    'total_packets': int(groups['packets_total']),
-                    'total_bytes': int(groups['bytes_total'])
-                })
-            
+
             #Packet inspection statistics [process switch:fast switch]
             m14= p14.match(line)
             if m14:
@@ -501,7 +513,8 @@ class ShowPolicyMapTypeInspectZonePairSessions(ShowPolicyMapTypeInspectZonePairS
         return parsed_dict
 
 class ShowPolicyMapTypeInspectZonePairSessionSchema(MetaParser):
-    ''' Schema for show policy-map type inspect zone-pair {zone_pair_name} session '''
+    ''' Schema for show policy-map type inspect zone-pair {zone_pair_name} session
+                   show policy-map type inspect zone-pair session'''
     schema = {
         "zone_pair":{
             Any():{
@@ -544,6 +557,22 @@ class ShowPolicyMapTypeInspectZonePairSessionSchema(MetaParser):
                                         }
                                     },
                                 },
+                                Optional("terminating_sessions"): {
+                                    Any():{
+                                        "initiator_ip": str,
+                                        "initiator_port": str,
+                                        "responder_ip": str,
+                                        "responder_port": str,
+                                        "protocol": str,
+                                        "state": str,
+                                        "created": str,
+                                        "last_heard": str,
+                                        "bytes_sent": {
+                                            "initiator": str,
+                                            "responder": int
+                                        }
+                                    },
+                                },
                                 Optional("packets"): int,
                                 Optional("bytes"): int
                             },
@@ -555,14 +584,19 @@ class ShowPolicyMapTypeInspectZonePairSessionSchema(MetaParser):
     }
 
 class ShowPolicyMapTypeInspectZonePairSession(ShowPolicyMapTypeInspectZonePairSessionSchema):
-    """Parser for show policy-map type inspect zone-pair {zone_pair_name} session"""
-
-    cli_command = "show policy-map type inspect zone-pair {zone_pair_name} session"
+    """Parser for show policy-map type inspect zone-pair {zone_pair_name} session
+                  show policy-map type inspect zone-pair session"""
+    
+    cli_command = ["show policy-map type inspect zone-pair {zone_pair_name} session",
+                   "show policy-map type inspect zone-pair session"]
 
     def cli(self, zone_pair_name='', output=None):
         if output is None:
             # Execute the command if output is not provided
-            out = self.device.execute(self.cli_command.format(zone_pair_name=zone_pair_name))
+            if zone_pair_name:
+                out = self.device.execute(self.cli_command[0].format(zone_pair_name=zone_pair_name))
+            else:
+                out = self.device.execute(self.cli_command[1])
         else:
             out = output
 
@@ -596,7 +630,7 @@ class ShowPolicyMapTypeInspectZonePairSession(ShowPolicyMapTypeInspectZonePairSe
             r'^Bytes sent \(initiator:responder\) +\[(?P<initiator_bytes>[\d\*]+):(?P<responder_bytes>\d+)\]$'
         )
         #Established Sessions
-        p10 = re.compile(r'^(?P<session_type>Established Sessions|Half-open Sessions)$')
+        p10 = re.compile(r'^(?P<session_type>Established Sessions|Half-open Sessions|Terminating Sessions)$')
         # Context tracking variables
         zone_pair_dict = None
         service_policy_dict = None
@@ -698,6 +732,8 @@ class ShowPolicyMapTypeInspectZonePairSession(ShowPolicyMapTypeInspectZonePairSe
                     current_session_type = "established_sessions"
                 elif groups["session_type"] == "Half-open Sessions":
                     current_session_type = "half_open_sessions"
+                elif groups["session_type"] == "Terminating Sessions":
+                    current_session_type = "terminating_sessions"
                 continue
         return parsed_dict
 

@@ -1,0 +1,8 @@
+Default domain is cisco.com
+Name servers are 8.8.8.8, 8.8.4.4, 171.70.168.183
+NAME  TTL  CLASS   TYPE      DATA/ADDRESS
+-----------------------------------------
+ router1.cisco.com   3600    IN      A       10.1.1.1
+ router2.cisco.com   3600    IN      A       10.1.1.2
+ server.example.com  7200    IN      A       192.168.1.100
+ 1.1.1.10.in-addr.arpa       300     IN      PTR     router1.cisco.com

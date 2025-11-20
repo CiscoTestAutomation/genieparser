@@ -1,0 +1,4 @@
+Default domain is example.org
+Name servers are 1.1.1.1
+NAME  TTL  CLASS   TYPE      DATA/ADDRESS
+-----------------------------------------

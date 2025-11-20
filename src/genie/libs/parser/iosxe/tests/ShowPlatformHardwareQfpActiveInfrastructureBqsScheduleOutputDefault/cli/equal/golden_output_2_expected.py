@@ -1,0 +1,43 @@
+expected_output = {
+    "TenGigabitEthernet1/0/1": {
+        "if_h": 8,
+        "qfp": "0.0",
+        "num_queues_schedules": 1,
+        "schedule_specifics": {
+            "index": {
+                "0": {
+                    "sid": "0x9a",
+                    "name": "TenGigabitEthernet1/0/1",
+                    "parq_software_control_info": {
+                        "sid": "0x9a",
+                        "parent_sid": "0x99",
+                        "evfc_fc_id": "0xfffe",
+                        "fc_sid": "0xffffe",
+                        "obj_id": "0x20",
+                        "parent_obj_id": "0x1f",
+                        "debug_name": "TenGigabitEthernet1/0/1",
+                        "num_entries_active": 1,
+                        "num_children_max": 1,
+                        "presize_hint": 0,
+                        "sw_flags": "0x0802002b",
+                        "sw_state": "0x00000802",
+                        "orig_min": 0,
+                        "min": 0,
+                        "min_qos": 0,
+                        "min_dflt": 10500000000,
+                        "orig_max": 0,
+                        "max": 10500000000,
+                        "max_qos": 0,
+                        "max_dflt": 10500000000,
+                        "share": 1050,
+                        "plevel": 1,
+                        "service_fragment": "True",
+                        "port_uidb": 65531,
+                        "priority": 1,
+                        "defer_obj_refcnt": 1,
+                    },
+                },
+            },
+        },
+    },
+}

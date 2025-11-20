@@ -15,6 +15,7 @@ IOSXE parsers for the following show commands:
     * show ip nat translations
     * show ip nat translations total
     * show ip nat translation {protocol} total
+    * show ip nat translation udp total
     * show ip nat translations vrf {vrf} total
     * show ip nat translations verbose
     * show ip nat statistics
@@ -102,6 +103,8 @@ IOSXE parsers for the following show commands:
     * show ip nat pool name {pool}
     * show ip ospf database nssa
     * show ip nat bpa
+    * show ip pim rp
+    * show ip ssh
     '''
 
 # Python
@@ -114,6 +117,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, ListOf
 # parser utils
 from genie.libs.parser.utils.common import Common
 from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetailSuperParser
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # ==============================
 # Schema for 'show ip aliases', 'show ip aliases vrf {vrf}'
@@ -6175,7 +6179,8 @@ class ShowIpNhrpSummary(ShowIpNhrpSummarySchema):
             output = self.device.execute(self.cli_command)
 
         # IP NHRP cache 4 entries, 3072 bytes
-        p1 = re.compile(r'^IP +NHRP +cache +(?P<nhrp_entries>[\d]+) +entries, +(?P<size>[\d]+) +bytes$')
+        # IP NHRP cache 1 entry, 784 bytes
+        p1 = re.compile(r'^IP +NHRP +cache +(?P<nhrp_entries>\d+) +entr(?:y|ies), +(?P<size>\d+) +bytes$')
 
         # 2 static 2 dynamic 0 incomplete
         p2 = re.compile(r'^(?P<total_static_entries>[\d]+) +static +(?P<total_dynamic_entries>[\d]+) +dynamic +(?P<total_incomplete_entries>[\d]+) +incomplete$')
@@ -7807,24 +7812,23 @@ class ShowIpNatTranslationUdpTotalSchema(MetaParser):
 
 class ShowIpNatTranslationUdpTotal(ShowIpNatTranslationUdpTotalSchema):
     """Parser for show ip nat translations {protocol} total"""
-
     cli_command = 'show ip nat translations {protocol} total'
-
-    def cli(self, protocol='', output=None):
+    def cli(self, protocol='', output=None):    
         if output is None:
-            # Execute the command on the device
             output = self.device.execute(self.cli_command.format(protocol=protocol))
-
         # Initialize the parsed dictionary
         parsed_dict = {}
 
+        # Define the regex pattern to match the output line
         # Total number of translations: 2
         p1 = re.compile(r'^Total +number +of +translations: +(?P<total>\d+)$')
-
+        
+        # Iterate over each line in the output
         for line in output.splitlines():
             line = line.strip()
 
-            #Total number of translations: 2
+            # Match the line against the pattern
+            # Total number of translations: 2
             m = p1.match(line)
             if m:
                 # Use setdefault to avoid KeyError
@@ -7832,7 +7836,6 @@ class ShowIpNatTranslationUdpTotal(ShowIpNatTranslationUdpTotalSchema):
                 continue
 
         return parsed_dict
-
 # ==============================
 # Schema for 'show ip name-servers', 'show ip name-servers vrf {vrf}'
 # ==============================
@@ -10551,6 +10554,228 @@ class ShowIpNatPoolName(ShowIpNatPoolNameSchema):
 
         return parsed_dict
 
+
+class ShowIpOspfDatabaseNssaSchema(MetaParser):
+    '''Schema for show ip ospf database nssa'''
+    schema = {
+        'ospf_router': {
+            'router_id': str,
+            'process_id': int,
+            'type_7_as_external_link_states': {
+                'area': int,
+                'link_states': {
+                    Any(): {
+                        'ls_age': int,
+                        'options': str,
+                        'ls_type': str,
+                        'link_state_id': str,
+                        'advertising_router': str,
+                        'ls_seq_number': str,
+                        'checksum': int,
+                        'length': int,
+                        'network_mask': int,
+                        'metric_type': int,
+                        'mtid': int,
+                        'metric': int,
+                        'forward_address': str,
+                        'external_route_tag': int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpOspfDatabaseNssa(ShowIpOspfDatabaseNssaSchema):
+    '''Parser for show ip ospf database nssa'''
+    cli_command = 'show ip ospf database nssa'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+        # OSPF Router with ID (10.0.0.1) (Process ID 1)
+        p1 = re.compile(r'^OSPF Router with ID \((?P<router_id>[\d\.]+)\) \(Process ID (?P<process_id>\d+)\)$')
+        # Type-7 AS External Link States (Area 40)
+        p2 = re.compile(r'^\s*Type-7 AS External Link States \(Area (?P<area>\d+)\)$')
+        # LS age: 117
+        p3 = re.compile(r'^\s*LS age: (?P<ls_age>\d+)$')
+        # Options: (No TOS-capability, Type 7/5 translation, DC)
+        p4 = re.compile(r'^\s*Options: (?P<options>.*)$')
+        # LS Type: AS External Link
+        p5 = re.compile(r'^\s*LS Type: (?P<ls_type>.*)$')
+        # Link State ID: 223.255.0.0 (External Network Number )
+        p6 = re.compile(r'^\s*Link State ID: (?P<link_state_id>[\d\.]+) \(External Network Number \)$')
+        # Advertising Router: 1.1.1.1
+        p7 = re.compile(r'^\s*Advertising Router: (?P<advertising_router>[\d\.]+)$')
+        # LS Seq Number: 80000001
+        p8 = re.compile(r'^\s*LS Seq Number: (?P<ls_seq_number>\w+)$')
+        # Checksum: 0x66B7
+        p9 = re.compile(r'^\s*Checksum: (?P<checksum>0x\w+)$')
+        # Length: 36
+        p10 = re.compile(r'^\s*Length: (?P<length>\d+)$')
+        #  Network Mask: /16
+        p11 = re.compile(r'^\s*Network Mask: (?P<network_mask>/\d+)$')
+        # Metric Type: 1 (Comparable directly to link state metric)
+        p12 = re.compile(r'^\s*Metric Type: (?P<metric_type>\d+) \((?P<metric_type_desc>.*)\)$')
+        # MTID: 0
+        p13 = re.compile(r'^\s*MTID: (?P<mtid>\d+)$')
+        # Metric: 10
+        p14 = re.compile(r'^\s*Metric: (?P<metric>\d+)$')
+        # Forward Address: 10.10.10.1
+        p15 = re.compile(r'^\s*Forward Address: (?P<forward_address>[\d\.]+)$')
+        # External Route Tag: 0
+        p16 = re.compile(r'^\s*External Route Tag: (?P<external_route_tag>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # OSPF Router with ID (1.1.1.1) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_router_dict = parsed.setdefault('ospf_router', {})
+                ospf_router_dict['router_id'] = group['router_id']
+                ospf_router_dict['process_id'] = int(group['process_id'])
+                continue
+            # Type-7 AS External Link States (Area 40)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                link_states_dict = ospf_router_dict.setdefault('type_7_as_external_link_states', {})
+                link_states_dict['area'] = int(group['area'])
+                link_states_dict['link_states'] = {}
+                continue
+            # LS age: 117
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict = link_states_dict['link_states'].setdefault(len(link_states_dict['link_states']), {})
+                link_state_dict['ls_age'] = int(group['ls_age'])
+                continue
+            # Options: (No TOS-capability, Type 7/5 translation, DC)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['options'] = group['options']
+                continue
+            # LS Type: AS External Link
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['ls_type'] = group['ls_type']
+                continue
+            # Link State ID: 223.255.0.0 (External Network Number )
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['link_state_id'] = group['link_state_id']
+                continue
+            # Advertising Router: 1.1.1.1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['advertising_router'] = group['advertising_router']
+                continue
+            # LS Seq Number: 80000001
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['ls_seq_number'] = group['ls_seq_number']
+                continue
+            # Checksum: 0x66B7
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['checksum'] = int(group['checksum'], 16)
+                continue
+            # Length: 36
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['length'] = int(group['length'])
+                continue
+            # Network Mask: /16
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['network_mask'] = int(group['network_mask'].lstrip('/'))
+                continue
+            # Metric Type: 1 (Comparable directly to link state metric)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['metric_type'] = int(group['metric_type'])
+                continue
+            # MTID: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['mtid'] = int(group['mtid'])
+                continue
+            # Metric: 10
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['metric'] = int(group['metric'])
+                continue
+            # Forward Address: 10.10.10.1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['forward_address'] = group['forward_address']
+                continue
+            # External Route Tag: 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['external_route_tag'] = int(group['external_route_tag'])
+                continue
+
+        return parsed
+
+class ShowIpMrmIntSchema(MetaParser):
+    """Schema for show ip mrm int"""
+    schema = {
+        'interfaces': {
+            Any(): {    # The interface name will be the key
+                'address': str,
+                'mode': str,
+                'status': str,
+            }
+        }
+    }
+
+class ShowIpMrmInt(ShowIpMrmIntSchema):
+    """Parser for show ip mrm int"""
+
+    cli_command = 'show ip mrm int'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device if no output is provided
+            output = self.device.execute(self.cli_command)
+
+        parsed_output = {}
+        # GigabitEthernet0/0/0     10.1.1.1         Test-Sender           Up
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<mode>\S+)\s+(?P<status>\S+)$')
+
+        # Split the output into lines and process them
+        lines = output.strip().splitlines()
+
+        for line in lines:
+            # GigabitEthernet0/0/0     10.1.1.1         Test-Sender           Up
+            m = p1.match(line.strip())
+            if m:
+                interfaces = parsed_output.setdefault('interfaces', {})
+                interface_name = m.group('interface')
+                interfaces[interface_name] = {
+                    'address': m.group('address'),
+                    'mode': m.group('mode'),
+                    'status': m.group('status'),
+                }
+
+        return parsed_output
+
 class ShowIpOspfDatabaseNssaSchema(MetaParser):
     '''Schema for show ip ospf database nssa'''
     schema = {
@@ -10799,4 +11024,332 @@ class ShowIpNatBpa(ShowIpNatBpaSchema):
                 bulk_port_allocation['single_set'] = m.group('single_set').lower() == 'true'
                 continue
 
+        return parsed_dict
+
+class ShowIpPimRpSchema(MetaParser):
+    """Schema for show ip pim rp"""
+    schema = {
+        Optional('pim_rp'): {
+            Any(): {  # Group address as key (e.g., '224.0.1.40')
+                'rp_address': str,     # RP IP address
+                Optional('expires'): str,        # Expiry time or "never"
+                Optional('uptime'): str,    # Uptime duration (if present)
+                Optional('group'): str # Group address (duplicate for clarity)
+            }
+        }
+}
+
+class ShowIpPimRp(ShowIpPimRpSchema):
+    """Parser for show ip pim rp"""
+
+    cli_command = 'show ip pim rp'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        # Define regex pattern for PIM RP entries
+        # Group: 224.0.1.40, RP: 60.1.1.1, uptime 00:00:29, expires never
+        p1 = re.compile(r'^Group:\s+(?P<group>[\d\.]+),\s+'
+                             r'RP:\s+(?P<rp_address>[\d\.]+)'
+                             r'(?:,\s+uptime\s+(?P<uptime>[\d\:]+),\s+'
+                             r'expires\s+(?P<expires>\S+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Group: 224.0.1.40, RP: 60.1.1.1, uptime 00:00:29, expires never
+            m = p1.match(line)
+            if m:
+                group_data = m.groupdict()
+                group_address = group_data['group']
+                
+                # Initialize pim_rp section if not exists
+                if 'pim_rp' not in ret_dict:
+                    ret_dict['pim_rp'] = {}
+                
+                rp_info = {
+                    'rp_address': group_data['rp_address'],
+                    'group': group_address
+                }
+
+                # Only add uptime and expires if they were captured (i.e., not None)
+                if group_data.get('uptime'):
+                    rp_info['uptime'] = group_data['uptime']
+                if group_data.get('expires'):
+                    rp_info['expires'] = group_data['expires']
+
+                # Store the PIM RP information
+                ret_dict['pim_rp'][group_address] = rp_info
+
+        return ret_dict
+
+
+# ==============================
+# Schema for 'show ip ssh'
+# ==============================
+class ShowIpSshSchema(MetaParser):
+    """Schema for show ip ssh"""
+    
+    schema = {
+        Optional('ssh'): {
+            Optional('enabled'): bool,
+            Optional('version'): str,
+            Optional('authentication_methods'): ListOf(str),
+            Optional('authentication_publickey_algorithms'): ListOf(str),
+            Optional('hostkey_algorithms'): ListOf(str),
+            Optional('encryption_algorithms'): ListOf(str),
+            Optional('mac_algorithms'): ListOf(str),
+            Optional('kex_algorithms'): ListOf(str),
+            Optional('authentication_timeout'): int,
+            Optional('authentication_retries'): int,
+            Optional('min_dh_key_size'): int,
+            Optional('rsa_key'): {
+                'present': bool,
+                Optional('modulus_size'): int,
+                Optional('key_data'): str,
+            },
+            Optional('ecdsa_key'): {
+                'present': bool,
+                Optional('key_size'): int,
+                Optional('key_data'): str,
+            },
+        }
+    }
+
+
+# ==============================
+# Parser for 'show ip ssh'
+# ==============================
+class ShowIpSsh(ShowIpSshSchema):
+    """Parser for:
+        show ip ssh
+    """
+    
+    cli_command = 'show ip ssh'
+    
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: execute, transform, return
+        """
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+            
+        # Init vars
+        parsed_dict = {}
+        
+        # SSH Enabled - version 2.0
+        p1 = re.compile(r'^SSH\s+(?P<status>Enabled|Disabled)(?:\s+-\s+version\s+(?P<version>\d+\.\d+))?$')
+        
+        # Authentication methods:publickey,keyboard-interactive,password
+        p2 = re.compile(r'^Authentication\s+methods:\s*(?P<methods>.+)$')
+        
+        # Authentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+        p3 = re.compile(r'^Authentication\s+Publickey\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # Hostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+        p4 = re.compile(r'^Hostkey\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # Encryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
+        p5 = re.compile(r'^Encryption\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # MAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+        p6 = re.compile(r'^MAC\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # KEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,mlkem1024nistp384-sha384,mlkem768x25519-sha256,mlkem768nistp256-sha256
+        p7 = re.compile(r'^KEX\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # Authentication timeout: 120 secs; Authentication retries: 3
+        p8 = re.compile(r'^Authentication\s+timeout:\s*(?P<timeout>\d+)\s+secs;\s+Authentication\s+retries:\s+(?P<retries>\d+)$')
+        
+        # Minimum expected Diffie Hellman key size : 2048 bits
+        p9 = re.compile(r'^Minimum\s+expected\s+Diffie\s+Hellman\s+key\s+size\s*:\s*(?P<size>\d+)\s+bits$')
+        
+        # IOS Keys in SECSH format(ssh-rsa, base64 encoded): NETCONF_SSH_RSA_KEY
+        p10 = re.compile(r'^IOS\s+Keys\s+in\s+SECSH\s+format\(ssh-rsa,\s+base64\s+encoded\):\s*(?P<status>.+)$')
+        
+        # Modulus Size : 2048 bits
+        p11 = re.compile(r'^Modulus\s+Size\s*:\s*(?P<size>\d+)\s+bits$')
+        
+        # IOS Keys in SECSH format(ssh-ec, base64 encoded): NONE
+        # IOS Keys in SECSH format(ecdsa-sha2-nistp256, base64 encoded): PI-CAT9K15-1.cisco.com
+        p12 = re.compile(r'^IOS\s+Keys\s+in\s+SECSH\s+format\((?:ssh-ec|ecdsa-sha2-nistp\d+),\s+base64\s+encoded\):\s*(?P<status>.+)$')
+        
+        # Key Size : 256 bits
+        p13 = re.compile(r'^Key\s+Size\s*:\s*(?P<size>\d+)\s+bits$')
+        
+        current_key_type = None
+        rsa_key_data_lines = []
+        ecdsa_key_data_lines = []
+            
+        ssh_dict = None  # Only create when we find SSH content
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+                
+            # SSH Enabled - version 2.0
+            m = p1.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                groups = m.groupdict()
+                ssh_dict['enabled'] = groups['status'] == 'Enabled'
+                if groups.get('version'):
+                    ssh_dict['version'] = groups['version']
+                continue
+                
+            # Authentication methods:publickey,keyboard-interactive,password
+            m = p2.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                methods = [method.strip() for method in m.groupdict()['methods'].split(',')]
+                ssh_dict['authentication_methods'] = methods
+                continue
+                
+            # Authentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+            m = p3.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['authentication_publickey_algorithms'] = algorithms
+                continue
+                
+            # Hostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+            m = p4.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['hostkey_algorithms'] = algorithms
+                continue
+                
+            # Encryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
+            m = p5.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['encryption_algorithms'] = algorithms
+                continue
+                
+            # MAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+            m = p6.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['mac_algorithms'] = algorithms
+                continue
+                
+            # KEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,mlkem1024nistp384-sha384,mlkem768x25519-sha256,mlkem768nistp256-sha256
+            m = p7.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['kex_algorithms'] = algorithms
+                continue
+                
+            # Authentication timeout: 120 secs; Authentication retries: 3
+            m = p8.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                groups = m.groupdict()
+                ssh_dict['authentication_timeout'] = int(groups['timeout'])
+                ssh_dict['authentication_retries'] = int(groups['retries'])
+                continue
+                
+            # Minimum expected Diffie Hellman key size : 2048 bits
+            m = p9.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                ssh_dict['min_dh_key_size'] = int(m.groupdict()['size'])
+                continue
+                
+            # IOS Keys in SECSH format(ssh-rsa, base64 encoded): NETCONF_SSH_RSA_KEY
+            m = p10.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                current_key_type = 'rsa'
+                rsa_dict = ssh_dict.setdefault('rsa_key', {})
+                status = m.groupdict()['status'].strip()
+                rsa_dict['present'] = status not in ['NONE', 'None', '']
+                rsa_key_data_lines = []
+                continue
+                
+            # Modulus Size : 2048 bits
+            m = p11.match(line)
+            if m and current_key_type == 'rsa' and ssh_dict is not None:
+                rsa_dict = ssh_dict.setdefault('rsa_key', {})
+                rsa_dict['modulus_size'] = int(m.groupdict()['size'])
+                continue
+                
+            # IOS Keys in SECSH format(ecdsa-sha2-nistp256, base64 encoded): PI-CAT9K15-1.cisco.com
+            m = p12.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                current_key_type = 'ecdsa'
+                ecdsa_dict = ssh_dict.setdefault('ecdsa_key', {})
+                status = m.groupdict()['status'].strip()
+                ecdsa_dict['present'] = status not in ['NONE', 'None', '']
+                ecdsa_key_data_lines = []
+                continue
+                
+            # Key Size : 256 bits
+            m = p13.match(line)
+            if m and current_key_type == 'ecdsa' and ssh_dict is not None:
+                ecdsa_dict = ssh_dict.setdefault('ecdsa_key', {})
+                ecdsa_dict['key_size'] = int(m.groupdict()['size'])
+                continue
+                
+            # Handle multi-line key data (ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ...)
+            if current_key_type == 'rsa' and ssh_dict is not None and (line.startswith('ssh-rsa') or 
+                (rsa_key_data_lines and not any([
+                    p1.match(line), p2.match(line), p3.match(line), p4.match(line),
+                    p5.match(line), p6.match(line), p7.match(line), p8.match(line),
+                    p9.match(line), p10.match(line), p11.match(line), p12.match(line), p13.match(line)
+                ]) and not line.startswith('IOS Keys') and not line.startswith('ecdsa-sha2'))):
+                rsa_key_data_lines.append(line)
+            elif current_key_type == 'ecdsa' and ssh_dict is not None and (line.startswith('ecdsa-sha2') or 
+                (ecdsa_key_data_lines and not any([
+                    p1.match(line), p2.match(line), p3.match(line), p4.match(line),
+                    p5.match(line), p6.match(line), p7.match(line), p8.match(line),
+                    p9.match(line), p10.match(line), p11.match(line), p12.match(line), p13.match(line)
+                ]) and not line.startswith('IOS Keys') and not line.startswith('ssh-rsa'))):
+                ecdsa_key_data_lines.append(line)
+                    
+        # Store collected key data at the end
+        if ssh_dict is not None:
+            if rsa_key_data_lines:
+                key_data = ' '.join(rsa_key_data_lines)
+                ssh_dict.setdefault('rsa_key', {})['key_data'] = key_data
+                
+            if ecdsa_key_data_lines:
+                key_data = ' '.join(ecdsa_key_data_lines)
+                ssh_dict.setdefault('ecdsa_key', {})['key_data'] = key_data
+                    
         return parsed_dict

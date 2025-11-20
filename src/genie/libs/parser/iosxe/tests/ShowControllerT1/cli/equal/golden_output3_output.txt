@@ -1,0 +1,23 @@
+Serial1/0/0 - (SM-X-1T3/E3 Interface) is up
+   Current mode is T3
+
+   Framing is c-bit, Clock Source is Internal
+   Bandwidth limit is 44210, DSU mode 0, Cable length is 10 feet
+   rx FEBE since last clear counter 0, since reset 0
+   Data in current interval (20 seconds elapsed):
+     0 Line Code Violations, 0 P-bit Coding Violation
+     0 C-bit Coding Violation
+     0 P-bit Err Secs, 0 P-bit Sev Err Secs
+     0 Sev Err Framing Secs, 0 Unavailable Secs
+     0 Line Errored Secs, 0 C-bit Errored Secs, 0 C-bit Sev Err Secs
+     0 Severely Errored Line Secs
+     0 Far-End Errored Secs, 0 Far-End Severely Errored Secs
+     0 CP-bit Far-end Unavailable Secs
+     0 Near-end path failures, 0 Far-end path failures
+     0 Far-end code violations, 0 FERF Defect Secs
+     0 AIS Defect Secs, 0 LOS Defect Secs
+
+   No alarms detected.
+
+   No FEAC code is being received
+   MDL transmission is disabled

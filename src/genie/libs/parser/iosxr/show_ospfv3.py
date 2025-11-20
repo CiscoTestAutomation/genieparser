@@ -2363,8 +2363,8 @@ class ShowOspfv3TopologyDetail(ShowOspfv3TopologyDetailSchema):
         # Node : 192.168.0.5  (2 link(s))  ABR, ASBR
         # Node : 192.168.0.3 (root) (2 link(s)) ABR
         p6 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\s*\((?P<node_type>\S+)\)\s*(?:\((?P<num_links>\d+)\s*link\(s\)\))?(?:\s+(?P<flags>.*))?$')
-        # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 link(s))  ABR, ASBR
-        p7 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\/(?P<node_id>\S+)\s+\((?P<pseudo>pseudo)\)\s*\((?P<num_links>\d+)\s*link\(s\)\)(?:\s+(?P<flags>.*))?$')
+        # Node : 192.168.0.6 interface-id 8 (pseudo) (2 link(s))  ABR, ASBR
+        p7 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\s+interface-id\s+(?P<interface_id>\d+)\s+\((?P<pseudo>pseudo)\)\s*\((?P<num_links>\d+)\s*link\(s\)\)(?:\s+(?P<flags>.*))?$')
         # Oper Flags : 0x4080
         p8 = re.compile(r'^Oper Flags\s*:\s*(?P<oper_flags>\S+)$')
         # Contributing LSAs : Router
@@ -2462,11 +2462,11 @@ class ShowOspfv3TopologyDetail(ShowOspfv3TopologyDetailSchema):
                     node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
                 continue
 
-            # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 link(s))  ABR, ASBR
+            # Node : 192.168.0.6 interface-id 8 (pseudo) (2 link(s))  ABR, ASBR
             m = p7.match(line)
             if m:
                 node_oper_flag_set = False
-                node = m.group('node') + '/' + m.group('node_id')
+                node = m.group('node') + '/' + m.group('interface_id')
                 node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
                 node_dict['node_id'] = node
                 node_dict['root'] = False
@@ -2642,8 +2642,8 @@ class ShowOspfv3TopologyPrefixes(ShowOspfv3TopologyPrefixesSchema):
             r'\s*\((?P<num_prefixes>\d+)\s*prefix\(es\)\)'
             r'(?:\s+(?P<flags>.*))?$'
         )
-        # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 prefix(es))
-        p6 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\/(?P<node_id>\S+)\s+\((?P<pseudo>pseudo)\)\s*\((?P<num_prefixes>\d+)\s*prefix\(es\)\)(?:\s+(?P<flags>.*))?$')
+        # Node : 192.168.0.6 interface-id 8 (pseudo) (2 prefix(es))  ABR, ASBR
+        p6 = re.compile(r'^Node\s*:\s*(?P<node>\S+)\s+interface-id\s+(?P<interface_id>\d+)\s+\((?P<pseudo>pseudo)\)\s*\((?P<num_prefixes>\d+)\s*prefix\(es\)\)(?:\s+(?P<flags>.*))?$')
         # Prefix : 34:34:1::/64
         p7 = re.compile(r'^Prefix\s*:\s*(?P<prefix>\S+)$')
 
@@ -2692,10 +2692,10 @@ class ShowOspfv3TopologyPrefixes(ShowOspfv3TopologyPrefixesSchema):
                     node_dict['flags'] = [flag.strip() for flag in flags.split(',') if flag.strip()]
                 continue
 
-            # Node : 10.4.1.1/10.4.1.1 (pseudo) (1 prefix(es))
+            # Node : 192.168.0.6 interface-id 8 (pseudo) (2 prefix(es))  ABR, ASBR
             m = p6.match(line)
             if m:
-                node = m.group('node') + '/' + m.group('node_id')
+                node = m.group('node') + '/' + m.group('interface_id')
                 node_dict = area_dict.setdefault('nodes', {}).setdefault(node, {})
                 node_dict['node_id'] = node
                 node_dict['root'] = False

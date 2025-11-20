@@ -1,0 +1,99 @@
+FT1:
+    Row   Inlet  Outlet     PWM
+           RPM    RPM
+    ---------------------------
+      1   14085   14072      90%
+      2   14005   14021      90%
+      3   14076   14068      90%
+      4   14101   14000      90%
+      5   14106   14110      90%
+      6   14009   14068      90%
+
+    Fantray Air Flow Direction   : Port-Side-Intake
+    Fantray Auto Poll Status     : true
+    Fantray Auto Poll Interval   : 2.0 Seconds
+    Fantray Control Mode         : Manual
+    Fantray Temperature Slot-5   : 25 C
+    Fantray Temperature Slot-6   : 26 C
+    Fantray Temperature Local-A  : 45 C
+    Fantray Temperature Local-B  : 46 C
+    Fantray Input Voltage        :  11.5958 V
+    Fantray Input Current        :  59.7500 A
+    Fantray Input Power          : 692.8510 W
+    Fantray Beacon LED           : OFF
+    Fantray Status LED           : GREEN
+
+FT2:
+    Row   Inlet  Outlet     PWM
+           RPM    RPM
+    ---------------------------
+      1       0   13950      90%
+      2   14030   14089      90%
+      3   14063   13921      90%
+      4   14140   14101      90%
+      5   14042   14017      90%
+      6   14114   14076      90%
+
+    Fantray Air Flow Direction   : Port-Side-Intake
+    Fantray Auto Poll Status     : true
+    Fantray Auto Poll Interval   : 2.0 Seconds
+    Fantray Control Mode         : Manual
+    Fantray Temperature Slot-5   : 24 C
+    Fantray Temperature Slot-6   : 26 C
+    Fantray Temperature Local-A  : 47 C
+    Fantray Temperature Local-B  : 47 C
+    Fantray Input Voltage        :  11.6073 V
+    Fantray Input Current        :  59.6667 A
+    Fantray Input Power          : 692.5709 W
+    Fantray Beacon LED           : OFF
+    Fantray Status LED           : AMBER
+
+FT3:
+    Row   Inlet  Outlet     PWM
+           RPM    RPM
+    ---------------------------
+      1       0   13955      90%
+      2   14017   14000      90%
+      3   14021   13921      90%
+      4   14017   13967      90%
+      5   14085   13992      90%
+      6   14009   14005      90%
+
+    Fantray Air Flow Direction   : Port-Side-Intake
+    Fantray Auto Poll Status     : true
+    Fantray Auto Poll Interval   : 2.0 Seconds
+    Fantray Control Mode         : Manual
+    Fantray Temperature Slot-5   : 25 C
+    Fantray Temperature Slot-6   : 27 C
+    Fantray Temperature Local-A  : 46 C
+    Fantray Temperature Local-B  : 45 C
+    Fantray Input Voltage        :  11.6648 V
+    Fantray Input Current        :  59.7500 A
+    Fantray Input Power          : 696.9738 W
+    Fantray Beacon LED           : OFF
+    Fantray Status LED           : AMBER
+
+FT4:
+    Row   Inlet  Outlet     PWM
+           RPM    RPM
+    ---------------------------
+      1   13938   13980      90%
+      2   13988   14101      90%
+      3   13917   14076      90%
+      4   14093   14042      90%
+      5   13984   14038      90%
+      6       0   13975      90%
+
+    Fantray Air Flow Direction   : Port-Side-Intake
+    Fantray Auto Poll Status     : true
+    Fantray Auto Poll Interval   : 2.0 Seconds
+    Fantray Control Mode         : Manual
+    Fantray Temperature Slot-5   : 25 C
+    Fantray Temperature Slot-6   : 26 C
+    Fantray Temperature Local-A  : 36 C
+    Fantray Temperature Local-B  : 36 C
+    Fantray Input Voltage        :  11.6035 V
+    Fantray Input Current        :  60.5833 A
+    Fantray Input Power          : 702.9787 W
+    Fantray Beacon LED           : OFF
+    Fantray Status LED           : AMBER

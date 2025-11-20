@@ -2633,7 +2633,8 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_local'): int,
             Optional('total_cached'): int,
             Optional('total_l3if') : int,
-            Optional('total_vlan'): int
+            Optional('total_vlan'): int,
+            Optional('total_cli-hi'): int
         }
     }
 
@@ -2664,7 +2665,8 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
 
         # 1.1.1.2 2 SXP
         # 1.1.1.3 3 SXP
-        p1 = re.compile(r'^(?P<ip_address>(\S+))\s+(?P<sgt>(\d+))\s+(?P<source>(\w+))$')
+        # 1133:1:1::1                                 2       CLI-HI
+        p1 = re.compile(r'^(?P<ip_address>(\S+))\s+(?P<sgt>(\d+))\s+(?P<source>([\w\-]+))$')
 
         # Total number of SXP bindings = 51
         # Total number of active bindings = 51
@@ -3224,7 +3226,8 @@ class ShowCtsServerList(ShowCtsServerListSchema):
         # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
         p10 = re.compile(r'^Installed\s+list:\s+(?P<list_name>\S+),.*$')
         # *Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
-        p11 = re.compile(r'^\*Server:\s+(?P<server_ip>[\d\.]+),\s+port\s+(?P<port_number>\d+),\s+A-ID\s+(?P<a_id>\S+)$')
+        # Server: 100.8.14.110, port 1812, A-ID 361CB222CFE7E875B7293A50834CC2A4
+        p11 = re.compile(r'^\*?Server:\s+(?P<server_ip>[\d\.]+),\s+port\s+(?P<port_number>\d+),\s+A-ID\s+(?P<a_id>\S+)$')
         # Status = ALIVE
         p12 = re.compile(r'^Status\s+=\s+(?P<status>\S+)$')
         # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs

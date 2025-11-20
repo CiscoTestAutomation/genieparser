@@ -1,0 +1,20 @@
+  CPP 0: Subdev 0            5 secs        1 min        5 min       60 min
+Input:  Priority (pps)            0            0            0            0
+                 (bps)            0            0            0            0
+    Non-Priority (pps)            2            3            3            1
+                 (bps)         1040         1552         1552          752
+           Total (pps)            2            3            3            1
+                 (bps)         1040         1552         1552          752
+Output: Priority (pps)            0            0            0            0
+                 (bps)            0            0            0            0
+    Non-Priority (pps)            1            2            2            1
+                 (bps)         4864        17624        17632         8360
+           Total (pps)            1            2            2            1
+                 (bps)         4864        17624        17632         8360
+Processing: Load (pct)            1            1            1            1
+
+Crypto/IO
+    Crypto: Load (pct)            0            0            0            0
+        RX: Load (pct)            0            0            0            0
+        TX: Load (pct)            1            1            1            6
+            Idle (pct)           98           98           98           93

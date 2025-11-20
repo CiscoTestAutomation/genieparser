@@ -1,0 +1,15 @@
+show crypto eli
+Hardware Encryption : ACTIVE
+ Number of hardware crypto engines = 1
+
+ CryptoEngine IOSXE-ESG(9) details: state = Active
+ Capability    : DES, 3DES, AES, GCM, GMAC, Manual IPsec key, OSPFv3 manual keying, RSA, IPv6, GDOI, FAILCLOSE, ESN
+
+ IPSec-Session :     2 active, 16000 max, 0 failed, 2 created
+
+ Number of DH's pregenerated = 4
+ DH lifetime = 86400 seconds
+ DH calculations: P1 1, SS 1
+
+crypto engine 1:Software Crypto Engine
+ DH in use/freeing/free - 1/0/16049

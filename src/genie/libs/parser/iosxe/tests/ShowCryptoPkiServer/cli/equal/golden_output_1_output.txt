@@ -1,0 +1,12 @@
+Certificate Server ios_ra:
+    Status: enabled
+    State: enabled
+    Server's configuration is locked  (enter "shut" to unlock it)
+    Issuer name: cn=ra, ou=ioscs RA, o=cisco C=pki
+    CA cert fingerprint: 56068029 4A003DFF 3D6B7B9B D7AC9AFD
+    Server configured in RA mode
+    RA cert fingerprint: AAB882C5 B43BFE17 E46E855F 0BC54931
+    Granting mode is: auto
+    Current primary storage dir: nvram:
+    Current storage dir for .crl files: tftp://6.28.19.3
+    Database Level: Minimum - no cert data written to storage

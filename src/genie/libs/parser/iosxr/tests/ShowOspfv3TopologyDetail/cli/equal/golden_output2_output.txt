@@ -1,0 +1,496 @@
+show ospfv3 topology detail
+Tue Oct 28 04:39:21.702 UTC
+
+        Process ospfv3-1
+
+  Instance : default
+   Router ID : 192.168.0.3
+
+    Area : 0 (6 nodes)
+      Node : 192.168.0.3 (root) (2 link(s))  ABR
+       Oper Flags : 0x4080
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.4 Local-id 65 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 64 Remote-id 65 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 65 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.4  (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.4 Local-id 35 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.4 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 66 Remote-id 63 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.4 Local-id 63 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.4 interface-id 35 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 35 Remote-id 65 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.4 Local-id 65 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.4 Local-id 35 Remote-id 35 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.4 Local-id 35 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.5  (2 link(s))  ABR, ASBR
+       Oper Flags : 0x4080
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 63 Remote-id 63 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 63 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 65 Remote-id 65 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 65 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.5 interface-id 63 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.4 Local-id 63 Remote-id 66 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 66 Remote-id 63 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 63 Remote-id 63 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 63 Remote-id 63 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.5 interface-id 65 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 65 Remote-id 64 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 64 Remote-id 65 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 65 Remote-id 65 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 65 Remote-id 65 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+
+    Area : 1 (18 nodes)
+      Node : 192.168.0.1  (5 link(s))   ASBR
+       Oper Flags : 0x4000
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.2 Local-id 35 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.1 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.2 Local-id 66 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.1 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.3 Local-id 65 Remote-id 36 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.1 Local-id 36 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 64 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.1 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 63 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.1 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.2  (5 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.2 Local-id 35 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.2 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.2 Local-id 66 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.2 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.3 Local-id 64 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.2 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.3 Local-id 65 Remote-id 67 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.2 Local-id 67 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 63 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.2 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.2 interface-id 35 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.1 Local-id 35 Remote-id 35 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.2 Local-id 35 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.2 Local-id 35 Remote-id 35 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.2 Local-id 35 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.2 interface-id 66 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.1 Local-id 66 Remote-id 66 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.2 Local-id 66 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.2 Local-id 66 Remote-id 66 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.2 Local-id 66 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.3 (root) (5 link(s))  ABR
+       Oper Flags : 0x4080
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.3 Local-id 36 Remote-id 36 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 36 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.3 Local-id 66 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.3 Local-id 67 Remote-id 67 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 67 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 63 Remote-id 64 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 64 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 62 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.3 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.3 interface-id 36 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.1 Local-id 36 Remote-id 65 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.3 Local-id 65 Remote-id 36 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 36 Remote-id 36 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.3 Local-id 36 Remote-id 36 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.3 interface-id 66 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.2 Local-id 66 Remote-id 64 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.3 Local-id 64 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 66 Remote-id 66 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.3 Local-id 66 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.3 interface-id 67 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.2 Local-id 67 Remote-id 65 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.3 Local-id 65 Remote-id 67 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 67 Remote-id 67 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.3 Local-id 67 Remote-id 67 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.5  (6 link(s))  ABR, ASBR
+       Oper Flags : 0x4080
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 35 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 64 Remote-id 64 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 64 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.5 Local-id 66 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 60 Remote-id 63 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 63 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 61 Remote-id 64 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 64 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 62 Remote-id 65 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.5 Local-id 65 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.5 interface-id 35 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.1 Local-id 35 Remote-id 64 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 64 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 35 Remote-id 35 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 35 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.5 interface-id 64 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 64 Remote-id 63 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 63 Remote-id 64 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 64 Remote-id 64 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 64 Remote-id 64 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.5 interface-id 66 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.2 Local-id 66 Remote-id 63 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 63 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 66 Remote-id 66 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.5 Local-id 66 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.6  (5 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 35 Remote-id 35 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.6 Local-id 35 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 63 Remote-id 63 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.6 Local-id 63 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 64 Remote-id 64 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.6 Local-id 64 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 65 Remote-id 65 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.6 Local-id 65 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+        Link: Nbr 192.168.0.6 Local-id 66 Remote-id 66 Transit
+         Metric        : 10
+         Remote link   : Nbr 192.168.0.6 Local-id 66 Remote-id 0 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Router
+
+      Node : 192.168.0.6 interface-id 35 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.1 Local-id 35 Remote-id 63 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 63 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.6 Local-id 35 Remote-id 35 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 35 Remote-id 35 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.6 interface-id 63 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 63 Remote-id 60 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 60 Remote-id 63 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.6 Local-id 63 Remote-id 63 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 63 Remote-id 63 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.6 interface-id 64 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 64 Remote-id 61 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 61 Remote-id 64 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.6 Local-id 64 Remote-id 64 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 64 Remote-id 64 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.6 interface-id 65 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.5 Local-id 65 Remote-id 62 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 62 Remote-id 65 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.6 Local-id 65 Remote-id 65 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 65 Remote-id 65 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+      Node : 192.168.0.6 interface-id 66 (pseudo) (2 link(s))
+       Oper Flags : 0x4000
+       Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.3 Local-id 66 Remote-id 62 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 62 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+        Link: Nbr 192.168.0.6 Local-id 66 Remote-id 66 Transit
+         Metric        : 0
+         Remote link   : Nbr 192.168.0.6 Local-id 66 Remote-id 66 Transit
+         Oper Flags    : 0x00
+         Contributing LSAs : Network
+
+
+    Area : 2 (1 nodes)
+      Node : 192.168.0.3 (root) ABR
+       Oper Flags : 0x4080
+       Contributing LSAs : Router

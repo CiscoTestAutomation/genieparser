@@ -10,6 +10,7 @@ IOSXE parsers for the following show commands:
     * show hw-module subslot all oir
     * show hw-module subslot {subslot} entity
     * show platform hardware chassis rp {rp_state} fan-speed-control-data
+    * hw-module beacon {switch} {switch_num} slot {slot_num} port {port_num} status
 '''
 
 # Python
@@ -1240,7 +1241,6 @@ class ShowHwModuleSubslotEntity(ShowHwModuleSubslotEntitySchema):
 
         return ret_dict
 
-
 class ShowPlatformHardwareChassisRpFanSpeedControlDataSchema(MetaParser):
     """Schema for:
        show platform hardware chassis rp {rp_state} fan-speed-control-data
@@ -1295,5 +1295,46 @@ class ShowPlatformHardwareChassisRpFanSpeedControlData(ShowPlatformHardwareChass
                 entry['io_pwm'] = m.group('io_pwm')
 
                 continue
+
+        return ret_dict
+
+class HwModuleBeaconSlotPortStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon [switch {switch_num}] slot {slot_num} port {port_num} status
+    """
+
+    schema = {
+        'beacon_status': str
+    }
+
+class HwModuleBeaconSlotPortStatus(HwModuleBeaconSlotPortStatusSchema):
+    """Parser for hw-module beacon [switch {switch_num}] slot {slot_num} port {port_num} status"""
+
+    cli_command = [
+        "hw-module beacon switch {switch_num} slot {slot_num} port {port_num} status",
+        "hw-module beacon slot {slot_num} port {port_num} status"
+    ]
+
+    def cli(self, slot_num='', port_num='', switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[0].format(switch_num=switch_num, slot_num=slot_num, port_num=port_num)
+            else:
+                cmd = self.cli_command[1].format(slot_num=slot_num, port_num=port_num)
+
+            output = self.device.execute(cmd)
+
+        # BEACON OFF
+        p1 = re.compile(r'^BEACON\s+(?P<beacon_status>\w+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # BEACON OFF
+            m = p1.match(line)
+            if m:
+                ret_dict['beacon_status'] = m.group('beacon_status')
+                break
 
         return ret_dict

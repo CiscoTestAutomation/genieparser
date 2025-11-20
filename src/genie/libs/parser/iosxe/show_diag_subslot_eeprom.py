@@ -37,7 +37,7 @@ class ShowDiagSubslotEepromDetailSchema(MetaParser):
                 'base_mac_address': str,
                 'mac_address_block_size': int,
                 'platform_features': str,
-                'manufacturing_test_data': str,
+                Optional('manufacturing_test_data'): str,
             }
         },
         Optional('eeprom_data'): {
@@ -63,7 +63,7 @@ class ShowDiagSubslotEepromDetailSchema(MetaParser):
                 'base_mac_address': str,
                 'mac_address_block_size': int,
                 'platform_features': str,
-                'manufacturing_test_data': str,
+                Optional('manufacturing_test_data'): str,
             }
         }
     }
@@ -152,6 +152,8 @@ class ShowDiagSubslotEepromDetail(ShowDiagSubslotEepromDetailSchema):
         #                           01 01 00
         p23 = re.compile(r'^\s*Platform features\s+:\s+(?P<platform_features>[\w\s]+)$')
         p23_cont = re.compile(r'^\s+(?P<platform_features_cont>[\w\s]+)$')
+        # Additional pattern for non-indented hex continuation (like "01 03 00")
+        p23_cont_hex = re.compile(r'^(?P<platform_features_cont>[\dA-Fa-f\s]+)$')
         
         # Manufacturing Test Data  : 00 00 00 00 00 00 00 00
         p24 = re.compile(r'^\s*Manufacturing Test Data\s+:\s+(?P<manufacturing_test_data>[\w\s]+)$')
@@ -315,7 +317,7 @@ class ShowDiagSubslotEepromDetail(ShowDiagSubslotEepromDetailSchema):
             
             # Platform features continuation line
             if platform_features_buffer is not None:
-                m = p23_cont.match(line)
+                m = p23_cont.match(line) or p23_cont_hex.match(line)
                 if m:
                     platform_features_buffer += " " + m.group('platform_features_cont').strip()
                     continue

@@ -3859,6 +3859,15 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
         #     Neighbor Address: 172.16.0.90
         p64 = re.compile(r"^Neighbor +Address *: +(?P<nbr_addr>\S+)$")
 
+        #  Opaque link info: Type 32770 Length: 24
+        p65 = re.compile(r"^\s*Opaque\s+link\s+info:\s+Type\s+(?P<opaque_type>\d+)\s+Length:\s+(?P<length>\d+)$")
+
+        #  Enterprise number: 9
+        p66 = re.compile(r"^\s*Enterprise\s+number:\s+(?P<enterprise_number>\d+)$")
+
+        #  Opaque link info value in Hex: 76 31 2e 30 30 2d 4f 4c 54 2d 43 5f 30 5f 30 5f 30 20 20 20
+        p67 = re.compile(r"^\s*Opaque\s+link\s+info\s+value\s+in\s+Hex:\s+(?P<opaque_value>[\d\sA-Fa-f]+)$")
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -4652,6 +4661,30 @@ class ShowOspfVrfAllInclusiveDatabaseParser(MetaParser):
                 tmp["neighbor_address"] = m.groupdict()["nbr_addr"]
                 continue
 
+            #  Opaque link info: Type 32770 Length: 24
+            m = p65.match(line)
+            if m:
+                sub_tlv_idx += 1
+                sub_tlv_dict = tlv_dict.setdefault("sub_tlvs", {}).setdefault(
+                    sub_tlv_idx, {}
+                )
+                sub_tlv_dict["type"] = "Opaque link info"
+                sub_tlv_dict["length"] = int(m.groupdict()["length"])
+                sub_tlv_dict["opaque_type"] = int(m.groupdict()["opaque_type"])
+                continue
+
+            #  Enterprise number: 9
+            m = p66.match(line)
+            if m:
+                sub_tlv_dict["enterprise_num"] = int(m.groupdict()["enterprise_number"])
+                continue
+
+            #  Opaque link info value in Hex: 76 31 2e 30 30 2d 4f 4c 54 2d 43 5f 30 5f 30 5f 30 20 20 20
+            m = p67.match(line)
+            if m:
+                sub_tlv_dict["opaque_value"] = str(''.join(m.groupdict()["opaque_value"].split()))
+                continue
+
         return ret_dict
 
 
@@ -5215,6 +5248,15 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueAreaSchema(MetaParser):
                                                                                         Optional(
                                                                                             "value"
                                                                                         ): int,
+                                                                                        Optional(
+                                                                                            "opaque_type"
+                                                                                        ): int,
+                                                                                        Optional(
+                                                                                            "enterprise_num"
+                                                                                        ): int,
+                                                                                        Optional(
+                                                                                            "opaque_value"
+                                                                                        ): str,
                                                                                     },
                                                                                 },
                                                                             },
@@ -8000,9 +8042,4 @@ class ShowOspfProcessIdVrfName(ShowOspfProcessIdVrfNameSchema):
                 neigbour_dict = interface_dict.setdefault('neighbors', {})
                 neigbour_dict['neighbor_router_id'] = group['neighbors_router_id']
                 continue
-                
-            
-            
-                
         return ret_dict
-

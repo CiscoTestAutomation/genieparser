@@ -111,6 +111,10 @@ class ShowAccessListsSchema(MetaParser):
                         'forwarding': str,
                         Optional('logging'): str,
                     },
+                    Optional('time_range'): {
+                        'name': str,
+                        Optional('status'): str,
+                    },
                     Optional('statistics'): {
                         'matched_packets': Or(int,str)
                     }
@@ -332,7 +336,8 @@ class ShowAccessLists(ShowAccessListsSchema):
             r'(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))?(?: '
             r'+(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\w+ ?)'
             r'+\w+))?(?: +(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
-            r'router-advertisement|mld-query+))?(?P<left>.+)? +sequence +(?P<seq>\d+)$')
+            r'router-advertisement|mld-query+))?(?: +time-range +(?P<time_range_name>\S+)'
+            r'(?: +\((?P<time_range_status>\w+)\))?)?(?P<left>.+)? +sequence +(?P<seq>\d+)$')
 
         p_mac_acl = re.compile(
             r'^(?P<actions_forwarding>(deny|permit)) +(?P<src>(host *)?[\w\.]+) '
@@ -495,6 +500,13 @@ class ShowAccessLists(ShowAccessListsSchema):
                 seq_dict.setdefault('actions', {})\
                     .setdefault('forwarding', actions_forwarding)
                 seq_dict['actions']['logging'] = 'log-syslog' if 'log' in left else 'log-none'
+
+                # time-range information
+                if group.get('time_range_name'):
+                    time_range_dict = seq_dict.setdefault('time_range', {})
+                    time_range_dict['name'] = group['time_range_name']
+                    if group.get('time_range_status'):
+                        time_range_dict['status'] = group['time_range_status']
 
                 # statistics
                 if ' matches' in left:

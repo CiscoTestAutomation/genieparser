@@ -1310,3 +1310,342 @@ class ShowIpv6MrouteSummary(ShowIpv6MrouteSummarySchema):
                 src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': bitrate_in_bps,'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
                 continue
         return mroute_dict
+
+# ===============================================
+# Parser for 'dchal module 1 "mroutepd l3 show"'
+# ===============================================
+
+# Define the schema
+class MroutepdL3ShowSchema(MetaParser):
+    schema = {
+        'all_mcast_pd_routes': {
+            int: {
+                Optional('rv_message'): str,
+                Optional('g_ip_addr'): str,
+                Optional('g_len'): int,
+                Optional('s_ip_addr'): str,
+                Optional('s_len'): int,
+                Optional('vrf_bd'): int,
+                Optional('cscale_data'): {
+                    Optional('g_index'): int,
+                    Optional('g_l2ptr'): int,
+                    Optional('g_mcinfo_fp'): int,
+                    Optional('min_mtu'): int,
+                    Optional('mtu_idx'): int,
+                    Optional('met_ptr'): int,
+                    Optional('rpf_if'): int,
+                    Optional('rpf_fail_send_to_sup'): bool,
+                    Optional('no_dc_sup_redirect'): bool,
+                    Optional('drop'): bool,
+                    Optional('slot'): int,
+                    Optional('s_index'): int,
+                    Optional('sg_index'): int,
+                    Optional('sg_l2ptr'): int,
+                    Optional('sg_mcinfo_fp'): int,
+                    Optional('sg_fp'): int,
+                    Optional('sg_hash_idx'): int,
+                    Optional('sg_hit_idx'): int,
+                    Optional('wildcard'): bool,
+                    Optional('met_list'): {
+                        Optional('bd_num'): int,
+                        Optional('outer_bd'): int,
+                        Optional('mc_idx'): int,
+                        Optional('met_slice_list'): {
+                            Optional('slice_list'): str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# Define the parser
+class MroutepdL3Show(MroutepdL3ShowSchema):
+    cli_command = 'dchal module 1 "mroutepd l3 show"'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+        route_index = 0
+
+        # all_mcast_pd_routes {
+        p1 = re.compile(r'^all_mcast_pd_routes \{$')
+        
+        # rv_message: "Success\n"
+        p2 = re.compile(r'^rv_message: "(?P<rv_message>[^"]+)"$')
+        
+        # g_ip_addr: "232.0.0.0"
+        p3 = re.compile(r'^g_ip_addr: "(?P<g_ip_addr>[^"]+)"$')
+        
+        # g_len: 8
+        p4 = re.compile(r'^g_len: (?P<g_len>\d+)$')
+        
+        # s_ip_addr: "0.0.0.0"
+        p5 = re.compile(r'^s_ip_addr: "(?P<s_ip_addr>[^"]+)"$')
+        
+        # s_len: 32
+        p6 = re.compile(r'^s_len: (?P<s_len>\d+)$')
+        
+        # vrf_bd: 1
+        p7 = re.compile(r'^vrf_bd: (?P<vrf_bd>\d+)$')
+        
+        # g_index: 262181
+        p8 = re.compile(r'^g_index: (?P<g_index>\d+)$')
+        
+        # g_l2ptr: 6
+        p9 = re.compile(r'^g_l2ptr: (?P<g_l2ptr>\d+)$')
+        
+        # g_mcinfo_fp: 30
+        p10 = re.compile(r'^g_mcinfo_fp: (?P<g_mcinfo_fp>\d+)$')
+        
+        # min_mtu: 1500
+        p11 = re.compile(r'^min_mtu: (?P<min_mtu>\d+)$')
+        
+        # mtu_idx: 1
+        p12 = re.compile(r'^mtu_idx: (?P<mtu_idx>\d+)$')
+        
+        # met_ptr: 1
+        p13 = re.compile(r'^met_ptr: (?P<met_ptr>\d+)$')
+        
+        # rpf_if: 4102
+        p14 = re.compile(r'^rpf_if: (?P<rpf_if>\d+)$')
+        
+        # rpf_fail_send_to_sup: true
+        p15 = re.compile(r'^rpf_fail_send_to_sup: (?P<rpf_fail_send_to_sup>true|false)$')
+        
+        # no_dc_sup_redirect: true
+        p16 = re.compile(r'^no_dc_sup_redirect: (?P<no_dc_sup_redirect>true|false)$')
+        
+        # drop: true
+        p17 = re.compile(r'^drop: (?P<drop>true|false)$')
+        
+        # slot: 1
+        p18 = re.compile(r'^slot: (?P<slot>\d+)$')
+        
+        # s_index: 67113077
+        p19 = re.compile(r'^s_index: (?P<s_index>\d+)$')
+        
+        # sg_index: 68945208
+        p20 = re.compile(r'^sg_index: (?P<sg_index>\d+)$')
+        
+        # sg_l2ptr: 4
+        p21 = re.compile(r'^sg_l2ptr: (?P<sg_l2ptr>\d+)$')
+        
+        # sg_mcinfo_fp: 30
+        p22 = re.compile(r'^sg_mcinfo_fp: (?P<sg_mcinfo_fp>\d+)$')
+        
+        # sg_fp: 7
+        p23 = re.compile(r'^sg_fp: (?P<sg_fp>\d+)$')
+        
+        # sg_hash_idx: 668
+        p24 = re.compile(r'^sg_hash_idx: (?P<sg_hash_idx>\d+)$')
+        
+        # sg_hit_idx: 1336
+        p25 = re.compile(r'^sg_hit_idx: (?P<sg_hit_idx>\d+)$')
+        
+        # wildcard: true
+        p26 = re.compile(r'^wildcard: (?P<wildcard>true|false)$')
+        
+        # bd_num: 4105
+        p27 = re.compile(r'^bd_num: (?P<bd_num>\d+)$')
+        
+        # outer_bd: 4105
+        p28 = re.compile(r'^outer_bd: (?P<outer_bd>\d+)$')
+        
+        # mc_idx: 4102
+        p29 = re.compile(r'^mc_idx: (?P<mc_idx>\d+)$')
+        
+        # slice_list: "3"
+        p30 = re.compile(r'^slice_list: "(?P<slice_list>[^"]+)"$')
+
+        # Parsing logic
+        for line in output.splitlines():
+            line = line.strip()
+
+            # all_mcast_pd_routes {
+            m = p1.match(line)
+            if m:
+                route_index += 1
+                if 'all_mcast_pd_routes' not in parsed_dict:
+                    parsed_dict['all_mcast_pd_routes'] = {}
+                parsed_dict['all_mcast_pd_routes'][route_index] = {}
+                continue
+
+            # rv_message: "Success\n"
+            m = p2.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index]['rv_message'] = m.group('rv_message')
+                continue
+
+            # g_ip_addr: "232.0.0.0"
+            m = p3.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index]['g_ip_addr'] = m.group('g_ip_addr')
+                continue
+
+            # g_len: 8
+            m = p4.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index]['g_len'] = int(m.group('g_len'))
+                continue
+
+            # s_ip_addr: "0.0.0.0"
+            m = p5.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index]['s_ip_addr'] = m.group('s_ip_addr')
+                continue
+
+            # s_len: 32
+            m = p6.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index]['s_len'] = int(m.group('s_len'))
+                continue
+
+            # vrf_bd: 1
+            m = p7.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index]['vrf_bd'] = int(m.group('vrf_bd'))
+                continue
+
+            # g_index: 262181
+            m = p8.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['g_index'] = int(m.group('g_index'))
+                continue
+
+            # g_l2ptr: 6
+            m = p9.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['g_l2ptr'] = int(m.group('g_l2ptr'))
+                continue
+
+            # g_mcinfo_fp: 30
+            m = p10.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['g_mcinfo_fp'] = int(m.group('g_mcinfo_fp'))
+                continue
+
+            # min_mtu: 1500
+            m = p11.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['min_mtu'] = int(m.group('min_mtu'))
+                continue
+
+            # mtu_idx: 1
+            m = p12.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['mtu_idx'] = int(m.group('mtu_idx'))
+                continue
+
+            # met_ptr: 1
+            m = p13.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['met_ptr'] = int(m.group('met_ptr'))
+                continue
+
+            # rpf_if: 4102
+            m = p14.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['rpf_if'] = int(m.group('rpf_if'))
+                continue
+
+            # rpf_fail_send_to_sup: true
+            m = p15.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['rpf_fail_send_to_sup'] = m.group('rpf_fail_send_to_sup') == 'true'
+                continue
+
+            # no_dc_sup_redirect: true
+            m = p16.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['no_dc_sup_redirect'] = m.group('no_dc_sup_redirect') == 'true'
+                continue
+
+            # drop: true
+            m = p17.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['drop'] = m.group('drop') == 'true'
+                continue
+
+            # slot: 1
+            m = p18.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['slot'] = int(m.group('slot'))
+                continue
+
+            # s_index: 67113077
+            m = p19.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['s_index'] = int(m.group('s_index'))
+                continue
+
+            # sg_index: 68945208
+            m = p20.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['sg_index'] = int(m.group('sg_index'))
+                continue
+
+            # sg_l2ptr: 4
+            m = p21.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['sg_l2ptr'] = int(m.group('sg_l2ptr'))
+                continue
+
+            # sg_mcinfo_fp: 30
+            m = p22.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['sg_mcinfo_fp'] = int(m.group('sg_mcinfo_fp'))
+                continue
+
+            # sg_fp: 7
+            m = p23.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['sg_fp'] = int(m.group('sg_fp'))
+                continue
+
+            # sg_hash_idx: 668
+            m = p24.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['sg_hash_idx'] = int(m.group('sg_hash_idx'))
+                continue
+
+            # sg_hit_idx: 1336
+            m = p25.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['sg_hit_idx'] = int(m.group('sg_hit_idx'))
+                continue
+
+            # wildcard: true
+            m = p26.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {})['wildcard'] = m.group('wildcard') == 'true'
+                continue
+
+            # bd_num: 4105
+            m = p27.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {}).setdefault('met_list', {})['bd_num'] = int(m.group('bd_num'))
+                continue
+
+            # outer_bd: 4105
+            m = p28.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {}).setdefault('met_list', {})['outer_bd'] = int(m.group('outer_bd'))
+                continue
+
+            # mc_idx: 4102
+            m = p29.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {}).setdefault('met_list', {})['mc_idx'] = int(m.group('mc_idx'))
+                continue
+
+            # slice_list: "3"
+            m = p30.match(line)
+            if m:
+                parsed_dict['all_mcast_pd_routes'][route_index].setdefault('cscale_data', {}).setdefault('met_list', {}).setdefault('met_slice_list', {})['slice_list'] = m.group('slice_list')
+                continue
+
+        return parsed_dict

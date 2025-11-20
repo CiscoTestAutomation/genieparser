@@ -1,0 +1,16 @@
+ ****** Port = 32, Phy_port = 1, Ctrl = 0 *******
+
+Executing Command - [dsp hist] 
+
+Good Eye Ratio Metric
+For 25G NRZ Mode, inner eye height/outer eye height > 0.40
+For 10G NRZ mode, inner eye height/outer eye height > 0.50
+For 53G PAM4 mode, inner eye height > 1/8 of outer eye height
+
+side:LINE mdioPort:3 laneOffset:3 InnerEyeHeight 0x170115,[23:16] 0x17,OuterEyeHeight 0x28252317,[31:24] 0x28, eyeratio 0.575000, Status: 0
+side:HOST mdioPort:3 laneOffset:3 InnerEyeHeight 0x1a0115,[23:16] 0x1a,OuterEyeHeight 0x2124211a,[31:24] 0x21, eyeratio 0.787879, Status: 0
+side:HOST mdioPort:2 laneOffset:3 InnerEyeHeight 0x180115,[23:16] 0x18,OuterEyeHeight 0x21222019,[31:24] 0x21, eyeratio 0.727273, Status: 0
+
+Executing Command - [Auxillary PHY hist Line] 
+
+Executing Command - [Auxillary PHY hist Host] 

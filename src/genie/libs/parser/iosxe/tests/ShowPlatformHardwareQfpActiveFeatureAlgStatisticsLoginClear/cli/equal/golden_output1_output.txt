@@ -1,0 +1,2 @@
+show platform hardware qfp active feature alg statistics login clear
+This ALG doesn't support displaying statistics.

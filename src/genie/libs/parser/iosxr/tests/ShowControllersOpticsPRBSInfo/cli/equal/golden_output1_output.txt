@@ -1,0 +1,24 @@
+RP/0/RP0/CPU0:ios#show controllers optics 0/0/0/46 prbs-info    
+Mon Sep 22 17:09:09.673 UTC
+
+
+-------------------------------------------------------PRBS Details-------------------------------------------------------
+PRBS Test                       : Enabled
+PRBS Mode                       : Source-Sink
+PRBS Pattern                    : PN15Q
+PRBS Status                     : Unlocked
+PRBS Direction                  : Line
+PRBS Configured Time            : 22 Sep 17:08:25 (44 seconds elapsed)
+PRBS Counter Last Updated Time  : 22 Sep 17:09:05 (4 seconds elapsed)
+
+Lane      SNR(dBm)          MaxSNR(dBm)          ErrorCount          TotalBits              BER                MaxBER       
+ 0           -                   -                   -                   -               2.047e+10           2.047e+10      
+ 1           -                   -                   -                   -               2.047e+10           2.047e+10      
+ 2           -                   -                   -                   -               2.047e+10           2.047e+10      
+ 3           -                   -                   -                   -               2.047e+10           2.047e+10      
+
+Lane     LockStatus          LostCount           FoundCount        LockTime(secs)    LockLostTimestamp  
+ 0        UnLocked               1                   0                   -            22 Sep 17:08:38   
+ 1        UnLocked               1                   0                   -            22 Sep 17:08:38   
+ 2        UnLocked               1                   0                   -            22 Sep 17:08:38   
+ 3        UnLocked               1                   0                   -            22 Sep 17:08:38   

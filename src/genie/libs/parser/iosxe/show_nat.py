@@ -32,6 +32,7 @@ IOSXE parser for the following show commands:
    * show nat64 mappings static key-port {port}
    * show nat64 mappings static key-address {address}
    * show ip nat limits all-host
+   * show nat64 routes
 '''
 # Python
 import re
@@ -2778,3 +2779,99 @@ class ShowIpNatLimitsAllHost(ShowIpNatLimitsAllHostSchema):
                 continue
 
         return ret_dict
+
+# =======================================================
+# Schema for 'show nat64 routes'
+# =======================================================
+class ShowNat64RoutesSchema(MetaParser):
+    """Schema for show nat64 routes"""
+    
+    schema = {
+        'nat64_routes': {
+            Any(): {  # IPv4 prefix as key
+                'ipv4_prefix': str,
+                'adj_address': str,
+                'enabled': bool,
+                'vrf': int,
+                'output_if': str,
+                Optional('global_ipv6_prefix'): {
+                    'enabled': bool,
+                    'prefix': str
+                }
+            }
+        }
+    }
+
+# =======================================================
+# Parser for 'show nat64 routes'
+# =======================================================
+class ShowNat64Routes(ShowNat64RoutesSchema):
+    """Parser for show nat64 routes"""
+    
+    cli_command = 'show nat64 routes'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        
+        # Initialize return dictionary
+        parsed = {}
+        
+        nat64_routes_data = {}
+		
+        # IPv4 Prefix        Adj. Address    Enabled  VRF      Output IF
+        # Global IPv6 Prefix
+        # 27.1.1.10/32       0.0.0.3         TRUE    0         Gi0/0/4
+        p1 = re.compile(r'^(?P<ipv4_prefix>\d+\.\d+\.\d+\.\d+/\d+)\s+'
+                       r'(?P<adj_address>\d+\.\d+\.\d+\.\d+)\s+'
+                       r'(?P<enabled>TRUE|FALSE)\s+'
+                       r'(?P<vrf>\d+)\s+'
+                       r'(?P<output_if>\S+)$')
+       
+        # TRUE   2001::/96
+        p2 = re.compile(r'^(?P<global_enabled>TRUE|FALSE)\s+'
+                       r'(?P<global_prefix>[0-9a-fA-F:]+/\d+)$')
+        
+        current_route = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines and header
+            if not line or 'IPv4 Prefix' in line or 'Global IPv6 Prefix' in line:
+                continue
+            
+            # Match IPv4 route line
+            # 27.1.1.10/32       0.0.0.3         TRUE    0         Gi0/0/4
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_prefix = group['ipv4_prefix']
+                current_route = ipv4_prefix
+                
+                nat64_routes_data[ipv4_prefix] = { 
+                    'ipv4_prefix': ipv4_prefix,
+                    'adj_address': group['adj_address'],
+                    'enabled': group['enabled'] == 'TRUE',
+                    'vrf': int(group['vrf']),
+                    'output_if': group['output_if'],
+                }
+                continue
+            
+            # Match global IPv6 prefix line (which follows an IPv4 route line)
+            # TRUE   2001::/96
+            m = p2.match(line)
+            if m and current_route: # Ensure a current_route is being processed
+                group = m.groupdict()
+                # Add 'global_ipv6_prefix' to the current route in the temporary dict
+                nat64_routes_data[current_route]['global_ipv6_prefix'] = {
+                    'enabled': group['global_enabled'] == 'TRUE',
+                    'prefix': group['global_prefix']
+                }
+                current_route = None # Reset current_route after processing its global_ipv6_prefix
+                continue
+            
+        if nat64_routes_data:
+            parsed['nat64_routes'] = nat64_routes_data
+        
+        return parsed

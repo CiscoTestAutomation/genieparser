@@ -1,0 +1,10 @@
+show ipv6 access-list time_based
+IPv6 access list time_based
+permit tcp host 2000::1 host 2002::1 time-range GO (active) sequence 10
+deny udp host 2000::1 host 2002::1 sequence 20
+permit tcp host 2000::1 host 2003::1 sequence 30
+deny udp host 2000::1 host 2003::1 time-range GO (active) sequence 40
+permit udp host 2000::1 host 2004::1 time-range GO (active) sequence 50
+deny tcp host 2000::1 host 2004::1 sequence 60
+permit udp host 2000::1 host 2004::1 sequence 70
+deny tcp host 2000::1 host 2004::1 time-range GO (active) sequence 80

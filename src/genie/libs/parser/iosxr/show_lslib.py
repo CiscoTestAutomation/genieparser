@@ -1,8 +1,10 @@
-''' show_lslib_server.py
+''' show_lslib.py
 
 Parser for the following commands:
     * show lslib server producer <prod> instance-id <id>
     * show lslib server topology protocol ospfv3 nlri-type link detail
+    * show lslib server topology-db protocol ospf nlri-type link detail
+    * show lslib cache ospf <process_id> links attributes
 '''
 
 import re
@@ -881,6 +883,338 @@ class ShowLslibServerTopologyOspfv3PrefixNlri(ShowLslibServerTopologyOspfv3Prefi
             if m:
                 attr_dict = nlri_dict.setdefault("attributes", {})
                 attr_dict["metric"] = int(m.group("metric"))
+                continue
+
+        return ret_dict
+
+# =============================================================
+# Schema for 'show lslib cache ospf <process_id> links attributes'
+# =============================================================
+class ShowLslibCacheOspfLinksAttributesSchema(MetaParser):
+    """
+    Schema for show lslib cache ospf <process_id> links attributes
+    """
+    schema = {
+        'links': {
+            Any(): {
+                'local_link_id': int,
+                'remote_link_id': int,
+                'metric': int,
+                'opaque_link_attr': str,
+            }
+        }
+    }
+
+class ShowLslibCacheOspfLinksAttributes(ShowLslibCacheOspfLinksAttributesSchema):
+    """
+    Parser for show lslib cache ospf <process_id> links attributes
+    """
+    cli_command = 'show lslib cache ospf {process_id} links attributes'
+
+    def cli(self, process_id, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process_id=process_id))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.1]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.2]][L[i99.1.2.1][n99.1.2.2]]
+        p1 = re.compile(r'^\[E\](?P<nlri>.+)$')
+        # Attributes: Link ID: Local:109 Remote:16, metric: 1, Opaque-link-attr:
+        p2 = re.compile(r'^Attributes: Link ID: Local:(\d+) Remote:(\d+), metric: (\d+), Opaque-link-attr: *$')
+        # Attributes: Link ID: Local:15 Remote:44, Opaque-link-attr:
+        p3 = re.compile(r'^Attributes: Link ID: Local:(\d+) Remote:(\d+), Opaque-link-attr:\s*$')
+        # 80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+        # .43.5f.30.5f.30.5f.32.20.20.20
+        p4 = re.compile(r'^(?:\s*\.?)([0-9A-Fa-f]{2}(?:\.[0-9A-Fa-f]{2})+)')
+
+        ret_dict = {'links': {}}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.1]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.2]][L[i99.1.2.1][n99.1.2.2]]
+            m = p1.match(line)
+            if m:
+                cur_link = '[E]' + m.group('nlri')
+                ret_dict['links'][cur_link] = {}
+                continue
+
+            # Attributes: Link ID: Local:109 Remote:16, metric: 1, Opaque-link-attr:
+            m = p2.match(line)
+            if m and cur_link is not None:
+                ret_dict['links'][cur_link]['local_link_id'] = int(m.group(1))
+                ret_dict['links'][cur_link]['remote_link_id'] = int(m.group(2))
+                ret_dict['links'][cur_link]['metric'] = int(m.group(3))
+                ret_dict['links'][cur_link]['opaque_link_attr'] = ''
+                continue
+
+            # Attributes: Link ID: Local:15 Remote:44, Opaque-link-attr:
+            m = p3.match(line)
+            if m and cur_link is not None:
+                ret_dict['links'][cur_link]['local_link_id'] = int(m.group(1))
+                ret_dict['links'][cur_link]['remote_link_id'] = int(m.group(2))
+                ret_dict['links'][cur_link]['metric'] = 0  # Default metric when not specified
+                ret_dict['links'][cur_link]['opaque_link_attr'] = ''
+                continue
+
+            # 80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+            # .43.5f.30.5f.30.5f.32.20.20.20
+            m = p4.match(line)
+            if m and cur_link is not None:
+                hex_str = m.group(1).replace('.', '')
+                ret_dict['links'][cur_link]['opaque_link_attr'] += hex_str
+                continue
+
+        return ret_dict
+
+# =============================================================
+# Schema for 'show lslib server topology-db protocol ospf nlri-type link detail'
+# =============================================================
+class ShowLslibServerTopologyDbOspfNlriTypeLinkDetailSchema(MetaParser):
+    """
+    Schema for show lslib server topology-db protocol ospf instance-id <id> nlri-type link detail
+    """
+    schema = {
+        'links': {
+            Any(): {
+                'nlri_length': int,
+                'attribute_length': int,
+                'producers': {
+                    Any(): {
+                        'inst_id': int,
+                        'producer': str,
+                    },
+                },
+                'nlri_type': str,
+                'protocol': str,
+                'identifier': str,
+                'local_node_descriptor': {
+                    'as_number': int,
+                    'bgp_identifier': str,
+                    'area_id': str,
+                    'router_id_ipv4': str,
+                },
+                'remote_node_descriptor': {
+                    'as_number': int,
+                    'bgp_identifier': str,
+                    'area_id': str,
+                    'router_id_ipv4': str,
+                },
+                'link_descriptor': {
+                    'local_interface_address_ipv4': str,
+                    'neighbor_interface_address_ipv4': str,
+                },
+                Optional('attributes'): {
+                    'local_link_id': int,
+                    'remote_link_id': int,
+                    'metric': int,
+                    Optional('opaque_link_attr'): str,
+                }
+            }
+        }
+    }
+
+class ShowLslibServerTopologyDbOspfNlriTypeLinkDetail(ShowLslibServerTopologyDbOspfNlriTypeLinkDetailSchema):
+    """
+    Parser for show lslib server topology-db protocol ospf nlri-type link detail
+    """
+    cli_command = ['show lslib server topology-db protocol ospf instance-id {inst_id} nlri-type link detail']
+
+    def cli(self, inst_id='0', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0].format(inst_id=inst_id))
+        else:
+            out = output
+
+        ret_dict = {}
+        producers_dict = {}
+        nlri_dict = None
+        in_local_node = False
+        in_remote_node = False
+        in_link_desc = False
+
+        # [E][O][I0x0][N[c0][b0.0.0.0][a0.0.0.0][r1.1.1.1]][R[c0][b0.0.0.0][a0.0.0.0][r1.1.1.2]][L[l64.35]]/792
+        p1 = re.compile(r'^\[E\](?P<nlri>.+)$')
+        # NLRI Length: 99 bytes
+        p2 = re.compile(r'^NLRI Length: (\d+) bytes$')
+        # Attribute Length: 51 bytes
+        p3 = re.compile(r'^Attribute Length: (\d+) bytes$')
+        # 0, ospf
+        p4 = re.compile(r'^(\d+),\s*(\w+)$')
+        # NLRI Type: Link
+        p5 = re.compile(r'^NLRI Type: (.+)$')
+        # Protocol: OSPF
+        p6 = re.compile(r'^Protocol: (.+)$')
+        # Identifier: 0x0
+        p7 = re.compile(r'^Identifier: (.+)$')
+        # Local Node Descriptor:
+        p8 = re.compile(r'^Local Node Descriptor:$')
+        # Remote Node Descriptor:
+        p9 = re.compile(r'^Remote Node Descriptor:$')
+        # Link Descriptor:
+        p10 = re.compile(r'^Link Descriptor:')
+        # AS Number: 0
+        p11 = re.compile(r'^AS Number: (\d+)$')
+        # BGP Identifier: 0.0.0.0
+        p12 = re.compile(r'^BGP Identifier: ([\d\.]+)$')
+        # Area ID: 0.0.0.0
+        p13 = re.compile(r'^Area ID: ([\d\.]+)$')
+        # Router ID IPv4: 1.1.1.1
+        p14 = re.compile(r'^Router ID IPv4: ([\d\.]+)$')
+        # Local Interface Address IPv4: 99.1.2.1
+        p15 = re.compile(r'^Local Interface Address IPv4: ([\d\.]+)$')
+        # Neighbor Interface Address IPv4: 99.1.2.2
+        p16 = re.compile(r'^Neighbor Interface Address IPv4: ([\d\.]+)$')
+        # Attributes: Link ID: Local:109 Remote:16, metric: 1, Opaque-link-attr:
+        p17 = re.compile(r'^Attributes: Link ID: Local:(\d+) Remote:(\d+), metric: (\d+), Opaque-link-attr: *$')
+        # 80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+        # .43.5f.30.5f.30.5f.32.20.20.20
+        p18 = re.compile(r'^(?:\s*\.?)([0-9A-Fa-f]{2}(?:\.[0-9A-Fa-f]{2})+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # [E][O][I0x0][N[c0][b0.0.0.0][a0.0.0.0][r1.1.1.1]][R[c0][b0.0.0.0][a0.0.0.0][r1.1.1.2]][L[i99.1.2.1][n99.1.2.2]]/792
+            m = p1.match(line)
+            if m:
+                nlri = '[E]' + m.group(1)
+                nlri_dict = ret_dict.setdefault('links', {}).setdefault(nlri, {})
+                continue
+
+            # NLRI Length: 99 bytes
+            m = p2.match(line)
+            if m and nlri_dict is not None:
+                nlri_dict['nlri_length'] = int(m.group(1))
+                continue
+
+            # Attribute Length: 51 bytes
+            m = p3.match(line)
+            if m and nlri_dict is not None:
+                nlri_dict['attribute_length'] = int(m.group(1))
+                continue
+
+            # 0, ospf
+            m = p4.match(line)
+            if m and nlri_dict is not None:
+                producers_dict[int(m.group(1))] = {
+                    'inst_id': int(m.group(1)),
+                    'producer': m.group(2).lower()
+                }
+                nlri_dict['producers'] = producers_dict
+                continue
+
+            # NLRI Type: Link
+            m = p5.match(line)
+            if m and nlri_dict is not None:
+                nlri_dict['nlri_type'] = m.group(1).lower()
+                continue
+
+            # Protocol: OSPF
+            m = p6.match(line)
+            if m and nlri_dict is not None:
+                nlri_dict['protocol'] = m.group(1).lower()
+                continue
+
+            # Identifier: 0x0
+            m = p7.match(line)
+            if m and nlri_dict is not None:
+                nlri_dict['identifier'] = m.group(1)
+                continue
+
+            # Local Node Descriptor:
+            m = p8.match(line)
+            if m and nlri_dict is not None:
+                in_local_node = True
+                in_remote_node = False
+                in_link_desc = False
+                nlri_dict['local_node_descriptor'] = {}
+                continue
+
+            # Remote Node Descriptor:
+            m = p9.match(line)
+            if m and nlri_dict is not None:
+                in_local_node = False
+                in_remote_node = True
+                in_link_desc = False
+                nlri_dict['remote_node_descriptor'] = {}
+                continue
+
+            # Link Descriptor:
+            m = p10.match(line)
+            if m and nlri_dict is not None:
+                in_local_node = False
+                in_remote_node = False
+                in_link_desc = True
+                nlri_dict['link_descriptor'] = {}
+                continue
+
+            # AS Number: 0
+            m = p11.match(line)
+            if m and nlri_dict is not None:
+                if in_local_node:
+                    nlri_dict['local_node_descriptor']['as_number'] = int(m.group(1))
+                elif in_remote_node:
+                    nlri_dict['remote_node_descriptor']['as_number'] = int(m.group(1))
+                continue
+
+            # BGP Identifier: 0.0.0.0
+            m = p12.match(line)
+            if m and nlri_dict is not None:
+                if in_local_node:
+                    nlri_dict['local_node_descriptor']['bgp_identifier'] = m.group(1)
+                elif in_remote_node:
+                    nlri_dict['remote_node_descriptor']['bgp_identifier'] = m.group(1)
+                continue
+
+            # Area ID: 0.0.0.0
+            m = p13.match(line)
+            if m and nlri_dict is not None:
+                if in_local_node:
+                    nlri_dict['local_node_descriptor']['area_id'] = m.group(1)
+                elif in_remote_node:
+                    nlri_dict['remote_node_descriptor']['area_id'] = m.group(1)
+                continue
+
+            # Router ID IPv4: 1.1.1.1
+            m = p14.match(line)
+            if m and nlri_dict is not None:
+                if in_local_node:
+                    nlri_dict['local_node_descriptor']['router_id_ipv4'] = m.group(1)
+                elif in_remote_node:
+                    nlri_dict['remote_node_descriptor']['router_id_ipv4'] = m.group(1)
+                continue
+
+            # Local Interface Address IPv4: 99.1.2.1
+            m = p15.match(line)
+            if m and nlri_dict is not None and in_link_desc:
+                nlri_dict['link_descriptor']['local_interface_address_ipv4'] = m.group(1)
+                continue
+
+            # Neighbor Interface Address IPv4: 99.1.2.2
+            m = p16.match(line)
+            if m and nlri_dict is not None and in_link_desc:
+                nlri_dict['link_descriptor']['neighbor_interface_address_ipv4'] = m.group(1)
+                continue
+
+            # Attributes: Link ID: Local:109 Remote:16, metric: 1, Opaque-link-attr:
+            m = p17.match(line)
+            if m and nlri_dict is not None:
+                nlri_dict['attributes'] = {
+                    'local_link_id': int(m.group(1)),
+                    'remote_link_id': int(m.group(2)),
+                    'metric': int(m.group(3)),
+                    'opaque_link_attr': ''
+                }
+                continue
+
+            # 80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+            # .43.5f.30.5f.30.5f.30.20.20.20
+            m = p18.match(line)
+            if m and nlri_dict is not None:
+                if 'attributes' in nlri_dict:
+                    nlri_dict['attributes']['opaque_link_attr'] += m.group(1).replace('.', '')
                 continue
 
         return ret_dict

@@ -318,12 +318,9 @@ class ShowUdldNeighbor(ShowUdldNeighborSchema):
         
         ret_dict = {}
         
-        #Gi1/0/13       9077EEFE7F0     1            70:D3:79:84:69:        Bidirectional
-        p1 = re.compile(r'^(?P<port>\w+\/\d+\/\d+(\/\d)?)\s+'
-                        r'(?P<device_name>\w+)\s+'
-                        r'(?P<device_id>\w+)\s+'
-                        r'(?P<port_id>\w+\/\d+\/\d+(\/\d)?)\s+'
-                        r'(?P<neighbor_state>\w+)$')
+        # Gi1/0/13       9077EEFE7F0     1            70:D3:79:84:69:        Bidirectional
+        # Fo1/0/12       B08D57ACC340    1            Hu1/1/0/12      Bidirectional
+        p1 = re.compile(r'^(?P<port>[\w\d\/]+?)\s+(?P<device_name>\w+)\s+(?P<device_id>\w+)\s+(?P<port_id>[\w\d\/:]+?)\s+(?P<neighbor_state>\w+)$')
 
         #Total number of bidirectional entries displayed: 1
         p2 = re.compile(r"^Total\s+number\s+of\s+bidirectional\s+entries\s+displayed:\s+(?P<total_number_of_bidirectional_entries_displayed>\d+)$")

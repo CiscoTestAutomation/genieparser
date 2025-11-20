@@ -1,0 +1,30 @@
+show cts role-based sgt-map all
+Active IPv4-SGT Bindings Information
+
+IP Address              SGT     Source
+============================================
+30.0.0.2                30      LOCAL
+40.0.0.2                40      LOCAL
+100.8.18.56             2       INTERNAL
+
+IP-SGT Active Bindings Summary
+============================================
+Total number of LOCAL    bindings = 2
+Total number of INTERNAL bindings = 1
+Total number of active   bindings = 3
+
+Active IPv6-SGT Bindings Information
+
+IP Address                                  SGT     Source
+================================================================
+30::1200:FF:FE00:1101                       30      LOCAL
+30::9895:7599:F301:809B                     30      LOCAL
+40::2                                       40      LOCAL
+40::1200:FF:FE00:2202                       40      LOCAL
+1133:1:1::1                                 2       CLI-HI
+
+IP-SGT Active Bindings Summary
+============================================
+Total number of LOCAL    bindings = 4
+Total number of CLI-HI   bindings = 1
+Total number of active   bindings = 5

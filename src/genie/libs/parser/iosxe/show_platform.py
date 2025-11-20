@@ -42,6 +42,7 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active feature nat datapath port'
     * 'show platform hardware qfp active feature nat datapath map'
     * 'show platform hardware qfp active feature nat datapath esp'
+    * 'show platform hardware subslot {subslot} module host-if statistics'
     '''
 
 # Python
@@ -2591,7 +2592,7 @@ class ShowPlatform(ShowPlatformSchema):
         # F0        C8500-20X6C         init, active          00:01:37
         p6 = re.compile(r'^(?P<slot>[\w]+)(\/)?(?P<subslot>\d+)?\s*(?P<name>[\w\-_+\/]+)?\s*'\
                         r'(?P<state>(ok|unknown|admin down|ok, active|N\/A|ok, standby|init, active'\
-                        r'|ps, fail|empty|incompatible|inserted|fail|disabled|booting|init, standby))\s*'\
+                        r'|ps, fail|empty|incompatible|inserted|fail|disabled|booting|init, standby|fan:\d,\s*fail))\s*'\
                         r'(?P<insert_time>([\w\.\:]+|N\/A))$')
 
         # 4                             unknown               2d00h
@@ -4337,8 +4338,8 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
 
     cli_command = [
         'show processes cpu sorted',
-        'show processes cpu sorted {sort_time}',
         'show processes cpu sorted | include {key_word}',
+        'show processes cpu sorted {sort_time}',
         'show processes cpu sorted | exclude {exclude}',
         'show processes cpu sorted {sort_time} | include {key_word}',
         'show processes cpu sorted {sort_time} | exclude {exclude}'
@@ -4359,9 +4360,9 @@ class ShowProcessesCpuSorted(ShowProcessesCpuSortedSchema):
                 elif exclude:
                     cmd = self.cli_command[3].format(exclude=exclude)
                 elif key_word:
-                    cmd = self.cli_command[2].format(key_word=key_word)
+                    cmd = self.cli_command[1].format(key_word=key_word)
                 elif sort_time:
-                    cmd = self.cli_command[1].format(sort_time=sort_time)
+                    cmd = self.cli_command[2].format(sort_time=sort_time)
                 else:
                     cmd = self.cli_command[0]
 
@@ -4685,10 +4686,11 @@ class ShowProcessesCpu(ShowProcessesCpuSorted):
     """Parser for show processes cpu
                   show processes cpu | include <WORD>"""
 
-    cli_command = 'show processes cpu'
+    cli_command = ['show processes cpu',
+                   'show processes cpu | include {key_word}']
 
     def cli(self, key_word='', output=None):
-        return(super().cli(key_word=key_word, output=output))
+        return(super().cli(key_word=key_word,output=output))
 
 
 class ShowVersionRpSchema(MetaParser):
@@ -7266,7 +7268,12 @@ class ShowPlatformPacketTracePacketSchema(MetaParser):
                         'policy_name': str,
                         'input_vrf_id': str,
                         'input_interface': str,
-                        'output_vrf_id': str
+                        'output_vrf_id': str,
+                        Optional('nat'): str,
+                        Optional('classification'): {
+                            Optional('src'): str,
+                            Optional('dst'): str
+                        }
                     },
                     Optional('cft'): {
                         'api': str,
@@ -7327,17 +7334,120 @@ class ShowPlatformPacketTracePacketSchema(MetaParser):
                         'local_addr': str
                     },
                     Optional('nat'): {
-                        'direction': str,
-                        'from': str,
+                        Optional('direction'): str,
+                        Optional('from'): str,
+                        Optional('action'): str,
+                        Optional('fwd_point'): str,
+                        Optional('vrf'): str,
+                        Optional('table_id'): str,
+                        Optional('protocol'): str,
+                        Optional('src_addr'): str,
+                        Optional('dest_addr'): str,
+                        Optional('src_port'): str,
+                        Optional('dst_port'): str,
+                        Optional('vrfid'): str,
+                        Optional('steps'): str,
+                        Optional('match_id'): str,
+                        Optional('old_address'): str,
+                        Optional('new_address'): str,
+                        Optional('orig_src_port'): str,
+                        Optional('new_src_port'): str,
+                        Optional('orig_dest_port'): str,
+                        Optional('new_dest_port'): str,
+                        Optional('trace_point'): str,
+                        Optional('proc_flags'): str,
+                        Optional('lookup_flags'): str,
+                        Optional('event_flags'): str,
+                        Optional('map_id_result'): str,
+                        Optional('rule_id'): str,
+                        Optional('in_uidb'): str,
+                        Optional('out_uidb'): str
+                    },
+                    Optional('vtcp'): {
                         'action': str,
-                        'fwd_point': str,
-                        'vrf': str,
-                        'table_id': str,
-                        'protocol': str,
-                        'src_addr': str,
-                        'dest_addr': str,
-                        'src_port': str,
-                        'dst_port': str
+                        Optional('seq'): str,
+                        Optional('ack'): str,
+                        Optional('len'): str,
+                        Optional('mss'): str,
+                        Optional('flags'): str
+                    },
+                    Optional('alg_parser'): {
+                        'type': str,
+                        'caller': str,
+                        'action': str
+                    },
+                    Optional('alg'): {
+                        'type': str,
+                        'caller': str,
+                        'action': str
+                    },
+                    Optional('alg_writeback'): {
+                        'action': str
+                    },
+                    # Support for literal ALG feature names and multiple instances
+                    Optional('ALG PARSER'): {
+                        Optional('type'): str,
+                        Optional('caller'): str,
+                        Optional('action'): str
+                    },
+                    Optional('ALG WRITEBACK'): {
+                        Optional('action'): str
+                    },
+                    Optional('threat_defense_vtcp'): {
+                        'action': str,
+                        Optional('seq'): str,
+                        Optional('ack'): str,
+                        Optional('len'): str,
+                        Optional('mss'): str,
+                        Optional('flags'): str
+                    },
+                    Optional('threat'): {
+                        'action': str,
+                        Optional('seq'): str,
+                        Optional('ack'): str,
+                        Optional('len'): str,
+                        Optional('mss'): str,
+                        Optional('flags'): str
+                    },
+                    # Allow for any other feature names (including numbered variants like ALG WRITEBACK_2, vtcp_2, etc.)
+                    Any(): {
+                        Optional('action'): str,
+                        Optional('type'): str,
+                        Optional('caller'): str,
+                        Optional('seq'): str,
+                        Optional('ack'): str,
+                        Optional('len'): str,
+                        Optional('mss'): str,
+                        Optional('flags'): str,
+                        Optional('direction'): str,
+                        Optional('from'): str,
+                        Optional('fwd_point'): str,
+                        Optional('vrf'): str,
+                        Optional('table_id'): str,
+                        Optional('protocol'): str,
+                        Optional('src_addr'): str,
+                        Optional('dest_addr'): str,
+                        Optional('src_port'): str,
+                        Optional('dst_port'): str,
+                        Optional('vrfid'): str,
+                        Optional('steps'): str,
+                        Optional('match_id'): str,
+                        Optional('old_address'): str,
+                        Optional('new_address'): str,
+                        Optional('orig_src_port'): str,
+                        Optional('new_src_port'): str,
+                        Optional('orig_dest_port'): str,
+                        Optional('new_dest_port'): str,
+                        Optional('trace_point'): str,
+                        Optional('proc_flags'): str,
+                        Optional('lookup_flags'): str,
+                        Optional('event_flags'): str,
+                        Optional('map_id_result'): str,
+                        Optional('rule_id'): str,
+                        Optional('in_uidb'): str,
+                        Optional('out_uidb'): str,
+                        # Allow for any other optional fields
+                        Any(): Any()
                     }
 
                 },
@@ -7363,7 +7473,9 @@ class ShowPlatformPacketTracePacketSchema(MetaParser):
                         'dst': str,
                         'length': str
                     }
-                }
+                },
+                Optional('packet_copy_in'): str,
+                Optional('packet_copy_out'): str
             }
         }
     }
@@ -7412,16 +7524,21 @@ class ShowPlatformPacketTracePacket(ShowPlatformPacketTracePacketSchema):
             r'\s+(?P<field>(Start)|(Stop))\s+:\s(?P<time_ns>\d+)\s+ns\s+'
             r'\((?P<date_str>\d+/\d+/\d+\s+\d+:\d+:\d+\.\d+)\s+\w+\)')
         #   Feature: IPV4(Output)
-        p_feature_start = re.compile(r'\s+Feature:\s(?P<feature_name>[\w\\()]+)')
+        p_feature_start = re.compile(r'\s+Feature:\s(?P<feature_name>[\w\s\\()]+)')
         # Path Trace
         p_path_trace_start = re.compile(r'Path\s+Trace$')
         # IOSd Path Flow: Packet: 1    CBUG ID: 105
         p_iosd_flow_start = re.compile(r'IOSd\sPath\sFlow:\sPacket:')
+        # Packet Copy In
+        p_packet_copy_in = re.compile(r'^Packet\s+Copy\s+In$')
+        # Packet Copy Out
+        p_packet_copy_out = re.compile(r'^Packet\s+Copy\s+Out$')
 
         p_from_plane = re.compile(r'\s+Packet\s+Rcvd\s+From\s+(?P<from_plane>\w+)')
         p_layer = re.compile(r'\s+Packet\s+Enqueued\s+in\s+(?P<layer>.*)')
 
         ret_dict = {}
+        current_packet_copy_type = None
 
         for line in output.splitlines():
             # start a with new packet
@@ -7432,31 +7549,79 @@ class ShowPlatformPacketTracePacket(ShowPlatformPacketTracePacketSchema):
                 packet_id = int(groups['packet_id'])
                 packet_dict = ret_dict.setdefault('packets', {}).setdefault(packet_id, {})
                 packet_dict['cbug_id'] = int(groups['cbug_id'])
+                current_packet_copy_type = None
                 continue
 
             # Summary
             m = p_summary_start.match(line)
             if m:
                 current_dict = packet_dict.setdefault('summary', {})
+                current_packet_copy_type = None
                 continue
 
             # Path Trace
             m = p_path_trace_start.match(line)
             if m:
                 current_features_key = 'path_trace'
+                current_packet_copy_type = None
                 continue
             # IOSd Path Flow: Packet: 1    CBUG ID: 105
             m = p_iosd_flow_start.match(line)
             if m:
                 current_features_key = 'iosd_flow'
+                current_packet_copy_type = None
+                continue
+
+            # Packet Copy In
+            m = p_packet_copy_in.match(line)
+            if m:
+                current_packet_copy_type = 'packet_copy_in'
+                packet_dict[current_packet_copy_type] = ''
+                continue
+
+            # Packet Copy Out
+            m = p_packet_copy_out.match(line)
+            if m:
+                current_packet_copy_type = 'packet_copy_out'
+                packet_dict[current_packet_copy_type] = ''
+                continue
+
+            # If we're in a packet copy section, accumulate hex data
+            if current_packet_copy_type:
+                # Check if line contains hex data (matches pattern like: ac3a67e5 34115057 ...)
+                if re.match(r'^\s*[0-9a-fA-F\s]+$', line.strip()) and line.strip():
+                    if packet_dict[current_packet_copy_type]:
+                        packet_dict[current_packet_copy_type] += ' ' + line.strip()
+                    else:
+                        packet_dict[current_packet_copy_type] = line.strip()
                 continue
 
             #   Feature: IPV4(Output)
             m = p_feature_start.match(line)
             if m:
                 groups = m.groupdict()
-                current_feature = self._field_name_normalize(groups['feature_name'])
-                current_dict = packet_dict.setdefault(current_features_key, {}).setdefault(current_feature, {})
+                feature_name = groups['feature_name']
+                
+                # For ALG features, keep the original name without normalization
+                if feature_name.startswith('ALG '):
+                    base_feature = feature_name
+                else:
+                    base_feature = self._field_name_normalize(feature_name)
+                
+                # Handle multiple instances of the same feature by creating numbered entries
+                path_trace_dict = packet_dict.setdefault(current_features_key, {})
+                if base_feature in path_trace_dict:
+                    # Find the next available number for this feature
+                    counter = 2
+                    current_feature = f"{base_feature}_{counter}"
+                    while current_feature in path_trace_dict:
+                        counter += 1
+                        current_feature = f"{base_feature}_{counter}"
+                else:
+                    current_feature = base_feature
+                    
+                current_dict = path_trace_dict.setdefault(current_feature, {})
+                current_packet_copy_type = None
                 continue
 
             #  Timestamp
@@ -7485,6 +7650,11 @@ class ShowPlatformPacketTracePacket(ShowPlatformPacketTracePacketSchema):
                 current_dict['packet_enqueued_in'] = groups['layer']
                 continue
 
+            # Handle special cases for nested structures like Classification under ZBFW
+            if 'Classification:' in line:
+                # Skip the "Classification:" line and continue to parse the nested fields
+                continue
+
             # from here on we match all lines by splitting by :
             #
             # current_dict is set to summary or the respective feature based on earlier
@@ -7507,9 +7677,23 @@ class ShowPlatformPacketTracePacket(ShowPlatformPacketTracePacketSchema):
             #     triplet.triplet_flags : 0x00000000
             #     triplet.counter       : 0
 
-            line = line.split(':', maxsplit=1)
-            if len(line) == 2:
-                current_dict[self._field_name_normalize(line[0])] = line[1].strip()
+            line_parts = line.split(':', maxsplit=1)
+            if len(line_parts) == 2:
+                field_name = self._field_name_normalize(line_parts[0])
+                field_value = line_parts[1].strip()
+                
+                # Handle Classification fields under ZBFW
+                if (field_name in ['src', 'dst'] and 
+                    current_features_key == 'path_trace' and 
+                    hasattr(current_dict, 'get') and 
+                    'zbfw' in packet_dict.get(current_features_key, {})):
+                    # Find the ZBFW feature and add to its classification
+                    zbfw_dict = packet_dict[current_features_key]['zbfw']
+                    if 'classification' not in zbfw_dict:
+                        zbfw_dict['classification'] = {}
+                    zbfw_dict['classification'][field_name] = field_value
+                else:
+                    current_dict[field_name] = field_value
                 continue
 
         return ret_dict
@@ -9328,10 +9512,12 @@ class ShowTimeRangeSchema(MetaParser):
     schema = {
         'time_range_entry': str,
         'status': str,
-        'periodicity': str,
-        'start_time': str,
-        'end_time': str,
-        Optional('used_in'): str,
+        Optional('periodicity'): str,
+        Optional('start_time'): str,
+        Optional('end_time'): str,
+        Optional('absolute_start'): str,
+        Optional('absolute_end'): str,
+        Optional('used_in'): Or(str, ListOf(str)),
     }
 
 class ShowTimeRange(ShowTimeRangeSchema):
@@ -9344,17 +9530,28 @@ class ShowTimeRange(ShowTimeRangeSchema):
             output = self.device.execute(self.cli_command.format(time_range_name=time_range_name))
 
         # time-range entry: time1 (active)
+        # time-range entry: GO (inactive)
         p1 = re.compile(r"^time-range\s+entry:\s+(?P<time_range_entry>\S+)\s+\((?P<status>\w+)\)$")
-        #    periodic daily 22:40 to 22:41
+        
+        # periodic daily 22:40 to 22:41
         p2 = re.compile(r"^\s+periodic\s+(?P<periodicity>\w+)\s+(?P<start_time>\S+)\s+to\s+(?P<end_time>\S+)$")
-        #    used in: IPv6 ACL entry
-        p3 = re.compile(r"^\s+used\s+in:\s+(?P<used_in>\S+\s+\S+\s+\S+)$")
+        
+        # absolute start 03:45 23 October 2025
+        p3 = re.compile(r"^\s*absolute\s+start\s+(?P<absolute_start>.+)$")
+        
+        # absolute end 03:45 24 October 2025
+        p4 = re.compile(r"^\s*absolute\s+end\s+(?P<absolute_end>.+)$")
+        
+        # used in: IPv6 ACL entry
+        p5 = re.compile(r"^\s*used\s+in:\s+(?P<used_in>.+)$")
 
         ret_dict = {}
+        used_in_list = []
 
         for line in output.splitlines():
 
             # time-range entry: time1 (active)
+            # time-range entry: GO (inactive)
             m = p1.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -9362,7 +9559,7 @@ class ShowTimeRange(ShowTimeRangeSchema):
                 ret_dict['status'] = dict_val['status']
                 continue
 
-            #    periodic daily 22:40 to 22:41
+            # periodic daily 22:40 to 22:41
             m = p2.match(line)
             if m:
                 dict_val = m.groupdict()
@@ -9371,12 +9568,33 @@ class ShowTimeRange(ShowTimeRangeSchema):
                 ret_dict['end_time'] = dict_val['end_time']
                 continue
 
-            #    used in: IPv6 ACL entry
+            # absolute start 03:45 23 October 2025
             m = p3.match(line)
             if m:
                 dict_val = m.groupdict()
-                ret_dict['used_in'] = dict_val['used_in']
+                ret_dict['absolute_start'] = dict_val['absolute_start']
                 continue
+
+            # absolute end 03:45 24 October 2025
+            m = p4.match(line)
+            if m:
+                dict_val = m.groupdict()
+                ret_dict['absolute_end'] = dict_val['absolute_end']
+                continue
+
+            # used in: IPv6 ACL entry
+            m = p5.match(line)
+            if m:
+                dict_val = m.groupdict()
+                used_in_list.append(dict_val['used_in'])
+                continue
+
+        # Handle used_in: single entry as string, multiple entries as list
+        if used_in_list:
+            if len(used_in_list) == 1:
+                ret_dict['used_in'] = used_in_list[0]
+            else:
+                ret_dict['used_in'] = used_in_list
 
         return ret_dict
 
@@ -11406,3 +11624,1274 @@ class ShowPlatformHardwareQfpActiveFeatureNatDatapathEsp(ShowPlatformHardwareQfp
                 continue
 
         return parsed_dict
+
+class ShowPlatformHardwareIomdEthernetControllersPhyHistogramSchema(MetaParser):
+    """Schema for show platform hardware iomd {iomd} ethernet_controllers phy {phy} histogram"""
+    schema = {
+        Optional('port'): int,
+        Optional('phy_port'): int,
+        Optional('ctrl'): int,
+        'entries': ListOf(dict)
+    }
+
+class ShowPlatformHardwareIomdEthernetControllersPhyHistogram(
+    ShowPlatformHardwareIomdEthernetControllersPhyHistogramSchema
+):
+    """Parser for show platform hardware iomd {iomd} ethernet_controllers phy {phy} histogram"""
+
+    cli_command = 'show platform hardware iomd {iomd} ethernet_controllers phy {phy} histogram'
+
+    def cli(self, iomd, phy, output=None):
+        if output is None:
+            cmd = self.cli_command.format(iomd=iomd, phy=phy)
+            output = self.device.execute(cmd)
+
+        ret_dict = {'entries': []}
+
+        # Header line: ****** Port = 32, Phy_port = 1, Ctrl = 0 *******
+        p1 = re.compile(r'^\*+ Port = (?P<port>\d+), Phy_port = (?P<phy_port>\d+), Ctrl = (?P<ctrl>\d+) \*+$')
+
+        # Data line:
+        p_data = re.compile(
+            r'^side:(?P<side>\S+)\s+mdioPort:(?P<mdio_port>\d+)\s+laneOffset:(?P<lane_offset>\d+)\s+'
+            r'InnerEyeHeight\s+(?P<inner_eye_hex>0x[0-9a-fA-F]+),\[23:16\]\s+(?P<inner_eye>\S+),'
+            r'OuterEyeHeight\s+(?P<outer_eye_hex>0x[0-9a-fA-F]+),\[31:24\]\s+(?P<outer_eye>\S+),\s*'
+            r'eyerat(?:io)?\s+(?P<eyerat>\S+),\s*Status:\s*(?P<status>\d+)'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Parse header line
+            m = p1.match(line)
+            if m:
+                ret_dict['port'] = int(m.group('port'))
+                ret_dict['phy_port'] = int(m.group('phy_port'))
+                ret_dict['ctrl'] = int(m.group('ctrl'))
+                continue
+
+            # Parse data lines
+            m = p_data.match(line)
+            if m:
+                entry = {
+                    'side': m.group('side'),
+                    'mdio_port': int(m.group('mdio_port')),
+                    'lane_offset': int(m.group('lane_offset')),
+                    'inner_eye_height_hex': m.group('inner_eye_hex'),
+                    'inner_eye_height': m.group('inner_eye'),
+                    'outer_eye_height_hex': m.group('outer_eye_hex'),
+                    'outer_eye_height': m.group('outer_eye'),
+                    'eyerat': float(m.group('eyerat')),
+                    'status': int(m.group('status')),
+                }
+                ret_dict['entries'].append(entry)
+                continue
+
+        return ret_dict 
+
+class ShowPlatformManagementInterfaceSchema(MetaParser):
+    """Schema for show platform management-interface"""
+    schema = {
+        'management_interface': str
+    }
+
+class ShowPlatformManagementInterface(ShowPlatformManagementInterfaceSchema):
+    """Parser for show platform management-interface"""
+
+    cli_command = 'show platform management-interface'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Management interface is GigabitEthernet0/0
+        p1 = re.compile(r'^Management interface is (?P<interface>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Management interface is GigabitEthernet0/0
+            m = p1.match(line)
+            if m:
+                ret_dict['management_interface'] = m.group('interface')
+
+        return ret_dict 
+
+class ShowPlatformHardwareSlotSenConsumerAllSchema(MetaParser):
+    """Schema for show plat hard slot {slot} sen consumer all"""
+    schema = {
+        'registration': str,
+        'sensors': {
+            Any(): {
+                'id': int,
+                'data': int,
+                'last_poll': str
+            }
+        }
+    }
+
+class ShowPlatformHardwareSlotSenConsumerAll(ShowPlatformHardwareSlotSenConsumerAllSchema):
+    """Parser for show plat hard slot {slot} sen consumer all"""
+
+    cli_command = 'show plat hard slot {slot} sen consumer all'
+
+    def cli(self, slot, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(slot=slot))
+
+        ret_dict = {}
+        sensors = {}
+
+        # Registration: Registered
+        # p1 matches registration line
+        p1 = re.compile(r'^Registration:\s+(?P<registration>\S+)$')
+
+        # HotSwap: P_MB     70      344       21:51:20
+        # Temp: CPUcore:0   74       33       21:51:20
+        # SUM_MB_GB         141     127       21:51:20
+        # p2 matches table rows
+        p2 = re.compile(r'^(?P<name>[\w\-\: ]+\w)\s+(?P<id>-?\d+)\s+(?P<data>-?\d+)\s+(?P<last_poll>\d{2}:\d{2}:\d{2})$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Registration: Registered
+            m = p1.match(line)
+            if m:
+                ret_dict['registration'] = m.group('registration')
+                continue
+
+            # Table row
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sensors[group['name'].strip()] = {
+                    'id': int(group['id']),
+                    'data': int(group['data']),
+                    'last_poll': group['last_poll']
+                }
+                continue
+
+        if sensors:
+            ret_dict['sensors'] = sensors
+
+        return ret_dict
+
+
+
+
+class ShowSystemStatsSchema(MetaParser):
+    '''Schema for show system stats'''
+    schema = {
+        'syspage_index': int,
+        'packet_stats': {
+            'min_packet_received': int,
+            'max_packet_received': int,
+        },
+        'message_stats': {
+            'min_message_sent': int,
+            'max_message_sent': int,
+            'total_message_received': int,
+            'total_message_sent': int,
+        },
+        'runtime_stats': {
+            'min_clock_runtime_msec': int,
+            'max_clock_runtime_msec': int,
+            'min_cpu_runtime_msec': int,
+            'max_cpu_runtime_msec': int,
+        },
+        'fastpath_stats': {
+            'fastpath_invocation': int,
+            'epoll_timeout': int,
+            'epoll_intr': int,
+            'fastpath_triggered_by_ios': int,
+            'wakeup': int,
+            'fastpath_top_epoll_error': int,
+            'second_level_epoll_error': int,
+            'special_ipc_request': int,
+        },
+        'file_descriptors': {
+            'mstr_efd': int,
+            'fastpath_wakeup_fd': int,
+            'rd_efd': {
+                'fd': int,
+                'epoll_add_failed': int,
+                'epoll_del_failed': int,
+            },
+            'rd_hdlr_efd': {
+                'fd': int,
+                'epoll_add_failed': int,
+                'epoll_del_failed': int,
+            },
+            'wr_efd': {
+                'fd': int,
+                'epoll_add_failed': int,
+                'epoll_del_failed': int,
+            },
+        },
+        'event_stats': {
+            'wakeup_efd_ready': int,
+            'rd_efd_ready': int,
+            'rd_efd_processed': int,
+            'rd_hdlr_efd_ready': int,
+            'rd_hdlr_efd_processed': int,
+            'wr_efd_ready': int,
+            'wr_efd_processed': int,
+        },
+        'ios_stats': {
+            'ios_triggered_by_fastpath': int,
+            'ios_triggered_by_packet': int,
+            'ios_scheduler_wakeup': int,
+        },
+        'data_path_stats': {
+            'console_data_path_invocation': int,
+            'stdout_data_path_invocation': int,
+            'chasfs_process_thread_event': int,
+            'tipc_process_thread_event': int,
+        },
+        'memory_stats': {
+            'memory_allocation_failures': int,
+            'read_paused': int,
+            'read_pause_cleared': int,
+            'read_disabled': int,
+            'read_disable_cleared': int,
+        },
+        'current_state': {
+            'read_paused': str,
+            'read_disabled': str,
+        },
+        'utilization': {
+            '5_seconds': {
+                'clock_percent': int,
+                'cpu_percent': int,
+            },
+            '1_min': {
+                'clock_percent': int,
+                'cpu_percent': int,
+            },
+            '5_min': {
+                'clock_percent': int,
+                'cpu_percent': int,
+            },
+        },
+        'mutex_stats': {
+            'max_acquire_time_msec': int,
+            'timestamp': str,
+        }
+    }
+
+class ShowSystemStats(ShowSystemStatsSchema):
+    '''Parser for show system stats'''
+    cli_command = 'show system stats'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+
+        # Regex patterns with named groups
+        # Syspage index for the Fastpath thread: 6
+        p0 = re.compile(r'^\s*Syspage index for the Fastpath thread:\s*(?P<index>\d+)')
+        
+        # 1 minimum packet received, 216 maximum packet received
+        p1 = re.compile(r'^\s*(?P<min>\d+)\s*minimum packet received,\s*(?P<max>\d+)\s*maximum packet received')
+        
+        # 1 minimum message sent, 1 maximum message sent
+        p2 = re.compile(r'^\s*(?P<min>\d+)\s*minimum message sent,\s*(?P<max>\d+)\s*maximum message sent')
+        
+        # 14458 total message received, 2 total message sent
+        p3 = re.compile(r'^\s*(?P<total_received>\d+)\s*total message received,\s*(?P<total_sent>\d+)\s*total message sent')
+        
+        # 0 msec minimum clock runtime, 5 msec maximum clock runtime
+        p4 = re.compile(r'^\s*(?P<min>\d+)\s*msec minimum clock runtime,\s*(?P<max>\d+)\s*msec maximum clock runtime')
+        
+        # 0 msec minimum cpu runtime, 5 msec maximum cpu runtime
+        p5 = re.compile(r'^\s*(?P<min>\d+)\s*msec minimum cpu runtime,\s*(?P<max>\d+)\s*msec maximum cpu runtime')
+        
+        # 20413 fastpath invocation, 9062 epoll timeout, 0 epoll intr
+        p6 = re.compile(r'^\s*(?P<invocation>\d+)\s*fastpath invocation,\s*(?P<timeout>\d+)\s*epoll timeout,\s*(?P<intr>\d+)\s*epoll intr')
+        
+        # 48 fastpath triggered by IOS thread, 13 wakeup
+        p7 = re.compile(r'^\s*(?P<triggered>\d+)\s*fastpath triggered by IOS thread,\s*(?P<wakeup>\d+)\s*wakeup')
+        
+        # 0 fastpath top epoll error, 0 second level epoll error
+        p8 = re.compile(r'^\s*(?P<top_error>\d+)\s*fastpath top epoll error,\s*(?P<second_error>\d+)\s*second level epoll error')
+        
+        # 0 special IPC request
+        p9 = re.compile(r'^\s*(?P<request>\d+)\s*special IPC request')
+        
+        # mstr_efd 9, fastpath_wakeup_fd 7
+        p10 = re.compile(r'^\s*mstr_efd\s*(?P<mstr>\d+),\s*fastpath_wakeup_fd\s*(?P<wakeup>\d+)')
+        
+        # rd_efd 10 (epoll add failed 0, epoll del failed 0)
+        p11 = re.compile(r'^\s*rd_efd\s*(?P<fd>\d+)\s*\(epoll add failed\s*(?P<add_failed>\d+),\s*epoll del failed\s*(?P<del_failed>\d+)\)')
+        
+        # rd_hdlr_efd 11 (epoll add failed 0, epoll del failed 0)
+        p12 = re.compile(r'^\s*rd_hdlr_efd\s*(?P<fd>\d+)\s*\(epoll add failed\s*(?P<add_failed>\d+),\s*epoll del failed\s*(?P<del_failed>\d+)\)')
+        
+        # wr_efd 12 (epoll add failed 0, epoll del failed 0)
+        p13 = re.compile(r'^\s*wr_efd\s*(?P<fd>\d+)\s*\(epoll add failed\s*(?P<add_failed>\d+),\s*epoll del failed\s*(?P<del_failed>\d+)\)')
+        
+        # 13 wakeup_efd_ready
+        p14 = re.compile(r'^\s*(?P<ready>\d+)\s*wakeup_efd_ready')
+        
+        # 7607 rd_efd_ready, 7607 rd_efd_processed
+        p15 = re.compile(r'^\s*(?P<ready>\d+)\s*rd_efd_ready,\s*(?P<processed>\d+)\s*rd_efd_processed')
+        
+        # 3738 rd_hdlr_efd_ready, 3738 rd_hdlr_efd_processed
+        p16 = re.compile(r'^\s*(?P<ready>\d+)\s*rd_hdlr_efd_ready,\s*(?P<processed>\d+)\s*rd_hdlr_efd_processed')
+        
+        # 2 wr_efd_ready, 2 wr_efd_processed
+        p17 = re.compile(r'^\s*(?P<ready>\d+)\s*wr_efd_ready,\s*(?P<processed>\d+)\s*wr_efd_processed')
+        
+        # 15930 IOS triggered by fastpath thread
+        p18 = re.compile(r'^\s*(?P<triggered>\d+)\s*IOS triggered by fastpath thread')
+        
+        # 27691 IOS triggered by packet thread
+        p19 = re.compile(r'^\s*(?P<triggered>\d+)\s*IOS triggered by packet thread')
+        
+        # 43504 IOS scheduler thread wakeup
+        p20 = re.compile(r'^\s*(?P<wakeup>\d+)\s*IOS scheduler thread wakeup')
+        
+        # 845 console data path invocation
+        p21 = re.compile(r'^\s*(?P<invocation>\d+)\s*console data path invocation')
+        
+        # 0 stdout data path invocation
+        p22 = re.compile(r'^\s*(?P<invocation>\d+)\s*stdout data path invocation')
+        
+        # 2535 chasfs process thread event invocation
+        p23 = re.compile(r'^\s*(?P<invocation>\d+)\s*chasfs process thread event invocation')
+        
+        # 0 tipc process thread event invocation
+        p24 = re.compile(r'^\s*(?P<invocation>\d+)\s*tipc process thread event invocation')
+        
+        # 0 memory allocation failures, 0 read paused, 0 read pause cleared
+        p25 = re.compile(r'^\s*(?P<failures>\d+)\s*memory allocation failures,\s*(?P<paused>\d+)\s*read paused,\s*(?P<pause_cleared>\d+)\s*read pause cleared')
+        
+        # 0 read disabled, 0 read disable cleared
+        p26 = re.compile(r'^\s*(?P<disabled>\d+)\s*read disabled,\s*(?P<disable_cleared>\d+)\s*read disable cleared')
+        
+        # Current state: read paused: no, read disabled: no
+        p27 = re.compile(r'^\s*Current state: read paused:\s*(?P<paused>yes|no),\s*read disabled:\s*(?P<disabled>yes|no)')
+        
+        # Clock/CPU utilization with 5 seconds 0%/0%, 1 min 0%/0%, 5 min 0%/0%
+        p28 = re.compile(r'^\s*Clock/CPU utilization with 5 seconds\s*(?P<clock_5s>\d+)%/(?P<cpu_5s>\d+)%,\s*1 min\s*(?P<clock_1m>\d+)%/(?P<cpu_1m>\d+)%,\s*5 min\s*(?P<clock_5m>\d+)%/(?P<cpu_5m>\d+)%')
+        
+        # Maximum mutex acquire time: 11937 msec at *Apr 14 18:15:50.475
+        p29 = re.compile(r'^\s*Maximum mutex acquire time:\s*(?P<time>\d+)\s*msec at\s*(?P<timestamp>[*]?\w+\s+\d+\s+\d+:\d+:\d+\.\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Syspage index for the Fastpath thread: 6
+            m0 = p0.match(line)
+            if m0:
+                result['syspage_index'] = int(m0.group('index'))
+                continue
+
+            # 1 minimum packet received, 216 maximum packet received
+            m1 = p1.match(line)
+            if m1:
+                packet_stats = result.setdefault('packet_stats', {})
+                packet_stats['min_packet_received'] = int(m1.group('min'))
+                packet_stats['max_packet_received'] = int(m1.group('max'))
+                continue
+
+            # 1 minimum message sent, 1 maximum message sent
+            m2 = p2.match(line)
+            if m2:
+                message_stats = result.setdefault('message_stats', {})
+                message_stats['min_message_sent'] = int(m2.group('min'))
+                message_stats['max_message_sent'] = int(m2.group('max'))
+                continue
+
+            # 14458 total message received, 2 total message sent
+            m3 = p3.match(line)
+            if m3:
+                message_stats = result.setdefault('message_stats', {})
+                message_stats['total_message_received'] = int(m3.group('total_received'))
+                message_stats['total_message_sent'] = int(m3.group('total_sent'))
+                continue
+
+            # 0 msec minimum clock runtime, 5 msec maximum clock runtime
+            m4 = p4.match(line)
+            if m4:
+                runtime_stats = result.setdefault('runtime_stats', {})
+                runtime_stats['min_clock_runtime_msec'] = int(m4.group('min'))
+                runtime_stats['max_clock_runtime_msec'] = int(m4.group('max'))
+                continue
+
+            # 0 msec minimum cpu runtime, 5 msec maximum cpu runtime
+            m5 = p5.match(line)
+            if m5:
+                runtime_stats = result.setdefault('runtime_stats', {})
+                runtime_stats['min_cpu_runtime_msec'] = int(m5.group('min'))
+                runtime_stats['max_cpu_runtime_msec'] = int(m5.group('max'))
+                continue
+
+            # 20413 fastpath invocation, 9062 epoll timeout, 0 epoll intr
+            m6 = p6.match(line)
+            if m6:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['fastpath_invocation'] = int(m6.group('invocation'))
+                fastpath_stats['epoll_timeout'] = int(m6.group('timeout'))
+                fastpath_stats['epoll_intr'] = int(m6.group('intr'))
+                continue
+
+            # 48 fastpath triggered by IOS thread, 13 wakeup
+            m7 = p7.match(line)
+            if m7:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['fastpath_triggered_by_ios'] = int(m7.group('triggered'))
+                fastpath_stats['wakeup'] = int(m7.group('wakeup'))
+                continue
+
+            # 0 fastpath top epoll error, 0 second level epoll error
+            m8 = p8.match(line)
+            if m8:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['fastpath_top_epoll_error'] = int(m8.group('top_error'))
+                fastpath_stats['second_level_epoll_error'] = int(m8.group('second_error'))
+                continue
+
+            # 0 special IPC request
+            m9 = p9.match(line)
+            if m9:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['special_ipc_request'] = int(m9.group('request'))
+                continue
+
+            # mstr_efd 9, fastpath_wakeup_fd 7
+            m10 = p10.match(line)
+            if m10:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                file_descriptors['mstr_efd'] = int(m10.group('mstr'))
+                file_descriptors['fastpath_wakeup_fd'] = int(m10.group('wakeup'))
+                continue
+
+            # rd_efd 10 (epoll add failed 0, epoll del failed 0)
+            m11 = p11.match(line)
+            if m11:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                rd_efd = file_descriptors.setdefault('rd_efd', {})
+                rd_efd['fd'] = int(m11.group('fd'))
+                rd_efd['epoll_add_failed'] = int(m11.group('add_failed'))
+                rd_efd['epoll_del_failed'] = int(m11.group('del_failed'))
+                continue
+
+            # rd_hdlr_efd 11 (epoll add failed 0, epoll del failed 0)
+            m12 = p12.match(line)
+            if m12:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                rd_hdlr_efd = file_descriptors.setdefault('rd_hdlr_efd', {})
+                rd_hdlr_efd['fd'] = int(m12.group('fd'))
+                rd_hdlr_efd['epoll_add_failed'] = int(m12.group('add_failed'))
+                rd_hdlr_efd['epoll_del_failed'] = int(m12.group('del_failed'))
+                continue
+
+            # wr_efd 12 (epoll add failed 0, epoll del failed 0)
+            m13 = p13.match(line)
+            if m13:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                wr_efd = file_descriptors.setdefault('wr_efd', {})
+                wr_efd['fd'] = int(m13.group('fd'))
+                wr_efd['epoll_add_failed'] = int(m13.group('add_failed'))
+                wr_efd['epoll_del_failed'] = int(m13.group('del_failed'))
+                continue
+
+            # 13 wakeup_efd_ready
+            m14 = p14.match(line)
+            if m14:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['wakeup_efd_ready'] = int(m14.group('ready'))
+                continue
+
+            # 7607 rd_efd_ready, 7607 rd_efd_processed
+            m15 = p15.match(line)
+            if m15:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['rd_efd_ready'] = int(m15.group('ready'))
+                event_stats['rd_efd_processed'] = int(m15.group('processed'))
+                continue
+
+            # 3738 rd_hdlr_efd_ready, 3738 rd_hdlr_efd_processed
+            m16 = p16.match(line)
+            if m16:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['rd_hdlr_efd_ready'] = int(m16.group('ready'))
+                event_stats['rd_hdlr_efd_processed'] = int(m16.group('processed'))
+                continue
+
+            # 2 wr_efd_ready, 2 wr_efd_processed
+            m17 = p17.match(line)
+            if m17:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['wr_efd_ready'] = int(m17.group('ready'))
+                event_stats['wr_efd_processed'] = int(m17.group('processed'))
+                continue
+
+            # 15930 IOS triggered by fastpath thread
+            m18 = p18.match(line)
+            if m18:
+                ios_stats = result.setdefault('ios_stats', {})
+                ios_stats['ios_triggered_by_fastpath'] = int(m18.group('triggered'))
+                continue
+
+            # 27691 IOS triggered by packet thread
+            m19 = p19.match(line)
+            if m19:
+                ios_stats = result.setdefault('ios_stats', {})
+                ios_stats['ios_triggered_by_packet'] = int(m19.group('triggered'))
+                continue
+
+            # 43504 IOS scheduler thread wakeup
+            m20 = p20.match(line)
+            if m20:
+                ios_stats = result.setdefault('ios_stats', {})
+                ios_stats['ios_scheduler_wakeup'] = int(m20.group('wakeup'))
+                continue
+
+            # 845 console data path invocation
+            m21 = p21.match(line)
+            if m21:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['console_data_path_invocation'] = int(m21.group('invocation'))
+                continue
+
+            # 0 stdout data path invocation
+            m22 = p22.match(line)
+            if m22:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['stdout_data_path_invocation'] = int(m22.group('invocation'))
+                continue
+
+            # 2535 chasfs process thread event invocation
+            m23 = p23.match(line)
+            if m23:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['chasfs_process_thread_event'] = int(m23.group('invocation'))
+                continue
+
+            # 0 tipc process thread event invocation
+            m24 = p24.match(line)
+            if m24:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['tipc_process_thread_event'] = int(m24.group('invocation'))
+                continue
+
+            # 0 memory allocation failures, 0 read paused, 0 read pause cleared
+            m25 = p25.match(line)
+            if m25:
+                memory_stats = result.setdefault('memory_stats', {})
+                memory_stats['memory_allocation_failures'] = int(m25.group('failures'))
+                memory_stats['read_paused'] = int(m25.group('paused'))
+                memory_stats['read_pause_cleared'] = int(m25.group('pause_cleared'))
+                continue
+
+            # 0 read disabled, 0 read disable cleared
+            m26 = p26.match(line)
+            if m26:
+                memory_stats = result.setdefault('memory_stats', {})
+                memory_stats['read_disabled'] = int(m26.group('disabled'))
+                memory_stats['read_disable_cleared'] = int(m26.group('disable_cleared'))
+                continue
+
+            # Current state: read paused: no, read disabled: no
+            m27 = p27.match(line)
+            if m27:
+                current_state = result.setdefault('current_state', {})
+                current_state['read_paused'] = m27.group('paused').lower()
+                current_state['read_disabled'] = m27.group('disabled').lower()
+                continue
+
+            # Clock/CPU utilization with 5 seconds 0%/0%, 1 min 0%/0%, 5 min 0%/0%
+            m28 = p28.match(line)
+            if m28:
+                utilization = result.setdefault('utilization', {})
+                
+                five_seconds = utilization.setdefault('5_seconds', {})
+                five_seconds['clock_percent'] = int(m28.group('clock_5s'))
+                five_seconds['cpu_percent'] = int(m28.group('cpu_5s'))
+
+                one_min = utilization.setdefault('1_min', {})
+                one_min['clock_percent'] = int(m28.group('clock_1m'))
+                one_min['cpu_percent'] = int(m28.group('cpu_1m'))
+
+                five_min = utilization.setdefault('5_min', {})
+                five_min['clock_percent'] = int(m28.group('clock_5m'))
+                five_min['cpu_percent'] = int(m28.group('cpu_5m'))
+                continue
+
+            # Maximum mutex acquire time: 11937 msec at *Apr 14 18:15:50.475
+            m29 = p29.match(line)
+            if m29:
+                mutex_stats = result.setdefault('mutex_stats', {})
+                mutex_stats['max_acquire_time_msec'] = int(m29.group('time'))
+                mutex_stats['timestamp'] = m29.group('timestamp')
+                continue
+
+        return result
+
+class ShowPlatformHardwareQfpActiveFeatureNat66DatapathStatisticsSchema(MetaParser):
+    '''Schema for show platform hardware qfp active feature nat66 datapath statistics'''
+    schema = {
+        'in2out_xlated_pkts': int,
+        'out2in_xlated_pkts': int,
+        'nat66_drop_sc_invalid_pkt': int,
+        'nat66_drop_sc_bad_dglen': int,
+        'nat66_drop_sc_plu_fail': int,
+        'nat66_drop_sc_process_v6_err': int,
+        'nat66_drop_sc_invalid_embedded': int,
+        'nat66_drop_sc_src_rt': int,
+        'nat66_drop_sc_not_enabled': int,
+        'nat66_drop_sc_no_gpm': int,
+        'nat66_drop_sc_loop': int,
+        'nat66_drop_sc_limit': int,
+        'nat66_drop_sc_addr_in_use': int,
+        'in2out_pkts': int,
+        'out2in_pkts': int,
+        'in2out_pkts_untrans': int,
+        'out2in_pkts_untrans': int,
+        'in2out_lookup_pass': int,
+        'out2in_lookup_pass': int,
+        'in2out_lookup_fail': int,
+        'out2in_lookup_fail': int,
+        'mem_alloc_fail': int,
+        'prefix_fail': int,
+        'total_prefix_count': int,
+        'egress_prefix_count': int,
+        'in2out_src_local': int,
+        'out2in_dst_local': int,
+        'in2out_icmp_err': int,
+        'out2in_icmp_err': int,
+        'in2out_frag': int,
+        'out2in_frag': int,
+        'out2in_nd': int,
+        'in2out_api_xlated': int,
+    }
+
+class ShowPlatformHardwareQfpActiveFeatureNat66DatapathStatistics(ShowPlatformHardwareQfpActiveFeatureNat66DatapathStatisticsSchema):
+    '''Parser for show platform hardware qfp active feature nat66 datapath statistics'''
+    cli_command = 'show platform hardware qfp active feature nat66 datapath statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+
+        # in2out xlated pkts 1022
+        p0 = re.compile(r'^in2out xlated pkts (\d+)')
+        # out2in xlated pkts 112
+        p1 = re.compile(r'^out2in xlated pkts (\d+)')
+        # NAT66_DROP_SC_INVALID_PKT 0
+        p2 = re.compile(r'^NAT66_DROP_SC_INVALID_PKT (\d+)')
+        # NAT66_DROP_SC_BAD_DGLEN 0
+        p3 = re.compile(r'^NAT66_DROP_SC_BAD_DGLEN (\d+)')
+        # NAT66_DROP_SC_PLU_FAIL 28
+        p4 = re.compile(r'^NAT66_DROP_SC_PLU_FAIL (\d+)')
+        # NAT66_DROP_SC_PROCESS_V6_ERR 0
+        p5 = re.compile(r'^NAT66_DROP_SC_PROCESS_V6_ERR (\d+)')
+        # NAT66_DROP_SC_INVALID_EMBEDDED 0
+        p6 = re.compile(r'^NAT66_DROP_SC_INVALID_EMBEDDED (\d+)')
+        # NAT66_DROP_SC_SRC_RT 0
+        p7 = re.compile(r'^NAT66_DROP_SC_SRC_RT (\d+)')
+        # NAT66_DROP_SC_NOT_ENABLED 0
+        p8 = re.compile(r'^NAT66_DROP_SC_NOT_ENABLED (\d+)')
+        # NAT66_DROP_SC_NO_GPM 0
+        p9 = re.compile(r'^NAT66_DROP_SC_NO_GPM (\d+)')
+        # NAT66_DROP_SC_LOOP 0
+        p10 = re.compile(r'^NAT66_DROP_SC_LOOP (\d+)')
+        # NAT66_DROP_SC_LIMIT 0
+        p11 = re.compile(r'^NAT66_DROP_SC_LIMIT (\d+)')
+        # NAT66_DROP_SC_ADDR_IN_USE 0
+        p12 = re.compile(r'^NAT66_DROP_SC_ADDR_IN_USE (\d+)')
+        # in2out_pkts 1050 out2in_pkts 174
+        p13 = re.compile(r'^in2out_pkts (\d+) out2in_pkts (\d+)')
+        # in2out_pkts_untrans 28 out2in_pkts_untrans 0
+        p14 = re.compile(r'^in2out_pkts_untrans (\d+) out2in_pkts_untrans (\d+)')
+        # in2out_lookup_pass 1022 out2in_lookup_pass 112
+        p15 = re.compile(r'^in2out_lookup_pass (\d+) out2in_lookup_pass (\d+)')
+        # in2out_lookup_fail 28 out2in_lookup_fail 0
+        p16 = re.compile(r'^in2out_lookup_fail (\d+) out2in_lookup_fail (\d+)')
+        # mem_alloc_fail 0 prefix_fail 0
+        p17 = re.compile(r'^mem_alloc_fail (\d+) prefix_fail (\d+)')
+        # total prefix count 1
+        p18 = re.compile(r'^total prefix count (\d+)')
+        # egress prefix count 0
+        p19 = re.compile(r'^egress prefix count (\d+)')
+        # in2out_src_local 0
+        p20 = re.compile(r'^in2out_src_local (\d+)')
+        # out2in_dst_local 62
+        p21 = re.compile(r'^out2in_dst_local (\d+)')
+        # in2out_icmp_err 0
+        p22 = re.compile(r'^in2out_icmp_err (\d+)')
+        # out2in_icmp_err 112
+        p23 = re.compile(r'^out2in_icmp_err (\d+)')
+        # in2out_frag 0
+        p24 = re.compile(r'^in2out_frag (\d+)')
+        # out2in_frag 0
+        p25 = re.compile(r'^out2in_frag (\d+)')
+        # out2in_nd 0
+        p26 = re.compile(r'^out2in_nd (\d+)')
+        # in2out_api_xlated 0
+        p27 = re.compile(r'^in2out_api_xlated (\d+)')
+
+        # Process each line
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # in2out xlated pkts 1022
+            m0 = p0.match(line)
+            if m0:
+                result['in2out_xlated_pkts'] = int(m0.group(1))
+                continue
+
+            # out2in xlated pkts 112
+            m1 = p1.match(line)
+            if m1:
+                result['out2in_xlated_pkts'] = int(m1.group(1))
+                continue
+
+            # NAT66_DROP_SC_INVALID_PKT 0
+            m2 = p2.match(line)
+            if m2:
+                result['nat66_drop_sc_invalid_pkt'] = int(m2.group(1))
+                continue
+
+            # NAT66_DROP_SC_BAD_DGLEN 0
+            m3 = p3.match(line)
+            if m3:
+                result['nat66_drop_sc_bad_dglen'] = int(m3.group(1))
+                continue
+
+            # NAT66_DROP_SC_PLU_FAIL 28
+            m4 = p4.match(line)
+            if m4:
+                result['nat66_drop_sc_plu_fail'] = int(m4.group(1))
+                continue
+
+            # NAT66_DROP_SC_PROCESS_V6_ERR 0
+            m5 = p5.match(line)
+            if m5:
+                result['nat66_drop_sc_process_v6_err'] = int(m5.group(1))
+                continue
+
+            # NAT66_DROP_SC_INVALID_EMBEDDED 0
+            m6 = p6.match(line)
+            if m6:
+                result['nat66_drop_sc_invalid_embedded'] = int(m6.group(1))
+                continue
+
+            # NAT66_DROP_SC_SRC_RT 0
+            m7 = p7.match(line)
+            if m7:
+                result['nat66_drop_sc_src_rt'] = int(m7.group(1))
+                continue
+
+            # NAT66_DROP_SC_NOT_ENABLED 0
+            m8 = p8.match(line)
+            if m8:
+                result['nat66_drop_sc_not_enabled'] = int(m8.group(1))
+                continue
+
+            # NAT66_DROP_SC_NO_GPM 0
+            m9 = p9.match(line)
+            if m9:
+                result['nat66_drop_sc_no_gpm'] = int(m9.group(1))
+                continue
+
+            # NAT66_DROP_SC_LOOP 0
+            m10 = p10.match(line)
+            if m10:
+                result['nat66_drop_sc_loop'] = int(m10.group(1))
+                continue
+
+            # NAT66_DROP_SC_LIMIT 0
+            m11 = p11.match(line)
+            if m11:
+                result['nat66_drop_sc_limit'] = int(m11.group(1))
+                continue
+
+            # NAT66_DROP_SC_ADDR_IN_USE 0
+            m12 = p12.match(line)
+            if m12:
+                result['nat66_drop_sc_addr_in_use'] = int(m12.group(1))
+                continue
+
+            # in2out_pkts 1050 out2in_pkts 174
+            m13 = p13.match(line)
+            if m13:
+                result['in2out_pkts'] = int(m13.group(1))
+                result['out2in_pkts'] = int(m13.group(2))
+                continue
+
+            # in2out_pkts_untrans 28 out2in_pkts_untrans 0
+            m14 = p14.match(line)
+            if m14:
+                result['in2out_pkts_untrans'] = int(m14.group(1))
+                result['out2in_pkts_untrans'] = int(m14.group(2))
+                continue
+
+            # in2out_lookup_pass 1022 out2in_lookup_pass 112
+            m15 = p15.match(line)
+            if m15:
+                result['in2out_lookup_pass'] = int(m15.group(1))
+                result['out2in_lookup_pass'] = int(m15.group(2))
+                continue
+
+            # in2out_lookup_fail 28 out2in_lookup_fail 0
+            m16 = p16.match(line)
+            if m16:
+                result['in2out_lookup_fail'] = int(m16.group(1))
+                result['out2in_lookup_fail'] = int(m16.group(2))
+                continue
+
+            # mem_alloc_fail 0 prefix_fail 0
+            m17 = p17.match(line)
+            if m17:
+                result['mem_alloc_fail'] = int(m17.group(1))
+                result['prefix_fail'] = int(m17.group(2))
+                continue
+
+            # total prefix count 1
+            m18 = p18.match(line)
+            if m18:
+                result['total_prefix_count'] = int(m18.group(1))
+                continue
+
+            # egress prefix count 0
+            m19 = p19.match(line)
+            if m19:
+                result['egress_prefix_count'] = int(m19.group(1))
+                continue
+
+            # in2out_src_local 0
+            m20 = p20.match(line)
+            if m20:
+                result['in2out_src_local'] = int(m20.group(1))
+                continue
+
+            # out2in_dst_local 62
+            m21 = p21.match(line)
+            if m21:
+                result['out2in_dst_local'] = int(m21.group(1))
+                continue
+
+            # in2out_icmp_err 0
+            m22 = p22.match(line)
+            if m22:
+                result['in2out_icmp_err'] = int(m22.group(1))
+                continue
+
+            # out2in_icmp_err 112
+            m23 = p23.match(line)
+            if m23:
+                result['out2in_icmp_err'] = int(m23.group(1))
+                continue
+
+            # in2out_frag 0
+            m24 = p24.match(line)
+            if m24:
+                result['in2out_frag'] = int(m24.group(1))
+                continue
+
+            # out2in_frag 0
+            m25 = p25.match(line)
+            if m25:
+                result['out2in_frag'] = int(m25.group(1))
+                continue
+
+            # out2in_nd 0
+            m26 = p26.match(line)
+            if m26:
+                result['out2in_nd'] = int(m26.group(1))
+                continue
+
+            # in2out_api_xlated 0
+            m27 = p27.match(line)
+            if m27:
+                result['in2out_api_xlated'] = int(m27.group(1))
+                continue
+
+        return result 
+
+
+
+class ShowPlatformSoftwareNat66RpActivePrefixTranslationSchema(MetaParser):
+    '''Schema for show platform software nat rp prefix-translation'''
+    schema = {
+        'nat66_prefix_translations': {  # Changed back to nat66_prefix_translations
+            Any(): {  # Translation ID as key
+                'id': int,
+                'in_prefix': str,
+                'out_prefix': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareNat66RpActivePrefixTranslation(ShowPlatformSoftwareNat66RpActivePrefixTranslationSchema):
+    '''Parser for show platform software nat rp prefix-translation (handles multiple NAT types)'''
+    
+    cli_command = 'show platform software {nat_type} rp {rp_location} prefix-translation'
+
+    def cli(self, nat_type='nat66', rp_location='active', output=None):
+        """
+        Args:
+            nat_type: Type of NAT (nat66, nat64, nat, etc.)
+            rp_location: RP location (active, standby, 0, 1, etc.)
+            output: Command output (for testing)
+        """
+        if output is None:
+            cmd = f'show platform software {nat_type} rp {rp_location} prefix-translation'
+            output = self.device.execute(cmd)
+
+
+        result = {}
+
+       
+        # 5           2001:101:0:1::/96                            2001:101:0:3::/96
+        p0 = re.compile(r'^(?P<id>\d+)\s+(?P<in_prefix>(?:[0-9a-fA-F:]+/\d+|(?:\d+\.){3}\d+/\d+))\s+(?P<out_prefix>(?:[0-9a-fA-F:]+/\d+|(?:\d+\.){3}\d+/\d+))')
+
+        # Process each line
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # 5           2001:101:0:1::/96                            2001:101:0:3::/96
+            m0 = p0.match(line)
+            if m0:
+                translation_id = int(m0.group('id'))
+                in_prefix = m0.group('in_prefix')
+                out_prefix = m0.group('out_prefix')
+
+                # Initialize the translations dict if not exists
+                if 'nat66_prefix_translations' not in result:
+                    result['nat66_prefix_translations'] = {}
+
+                # Store the translation entry using ID as key
+                result['nat66_prefix_translations'][translation_id] = {  
+                    'id': translation_id,
+                    'in_prefix': in_prefix,
+                    'out_prefix': out_prefix,
+                }
+
+        return result
+
+# ==============================================
+#  Schema for show platform hardware subslot module host-if statistics
+# ==============================================
+class ShowPlatformHardwareSubslotModuleHostIfStatisticsSchema(MetaParser):
+    """Schema for show platform hardware subslot {subslot} module host-if statistics"""
+
+    schema = {
+        'ge_statistics': {
+            Optional('rx_frames'): int,
+            Optional('rx_bytes'): int,
+            Optional('tx_frames'): int,
+            Optional('tx_bytes'): int,
+            Optional('pkt_forwarded'): {
+                Optional('rx_frames'): int,
+                Optional('rx_bytes'): int,
+                Optional('tx_frames'): int,
+                Optional('tx_bytes'): int,
+            },
+            Optional('oversize'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('undersize'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('multicast'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('broadcast'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('pause'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('dropped'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('fcs_err'): {
+                Optional('rx_frames'): int,
+                Optional('tx_frames'): int,
+            },
+            Optional('aligmt_err'): {
+                Optional('rx_frames'): int,
+            },
+            Optional('length_err'): {
+                Optional('rx_frames'): int,
+            },
+            Optional('mru_err'): {
+                Optional('rx_frames'): int,
+            },
+            Optional('sdu_err'): {
+                Optional('rx_frames'): int,
+            },
+            Optional('overrun_err'): {
+                Optional('rx_frames'): int,
+            },
+            Optional('undrrun_err'): {
+                Optional('tx_frames'): int,
+            },
+        },
+        'total_frames': {
+            Optional('64'): int,
+            Optional('65_127'): int,
+            Optional('128_255'): int,
+            Optional('256_511'): int,
+            Optional('512_1023'): int,
+            Optional('1024_1518'): int,
+            Optional('1519_1522'): int,
+        },
+        'flow_aggregation': {
+            Any(): {
+                Optional('pkt_forwarded'): int,
+                Optional('bytes_forwarded'): int,
+                Optional('fpb_drop'): int,
+                Optional('mtu_drop'): int,
+                Optional('tx_q_drop'): int,
+            },
+        }
+    }
+
+# ==============================================
+#  Parser for show platform hardware subslot module host-if statistics
+# ==============================================
+class ShowPlatformHardwareSubslotModuleHostIfStatistics(ShowPlatformHardwareSubslotModuleHostIfStatisticsSchema):
+    """Parser for show platform hardware subslot {subslot} module host-if statistics"""
+
+    cli_command = 'show platform hardware subslot {subslot} module host-if statistics'
+
+    def cli(self, subslot="0/1", output=None):
+        if output is None:
+            cmd = self.cli_command.format(subslot=subslot)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # GE (connecting to BP switch) statistics
+        p1 = re.compile(r'^GE\s+\(connecting\s+to\s+BP\s+switch\)\s+statistics$')
+
+        #                     Rx frames             Rx Bytes              Tx frames             Tx Bytes
+        p2 = re.compile(r'^\s*Rx\s+frames\s+Rx\s+Bytes\s+Tx\s+frames\s+Tx\s+Bytes$')
+
+        # pkt forwarded       41355                 3325326               41438                 3465186
+        p3 = re.compile(r'^pkt\s+forwarded\s+(?P<rx_frames>\d+)\s+(?P<rx_bytes>\d+)\s+(?P<tx_frames>\d+)\s+(?P<tx_bytes>\d+)$')
+
+
+        # oversize            0                                           2
+        # undersize           0                                           0
+        # multicast           4                                           0
+        # broadcast           0                                           2
+        # pause               0                                           0
+        # dropped             0                                           0
+        # FCS err             0                                           0
+        p4 = re.compile(r'^(?P<stat_name>\w+(?:\s+\w+)?)\s+(?P<rx_frames>\d+)\s+(?P<tx_frames>\d+)$')
+
+        # aligmt err          0
+        # length err          0
+        # MRU err             0
+        # SDU err             0
+        # overrun err         0
+        p5 = re.compile(r'^(?P<stat_name>\w+\s+err)\s+(?P<rx_frames>\d+)$')
+
+        # undrrun err                                                     0
+        p6 = re.compile(r'^undrrun\s+err\s+(?P<tx_frames>\d+)$')
+
+        # Total frames
+        p7 = re.compile(r'^Total\s+frames$')
+
+        # 64            1094
+        # 65 ~ 127      80926
+        # 128 ~ 255     27
+        # 256 ~ 511     586
+        # 512 ~ 1023    4
+        # 1024 ~ 1518   154
+        # 1519 ~ 1522   0
+        p8 = re.compile(r'^(?P<range>[\d~\s]+)\s+(?P<count>\d+)$')
+
+        # Flow Aggregation to BP switch
+        p9 = re.compile(r'^Flow\s+Aggregation\s+to\s+BP\s+switch$')
+
+        # FlowControl FA
+        # DSP signaling ingress FA
+        # DSP media ingress FA
+        # Low priority ingress FA (IP/ARP/BC)
+        # Control message ingress FA
+        p10 = re.compile(r'^(?P<fa_name>.*)\s+FA$')
+
+        #       pkt fowarded:120 bytes forwarded:3840
+        p11 = re.compile(r'^\s*pkt\s+fowarded:(?P<pkt_forwarded>\d+)\s+bytes\s+forwarded:(?P<bytes_forwarded>\d+)$')
+
+        #       fpb drop:0 mtu drop:0 tx_q drop:0
+        p12 = re.compile(r'^\s*fpb\s+drop:(?P<fpb_drop>\d+)\s+mtu\s+drop:(?P<mtu_drop>\d+)\s+tx_q\s+drop:(?P<tx_q_drop>\d+)$')
+
+        current_section = None
+        current_fa = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line or line.startswith('-'):
+                continue
+
+            # GE (connecting to BP switch) statistics
+            m = p1.match(line)
+            if m:
+                current_section = 'ge_statistics'
+                ret_dict[current_section] = {}
+                continue
+
+            #                     Rx frames             Rx Bytes              Tx frames             Tx Bytes
+            m = p2.match(line)
+            if m:
+                continue
+
+            # pkt forwarded       41355                 3325326               41438                 3465186
+            m = p3.match(line)
+            if m:
+                if current_section == 'ge_statistics':
+                    group = m.groupdict()
+                    ret_dict[current_section]['pkt_forwarded'] = {
+                        'rx_frames': int(group['rx_frames']),
+                        'rx_bytes': int(group['rx_bytes']),
+                        'tx_frames': int(group['tx_frames']),
+                        'tx_bytes': int(group['tx_bytes'])
+                    }
+                continue
+
+            # undrrun err                                                     0
+            m = p6.match(line)
+            if m:
+                if current_section == 'ge_statistics':
+                    group = m.groupdict()
+                    ret_dict[current_section]['undrrun_err'] = {
+                        'tx_frames': int(group['tx_frames'])
+                    }
+                continue
+
+            # oversize            0                                           2
+            # undersize           0                                           0
+            # multicast           4                                           0
+            # broadcast           0                                           2
+            # pause               0                                           0
+            # dropped             0                                           0
+            # FCS err             0                                           0
+            m = p4.match(line)
+            if m:
+                if current_section == 'ge_statistics':
+                    group = m.groupdict()
+                    stat_name = group['stat_name'].lower().replace(' ', '_')
+                    ret_dict[current_section][stat_name] = {
+                        'rx_frames': int(group['rx_frames']),
+                        'tx_frames': int(group['tx_frames'])
+                    }
+                continue
+
+            # aligmt err          0
+            # length err          0
+            # MRU err             0
+            # SDU err             0
+            # overrun err         0
+            m = p5.match(line)
+            if m:
+                if current_section == 'ge_statistics':
+                    group = m.groupdict()
+                    stat_name = group['stat_name'].lower().replace(' ', '_')
+                    ret_dict[current_section][stat_name] = {
+                        'rx_frames': int(group['rx_frames'])
+                    }
+                continue
+
+            # Total frames
+            m = p7.match(line)
+            if m:
+                current_section = 'total_frames'
+                ret_dict[current_section] = {}
+                continue
+
+            # 64                1094
+            # 65 ~ 127  80926
+            # 128 ~ 255 27
+            # 256 ~ 511 586
+            # 512 ~ 1023        4
+            # 1024 ~ 1518       154
+            # 1519 ~ 1522       0
+            m = p8.match(line)
+            if m:
+                if current_section == 'total_frames':
+                    group = m.groupdict()
+                    range_str = group['range'].strip()
+
+                    # Convert range to key format
+                    if range_str == '64':
+                        key = '64'
+                    elif '~' in range_str:
+                        key = range_str.replace(' ~ ', '_').replace(' ', '')
+                    else:
+                        key = range_str.replace(' ', '_')
+
+                    ret_dict[current_section][key] = int(group['count'])
+                continue
+
+            # Flow Aggregation to BP switch
+            m = p9.match(line)
+            if m:
+                current_section = 'flow_aggregation'
+                ret_dict[current_section] = {}
+                continue
+
+            # FlowControl FA
+            # DSP signaling ingress FA
+            # DSP media ingress FA
+            # Low priority ingress FA (IP/ARP/BC)
+            # Control message ingress FA
+            m = p10.match(line)
+            if m:
+                if current_section == 'flow_aggregation':
+                    group = m.groupdict()
+                    fa_name = group['fa_name'].lower().replace(' ', '_').replace('(', '').replace(')', '').replace('/', '_')
+                    current_fa = fa_name
+                    ret_dict[current_section][current_fa] = {}
+                continue
+
+
+            #   pkt fowarded:120 bytes forwarded:3840
+            m = p11.match(line)
+            if m:
+                if current_section == 'flow_aggregation' and current_fa:
+                    group = m.groupdict()
+                    ret_dict[current_section][current_fa]['pkt_forwarded'] = int(group['pkt_forwarded'])
+                    ret_dict[current_section][current_fa]['bytes_forwarded'] = int(group['bytes_forwarded'])
+                continue
+
+            #   fpb drop:0 mtu drop:0 tx_q drop:0
+            m = p12.match(line)
+            if m:
+                if current_section == 'flow_aggregation' and current_fa:
+                    group = m.groupdict()
+                    ret_dict[current_section][current_fa]['fpb_drop'] = int(group['fpb_drop'])
+                    ret_dict[current_section][current_fa]['mtu_drop'] = int(group['mtu_drop'])
+                    ret_dict[current_section][current_fa]['tx_q_drop'] = int(group['tx_q_drop'])
+                continue
+
+        return ret_dict
+
+

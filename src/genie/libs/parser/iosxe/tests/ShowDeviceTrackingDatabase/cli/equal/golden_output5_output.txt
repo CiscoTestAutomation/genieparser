@@ -1,0 +1,13 @@
+Binding Table has 4 entries, 3 dynamic (limit 200000)
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access           
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned         
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned   
+
+
+    Network Layer Address       Link Layer Address    Interface  vlan  prlvl age    state     Time left
+S   10.10.10.10                 7081.05ff.eb41        E0/0       228   0100  10330mn REACHABLE  N/A
+ND  10.10.10.11                 7081.05ff.eb42        E0/1       226   0005  235mn   STALE      try 0 73072 s
+ND  10.10.10.12                 7081.05ff.eb43        E0/2       224   0005  60s     REACHABLE  250 s
+ARP 10.10.10.13                 7081.05ff.eb44        E0/3       222   0005  3mn     REACHABLE  2233 ms try 0

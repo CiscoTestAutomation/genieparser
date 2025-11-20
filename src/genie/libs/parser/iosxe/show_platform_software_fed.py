@@ -50,7 +50,7 @@
     * 'show platform software fed active ifm interfaces ethernet'
     * 'show platform software fed switch active ifm interfaces loopback'
     * 'show platform software fed active ifm interfaces loopback'
-
+    * 'show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui' 
 """
 # Python
 import re
@@ -18409,6 +18409,7 @@ class ShowPlatformSoftwareFedSwitchWdavcFlows(ShowPlatformSoftwareFedSwitchWdavc
 class ShowPlatformSoftwareFedSwitchWdavcFunctionFlowsSchema(MetaParser):
     """
     Schema for show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui
+    
     """
     schema = {
     "index": {
@@ -18434,7 +18435,7 @@ class ShowPlatformSoftwareFedSwitchWdavcFunctionFlowsSchema(MetaParser):
             "seg_index": {
                 Any(): {
                     "if_id": int,
-                    "opst_if": int,
+                    "opst_if": Or(int, str),
                     "seg_dir": str,
                     "vlan": int,
                     "fif_dir": bool,
@@ -18484,9 +18485,14 @@ class ShowPlatformSoftwareFedSwitchWdavcFunctionFlows(ShowPlatformSoftwareFedSwi
         #SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
             #-------------------------------------------------------------------------------------------------------------------------------------------------------
             #0       |1050   |1051     |Ingress |0       |True    |True   |True   |0      |0        VV|0       |0       |1753712193000|1753712240000|283178 |265    |0       |
-            
+
+        #SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+            #-------------------------------------------------------------------------------------------------------------------------------------------------------
+            #0       |1050   |----     |Ingress |0       |True    |True   |True   |0      |4        VV|0       |0       |1758196434000|1758196529000|193824 |180    |0       |
+
+        
         p2 = re.compile(
-            r'^\s*(?P<seg_idx>\d+)\s*\|\s*(?P<if_id>\d+)\s*\|\s*(?P<opst_if>\d+)\s*\|\s*'
+            r'^\s*(?P<seg_idx>\d+)\s*\|\s*(?P<if_id>\d+)\s*\|\s*(?P<opst_if>\d+|----)\s*\|\s*'
             r'(?P<seg_dir>\w+)\s*\|\s*(?P<vlan>\d+)\s*\|\s*(?P<fif_dir>\w+)\s*\|\s*'
             r'(?P<seen>\w+)\s*\|\s*(?P<is_set>\w+)\s*\|\s*(?P<dop_id>\d+)\s*\|\s*'
             r'(?P<nfl_hdl_st>[\w ]+)\s*\|\s*(?P<bps_pnd>\d+)\s*\|\s*(?P<app_pnd>\d+)\s*\|\s*'
@@ -18536,15 +18542,27 @@ class ShowPlatformSoftwareFedSwitchWdavcFunctionFlows(ShowPlatformSoftwareFedSwi
             #SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
             #-------------------------------------------------------------------------------------------------------------------------------------------------------
             #0       |1050   |1051     |Ingress |0       |True    |True   |True   |0      |0        VV|0       |0       |1753712193000|1753712240000|283178 |265    |0       |
+            
+            #SEG IDX |I/F ID |OPST I/F |SEG DIR |.1Q VLAN|FIF DIR | SEEN  |Is SET |DOP ID |NFL HDL ST |BPS PND |APP PND |FRST TS |LAST TS |BYTES  |PKTS   |TCP FLGS|
+            #-------------------------------------------------------------------------------------------------------------------------------------------------------
+            #0       |1050   |----     |Ingress |0       |True    |True   |True   |0      |4        VV|0       |0       |1758196434000|1758196529000|193824 |180    |0       |
+            
             m2 = p2.match(line)
             if m2 and current_index is not None:
                 group = m2.groupdict()
                 seg_dict = ret_dict["index"][current_index]["seg_index"].setdefault(seg_index_counter, {})
         
+                # Handle opst_if which can be a number or "----"
+                opst_if_value = group["opst_if"]
+                if opst_if_value == "----":
+                    opst_if_final = opst_if_value
+                else:
+                    opst_if_final = int(opst_if_value)
+        
                 seg_dict.update({
                     "if_id": int(group["if_id"]),
-                    "opst_if": int(group["opst_if"]),
-                    "seg_dir": group["seg_dir"],
+                    "opst_if": opst_if_final,
+                    "seg_dir": group["seg_dir"].strip(),
                     "vlan": int(group["vlan"]),
                     "fif_dir": group["fif_dir"].lower() == "true",
                     "seen": group["seen"].lower() == "true",
@@ -18560,6 +18578,194 @@ class ShowPlatformSoftwareFedSwitchWdavcFunctionFlows(ShowPlatformSoftwareFedSwi
                     "tcp_flgs": int(group["tcp_flgs"]),
                 })
                 seg_index_counter += 1
+                continue
+
+        return ret_dict
+
+# ========================================================================
+# Schema for 'show platform software fed switch {switch_state} swc statistics'
+# ========================================================================
+class ShowPlatformSoftwareFedSwitchSwcStatisticsSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch_state} swc statistics'"""
+
+    schema = {
+        "swc_upload_statistics": {
+            "last_file_uploaded": str,
+            "time_of_upload": str,
+            "current_file_uploading": str,
+            "files_queued_for_upload": str,
+            "number_of_files_queued": int,
+            "last_failed_upload": str,
+            "files_failed_to_upload": int,
+            "files_successfully_uploaded": int,
+        },
+        "swc_file_creation_statistics": {
+            "last_file_created": str,
+            "time_of_creation": str,
+        },
+        "swc_flow_statistics": {
+            "number_of_flows_in_prev_file": int,
+            "number_of_flows_in_curr_file": int,
+            "invalid_dropped_flows": int,
+            "error_dropped_flows": int,
+        },
+        "swc_flags": {
+            "is_registered": str,
+            "delete_debug": str,
+            "exporter_delete_debug": str,
+            "certificate_validation": str,
+        }
+    }
+
+# ========================================================================
+# Parser for 'show platform software fed switch {switch_state} swc statistics'
+# ========================================================================
+class ShowPlatformSoftwareFedSwitchSwcStatistics(ShowPlatformSoftwareFedSwitchSwcStatisticsSchema):
+    """
+    Parser for :
+        * show platform software fed switch {switch_state} swc statistics
+    """
+
+    cli_command = [
+        "show platform software fed switch {switch_state} swc statistics"
+    ]
+
+    def cli(self, switch_state="active", output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(switch_state=switch_state)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Patterns for each line
+        #  1: Last file uploaded          :   
+        p1 = re.compile(r"^1: Last file uploaded\s*:\s*(?P<last_file_uploaded>.*)$")
+        #  2: Time of upload              :  
+        p2 = re.compile(r"^2: Time of upload\s*:\s*(?P<time_of_upload>.*)$")
+        #  3: Current file uploading      :  
+        p3 = re.compile(r"^3: Current file uploading\s*:\s*(?P<current_file_uploading>.*)$")
+        #  4: Files queued for upload     :  202510151103_2, 202510151104_3, 202510151105_2, 202510151104_2, 202510151106_2 
+        p4 = re.compile(r"^4: Files queued for upload\s*:\s*(?P<files_queued_for_upload>.*)$")
+        #  5: Number of files queued      :  5
+        p5 = re.compile(r"^5: Number of files queued\s*:\s*(?P<number_of_files_queued>\d+)$")
+        #  6: Last failed upload          :  202510151102_2 
+        p6 = re.compile(r"^6: Last failed upload\s*:\s*(?P<last_failed_upload>.*)$")
+        #  7: Files failed to upload      :  411 
+        p7 = re.compile(r"^7: Files failed to upload\s*:\s*(?P<files_failed_to_upload>\d+)$")
+        #  8: Files successfully uploaded :  0 
+        p8 = re.compile(r"^8: Files successfully uploaded\s*:\s*(?P<files_successfully_uploaded>\d+)$")
+        #  9: Last file created           :  202510151107_2  
+        p9 = re.compile(r"^9: Last file created\s*:\s*(?P<last_file_created>.*)$")
+        # 10: Time of creation            :  10/15/25 11:07:03 UTC 
+        p10 = re.compile(r"^10: Time of creation\s*:\s*(?P<time_of_creation>.*)$")
+        # 11: Number of flows in prev file:  64000 
+        p11 = re.compile(r"^11: Number of flows in prev file:\s*(?P<number_of_flows_in_prev_file>\d+)$")
+        # 12: Number of flows in curr file:  48000
+        p12 = re.compile(r"^12: Number of flows in curr file:\s*(?P<number_of_flows_in_curr_file>\d+)$")
+        # 13: Invalid dropped flows       :  0
+        p13 = re.compile(r"^13: Invalid dropped flows\s*:\s*(?P<invalid_dropped_flows>\d+)$")
+        # 14: Error dropped flows         :  0
+        p14 = re.compile(r"^14: Error dropped flows\s*:\s*(?P<error_dropped_flows>\d+)$")
+        # 15: Is Registered               :  Registered
+        p15 = re.compile(r"^15: Is Registered\s*:\s*(?P<is_registered>\w+)$")
+        # 16: Delete debug                :  Disabled 
+        p16 = re.compile(r"^16: Delete debug\s*:\s*(?P<delete_debug>\w+)$")
+        # 17: Exporter delete debug       :  Disabled     
+        p17 = re.compile(r"^17: Exporter delete debug\s*:\s*(?P<exporter_delete_debug>\w+)$")
+        # 18: Certificate Validation      :  Enabled
+        p18 = re.compile(r"^18: Certificate Validation\s*:\s*(?P<certificate_validation>\w+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            #  1: Last file uploaded          :   
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["last_file_uploaded"] = m.group("last_file_uploaded")
+                continue
+            #  2: Time of upload              :  
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["time_of_upload"] = m.group("time_of_upload")
+                continue
+            #  3: Current file uploading      :  
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["current_file_uploading"] = m.group("current_file_uploading")
+                continue
+            #  4: Files queued for upload     :  202510151103_2, 202510151104_3, 202510151105_2, 202510151104_2, 202510151106_2 
+            m = p4.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["files_queued_for_upload"] = m.group("files_queued_for_upload")
+                continue
+            #  5: Number of files queued      :  5
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["number_of_files_queued"] = int(m.group("number_of_files_queued"))
+                continue
+            #  6: Last failed upload          :  202510151102_2 
+            m = p6.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["last_failed_upload"] = m.group("last_failed_upload")
+                continue
+            #  7: Files failed to upload      :  411
+            m = p7.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["files_failed_to_upload"] = int(m.group("files_failed_to_upload"))
+                continue
+            #  8: Files successfully uploaded :  0 
+            m = p8.match(line)
+            if m:
+                ret_dict.setdefault("swc_upload_statistics", {})["files_successfully_uploaded"] = int(m.group("files_successfully_uploaded"))
+                continue
+            #  9: Last file created           :  202510151107_2    
+            m = p9.match(line)
+            if m:
+                ret_dict.setdefault("swc_file_creation_statistics", {})["last_file_created"] = m.group("last_file_created")
+                continue
+            # 10: Time of creation            :  10/15/25 11:07:03 UTC     
+            m = p10.match(line)
+            if m:
+                ret_dict.setdefault("swc_file_creation_statistics", {})["time_of_creation"] = m.group("time_of_creation")
+                continue
+            # 11: Number of flows in prev file:  64000 
+            m = p11.match(line)
+            if m:
+                ret_dict.setdefault("swc_flow_statistics", {})["number_of_flows_in_prev_file"] = int(m.group("number_of_flows_in_prev_file"))
+                continue
+            # 12: Number of flows in curr file:  48000
+            m = p12.match(line)
+            if m:
+                ret_dict.setdefault("swc_flow_statistics", {})["number_of_flows_in_curr_file"] = int(m.group("number_of_flows_in_curr_file"))
+                continue
+            # 13: Invalid dropped flows       :  0
+            m = p13.match(line)
+            if m:
+                ret_dict.setdefault("swc_flow_statistics", {})["invalid_dropped_flows"] = int(m.group("invalid_dropped_flows"))
+                continue
+            # 14: Error dropped flows         :  0
+            m = p14.match(line)
+            if m:
+                ret_dict.setdefault("swc_flow_statistics", {})["error_dropped_flows"] = int(m.group("error_dropped_flows"))
+                continue
+            # 15: Is Registered               :  Registered
+            m = p15.match(line)
+            if m:
+                ret_dict.setdefault("swc_flags", {})["is_registered"] = m.group("is_registered")
+                continue
+            # 16: Delete debug                :  Disabled 
+            m = p16.match(line)
+            if m:
+                ret_dict.setdefault("swc_flags", {})["delete_debug"] = m.group("delete_debug")
+                continue
+            # 17: Exporter delete debug       :  Disabled     
+            m = p17.match(line)
+            if m:
+                ret_dict.setdefault("swc_flags", {})["exporter_delete_debug"] = m.group("exporter_delete_debug")
+                continue
+            # 18: Certificate Validation      :  Enabled
+            m = p18.match(line)
+            if m:
+                ret_dict.setdefault("swc_flags", {})["certificate_validation"] = m.group("certificate_validation")
                 continue
 
         return ret_dict

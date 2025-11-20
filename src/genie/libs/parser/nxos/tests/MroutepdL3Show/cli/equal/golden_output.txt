@@ -1,0 +1,221 @@
+Executing: mroutepd l3 show
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "232.0.0.0"
+    g_len: 8
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 1
+    cscale_data {
+      g_index: 262181
+      g_l2ptr: 6
+      g_mcinfo_fp: 30
+      min_mtu: 1500
+      mtu_idx: 1
+      met_ptr: 1
+      no_dc_sup_redirect: true
+      drop: true
+      slot: 1
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "239.3.1.12"
+    g_len: 32
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 1
+    cscale_data {
+      g_index: 67115974
+      g_l2ptr: 5
+      g_mcinfo_fp: 30
+      min_mtu: 1500
+      mtu_idx: 1
+      met_ptr: 12
+      rpf_if: 4102
+      rpf_fail_send_to_sup: true
+      no_dc_sup_redirect: true
+      slot: 1
+      met_list {
+        bd_num: 4105
+        outer_bd: 4105
+        mc_idx: 4102
+        met_slice_list {
+          slice_list: "3"
+        }
+      }
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "239.3.1.12"
+    g_len: 32
+    s_ip_addr: "16.1.0.101"
+    s_len: 32
+    vrf_bd: 1
+    cscale_data {
+      s_index: 67113077
+      g_index: 67115974
+      sg_index: 68945208
+      g_l2ptr: 5
+      sg_l2ptr: 4
+      sg_mcinfo_fp: 30
+      sg_fp: 7
+      min_mtu: 1500
+      mtu_idx: 1
+      sg_hash_idx: 668
+      sg_hit_idx: 1336
+      met_ptr: 11
+      rpf_if: 4102
+      rpf_fail_send_to_sup: true
+      slot: 1
+      met_list {
+        bd_num: 4105
+        outer_bd: 4105
+        mc_idx: 4102
+        met_slice_list {
+          slice_list: "3"
+        }
+      }
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "239.3.1.12"
+    g_len: 32
+    s_ip_addr: "26.1.0.102"
+    s_len: 32
+    vrf_bd: 1
+    cscale_data {
+      s_index: 67110927
+      g_index: 67115974
+      sg_index: 68947076
+      g_l2ptr: 5
+      sg_l2ptr: 7
+      sg_mcinfo_fp: 30
+      sg_fp: 7
+      min_mtu: 1500
+      mtu_idx: 1
+      sg_hash_idx: 1602
+      sg_hit_idx: 3204
+      met_ptr: 12
+      rpf_if: 4102
+      rpf_fail_send_to_sup: true
+      slot: 1
+      met_list {
+        bd_num: 4105
+        outer_bd: 4105
+        mc_idx: 4102
+        met_slice_list {
+          slice_list: "3"
+        }
+      }
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "239.3.1.13"
+    g_len: 32
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 1
+    cscale_data {
+      g_index: 67116325
+      g_l2ptr: 5
+      g_mcinfo_fp: 30
+      min_mtu: 1500
+      mtu_idx: 1
+      met_ptr: 12
+      rpf_if: 4102
+      rpf_fail_send_to_sup: true
+      no_dc_sup_redirect: true
+      slot: 1
+      met_list {
+        bd_num: 4105
+        outer_bd: 4105
+        mc_idx: 4102
+        met_slice_list {
+          slice_list: "3"
+        }
+      }
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "224.0.0.0"
+    g_len: 4
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 32768
+    cscale_data {
+      g_index: 262144
+      g_l2ptr: 1
+      g_mcinfo_fp: 30
+      min_mtu: 9216
+      met_ptr: 1
+      no_dc_sup_redirect: true
+      drop: true
+      wildcard: true
+      slot: 1
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "224.0.0.0"
+    g_len: 24
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 32768
+    cscale_data {
+      g_index: 262145
+      min_mtu: 9216
+      met_ptr: 1
+      wildcard: true
+      slot: 1
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "224.0.1.39"
+    g_len: 32
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 32768
+    cscale_data {
+      g_index: 262146
+      g_l2ptr: 2
+      g_mcinfo_fp: 30
+      min_mtu: 9216
+      met_ptr: 1
+      wildcard: true
+      slot: 1
+    }
+  }
+}
+all_mcast_pd_routes {
+  rv_message: "Success\n"
+  pd_data {
+    g_ip_addr: "224.0.1.40"
+    g_len: 32
+    s_ip_addr: "0.0.0.0"
+    vrf_bd: 32768
+    cscale_data {
+      g_index: 262147
+      g_l2ptr: 2
+      g_mcinfo_fp: 30
+      min_mtu: 9216
+      met_ptr: 1
+      wildcard: true
+      slot: 1
+    }
+  }
+}

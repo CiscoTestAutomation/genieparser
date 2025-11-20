@@ -295,6 +295,9 @@ class ShowInstallState(ShowInstallStateSchema):
             # get output from device
             output = self.device.execute(self.cli_command[0].format(state=state))
 
+        if "No packages" in output:
+            return {"location": {}}
+
         # initial return dictionary
         ret_dict = {}
         index = 0

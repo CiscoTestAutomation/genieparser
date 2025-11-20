@@ -17,6 +17,7 @@
     * 'show platform software install-manager switch active r0 operation history summary'
     * 'show platform software object-manager switch {switchstate} {serviceprocessor} active statistics'
     * 'show platform software object-manager FP active statistics'
+    * 'show platform software object-manager FP standby statistics'
     * 'show platform software bp crimson content config'
     * 'show platform software node cluster-manager switch {mode} B0 node {node}'
     * 'show platform software factory-reset secure log'
@@ -38,6 +39,7 @@
     * 'show platform software l2vpn fp active atom'
     * 'show platform software adjacency RP active'
     * 'show platform software nat fp active qfp-stats'
+    * 'show platform software nat fp active cpp-stats'
     * 'show platform software mpls fp active eos'
     * 'show platform software multicast stats'
     * 'show platform software interface fp active name Port-channel32'
@@ -54,6 +56,11 @@
     * 'show platform software firewall RP active zones'
     * 'show platform software firewall FP active zones'
     * 'show platform software nat fp active mapping static'
+    * 'show platform software firewall RP active parameter-maps'
+    * 'show platform software subslot {subslot} module firmware'
+    * 'show platform software bp crimson content oper'
+    * 'show platform software audit monitor status'
+    * 'show platform software audit ruleset'
 """
 
 # Python
@@ -578,7 +585,8 @@ class ShowPlatformSoftwareYangManagementProcessState(
 
         # Confd Status: Started
         # Confd Status: Not Running
-        p1 = re.compile(r"^Confd +Status: +(?P<status>.+)$")
+        # *Sep 30 15:56:15.001: %SYS-5-CONFIG_I: Configured from console by consoleConfd Status: Started
+        p1 = re.compile(r".*Confd +Status: +(?P<status>.+)$")
 
         # pubd                 Running             Active
         # gnmib                Not Running         Not Applicable
@@ -1632,10 +1640,12 @@ class ShowPlatformSoftwareIomdMacsecInterfaceDetail(
 #  Schema for
 #  * 'show platform software object-manager {switch} {switch_type} F0 pending-ack-update'
 #  * 'show platform software object-manager F0 pending-ack-update'
+#  * 'show platform software object-manager FP active pending-ack-update'
 # =======================================================================================
 class ShowPlatformSoftwareObjectManagerF0PendingAckUpdateSchema(MetaParser):
     """Schema for 'show platform software object-manager {switch} {switch_type} F0 pending-ack-update'
     'show platform software object-manager F0 pending-ack-update'
+    'show platform software object-manager FP active pending-ack-update'
     """
 
     schema = {
@@ -1657,6 +1667,7 @@ class ShowPlatformSoftwareObjectManagerF0PendingAckUpdateSchema(MetaParser):
 #  Parser for
 #  * 'show platform software object-manager {switch} {switch_type} F0 pending-ack-update'
 #  * 'show platform software object-manager F0 pending-ack-update'
+#  * 'show platform software object-manager FP active pending-ack-update'
 # =======================================================================================
 
 
@@ -1667,21 +1678,29 @@ class ShowPlatformSoftwareObjectManagerF0PendingAckUpdate(
     Parser for :
         * 'show platform software object-manager {switch} {switch_type} F0 pending-ack-update'
         * 'show platform software object-manager F0 pending-ack-update'
+        * 'show platform software object-manager FP active pending-ack-update'
     """
 
     cli_command = [
         "show platform software object-manager {switch} {switch_type} F0 pending-ack-update",
-        "show platform software object-manager F0 pending-ack-update",
+	"show platform software object-manager F0 pending-ack-update",
+        "show platform software object-manager {processor} {type} pending-ack-update",
     ]
 
-    def cli(self, switch_type="", switch="", output=None):
+    def cli(self, switch_type="", switch="", processor="", type="", output=None):
         if output is None:
             if switch and switch_type:
                 output = self.device.execute(
                     self.cli_command[0].format(switch=switch, switch_type=switch_type)
                 )
+            elif processor and type:
+                output = self.device.execute(
+                    self.cli_command[2].format(processor=processor, type=type)
+                )
             else:
-                output = self.device.execute(self.cli_command[1])
+                output = self.device.execute(
+                    self.cli_command[1]
+                )
         else:
             output = output
 
@@ -2624,6 +2643,7 @@ class ShowPlatformSoftwareCpmSwitchB0ControlInfoSchema(MetaParser):
                     "ec_if_id": str,
                     "system_port": int,
                     "if_type": str,
+                    Optional("preffered_link"): str
                 },
             },
         },
@@ -2654,8 +2674,9 @@ class ShowPlatformSoftwareCpmSwitchB0ControlInfo(
         p1_2 = re.compile(r"^(?P<system_port>\s*\d+)\s+(?P<svl_control_interface>\S+)$")
 
         # 0x2c       0x2c     28       etherchannel
+        # If Id         Ec If Id           System Port     If Type      Preferred Link
         p3 = re.compile(
-            r"^(?P<if_id>\S+)\s+(?P<ec_if_id>\S+)\s+(?P<system_port>\d+)\s+(?P<if_type>\S+)$"
+            r"^(?P<if_id>\S+)\s+(?P<ec_if_id>\S+)\s+(?P<system_port>\d+)\s+(?P<if_type>\S+)(\s+(?P<preffered_link>\S+))?$"
         )
 
         for line in output.splitlines():
@@ -2693,6 +2714,8 @@ class ShowPlatformSoftwareCpmSwitchB0ControlInfo(
                 root_dict["ec_if_id"] = group["ec_if_id"]
                 root_dict["system_port"] = int(group["system_port"])
                 root_dict["if_type"] = group["if_type"]
+                if group["preffered_link"]:
+                    root_dict["preffered_link"] = group["preffered_link"]
                 continue
 
         return ret_dict
@@ -2766,6 +2789,7 @@ class ShowPlatformSoftwareObjectManagerFpActiveStatisticsSchema(MetaParser):
     """Schema for the commands:
     * show platform software object-manager switch {switchstate} {serviceprocessor} active statistics
     * show platform software object-manager FP active statistics
+    * show platform software object-manager FP standby statistics
     """
 
     schema = {
@@ -2793,26 +2817,22 @@ class ShowPlatformSoftwareObjectManagerFpActiveStatistics(
     """
     show platform software object-manager switch {switchstate} {serviceprocessor} active statistics
     show platform software object-manager FP active statistics
+    show platform software object-manager FP standby statisics
     """
 
     cli_command = [
         "show platform software object-manager switch {switchstate} {serviceprocessor} active statistics",
-        "show platform software object-manager FP active statistics",
-        "show platform software object-manager switch {switchstate} {serviceprocessor} statistics"
+        "show platform software object-manager FP {processor} statistics",
     ]
 
-    def cli(self, switchstate="", serviceprocessor="", output=None):
+    def cli(self, switchstate="", serviceprocessor="", processor="", output=None):
         if output is None:
             if switchstate:
                 cmd = self.cli_command[0].format(
                     switchstate=switchstate, serviceprocessor=serviceprocessor
                 )
-            elif switchstate and serviceprocessor:
-                cmd = self.cli_command[2].format(
-                    switchstate=switchstate, serviceprocessor=serviceprocessor
-                )
             else:
-                cmd = self.cli_command[1]
+                cmd = self.cli_command[1].format(processor=processor)
 
             output = self.device.execute(cmd)
 
@@ -6033,6 +6053,60 @@ class ShowPlatformSoftwareAccessListSwitchActiveFPActiveOgLkupIds(
                 int_dict["access_list"] = group["access_list"]
                 int_dict["src_lkup_id"] = group["src_lkup_id"]
                 int_dict["dst_lkup_id"] = group["dst_lkup_id"]
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Parser for 'show platform software access-list fp active summary'
+# ======================================================
+
+
+class ShowPlatformSoftwareAccessListFpActiveSummarySchema(MetaParser):
+    """Schema for show platform software access-list fp active summary"""
+
+    schema = {
+        "access_list": {
+            Any(): {
+                "index": int,
+                "num_ref": int,
+                "num_aces": int,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareAccessListFpActiveSummary(
+    ShowPlatformSoftwareAccessListFpActiveSummarySchema
+):
+    """Parser for show platform software access-list {fp} {active} summary"""
+
+    cli_command = "show platform software access-list {fp} {active} summary"
+
+    def cli(self, fp="fp", active="active", output=None):
+        if output is None:
+            cmd = self.cli_command.format(fp=fp, active=active)
+            output = self.device.execute(cmd)
+
+        # implicit_deny_v6                     5            0            1  
+        p1 = re.compile(r"^(?P<access_list_name>\S+)\s+(?P<index>\d+)\s+(?P<num_ref>\d+)\s+(?P<num_aces>\d+)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # preauth_v4                           2            0            6            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                access_list_name = group["access_list_name"]
+                
+                access_list_dict = ret_dict.setdefault("access_list", {}).setdefault(access_list_name, {})
+                access_list_dict["index"] = int(group["index"])
+                access_list_dict["num_ref"] = int(group["num_ref"])
+                access_list_dict["num_aces"] = int(group["num_aces"])
                 continue
 
         return ret_dict
@@ -12803,3 +12877,2320 @@ class ShowPlatformSoftwareNatFpActiveMappingStatic(ShowPlatformSoftwareNatFpActi
                 continue
 
         return parsed
+
+# =======================================================
+# Schema for 'show platform software nat fp active cpp-stats'
+# =======================================================
+class ShowPlatformSoftwareNatFpActiveCppStatsSchema(MetaParser):
+    """Schema for show platform software nat fp active cpp-stats"""
+    schema = {
+        Optional('interface'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('timeout'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('service'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('modify_in_progress'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('esp'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('dnsv6'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('settings'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('pap_settings'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('flow_entries'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('pool'): {
+            'add': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('addr_range'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('static_mapping'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('dyn_mapping'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('dyn_pat_mapping'): {
+            'add': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('porlist'): {
+            'add': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('logging'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('per_vrf_logging'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('sess_replicate'): {
+            'add': int,
+            'upd': int,
+            'del': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('max_entry'): {
+            'set': int,
+            'clr': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('ifaddr_change'): {
+            'notify': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('debug'): {
+            'set': int,
+            'clr': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('dp_static_rt'): {
+            'add': int,
+            'del': int,
+            'err': int,
+        },
+        Optional('dp_ipalias'): {
+            'add': int,
+            'del': int,
+            'err': int,
+        },
+        Optional('dp_portlist'): {
+            'req': int,
+            'ret': int,
+            'err': int,
+        },
+        Optional('dp_wlan_sess'): {
+            'est': int,
+            'term': int,
+            'err': int,
+        },
+        Optional('mib_setup'): {
+            'enable': int,
+            'disable': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('mib_addr_bind'): {
+            'query': int,
+            'reply': int,
+            'err': int,
+        },
+        Optional('misc_settings'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+        Optional('gatekeeper_settings'): {
+            'set': int,
+            'ack': int,
+            'err': int,
+        },
+    }
+
+class ShowPlatformSoftwareNatFpActiveCppStats(ShowPlatformSoftwareNatFpActiveCppStatsSchema):
+    """Parser for 'show platform software nat fp active cpp-stats'"""
+
+    cli_command = 'show platform software nat fp active cpp-stats'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # interface add: 10, upd: 0, del: 5, ack: 6, err: 0
+        p1 = re.compile(
+            r'^interface add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # timeout set: 24, ack: 24, err: 0
+        p2 = re.compile(
+            r'^timeout set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # service set: 54, ack: 54, err: 0
+        p3 = re.compile(
+            r'^service set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # modify-in-progress set: 0, ack: 0, err: 0
+        p4 = re.compile(
+            r'^modify-in-progress set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # esp set: 0, ack: 0, err: 0
+        p5 = re.compile(
+            r'^esp set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # dnsv6 set: 1, ack: 1, err: 0
+        p6 = re.compile(
+            r'^dnsv6 set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # settings set: 0, ack: 0, err: 0
+        p7 = re.compile(
+            r'^settings set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # PAP settings set: 0, ack: 0, err: 0
+        p8 = re.compile(
+            r'^PAP settings set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Flow entries set: 1, ack: 1, err: 0
+        p9 = re.compile(
+            r'^Flow entries set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # pool add: 1, del: 0, ack: 1, err: 0
+        p10 = re.compile(
+            r'^pool add: (?P<add>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # addr range add: 1, upd: 0, del: 0, ack: 1, err: 0
+        p11 = re.compile(
+            r'^addr range add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # static mapping add: 2, upd: 0, del: 2, ack: 0, err: 0
+        p12 = re.compile(
+            r'^static mapping add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # dyn mapping add: 1, upd: 0, del: 0, ack: 1, err: 0
+        p13 = re.compile(
+            r'^dyn mapping add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # dyn pat mapping add: 0, del: 0, ack: 0, err: 0
+        p14 = re.compile(
+            r'^dyn pat mapping add: (?P<add>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # porlist add: 0, del: 0, ack: 0, err: 0
+        p15 = re.compile(
+            r'^porlist add: (?P<add>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Logging add: 0, upd: 0, del: 0, ack: 0, err: 0
+        p16 = re.compile(
+            r'^Logging add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Per-VRF logging add: 0, upd: 0, del: 0, ack: 0, err: 0
+        p17 = re.compile(
+            r'^Per-VRF logging add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Sess replicate add: 1, upd: 0, del: 1, ack: 2, err: 0
+        p18 = re.compile(
+            r'^Sess replicate add: (?P<add>\d+), upd: (?P<upd>\d+), del: (?P<del>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # max entry set: 1, clr: 0, ack: 1, err: 0
+        p19 = re.compile(
+            r'^max entry set: (?P<set>\d+), clr: (?P<clr>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # ifaddr change notify: 0, ack: 0, err: 0
+        p20 = re.compile(
+            r'^ifaddr change notify: (?P<notify>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # debug set: 0, clr: 0, ack: 0, err: 0
+        p21 = re.compile(
+            r'^debug set: (?P<set>\d+), clr: (?P<clr>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # dp static-rt add: 0, del: 0, err: 0
+        p22 = re.compile(
+            r'^dp static-rt add: (?P<add>\d+), del: (?P<del>\d+), err: (?P<err>\d+)$'
+        )
+        # dp ipalias add: 4, del: 2, err: 0
+        p23 = re.compile(
+            r'^dp ipalias add: (?P<add>\d+), del: (?P<del>\d+), err: (?P<err>\d+)$'
+        )
+        # dp portlist req: 0, ret: 0, err: 0
+        p24 = re.compile(
+            r'^dp portlist req: (?P<req>\d+), ret: (?P<ret>\d+), err: (?P<err>\d+)$'
+        )
+        # dp wlan sess est: 0, term: 0, err: 0
+        p25 = re.compile(
+            r'^dp wlan sess est: (?P<est>\d+), term: (?P<term>\d+), err: (?P<err>\d+)$'
+        )
+        # mib setup enable: 0, disable: 0, ack: 0, err: 0
+        p26 = re.compile(
+            r'^mib setup enable: (?P<enable>\d+), disable: (?P<disable>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # mib addr-bind query: 0, reply: 0, err: 0
+        p27 = re.compile(
+            r'^mib addr-bind query: (?P<query>\d+), reply: (?P<reply>\d+), err: (?P<err>\d+)$'
+        )
+        # MISC settings set: 0, ack: 0, err: 0
+        p28 = re.compile(
+            r'^MISC settings set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+        # Gatekeeper settings set: 0, ack: 0, err: 0
+        p29 = re.compile(
+            r'^Gatekeeper settings set: (?P<set>\d+), ack: (?P<ack>\d+), err: (?P<err>\d+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # interface add: 10, upd: 0, del: 5, ack: 6, err: 0
+            m = p1.match(line)
+            if m:
+                parsed_dict.setdefault('interface', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # timeout set: 24, ack: 24, err: 0
+            m = p2.match(line)
+            if m:
+                parsed_dict.setdefault('timeout', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # service set: 54, ack: 54, err: 0
+            m = p3.match(line)
+            if m:
+                parsed_dict.setdefault('service', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # modify-in-progress set: 0, ack: 0, err: 0
+            m = p4.match(line)
+            if m:
+                parsed_dict.setdefault('modify_in_progress', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # esp set: 0, ack: 0, err: 0
+            m = p5.match(line)
+            if m:
+                parsed_dict.setdefault('esp', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dnsv6 set: 1, ack: 1, err: 0
+            m = p6.match(line)
+            if m:
+                parsed_dict.setdefault('dnsv6', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # settings set: 0, ack: 0, err: 0
+            m = p7.match(line)
+            if m:
+                parsed_dict.setdefault('settings', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # PAP settings set: 0, ack: 0, err: 0
+            m = p8.match(line)
+            if m:
+                parsed_dict.setdefault('pap_settings', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Flow entries set: 1, ack: 1, err: 0
+            m = p9.match(line)
+            if m:
+                parsed_dict.setdefault('flow_entries', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # pool add: 1, del: 0, ack: 1, err: 0
+            m = p10.match(line)
+            if m:
+                parsed_dict.setdefault('pool', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # addr range add: 1, upd: 0, del: 0, ack: 1, err: 0
+            m = p11.match(line)
+            if m:
+                parsed_dict.setdefault('addr_range', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # static mapping add: 2, upd: 0, del: 2, ack: 0, err: 0
+            m = p12.match(line)
+            if m:
+                parsed_dict.setdefault('static_mapping', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dyn mapping add: 1, upd: 0, del: 0, ack: 1, err: 0
+            m = p13.match(line)
+            if m:
+                parsed_dict.setdefault('dyn_mapping', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dyn pat mapping add: 0, del: 0, ack: 0, err: 0
+            m = p14.match(line)
+            if m:
+                parsed_dict.setdefault('dyn_pat_mapping', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # porlist add: 0, del: 0, ack: 0, err: 0
+            m = p15.match(line)
+            if m:
+                parsed_dict.setdefault('porlist', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Logging add: 0, upd: 0, del: 0, ack: 0, err: 0
+            m = p16.match(line)
+            if m:
+                parsed_dict.setdefault('logging', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Per-VRF logging add: 0, upd: 0, del: 0, ack: 0, err: 0
+            m = p17.match(line)
+            if m:
+                parsed_dict.setdefault('per_vrf_logging', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Sess replicate add: 1, upd: 0, del: 1, ack: 2, err: 0
+            m = p18.match(line)
+            if m:
+                parsed_dict.setdefault('sess_replicate', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # max entry set: 1, clr: 0, ack: 1, err: 0
+            m = p19.match(line)
+            if m:
+                parsed_dict.setdefault('max_entry', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # ifaddr change notify: 0, ack: 0, err: 0
+            m = p20.match(line)
+            if m:
+                parsed_dict.setdefault('ifaddr_change', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # debug set: 0, clr: 0, ack: 0, err: 0
+            m = p21.match(line)
+            if m:
+                parsed_dict.setdefault('debug', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dp static-rt add: 0, del: 0, err: 0
+            m = p22.match(line)
+            if m:
+                parsed_dict.setdefault('dp_static_rt', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dp ipalias add: 4, del: 2, err: 0
+            m = p23.match(line)
+            if m:
+                parsed_dict.setdefault('dp_ipalias', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dp portlist req: 0, ret: 0, err: 0
+            m = p24.match(line)
+            if m:
+                parsed_dict.setdefault('dp_portlist', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # dp wlan sess est: 0, term: 0, err: 0
+            m = p25.match(line)
+            if m:
+                parsed_dict.setdefault('dp_wlan_sess', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # mib setup enable: 0, disable: 0, ack: 0, err: 0
+            m = p26.match(line)
+            if m:
+                parsed_dict.setdefault('mib_setup', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # mib addr-bind query: 0, reply: 0, err: 0
+            m = p27.match(line)
+            if m:
+                parsed_dict.setdefault('mib_addr_bind', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # MISC settings set: 0, ack: 0, err: 0
+            m = p28.match(line)
+            if m:
+                parsed_dict.setdefault('misc_settings', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+            # Gatekeeper settings set: 0, ack: 0, err: 0
+            m = p29.match(line)
+            if m:
+                parsed_dict.setdefault('gatekeeper_settings', {}).update({k: int(v) for k, v in m.groupdict().items()})
+                continue
+
+        return parsed_dict
+
+# =======================================================
+# Schema for 'show platform software firewall RP active parameter-maps'
+# =======================================================
+class ShowPlatformSoftwareFirewallRPActiveParameterMapsSchema(MetaParser):
+    """Schema for show platform software firewall RP active parameter-maps"""
+    schema = {
+        'parameter_maps': {
+            Any(): {
+                'parameter_map_type': str,
+                Optional('global_parameter_map'): bool,
+                Optional('alerts'): str,
+                Optional('audits'): str,
+                Optional('drop_log'): str,
+                Optional('log_flow'): str,
+                Optional('hsl_mode'): str,
+                Optional('host'): str,
+                Optional('port'): int,
+                Optional('template'): str,
+                Optional('zone_mismatch_drop'): str,
+                Optional('multi_tenancy'): str,
+                Optional('icmp_ureachable_allowed'): str,
+                Optional('session_rate'): {
+                    'high': int,
+                    'low': int,
+                    'time_duration': str,
+                },
+                Optional('half_open'): {
+                    'high': int,
+                    'low': int,
+                    'host': int,
+                    'host_block_time': int,
+                },
+                Optional('inactivity_times'): {
+                    'dns': int,
+                    'icmp': int,
+                    'tcp': int,
+                    'udp': int,
+                },
+                Optional('inactivity_age_out_times'): {
+                    'icmp': int,
+                    'tcp': int,
+                    'udp': int,
+                },
+                Optional('tcp_timeouts'): {
+                    'syn_wait_time': int,
+                    'fin_wait_time': int,
+                },
+                Optional('tcp_ageout_timeouts'): {
+                    'syn_wait_time': int,
+                    'fin_wait_time': int,
+                },
+                Optional('tcp_rst_pkt_control'): {
+                    'half_open': str,
+                    'half_close': str,
+                    'idle': str,
+                },
+                Optional('udp_timeout'): {
+                    'udp_half_open_time': int,
+                },
+                Optional('udp_ageout_timeout'): {
+                    'udp_half_open_time': int,
+                },
+                Optional('max_sessions'): str,
+                Optional('number_of_simultaneous_packet_per_sessions'): int,
+                Optional('syn_cookie_and_resource_management'): {
+                    'global_syn_flood_limit': int,
+                    'global_total_session': int,
+                    Optional('global_number_of_simultaneous_packet_per_session'): str,
+                },
+                Optional('global_total_session_aggressive_aging'): str,
+                Optional('global_alert'): str,
+                Optional('global_max_incomplete'): int,
+                Optional('global_max_incomplete_tcp'): int,
+                Optional('global_max_incomplete_udp'): int,
+                Optional('global_max_incomplete_icmp'): int,
+                Optional('global_max_incomplete_aggressive_aging'): str,
+                Optional('per_box_configuration'): {
+                    'syn_flood_limit': int,
+                    'total_session_aggressive_aging': str,
+                    'max_incomplete': int,
+                    'max_incomplete_tcp': int,
+                    'max_incomplete_udp': int,
+                    'max_incomplete_icmp': int,
+                    'max_incomplete_aggressive_aging': str,
+                },
+                Optional('application_protocol_control'): {
+                    Any(): {
+                        'protocol': str,
+                        'status': str,
+                    }
+                },
+                Optional('vrf_pmap_syn_flood_limit'): int,
+                Optional('vrf_pmap_total_session'): int,
+                Optional('vrf_pmap_total_session_aggressive_aging'): str,
+                Optional('vrf_pmap_alert'): str,
+                Optional('vrf_pmap_max_incomplete'): int,
+                Optional('vrf_pmap_max_incomplete_tcp'): int,
+                Optional('vrf_pmap_max_incomplete_udp'): int,
+                Optional('vrf_pmap_max_incomplete_icmp'): int,
+                Optional('vrf_pmap_max_incomplete_aggressive_aging'): str,
+            }
+        }
+    }
+
+
+# =======================================================
+# Parser for 'show platform software firewall RP active parameter-maps'
+# =======================================================
+class ShowPlatformSoftwareFirewallRPActiveParameterMaps(ShowPlatformSoftwareFirewallRPActiveParameterMapsSchema):
+    """Parser for show platform software firewall RP active parameter-maps"""
+
+    cli_command = 'show platform software firewall RP active parameter-maps'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Regex patterns
+        # Inspect Parameter Map: global
+        p1 = re.compile(r'^\s*Inspect Parameter Map:\s+(?P<param_map_name>\S+)$')
+
+        # Parameter Map Type: Parameter-Map
+        p2 = re.compile(r'^\s*Parameter Map Type:\s+(?P<param_map_type>.+)$')
+
+        # Global Parameter-Map
+        p3 = re.compile(r'^\s*Global Parameter-Map$')
+
+        # Alerts: On, Audits: Off, Drop-Log: On, Log flow: Off
+        p4 = re.compile(r'^\s*Alerts:\s+(?P<alerts>\S+),\s+Audits:\s+(?P<audits>\S+),\s+Drop-Log:\s+(?P<drop_log>\S+),\s+Log flow:\s+(?P<log_flow>\S+)$')
+
+        # HSL Mode: Disabled, Host: :0, Port: 0, Template: 300 sec
+        p5 = re.compile(r'^\s*HSL Mode:\s+(?P<hsl_mode>\S+),\s+Host:\s+(?P<host>\S+),\s+Port:\s+(?P<port>\d+),\s+Template:\s+(?P<template>.+)$')
+
+        # Zone mismatch drop: Off
+        p6 = re.compile(r'^\s*Zone mismatch drop:\s+(?P<zone_mismatch_drop>\S+)$')
+
+        # Multi tenancy: Off
+        p7 = re.compile(r'^\s*Multi tenancy:\s+(?P<multi_tenancy>\S+)$')
+
+        # ICMP ureachable allowed: No
+        p8 = re.compile(r'^\s*ICMP ureachable allowed:\s+(?P<icmp_ureachable_allowed>\S+)$')
+
+        # Session Rate High: 2147483647, Session Rate Low: 2147483647, Time Duration: 60 sec
+        p9 = re.compile(r'^\s*Session Rate High:\s+(?P<high>\d+),\s+Session Rate Low:\s+(?P<low>\d+),\s+Time Duration:\s+(?P<time_duration>.+)$')
+
+        # High: 2147483647, Low: 2147483647, Host: 4294967295, Host Block Time: 0
+        p10 = re.compile(r'^\s*High:\s+(?P<high>\d+),\s+Low:\s+(?P<low>\d+),\s+Host:\s+(?P<host>\d+),\s+Host Block Time:\s+(?P<host_block_time>\d+)$')
+
+        # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+        p11 = re.compile(r'^\s*DNS:\s+(?P<dns>\d+),\s+ICMP:\s+(?P<icmp>\d+),\s+TCP:\s+(?P<tcp>\d+),\s+UDP:\s+(?P<udp>\d+)$')
+
+        # ICMP: 10, TCP: 3600, UDP: 30
+        p12 = re.compile(r'^\s*ICMP:\s+(?P<icmp>\d+),\s+TCP:\s+(?P<tcp>\d+),\s+UDP:\s+(?P<udp>\d+)$')
+
+        # SYN wait time: 30, FIN wait time: 1
+        p13 = re.compile(r'^\s*SYN wait time:\s+(?P<syn_wait_time>\d+),\s+FIN wait time:\s+(?P<fin_wait_time>\d+)$')
+
+        # half-open: On, half-close: On, idle: On
+        p14 = re.compile(r'^\s*half-open:\s+(?P<half_open>\S+),\s+half-close:\s+(?P<half_close>\S+),\s+idle:\s+(?P<idle>\S+)$')
+
+        # UDP Half-open time: 30000
+        p15 = re.compile(r'^\s*UDP Half-open time:\s+(?P<udp_half_open_time>\d+)$')
+
+        # Max Sessions: Unlimited
+        p16 = re.compile(r'^\s*Max Sessions:\s+(?P<max_sessions>.+)$')
+
+        # Number of Simultaneous Packet per Sessions: 0
+        p17 = re.compile(r'^\s*Number of Simultaneous Packet per Sessions:\s+(?P<simultaneous_packets>\d+)$')
+
+        # Global Syn Flood Limit: 4294967295
+        p18 = re.compile(r'^\s*Global Syn Flood Limit:\s+(?P<global_syn_flood_limit>\d+)$')
+
+        # Global Total Session : 4294967295
+        p19 = re.compile(r'^\s*Global Total Session\s+:\s+(?P<global_total_session>\d+)$')
+
+        # Global Number of Simultaneous Packet per Session :
+        p20 = re.compile(r'^\s*Global Number of Simultaneous Packet per Session\s+:\s*(?P<global_simultaneous>.*)$')
+
+        # Global Total Session Aggressive Aging Disabled
+        p21 = re.compile(r'^\s*Global Total Session Aggressive Aging\s+(?P<aggressive_aging>\S+)$')
+
+        # Global alert : Off
+        p22 = re.compile(r'^\s*Global alert\s+:\s+(?P<global_alert>\S+)$')
+
+        # Global max incomplete : 4294967295
+        p23 = re.compile(r'^\s*Global max incomplete\s+:\s+(?P<global_max_incomplete>\d+)$')
+
+        # Global max incomplete TCP: 4294967295
+        p24 = re.compile(r'^\s*Global max incomplete TCP:\s+(?P<global_max_incomplete_tcp>\d+)$')
+
+        # Global max incomplete UDP: 4294967295
+        p25 = re.compile(r'^\s*Global max incomplete UDP:\s+(?P<global_max_incomplete_udp>\d+)$')
+
+        # Global max incomplete ICMP: 4294967295
+        p26 = re.compile(r'^\s*Global max incomplete ICMP:\s+(?P<global_max_incomplete_icmp>\d+)$')
+
+        # Global max incomplete Aggressive Aging Disabled
+        p27 = re.compile(r'^\s*Global max incomplete Aggressive Aging\s+(?P<global_max_incomplete_aging>\S+)$')
+
+        # syn flood limit : 4294967295
+        p28 = re.compile(r'^\s*syn flood limit\s+:\s+(?P<syn_flood_limit>\d+)$')
+
+        # Total Session Aggressive Aging Disabled
+        p29 = re.compile(r'^\s*Total Session Aggressive Aging\s+(?P<total_session_aging>\S+)$')
+
+        # max incomplete : 4294967295
+        p30 = re.compile(r'^\s*max incomplete\s+:\s+(?P<max_incomplete>\d+)$')
+
+        # max incomplete TCP: 4294967295
+        p31 = re.compile(r'^\s*max incomplete TCP:\s+(?P<max_incomplete_tcp>\d+)$')
+
+        # max incomplete UDP: 4294967295
+        p32 = re.compile(r'^\s*max incomplete UDP:\s+(?P<max_incomplete_udp>\d+)$')
+
+        # max incomplete ICMP: 4294967295
+        p33 = re.compile(r'^\s*max incomplete ICMP:\s+(?P<max_incomplete_icmp>\d+)$')
+
+        # max incomplete Aggressive Aging Disabled
+        p34 = re.compile(r'^\s*max incomplete Aggressive Aging\s+(?P<max_incomplete_aging>\S+)$')
+
+        #         Protocol         Status
+        #        dns              on
+        
+        p35 = re.compile(r'^\s*(?P<protocol>\S+)\s+(?P<status>\S+)$')
+
+        # VRF PMAP lines
+        # VRF PMAP syn flood limit : 4294967295
+        p36 = re.compile(r'^\s*VRF PMAP syn flood limit\s+:\s+(?P<vrf_syn_flood_limit>\d+)$')
+
+        # VRF PMAP total session : 4294967295
+        p37 = re.compile(r'^\s*VRF PMAP total session\s+:\s+(?P<vrf_total_session>\d+)$')
+
+        # VRF PMAP total session Aggressive Aging Disabled
+        p38 = re.compile(r'^\s*VRF PMAP total session Aggressive Aging\s+(?P<vrf_total_session_aging>\S+)$')
+
+        # VRF PMAP alert : Off
+        p39 = re.compile(r'^\s*VRF PMAP alert\s+:\s+(?P<vrf_alert>\S+)$')
+
+        # VRF PMAP max incomplete : 4294967295
+        p40 = re.compile(r'^\s*VRF PMAP max incomplete\s+:\s+(?P<vrf_max_incomplete>\d+)$')
+
+        # VRF PMAP max incomplete TCP: 4294967295
+        p41 = re.compile(r'^\s*VRF PMAP max incomplete TCP:\s+(?P<vrf_max_incomplete_tcp>\d+)$')
+
+        # VRF PMAP max incomplete UDP: 4294967295
+        p42 = re.compile(r'^\s*VRF PMAP max incomplete UDP:\s+(?P<vrf_max_incomplete_udp>\d+)$')
+
+        # VRF PMAP max incomplete ICMP: 4294967295
+        p43 = re.compile(r'^\s*VRF PMAP max incomplete ICMP:\s+(?P<vrf_max_incomplete_icmp>\d+)$')
+
+        # VRF PMAP max incomplete Aggressive Aging Disabled
+        p44 = re.compile(r'^\s*VRF PMAP max incomplete Aggressive Aging\s+(?P<vrf_max_incomplete_aging>\S+)$')
+
+        # Section headers to track context
+        # Half-Open:
+        p45 = re.compile(r'^\s*Half-Open:$')
+
+        # Inactivity Times [sec]:
+        p46 = re.compile(r'^\s*Inactivity Times \[sec\]:$')
+
+        # Inactivity Age-out Times [sec]:
+        p47 = re.compile(r'^\s*Inactivity Age-out Times \[sec\]:$')
+
+        # TCP Timeouts [sec]:
+        p48 = re.compile(r'^\s*TCP Timeouts \[sec\]:$')
+
+        # TCP Ageout Timeouts [sec]:
+        p49 = re.compile(r'^\s*TCP Ageout Timeouts \[sec\]:$')
+
+        # TCP RST pkt control:
+        p50 = re.compile(r'^\s*TCP RST pkt control:$')
+
+        # UDP Timeout [msec]:
+        p51 = re.compile(r'^\s*UDP Timeout \[msec\]:$')
+
+        # UDP Ageout Timeout [msec]:
+        p52 = re.compile(r'^\s*UDP Ageout Timeout \[msec\]:$')
+
+        # Syn Cookie and Resource Management:
+        p53 = re.compile(r'^\s*Syn Cookie and Resource Management:$')
+
+        # Per Box Configuration
+        p54 = re.compile(r'^\s*Per Box Configuration$')
+
+        # Application protocol control:
+        p55 = re.compile(r'^\s*Application protocol control:$')
+
+        # Protocol         Status
+        p56 = re.compile(r'^\s*Protocol\s+Status$')
+
+        # --------------------------------
+        p57 = re.compile(r'^\s*-+$')
+
+        current_param_map = None
+        current_section = None
+        protocol_counter = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines and separators
+            if not line or p57.match(line) or p56.match(line):
+                continue
+
+            # Parse parameter map name
+            # Inspect Parameter Map: global
+            m = p1.match(line)
+            if m:
+                param_map_name = m.group('param_map_name')
+                current_param_map = param_map_name
+                param_maps_dict = ret_dict.setdefault('parameter_maps', {})
+                param_maps_dict[param_map_name] = {}
+                current_section = None
+                protocol_counter = 0
+                continue
+
+            if not current_param_map:
+                continue
+
+            param_dict = ret_dict['parameter_maps'][current_param_map]
+
+            # Parse parameter map type
+            # Parameter Map Type: Parameter-Map
+            m = p2.match(line)
+            if m:
+                param_dict['parameter_map_type'] = m.group('param_map_type')
+                continue
+
+            # Parse global parameter map
+            # Global Parameter-Map
+            m = p3.match(line)
+            if m:
+                param_dict['global_parameter_map'] = True
+                continue
+
+            # Parse alerts and audits
+            # Alerts: On, Audits: Off, Drop-Log: On, Log flow: Off
+            m = p4.match(line)
+            if m:
+                param_dict['alerts'] = m.group('alerts')
+                param_dict['audits'] = m.group('audits')
+                param_dict['drop_log'] = m.group('drop_log')
+                param_dict['log_flow'] = m.group('log_flow')
+                continue
+
+            # Parse HSL mode
+            # HSL Mode: Disabled, Host: :0, Port: 0, Template: 300 sec
+            m = p5.match(line)
+            if m:
+                param_dict['hsl_mode'] = m.group('hsl_mode')
+                param_dict['host'] = m.group('host')
+                param_dict['port'] = int(m.group('port'))
+                param_dict['template'] = m.group('template')
+                continue
+
+            # Parse zone mismatch drop
+            # Zone mismatch drop: Off
+            m = p6.match(line)
+            if m:
+                param_dict['zone_mismatch_drop'] = m.group('zone_mismatch_drop')
+                continue
+
+            # Parse multi tenancy
+            # Multi tenancy: Off
+            m = p7.match(line)
+            if m:
+                param_dict['multi_tenancy'] = m.group('multi_tenancy')
+                continue
+
+            # Parse ICMP ureachable
+            # ICMP ureachable allowed: No
+            m = p8.match(line)
+            if m:
+                param_dict['icmp_ureachable_allowed'] = m.group('icmp_ureachable_allowed')
+                continue
+
+            # Parse session rate
+            # Session Rate High: 2147483647, Session Rate Low: 2147483647, Time Duration: 60 sec
+            m = p9.match(line)
+            if m:
+                session_rate_dict = param_dict.setdefault('session_rate', {})
+                session_rate_dict['high'] = int(m.group('high'))
+                session_rate_dict['low'] = int(m.group('low'))
+                session_rate_dict['time_duration'] = m.group('time_duration')
+                continue
+
+            # Parse section headers
+            # Half-Open:
+            if p45.match(line):
+                current_section = 'half_open'
+                continue
+
+            # Inactivity Times [sec]:
+            elif p46.match(line):
+                current_section = 'inactivity_times'
+                continue
+
+            # Inactivity Age-out Times [sec]:
+            elif p47.match(line):
+                current_section = 'inactivity_age_out'
+                continue
+
+            # TCP Timeouts [sec]:
+            elif p48.match(line):
+                current_section = 'tcp_timeouts'
+                continue
+
+            # TCP Ageout Timeouts [sec]:
+            elif p49.match(line):
+                current_section = 'tcp_ageout'
+                continue
+
+            # TCP RST pkt control:
+            elif p50.match(line):
+                current_section = 'tcp_rst'
+                continue
+
+            # UDP Timeout [msec]:
+            elif p51.match(line):
+                current_section = 'udp_timeout'
+                continue
+
+            # UDP Ageout Timeout [msec]:
+            elif p52.match(line):
+                current_section = 'udp_ageout'
+                continue
+
+            # Syn Cookie and Resource Management:
+            elif p53.match(line):
+                current_section = 'syn_cookie'
+                continue
+
+            # Per Box Configuration
+            elif p54.match(line):
+                current_section = 'per_box'
+                continue
+
+            # Application protocol control:
+            elif p55.match(line):
+                current_section = 'app_protocol'
+                continue
+
+            # Parse based on current section
+            if current_section == 'half_open':
+                # High: 2147483647, Low: 2147483647, Host: 4294967295, Host Block Time: 0
+                m = p10.match(line)
+                if m:
+                    half_open_dict = param_dict.setdefault('half_open', {})
+                    half_open_dict['high'] = int(m.group('high'))
+                    half_open_dict['low'] = int(m.group('low'))
+                    half_open_dict['host'] = int(m.group('host'))
+                    half_open_dict['host_block_time'] = int(m.group('host_block_time'))
+                    continue
+
+            elif current_section == 'inactivity_times':
+                # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+                m = p11.match(line)
+                if m:
+                    inactivity_dict = param_dict.setdefault('inactivity_times', {})
+                    inactivity_dict['dns'] = int(m.group('dns'))
+                    inactivity_dict['icmp'] = int(m.group('icmp'))
+                    inactivity_dict['tcp'] = int(m.group('tcp'))
+                    inactivity_dict['udp'] = int(m.group('udp'))
+                    continue
+
+            elif current_section == 'inactivity_age_out':
+                # ICMP: 10, TCP: 3600, UDP: 30
+                m = p12.match(line)
+                if m:
+                    age_out_dict = param_dict.setdefault('inactivity_age_out_times', {})
+                    age_out_dict['icmp'] = int(m.group('icmp'))
+                    age_out_dict['tcp'] = int(m.group('tcp'))
+                    age_out_dict['udp'] = int(m.group('udp'))
+                    continue
+
+            elif current_section in ['tcp_timeouts', 'tcp_ageout']:
+                # SYN wait time: 30, FIN wait time: 1
+                m = p13.match(line)
+                if m:
+                    if current_section == 'tcp_timeouts':
+                        tcp_dict = param_dict.setdefault('tcp_timeouts', {})
+                    else:
+                        tcp_dict = param_dict.setdefault('tcp_ageout_timeouts', {})
+                    tcp_dict['syn_wait_time'] = int(m.group('syn_wait_time'))
+                    tcp_dict['fin_wait_time'] = int(m.group('fin_wait_time'))
+                    continue
+
+            elif current_section == 'tcp_rst':
+                # half-open: On, half-close: On, idle: On
+                m = p14.match(line)
+                if m:
+                    tcp_rst_dict = param_dict.setdefault('tcp_rst_pkt_control', {})
+                    tcp_rst_dict['half_open'] = m.group('half_open')
+                    tcp_rst_dict['half_close'] = m.group('half_close')
+                    tcp_rst_dict['idle'] = m.group('idle')
+                    continue
+
+            elif current_section in ['udp_timeout', 'udp_ageout']:
+                # UDP Half-open time: 30000
+                m = p15.match(line)
+                if m:
+                    if current_section == 'udp_timeout':
+                        udp_dict = param_dict.setdefault('udp_timeout', {})
+                    else:
+                        udp_dict = param_dict.setdefault('udp_ageout_timeout', {})
+                    udp_dict['udp_half_open_time'] = int(m.group('udp_half_open_time'))
+                    continue
+
+            elif current_section == 'app_protocol':
+                #         Protocol         Status
+                #        dns              on
+                m = p35.match(line)
+                if m:
+                    protocol_counter += 1
+                    protocol_key = f"protocol_{protocol_counter}"
+                    app_protocol_dict = param_dict.setdefault('application_protocol_control', {})
+                    app_protocol_dict[protocol_key] = {
+                        'protocol': m.group('protocol'),
+                        'status': m.group('status')
+                    }
+                    continue
+
+            # Parse max sessions
+            # Max Sessions: Unlimited
+            m = p16.match(line)
+            if m:
+                param_dict['max_sessions'] = m.group('max_sessions')
+                continue
+
+            # Parse simultaneous packets
+            # Number of Simultaneous Packet per Sessions: 0
+            m = p17.match(line)
+            if m:
+                param_dict['number_of_simultaneous_packet_per_sessions'] = int(m.group('simultaneous_packets'))
+                continue
+
+            # Parse syn cookie and resource management
+            if current_section == 'syn_cookie':
+                # Global Syn Flood Limit: 4294967295
+                m = p18.match(line)
+                if m:
+                    syn_cookie_dict = param_dict.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['global_syn_flood_limit'] = int(m.group('global_syn_flood_limit'))
+                    continue
+
+                # Global Total Session : 4294967295
+                m = p19.match(line)
+                if m:
+                    syn_cookie_dict = param_dict.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['global_total_session'] = int(m.group('global_total_session'))
+                    continue
+
+                # Global Number of Simultaneous Packet per Session :
+                m = p20.match(line)
+                if m:
+                    syn_cookie_dict = param_dict.setdefault('syn_cookie_and_resource_management', {})
+                    global_sim = m.group('global_simultaneous').strip()
+                    if global_sim:
+                        syn_cookie_dict['global_number_of_simultaneous_packet_per_session'] = global_sim
+                    continue
+
+            # Parse per box configuration
+            if current_section == 'per_box':
+                # syn flood limit : 4294967295
+                m = p28.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['syn_flood_limit'] = int(m.group('syn_flood_limit'))
+                    continue
+
+                # Total Session Aggressive Aging Disabled
+                m = p29.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['total_session_aggressive_aging'] = m.group('total_session_aging')
+                    continue
+
+                # max incomplete : 4294967295
+                m = p30.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['max_incomplete'] = int(m.group('max_incomplete'))
+                    continue
+
+                # max incomplete TCP: 4294967295
+                m = p31.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['max_incomplete_tcp'] = int(m.group('max_incomplete_tcp'))
+                    continue
+
+                # max incomplete UDP: 4294967295
+                m = p32.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['max_incomplete_udp'] = int(m.group('max_incomplete_udp'))
+                    continue
+
+                # max incomplete ICMP: 4294967295
+                m = p33.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['max_incomplete_icmp'] = int(m.group('max_incomplete_icmp'))
+                    continue
+
+                # max incomplete Aggressive Aging Disabled
+                m = p34.match(line)
+                if m:
+                    per_box_dict = param_dict.setdefault('per_box_configuration', {})
+                    per_box_dict['max_incomplete_aggressive_aging'] = m.group('max_incomplete_aging')
+                    continue
+
+            # Parse global settings outside of sections
+            # Global Total Session Aggressive Aging Disabled
+            m = p21.match(line)
+            if m:
+                param_dict['global_total_session_aggressive_aging'] = m.group('aggressive_aging')
+                continue
+
+            # Global alert : Off
+            m = p22.match(line)
+            if m:
+                param_dict['global_alert'] = m.group('global_alert')
+                continue
+
+            # Global max incomplete : 4294967295
+            m = p23.match(line)
+            if m:
+                param_dict['global_max_incomplete'] = int(m.group('global_max_incomplete'))
+                continue
+
+            # Global max incomplete TCP: 4294967295
+            m = p24.match(line)
+            if m:
+                param_dict['global_max_incomplete_tcp'] = int(m.group('global_max_incomplete_tcp'))
+                continue
+
+            # Global max incomplete UDP: 4294967295
+            m = p25.match(line)
+            if m:
+                param_dict['global_max_incomplete_udp'] = int(m.group('global_max_incomplete_udp'))
+                continue
+
+            # Global max incomplete ICMP: 4294967295
+            m = p26.match(line)
+            if m:
+                param_dict['global_max_incomplete_icmp'] = int(m.group('global_max_incomplete_icmp'))
+                continue
+
+            # Global max incomplete Aggressive Aging Disabled
+            m = p27.match(line)
+            if m:
+                param_dict['global_max_incomplete_aggressive_aging'] = m.group('global_max_incomplete_aging')
+                continue
+
+            # Parse VRF PMAP settings
+            # VRF PMAP syn flood limit : 4294967295
+            m = p36.match(line)
+            if m:
+                param_dict['vrf_pmap_syn_flood_limit'] = int(m.group('vrf_syn_flood_limit'))
+                continue
+
+            # VRF PMAP total session : 4294967295
+            m = p37.match(line)
+            if m:
+                param_dict['vrf_pmap_total_session'] = int(m.group('vrf_total_session'))
+                continue
+
+            # VRF PMAP total session Aggressive Aging Disabled
+            m = p38.match(line)
+            if m:
+                param_dict['vrf_pmap_total_session_aggressive_aging'] = m.group('vrf_total_session_aging')
+                continue
+
+            # VRF PMAP alert : Off
+            m = p39.match(line)
+            if m:
+                param_dict['vrf_pmap_alert'] = m.group('vrf_alert')
+                continue
+
+            # VRF PMAP max incomplete : 4294967295
+            m = p40.match(line)
+            if m:
+                param_dict['vrf_pmap_max_incomplete'] = int(m.group('vrf_max_incomplete'))
+                continue
+
+            # VRF PMAP max incomplete TCP: 4294967295
+            m = p41.match(line)
+            if m:
+                param_dict['vrf_pmap_max_incomplete_tcp'] = int(m.group('vrf_max_incomplete_tcp'))
+                continue
+
+            # VRF PMAP max incomplete UDP: 4294967295
+            m = p42.match(line)
+            if m:
+                param_dict['vrf_pmap_max_incomplete_udp'] = int(m.group('vrf_max_incomplete_udp'))
+                continue
+
+            # VRF PMAP max incomplete ICMP: 4294967295
+            m = p43.match(line)
+            if m:
+                param_dict['vrf_pmap_max_incomplete_icmp'] = int(m.group('vrf_max_incomplete_icmp'))
+                continue
+
+            # VRF PMAP max incomplete Aggressive Aging Disabled
+            m = p44.match(line)
+            if m:
+                param_dict['vrf_pmap_max_incomplete_aggressive_aging'] = m.group('vrf_max_incomplete_aging')
+                continue
+
+        return ret_dict
+
+
+# ==========================================================================================
+# Schema for 'show platform software subslot {subslot} module status'  
+# ==========================================================================================
+class ShowPlatformSoftwareSubslotModuleStatusSchema(MetaParser):
+    """Schema for show platform software subslot {subslot} module status"""
+
+    schema = {
+        "process_and_memory": {
+            "memory_stats": {
+                "mem_used_kb": int,
+                "mem_free_kb": int,
+                "mem_shrd_kb": int,
+                "mem_buff_kb": int,
+                "mem_cached_kb": int,
+            },
+            "cpu_stats": {
+                "cpu_usr_percent": int,
+                "cpu_sys_percent": int,
+                "cpu_nic_percent": int,
+                "cpu_idle_percent": int,
+                "cpu_io_percent": int,
+                "cpu_irq_percent": int,
+                "cpu_sirq_percent": int,
+            },
+            "load_average": str,
+            "processes": {
+                Any(): {
+                    "pid": int,
+                    "ppid": int,
+                    "user": str,
+                    "stat": str,
+                    "vsz": str,
+                    "mem_percent": str,
+                    "cpu_percent": str,
+                    "command": str,
+                }
+            },
+        },
+        "interrupts": {
+            Any(): {
+                "cpu0": int,
+                "controller": str,
+                "description": str,
+            },
+            "err": int,
+        },
+        "system_status": {
+            "cpu": str,
+            "intr": str,
+            "ctxt": int,
+            "btime": int,
+            "processes": int,
+            "procs_running": int,
+            "procs_blocked": int,
+        },
+        "klm_module_status": {
+            "modules": {
+                Any(): {
+                    "size": int,
+                    "used": int,
+                    "flags": str,
+                    "address": str,
+                    Optional("state"): str,
+                }
+            },
+            "wddi_memory": int,
+            "qnode_status": int,
+        },
+    }
+
+
+class ShowPlatformSoftwareSubslotModuleStatus(ShowPlatformSoftwareSubslotModuleStatusSchema):
+    """Parser for show platform software subslot {subslot} module status"""
+
+    cli_command = "show platform software subslot {subslot} module status"
+
+    def cli(self, subslot="0/2", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(subslot=subslot))
+
+        ret_dict = {}
+
+        # Process and Memory
+        p1 = re.compile(r"^Process and Memory$")
+
+        # Mem: 46468K used, 14468K free, 0K shrd, 0K buff, 32764K cached
+        p2 = re.compile(
+            r"^Mem: +(?P<used>\d+)K +used, +(?P<free>\d+)K +free, +"
+            r"(?P<shrd>\d+)K +shrd, +(?P<buff>\d+)K +buff, +(?P<cached>\d+)K +cached$"
+        )
+
+        # CPU:   0% usr   0% sys   0% nic 100% idle   0% io   0% irq   0% sirq
+        p3 = re.compile(
+            r"^CPU: +(?P<usr>\d+)% +usr +(?P<sys>\d+)% +sys +(?P<nic>\d+)% +nic +"
+            r"(?P<idle>\d+)% +idle +(?P<io>\d+)% +io +(?P<irq>\d+)% +irq +(?P<sirq>\d+)% +sirq$"
+        )
+
+        # Load average: 0.06 0.03 0.00 3/20 10258
+        p4 = re.compile(r"^Load average: (?P<load_average>.*)$")
+
+        # PID  PPID USER     STAT   VSZ %MEM %CPU COMMAND
+        p4_1 = re.compile(r"^PID +PPID +USER +STAT +VSZ +%MEM +%CPU +COMMAND$")
+
+        # Process entries:
+        #   158   157 0        R     146m 246%   0% [cisco_fortitude]
+        p5 = re.compile(
+            r"^(?P<pid>\d+) +(?P<ppid>\d+) +(?P<user>\S+) +(?P<stat>\S+) +"
+            r"(?P<vsz>\S+) +(?P<mem_percent>\S+) +(?P<cpu_percent>\S+) +(?P<command>.*)$"
+        )
+
+        # Interrupts
+        p6 = re.compile(r"^Interrupts$")
+
+        #            CPU0
+        p6_1 = re.compile(r"^CPU0$")
+
+        # Interrupt entries like:
+        #   2:          0            MIPS  WinPath interrupt controller
+        p7 = re.compile(
+            r"^(?P<interrupt>\d+): +(?P<cpu0>\d+) +(?P<controller>\S+) +(?P<description>.*)$"
+        )
+
+        # ERR:          0
+        p8 = re.compile(r"^ERR: +(?P<err>\d+)$")
+
+        # System status
+        p9 = re.compile(r"^System status$")
+
+        # cpu  115 0 611 21404 0 0 0 0 0
+        p10 = re.compile(r"^cpu +(?P<cpu>.*)$")
+
+        # intr 86063 0 0 0 0 0 0 0 55326 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 544 0 0 0 0 0 0 0 0 0 0 0 0 30193 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+        p11 = re.compile(r"^intr +(?P<intr>.*)$")
+
+        # ctxt 205235
+        p12 = re.compile(r"^ctxt +(?P<ctxt>\d+)$")
+
+        # btime 0
+        p13 = re.compile(r"^btime +(?P<btime>\d+)$")
+
+        # processes 10236
+        p14 = re.compile(r"^processes +(?P<processes>\d+)$")
+
+        # procs_running 2
+        p15 = re.compile(r"^procs_running +(?P<procs_running>\d+)$")
+
+        # procs_blocked 0
+        p16 = re.compile(r"^procs_blocked +(?P<procs_blocked>\d+)$")
+
+        # KLM Module status
+        p17 = re.compile(r"^KLM Module status$")
+
+        # klm_mmap 5917008 4 - Live 0xc05ff000
+        p18 = re.compile(
+            r"^(?P<module>\S+) +(?P<size>\d+) +(?P<used>\d+) +(?P<flags>\S+) +"
+            r"(?P<state>\S+) +(?P<address>\S+)$"
+        )
+
+        # klm_ds0dump 2848 0 - Live 0xc0bb2000
+        # dmesg 544 0 - Live 0xc0bbb000 (P)
+        p19 = re.compile(
+            r"^(?P<module>\S+) +(?P<size>\d+) +(?P<used>\d+) +(?P<flags>\S+) +"
+            r"(?P<state>\S+) +(?P<address>\S+)(?:\s+\((?P<extra>.*)\))?$"
+        )
+
+        # WDDI Memory:          8732064
+        p20 = re.compile(r"^WDDI Memory: +(?P<wddi_memory>\d+)$")
+
+        # Qnode Status:        65276
+        p21 = re.compile(r"^Qnode Status: +(?P<qnode_status>\d+)$")
+
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Process and Memory
+            m = p1.match(line)
+            if m:
+                current_section = "process_and_memory"
+                ret_dict.setdefault(current_section, {"processes": {}})
+                continue
+
+            # Mem: 46468K used, 14468K free, 0K shrd, 0K buff, 32764K cached
+            m = p2.match(line)
+            if m and current_section == "process_and_memory":
+                group = m.groupdict()
+                mem_stats = ret_dict[current_section].setdefault("memory_stats", {})
+                mem_stats["mem_used_kb"] = int(group["used"])
+                mem_stats["mem_free_kb"] = int(group["free"])
+                mem_stats["mem_shrd_kb"] = int(group["shrd"])
+                mem_stats["mem_buff_kb"] = int(group["buff"])
+                mem_stats["mem_cached_kb"] = int(group["cached"])
+                continue
+
+            # CPU:   0% usr   0% sys   0% nic 100% idle   0% io   0% irq   0% sirq
+            m = p3.match(line)
+            if m and current_section == "process_and_memory":
+                group = m.groupdict()
+                cpu_stats = ret_dict[current_section].setdefault("cpu_stats", {})
+                cpu_stats["cpu_usr_percent"] = int(group["usr"])
+                cpu_stats["cpu_sys_percent"] = int(group["sys"])
+                cpu_stats["cpu_nic_percent"] = int(group["nic"])
+                cpu_stats["cpu_idle_percent"] = int(group["idle"])
+                cpu_stats["cpu_io_percent"] = int(group["io"])
+                cpu_stats["cpu_irq_percent"] = int(group["irq"])
+                cpu_stats["cpu_sirq_percent"] = int(group["sirq"])
+                continue
+
+            # Load average: 0.06 0.03 0.00 3/20 10258
+            m = p4.match(line)
+            if m and current_section == "process_and_memory":
+                group = m.groupdict()
+                ret_dict[current_section]["load_average"] = group["load_average"]
+                continue
+
+            # PID  PPID USER     STAT   VSZ %MEM %CPU COMMAND
+            m = p4_1.match(line)
+            if m and current_section == "process_and_memory":
+                # Skip header line
+                continue
+
+            # Process entries like:   158   157 0        R     146m 246%   0% [cisco_fortitude]
+            m = p5.match(line)
+            if m and current_section == "process_and_memory":
+                group = m.groupdict()
+                processes = ret_dict[current_section].setdefault("processes", {})
+                pid = int(group["pid"])
+                processes[pid] = {
+                    "pid": pid,
+                    "ppid": int(group["ppid"]),
+                    "user": group["user"],
+                    "stat": group["stat"],
+                    "vsz": group["vsz"],
+                    "mem_percent": group["mem_percent"],
+                    "cpu_percent": group["cpu_percent"],
+                    "command": group["command"],
+                }
+                continue
+
+            # Interrupts
+            m = p6.match(line)
+            if m:
+                current_section = "interrupts"
+                ret_dict.setdefault(current_section, {})
+                continue
+
+            #            CPU0
+            m = p6_1.match(line)
+            if m and current_section == "interrupts":
+                # Skip header line
+                continue
+
+            # Interrupt entries like:   2:          0            MIPS  WinPath interrupt controller
+            m = p7.match(line)
+            if m and current_section == "interrupts":
+                group = m.groupdict()
+                interrupt = int(group["interrupt"])
+                ret_dict[current_section][interrupt] = {
+                    "cpu0": int(group["cpu0"]),
+                    "controller": group["controller"],
+                    "description": group["description"],
+                }
+                continue
+
+            # ERR:          0
+            m = p8.match(line)
+            if m and current_section == "interrupts":
+                group = m.groupdict()
+                ret_dict[current_section]["err"] = int(group["err"])
+                continue
+
+            # System status
+            m = p9.match(line)
+            if m:
+                current_section = "system_status"
+                ret_dict.setdefault(current_section, {})
+                continue
+
+            # cpu  115 0 611 21404 0 0 0 0 0
+            m = p10.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["cpu"] = group["cpu"]
+                continue
+
+            # intr 86063 0 0 0 0 0 0 0 55326 ...
+            m = p11.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["intr"] = group["intr"]
+                continue
+
+            # ctxt 205235
+            m = p12.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["ctxt"] = int(group["ctxt"])
+                continue
+
+            # btime 0
+            m = p13.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["btime"] = int(group["btime"])
+                continue
+
+            # processes 10236
+            m = p14.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["processes"] = int(group["processes"])
+                continue
+
+            # procs_running 2
+            m = p15.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["procs_running"] = int(group["procs_running"])
+                continue
+
+            # procs_blocked 0
+            m = p16.match(line)
+            if m and current_section == "system_status":
+                group = m.groupdict()
+                ret_dict[current_section]["procs_blocked"] = int(group["procs_blocked"])
+                continue
+
+            # KLM Module status
+            m = p17.match(line)
+            if m:
+                current_section = "klm_module_status"
+                ret_dict.setdefault(current_section, {"modules": {}})
+                continue
+
+            # klm_mmap 5917008 4 - Live 0xc05ff000
+            # dmesg 544 0 - Live 0xc0bbb000 (P)
+            m = p19.match(line)
+            if m and current_section == "klm_module_status":
+                group = m.groupdict()
+                modules = ret_dict[current_section]["modules"]
+                module_name = group["module"]
+                modules[module_name] = {
+                    "size": int(group["size"]),
+                    "used": int(group["used"]),
+                    "flags": group["flags"],
+                    "address": group["address"],
+                }
+                if group["state"] != "-":
+                    modules[module_name]["state"] = group["state"]
+                continue
+
+            # WDDI Memory:          8732064
+            m = p20.match(line)
+            if m and current_section == "klm_module_status":
+                group = m.groupdict()
+                ret_dict[current_section]["wddi_memory"] = int(group["wddi_memory"])
+                continue
+
+            # Qnode Status:        65276
+            m = p21.match(line)
+            if m and current_section == "klm_module_status":
+                group = m.groupdict()
+                ret_dict[current_section]["qnode_status"] = int(group["qnode_status"])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareBPCrimsonContentOperSchema(MetaParser):
+    """Schema for show platform software bp crimson content oper"""
+
+    schema = {
+        "node": {
+            Any(): {
+                "node_details": {
+                    "node_number": int,
+                    "priority": int,
+                    "negotiation_state": str,
+                },
+                "domain_details": {
+                    "node": int,
+                    "domain": int,
+                    "mode": str,
+                },
+                Optional("svl_ports"): {
+                    Any(): {
+                        "interface": str,
+                        "link": int,
+                        "if_id": int,
+                        "status": str,
+                        "prot": str,
+                        "speed": str,
+                        "sync": str,
+                        "svl_state": str,
+                        "slot": str,
+                        "type": str,
+                    }
+                },
+                Optional("dad_ports"): {
+                    Any(): {
+                        "interface": str,
+                        "link": int,
+                        "if_id": int,
+                        "status": str,
+                        "prot": str,
+                        "speed": str,
+                        "sync": str,
+                        "svl_state": str,
+                        "slot": str,
+                        "type": str,
+                    }
+                },
+            },
+        }
+    }
+
+
+class ShowPlatformSoftwareBPCrimsonContentOper(
+    ShowPlatformSoftwareBPCrimsonContentOperSchema
+):
+    """Parser for
+    show platform software bp crimson content oper
+    """
+
+    cli_command = "show platform software bp crimson content oper"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        current_node = None
+        current_section = None
+        expect_domain_details = False
+
+        # Header line: Node    Domain    Mode
+        p0 = re.compile(r"^Node\s+Domain\s+Mode$")
+
+        # Node    Priority   Negotiation State data
+        # 1       1          Done
+        p1 = re.compile(
+            r"^(?P<node>\d+)\s+(?P<priority>\d+)\s+(?P<negotiation_state>\S+)$"
+        )
+
+        # Node    Domain    Mode data
+        # 1       1         Aggregation
+        p2 = re.compile(
+            r"^(?P<node>\d+)\s+(?P<domain>\d+)\s+(?P<mode>\S+)$"
+        )
+
+        # Oper SVL Ports:
+        p3 = re.compile(r"^Oper SVL Ports:")
+
+        # Oper DAD Ports:
+        p4 = re.compile(r"^Oper DAD Ports:")
+
+        # Interface                     Link   if_id   Status   Prot   Speed    Sync            SVLState   Slot:Bay:Port   Type
+        # FiftyGigE1/0/1                1      3       Up       P      10gbps   BP-Owns         Created    1:0:1           SFP-10GBase-CU1M
+        p5 = re.compile(
+            r"^(?P<interface>\S+)\s+(?P<link>\d+)\s+(?P<if_id>\d+)\s+(?P<status>\S+)\s+(?P<prot>\S+)\s+(?P<speed>\S+)\s+(?P<sync>\S+)\s+(?P<svl_state>\S+)\s+(?P<slot>\S+)\s+(?P<type>\S+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Check for Node Domain Mode header
+            m = p0.match(line)
+            if m:
+                expect_domain_details = True
+                continue
+
+            # Node Priority Negotiation State data (appears first, no header check needed)
+            # 1       1          Done
+            m = p1.match(line)
+            if m and not expect_domain_details:
+                group = m.groupdict()
+                current_node = group["node"]
+                node_wrapper = ret_dict.setdefault("node", {})
+                node_dict = node_wrapper.setdefault(current_node, {})
+                node_details = node_dict.setdefault("node_details", {})
+                node_details["node_number"] = int(group["node"])
+                node_details["priority"] = int(group["priority"])
+                node_details["negotiation_state"] = group["negotiation_state"]
+                continue
+
+            # Node Domain Mode data (only after seeing the header)
+            # 1       1         Aggregation
+            m = p2.match(line)
+            if m and expect_domain_details:
+                group = m.groupdict()
+                if current_node:
+                    node_wrapper = ret_dict["node"]
+                    node_dict = node_wrapper[current_node]
+                    domain_details = node_dict.setdefault("domain_details", {})
+                    domain_details["node"] = int(group["node"])
+                    domain_details["domain"] = int(group["domain"])
+                    domain_details["mode"] = group["mode"]
+                expect_domain_details = False
+                continue
+
+            # Oper SVL Ports:
+            m = p3.match(line)
+            if m:
+                current_section = "svl_ports"
+                continue
+
+            # Oper DAD Ports:
+            m = p4.match(line)
+            if m:
+                current_section = "dad_ports"
+                continue
+
+            # Interface details
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                node_wrapper = ret_dict["node"]
+                node_dict = node_wrapper[current_node]
+                ports_dict = node_dict.setdefault(current_section, {})
+                interface_dict = ports_dict.setdefault(group["interface"], {})
+                interface_dict["interface"] = group["interface"]
+                interface_dict["link"] = int(group["link"])
+                interface_dict["if_id"] = int(group["if_id"])
+                interface_dict["status"] = group["status"]
+                interface_dict["prot"] = group["prot"]
+                interface_dict["speed"] = group["speed"]
+                interface_dict["sync"] = group["sync"]
+                interface_dict["svl_state"] = group["svl_state"]
+                interface_dict["slot"] = group["slot"]
+                interface_dict["type"] = group["type"]
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareFirewallFPActiveParameterMapsSchema(MetaParser):
+    """Schema for show platform software firewall FP active parameter-maps"""
+    schema = {
+        'parameter_maps': {
+            Any(): {
+                'name': str,
+                'index': int,
+                'type': str,
+                'global_parameter_map': bool,
+                'alerts': str,
+                'audits': str,
+                'drop_log': str,
+                'hsl_mode': str,
+                'host': str,
+                'port': int,
+                'template': str,
+                'session_rate_high': int,
+                'session_rate_low': int,
+                'time_duration': str,
+                'half_open': {
+                    'high': int,
+                    'low': int,
+                    'host': int,
+                    'host_block_time': int,
+                },
+                'inactivity_times': {
+                    'dns': int,
+                    'icmp': int,
+                    'tcp': int,
+                    'udp': int,
+                },
+                'tcp_timeouts': {
+                    'syn_wait_time': int,
+                    'fin_wait_time': int,
+                },
+                'tcp_rst_pkt_control': {
+                    'half_open': str,
+                    'half_close': str,
+                    'idle': str,
+                },
+                'udp_timeout': {
+                    'udp_half_open_time': int,
+                },
+                'max_sessions': str,
+                'number_of_simultaneous_packet_per_sessions': int,
+                'syn_cookie_and_resource_management': {
+                    'global_syn_flood_limit': int,
+                    'global_total_session': int,
+                },
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFirewallFPActiveParameterMapsSchema):
+    """Parser for show platform software firewall FP active parameter-maps"""
+
+    cli_command = 'show platform software firewall FP active parameter-maps'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Inspect Parameter Map: global, Index 1
+        p1 = re.compile(r'^Inspect Parameter Map: (?P<name>\S+), Index (?P<index>\d+)$')
+
+        # Parameter Map Type: Parameter-Map
+        p2 = re.compile(r'^Parameter Map Type: (?P<type>[\S\s]+)$')
+
+        # Global Parameter-Map
+        p3 = re.compile(r'^Global Parameter-Map$')
+
+        # Alerts: On, Audits: Off, Drop-Log: Off
+        p4 = re.compile(r'^Alerts: (?P<alerts>\S+), Audits: (?P<audits>\S+), Drop-Log: (?P<drop_log>\S+)$')
+
+        # HSL Mode: V9, Host: 10.1.1.1:9000, Port: 54174, Template: 300 sec
+        p5 = re.compile(r'^HSL Mode: (?P<hsl_mode>\S+), Host: (?P<host>\S+), Port: (?P<port>\d+), Template: (?P<template>[\d\s\w]+)$')
+
+        # Session Rate High: 2147483647, Session Rate Low: 2147483647, Time Duration: 60 sec
+        p6 = re.compile(r'^Session Rate High: (?P<session_rate_high>\d+), Session Rate Low: (?P<session_rate_low>\d+), Time Duration: (?P<time_duration>[\d\s\w]+)$')
+
+        # High: 2147483647, Low: 2147483647, Host: 4294967295, Host Block Time: 0
+        p7 = re.compile(r'^High: (?P<high>\d+), Low: (?P<low>\d+), Host: (?P<host_val>\d+), Host Block Time: (?P<host_block_time>\d+)$')
+
+        # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+        p8 = re.compile(r'^DNS: (?P<dns>\d+), ICMP: (?P<icmp>\d+), TCP: (?P<tcp>\d+), UDP: (?P<udp>\d+)$')
+
+        # SYN wait time: 30, FIN wait time: 1
+        p9 = re.compile(r'^SYN wait time: (?P<syn_wait_time>\d+), FIN wait time: (?P<fin_wait_time>\d+)$')
+
+        # half-open: On, half-close: On, idle: On
+        p10 = re.compile(r'^half-open: (?P<half_open>\S+), half-close: (?P<half_close>\S+), idle: (?P<idle>\S+)$')
+
+        # UDP Half-open time: 30000
+        p11 = re.compile(r'^UDP Half-open time: (?P<udp_half_open_time>\d+)$')
+
+        # Max Sessions: Unlimited
+        p12 = re.compile(r'^Max Sessions: (?P<max_sessions>\S+)$')
+
+        # Number of Simultaneous Packet per Sessions: 0
+        p13 = re.compile(r'^Number of Simultaneous Packet per Sessions: (?P<number_of_simultaneous_packet_per_sessions>\d+)$')
+
+        # Global Syn Flood Limit: 4294967295
+        p14 = re.compile(r'^Global Syn Flood Limit: (?P<global_syn_flood_limit>\d+)$')
+
+        # Global Total Session : 4294967295
+        p15 = re.compile(r'^Global Total Session\s*:\s*(?P<global_total_session>\d+)$')
+
+        current_param_map = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Inspect Parameter Map: global, Index 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                name = group['name']
+                current_param_map = ret_dict.setdefault('parameter_maps', {}).setdefault(name, {})
+                current_param_map['name'] = name
+                current_param_map['index'] = int(group['index'])
+                continue
+
+            # Parameter Map Type: Parameter-Map
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['type'] = group['type']
+                continue
+
+            # Global Parameter-Map
+            m = p3.match(line)
+            if m:
+                current_param_map['global_parameter_map'] = True
+                continue
+
+            # Alerts: On, Audits: Off, Drop-Log: Off
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['alerts'] = group['alerts']
+                current_param_map['audits'] = group['audits']
+                current_param_map['drop_log'] = group['drop_log']
+                continue
+
+            # HSL Mode: V9, Host: 10.1.1.1:9000, Port: 54174, Template: 300 sec
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['hsl_mode'] = group['hsl_mode']
+                current_param_map['host'] = group['host']
+                current_param_map['port'] = int(group['port'])
+                current_param_map['template'] = group['template']
+                continue
+
+            # Session Rate High: 2147483647, Session Rate Low: 2147483647, Time Duration: 60 sec
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['session_rate_high'] = int(group['session_rate_high'])
+                current_param_map['session_rate_low'] = int(group['session_rate_low'])
+                current_param_map['time_duration'] = group['time_duration']
+                continue
+
+            # High: 2147483647, Low: 2147483647, Host: 4294967295, Host Block Time: 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                half_open_dict = current_param_map.setdefault('half_open', {})
+                half_open_dict['high'] = int(group['high'])
+                half_open_dict['low'] = int(group['low'])
+                half_open_dict['host'] = int(group['host_val'])
+                half_open_dict['host_block_time'] = int(group['host_block_time'])
+                continue
+
+            # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                inactivity_dict = current_param_map.setdefault('inactivity_times', {})
+                inactivity_dict['dns'] = int(group['dns'])
+                inactivity_dict['icmp'] = int(group['icmp'])
+                inactivity_dict['tcp'] = int(group['tcp'])
+                inactivity_dict['udp'] = int(group['udp'])
+                continue
+
+            # SYN wait time: 30, FIN wait time: 1
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                tcp_timeouts_dict = current_param_map.setdefault('tcp_timeouts', {})
+                tcp_timeouts_dict['syn_wait_time'] = int(group['syn_wait_time'])
+                tcp_timeouts_dict['fin_wait_time'] = int(group['fin_wait_time'])
+                continue
+
+            # half-open: On, half-close: On, idle: On
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                tcp_rst_dict = current_param_map.setdefault('tcp_rst_pkt_control', {})
+                tcp_rst_dict['half_open'] = group['half_open']
+                tcp_rst_dict['half_close'] = group['half_close']
+                tcp_rst_dict['idle'] = group['idle']
+                continue
+
+            # UDP Half-open time: 30000
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                udp_timeout_dict = current_param_map.setdefault('udp_timeout', {})
+                udp_timeout_dict['udp_half_open_time'] = int(group['udp_half_open_time'])
+                continue
+
+            # Max Sessions: Unlimited
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['max_sessions'] = group['max_sessions']
+                continue
+
+            # Number of Simultaneous Packet per Sessions: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['number_of_simultaneous_packet_per_sessions'] = int(group['number_of_simultaneous_packet_per_sessions'])
+                continue
+
+            # Global Syn Flood Limit: 4294967295
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_syn_flood_limit'] = int(group['global_syn_flood_limit'])
+                continue
+
+            # Global Total Session : 4294967295
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_total_session'] = int(group['global_total_session'])
+                continue
+
+        return ret_dict
+
+# ==========================================================================
+# Schema for 'show platform software subslot {subslot} module firmware'
+# ==========================================================================
+
+class ShowPlatformSoftwareSubslotModuleFirmwareSchema(MetaParser):
+    """Schema for show platform software subslot {subslot} module firmware"""
+
+    schema = {
+        'chip_revision': str,
+        'wddi_build': int,
+        'winfarm_dps_builds': {
+            'winfarm_0': int,
+            'winfarm_1': int,
+        },
+        'wf_features_sets': {
+            'wf_0': str,
+            'wf_1': str,
+        },
+        'nim_firmware': {
+            'linux_version': str,
+            'gcc_version': str,
+            'compile_time': str,
+        },
+        'boot_loader_info': {
+            'current_secure_boot_loader': str,
+            'golden_boot_loader_version': str,
+            'upgrade_boot_loader_version': str,
+            'bundled_boot_image_version': str,
+            'upgrade_boot_loader_valid': str,
+        },
+        'fpga_versions': {
+            'active': str,
+            'upgraded': str,
+            'golden': str,
+        },
+    }
+
+
+class ShowPlatformSoftwareSubslotModuleFirmware(ShowPlatformSoftwareSubslotModuleFirmwareSchema):
+    """Parser for show platform software subslot {subslot} module firmware"""
+
+    cli_command = 'show platform software subslot {subslot} module firmware'
+
+    def cli(self, subslot, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(subslot=subslot)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Initialize return dictionary to store parsed results
+        ret_dict = {}
+
+        # Chip Revision: unknown
+        p1 = re.compile(r'^Chip\s+Revision:\s+(?P<chip_revision>\S+)$')
+
+        # WDDI Build: 1908
+        p2 = re.compile(r'^WDDI\s+Build:\s+(?P<wddi_build>\d+)$')
+
+        # WinFarm-0:DPS Build: 2392
+        p3 = re.compile(r'^WinFarm-(?P<wf_num>\d+):DPS\s+Build:\s+(?P<dps_build>\d+)$')
+
+        # WF-0 features set:
+        p4 = re.compile(r'^WF-(?P<wf_num>\d+)\s+features\s+set:$')
+
+        # 70d43f57 7987fffe 30f80386 46809a62 016d100e
+        p5 = re.compile(r'^[0-9a-f\s]+$')
+
+        # Linux version 2.6.28.10.mips-malta (paulhu@sjc-marsbu-131) (gcc version 4.3.3 (MontaVista Linux Sourcery G++ 4.3-302) ) #2 PREEMPT Thu Nov 24 22:10:30 PST 2022
+        p6 = re.compile(r'^Linux\s+version\s+(?P<linux_version>\S+)\s+.*\(gcc\s+version\s+(?P<gcc_version>[\d\.]+).*\)\s+#\d+\s+PREEMPT\s+(?P<compile_time>.+)$')
+
+        # Current Secure Boot Loader : Upgrade
+        p7 = re.compile(r'^Current\s+Secure\s+Boot\s+Loader\s+:\s+(?P<current_boot_loader>\S+)$')
+
+        # Golden Boot Loader Version : 0x5
+        p8 = re.compile(r'^Golden\s+Boot\s+Loader\s+Version\s+:\s+(?P<golden_version>\S+)$')
+
+        # Upgrade Boot Loader Version: 0x7
+        p9 = re.compile(r'^Upgrade\s+Boot\s+Loader\s+Version:\s+(?P<upgrade_version>\S+)$')
+
+        # Bundled Boot Image Version : 0x7
+        p10 = re.compile(r'^Bundled\s+Boot\s+Image\s+Version\s+:\s+(?P<bundled_version>\S+)$')
+
+        # Upgrade Boot Loader Valid  : 0x1
+        p11 = re.compile(r'^Upgrade\s+Boot\s+Loader\s+Valid\s+:\s+(?P<upgrade_valid>\S+)$')
+
+        # FPGA (Active) version: 14050215
+        p12 = re.compile(r'^FPGA\s+\(Active\)\s+version:\s+(?P<fpga_active>\S+)$')
+
+        # FPGA (Upgraded) version: 19062002
+        p13 = re.compile(r'^FPGA\s+\(Upgraded\)\s+version:\s+(?P<fpga_upgraded>\S+)$')
+
+        # FPGA (Golden) version: Unknownge: 1
+        p14 = re.compile(r'^FPGA\s+\(Golden\)\s+version:\s+(?P<fpga_golden>.+)$')
+
+        # State variables for multi-line parsing
+        # current_wf: Tracks which WF section we're currently parsing (0 or 1)
+        # features_data_buffer: Accumulates hex feature data lines for current WF
+        # in_nim_firmware: Flag indicating we're in the NIM Firmware section
+        current_wf = None
+        features_data_buffer = []
+        in_nim_firmware = False
+
+        # Parse each line of the command output
+        for line in out.splitlines():
+            line = line.strip()
+
+            if not line:  # Skip empty lines
+                continue
+
+            # Check for NIM Firmware section header
+            # This marks the transition from WF features to NIM firmware info
+            if line == "NIM Firmware:":
+                # End of features data for current WF if any
+                if current_wf is not None and features_data_buffer:
+                    wf_features_dict = ret_dict.setdefault('wf_features_sets', {})
+                    wf_key = f"wf_{current_wf}"
+                    wf_features_dict[wf_key] = '\n'.join(features_data_buffer).strip()
+                    features_data_buffer = []
+                    current_wf = None
+                in_nim_firmware = True
+                continue
+
+            # Chip Revision: unknown
+            m = p1.match(line)
+            if m:
+                ret_dict['chip_revision'] = m.groupdict()['chip_revision']
+                continue
+
+            # WDDI Build: 1908
+            m = p2.match(line)
+            if m:
+                ret_dict['wddi_build'] = int(m.groupdict()['wddi_build'])
+                continue
+
+            # WinFarm-0:DPS Build: 2392
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                winfarm_dict = ret_dict.setdefault('winfarm_dps_builds', {})
+                wf_key = f"winfarm_{group['wf_num']}"
+                winfarm_dict[wf_key] = int(group['dps_build'])
+                continue
+
+            # WF-0 features set:
+            m = p4.match(line)
+            if m:
+                # End of previous WF if any
+                if current_wf is not None and features_data_buffer:
+                    wf_features_dict = ret_dict.setdefault('wf_features_sets', {})
+                    wf_key = f"wf_{current_wf}"
+                    wf_features_dict[wf_key] = '\n'.join(features_data_buffer).strip()
+
+                current_wf = m.groupdict()['wf_num']
+                features_data_buffer = []
+                continue
+
+            # 70d43f57 7987fffe 30f80386 46809a62 016d100e
+            if current_wf is not None and not in_nim_firmware:
+                m = p5.match(line)
+                if m:
+                    features_data_buffer.append(line)
+                    continue
+
+            # Linux version 2.6.28.10.mips-malta (paulhu@sjc-marsbu-131) (gcc version 4.3.3 (MontaVista Linux Sourcery G++ 4.3-302) ) #2 PREEMPT Thu Nov 24 22:10:30 PST 2022
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                nim_dict = ret_dict.setdefault('nim_firmware', {})
+                nim_dict['linux_version'] = group['linux_version']
+                nim_dict['gcc_version'] = group['gcc_version']
+                nim_dict['compile_time'] = group['compile_time']
+                continue
+
+            # Current Secure Boot Loader : Upgrade
+            m = p7.match(line)
+            if m:
+                boot_dict = ret_dict.setdefault('boot_loader_info', {})
+                boot_dict['current_secure_boot_loader'] = m.groupdict()['current_boot_loader']
+                continue
+
+            # Golden Boot Loader Version : 0x5
+            m = p8.match(line)
+            if m:
+                boot_dict = ret_dict.setdefault('boot_loader_info', {})
+                boot_dict['golden_boot_loader_version'] = m.groupdict()['golden_version']
+                continue
+
+            # Upgrade Boot Loader Version: 0x7
+            m = p9.match(line)
+            if m:
+                boot_dict = ret_dict.setdefault('boot_loader_info', {})
+                boot_dict['upgrade_boot_loader_version'] = m.groupdict()['upgrade_version']
+                continue
+
+            # Bundled Boot Image Version : 0x7
+            m = p10.match(line)
+            if m:
+                boot_dict = ret_dict.setdefault('boot_loader_info', {})
+                boot_dict['bundled_boot_image_version'] = m.groupdict()['bundled_version']
+                continue
+
+            # Upgrade Boot Loader Valid  : 0x1
+            m = p11.match(line)
+            if m:
+                boot_dict = ret_dict.setdefault('boot_loader_info', {})
+                boot_dict['upgrade_boot_loader_valid'] = m.groupdict()['upgrade_valid']
+                continue
+
+            # FPGA (Active) version: 14050215
+            m = p12.match(line)
+            if m:
+                fpga_dict = ret_dict.setdefault('fpga_versions', {})
+                fpga_dict['active'] = m.groupdict()['fpga_active']
+                continue
+
+            # FPGA (Upgraded) version: 19062002
+            m = p13.match(line)
+            if m:
+                fpga_dict = ret_dict.setdefault('fpga_versions', {})
+                fpga_dict['upgraded'] = m.groupdict()['fpga_upgraded']
+                continue
+
+            # FPGA (Golden) version: Unknownge: 1
+            m = p14.match(line)
+            if m:
+                fpga_dict = ret_dict.setdefault('fpga_versions', {})
+                fpga_dict['golden'] = m.groupdict()['fpga_golden']
+                continue
+
+        # Handle any remaining WF features data that wasn't closed by another section
+        # This ensures we don't lose the last WF section if it's at the end of output
+        if current_wf is not None and features_data_buffer:
+            wf_features_dict = ret_dict.setdefault('wf_features_sets', {})
+            wf_key = f"wf_{current_wf}"
+            wf_features_dict[wf_key] = '\n'.join(features_data_buffer).strip()
+
+        return ret_dict
+
+class ShowPlatformSoftwareAuditMonitorStatusSchema(MetaParser):
+    """
+    Schema for 'show platform software audit monitor status'
+    """
+    schema = {
+        "rules": ListOf({
+            "name": str,
+            "status": str
+        })
+    }
+
+class ShowPlatformSoftwareAuditMonitorStatus(ShowPlatformSoftwareAuditMonitorStatusSchema, MetaParser):
+    """Parser for 'show platform software audit monitor status'"""
+
+    cli_command = 'show platform software audit monitor status'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # Compile regex pattern for rule lines with named groups before the loop
+        rule_pattern = re.compile(
+            r'(?P<name>[A-Z_]+)\s*:\s*(?P<status>enable|disable)', re.IGNORECASE
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            m = rule_pattern.match(line)
+            if m:
+                rules = ret_dict.setdefault('rules', [])
+                rules.append({
+                    "name": m.group("name").upper(),
+                    "status": m.group("status").lower()
+                })
+        return ret_dict
+
+class ShowPlatformSoftwareAuditRulesetSchema(MetaParser):
+    """
+    Schema for 'show platform software audit ruleset'
+    """
+    schema = {
+        "rulesets": ListOf({
+            "name": str,
+            "rules": ListOf(str)
+        })
+    }
+
+class ShowPlatformSoftwareAuditRuleset(ShowPlatformSoftwareAuditRulesetSchema, MetaParser):
+    """Parser for 'show platform software audit ruleset'"""
+
+    cli_command = 'show platform software audit ruleset'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        # Compile regex patterns before the loop for efficiency
+        ruleset_pattern = re.compile(r'^(?P<name>[a-zA-Z0-9_]+)\s*:\s*$')
+        rule_pattern = re.compile(r'^:\s+(?P<rule>.+)$')
+        section_end_pattern = re.compile(r'^_{5,}$')
+
+        current_ruleset = None
+        current_rules = []
+
+        for line in output.splitlines():
+            line = line.strip()
+            m = ruleset_pattern.match(line)
+            if m:
+                if current_ruleset:
+                    rulesets = ret_dict.setdefault('rulesets', [])
+                    rulesets.append({
+                        "name": current_ruleset,
+                        "rules": current_rules
+                    })
+                current_ruleset = m.group("name")
+                current_rules = []
+                continue
+            m = rule_pattern.match(line)
+            if m and current_ruleset:
+                current_rules.append(m.group("rule").strip())
+                continue
+            if section_end_pattern.match(line):
+                continue
+
+        if current_ruleset:
+            rulesets = ret_dict.setdefault('rulesets', [])
+            rulesets.append({
+                "name": current_ruleset,
+                "rules": current_rules
+            })
+
+        return ret_dict

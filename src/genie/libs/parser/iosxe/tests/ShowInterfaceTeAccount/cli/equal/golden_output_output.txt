@@ -1,0 +1,10 @@
+TenGigabitEthernet0/1/1
+ Pkts In: input pkts                 Pkts Out: output pkts
+ Chars In: input bytes received      Chars Out: output bytes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+        IPv6           87        11094         6138       491064        1000            1        14000           21
+
+

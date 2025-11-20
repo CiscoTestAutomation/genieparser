@@ -1,0 +1,25 @@
+show controllers optics 0/0/0/8 prbs-info
+Thu Sep  22 17:09:10.361 UTC
+
+-------------------------------------------------------PRBS Details-------------------------------------------------------
+PRBS Test                       : Enabled
+PRBS Mode                       : Source-Sink
+PRBS Pattern                    : PN15Q
+PRBS Status                     : Unlocked
+PRBS Direction                  : Line
+PRBS Configured Time            : 22 Sep 17:08:25 (90 seconds elapsed)
+PRBS First Lock Established Time: 22 Sep 17:08:35 (76 seconds elapsed)
+PRBS Counter Last Updated Time  : 22 Sep 17:09:05 (4 seconds elapsed)
+
+Lane       SNR(dBm)           MaxSNR(dBm)           ErrorCount           TotalBits               BER                 MaxBER        
+ 1          23.11                23.29                 1020            7151954085888          0.000e+00            0.000e+00       
+ 2          22.32                22.47                35760            7143627720192          0.000e+00            0.000e+00       
+ 3          22.32                22.32                19784            7114893484928          0.000e+00            0.000e+00       
+ 4          22.18                22.47                25552            7174734429312          0.000e+00            0.000e+00       
+
+Lane      LockStatus           LostCount            FoundCount         LockTime(secs)     LockLostTimestamp   
+ 1          Locked                 0                    1                    76                               
+ 2          Locked                 0                    1                    76                               
+ 3          Locked                 0                    1                    76                               
+ 4          Locked                 0                    1                    76                               
+

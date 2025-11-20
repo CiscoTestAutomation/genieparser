@@ -1,0 +1,7 @@
+xtr11#sh lisp in 101 ipv4 publisher
+LISP Publisher Information
+Type: L = Local CP, T = Transit CP, S = Service CP
+      I = IID PubSub, P = Policy/EID PubSub
+Publisher       State       Session  Type  PubSub State
+12.12.12.12     Reachable   Up       LP    Established
+13.13.13.13     Unreachable Down     L     Off

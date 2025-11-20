@@ -1,0 +1,6 @@
+show udld neighbor
+Port           Device Name     Device ID    Port ID         Neighbor State
+----           -----------     ---------    -------         --------------
+Fo1/0/12       B08D57ACC340    1            Hu1/1/0/12      Bidirectional
+
+Total number of bidirectional entries displayed: 1

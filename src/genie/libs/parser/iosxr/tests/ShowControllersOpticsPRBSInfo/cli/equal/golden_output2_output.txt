@@ -1,0 +1,6 @@
+RP/0/RP0/CPU0:ios#show controllers optics 0/1/0/46 prbs-info 
+Mon Sep 22 17:09:02.003 UTC
+
+PRBS information is not available on the port
+
+RP/0/RP0/CPU0:ios#

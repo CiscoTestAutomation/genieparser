@@ -1,0 +1,30 @@
+Chip Revision: unknown
+
+WDDI Build: 1908
+WinFarm-0:DPS Build: 2392
+WinFarm-1:DPS Build: 2392
+
+WF-0 features set:
+70d43f57 7987fffe 30f80386 46809a62 016d100e
+c780344e 38357dd1 01940200 00000000 00000000
+00000000 00000000 00000000 00000000 52351b20
+
+WF-1 features set:
+70d43f57 7987fffe 30f80386 46809a62 016d100e
+c780344e 38357dd1 01940200 00000000 00000000
+00000000 00000000 00000000 00000000 52351b20
+
+
+
+
+NIM Firmware:
+Linux version 2.6.28.10.mips-malta (paulhu@sjc-marsbu-131) (gcc version 4.3.3 (MontaVista Linux Sourcery G++ 4.3-302) ) #2 PREEMPT Thu Nov 24 22:10:30 PST 2022
+
+Current Secure Boot Loader : Upgrade
+Golden Boot Loader Version : 0x5
+Upgrade Boot Loader Version: 0x7
+Bundled Boot Image Version : 0x7
+Upgrade Boot Loader Valid  : 0x1
+FPGA (Active) version: 14050215
+FPGA (Upgraded) version: 19062002
+FPGA (Golden) version: Unknownge: 1

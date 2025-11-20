@@ -1,0 +1,35 @@
+ IPv4 Crypto IKEv2 Session 
+
+ IPv6 Crypto IKEv2 Session 
+
+Session-id:17, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+
+Tunnel-id    fvrf/ivrf              Status 
+3          none/none             READY  
+Local  2001:DB8:1101::222/500                            
+Remote  2001:DB8:1201::222/500                            
+      Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:21, Auth sign: PSK, Auth verify: PSK
+      AKE group: AKE1: MLKEM1024
+      Life/Active Time: 86400/19908 sec
+      CE id: 0, Session-id: 17
+      Local spi: 697FEC72CFA6D976       Remote spi: 5F539F4D2F15DC30
+Child sa:
+          local selector       ->      remote_selector
+          2001:DB8:1101::222/0 - 2001:DB8:1101::222/65535    ->    2001:DB8:1201::222/0 - 2001:DB8:1201::222/65535
+          ESP spi in/out: 0xC9CF4E92/0xCA9B3063  
+
+Session-id:18, Status:UP-ACTIVE, IKE count:1, CHILD count:1
+
+Tunnel-id    fvrf/ivrf              Status 
+4          none/none             READY  
+Local  2001:DB8:1101::222/500                            
+Remote  2001:DB8:1202::222/500                            
+      Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:21, Auth sign: PSK, Auth verify: PSK
+      AKE group: AKE1: MLKEM1024
+      Life/Active Time: 86400/19896 sec
+      CE id: 0, Session-id: 18
+      Local spi: F26D83233C693382       Remote spi: C804F614076EB601
+Child sa:
+          local selector       ->      remote_selector
+          2001:DB8:1101::222/0 - 2001:DB8:1101::222/65535    ->    2001:DB8:1202::222/0 - 2001:DB8:1202::222/65535
+          ESP spi in/out: 0x88EBB220/0xDCE88BD6  

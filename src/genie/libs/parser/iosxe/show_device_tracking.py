@@ -113,11 +113,12 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
 
         # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        # ARP 88.0.0.120   0000.8cfb.1eba         Gi3/0/10   88         0005       118s       STALE     try 0 2560 ms
         device_info_capture_database = re.compile(
             r"^(?P<dev_code>\S+)\s+"
             r"(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+"
             r"(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+"
-            r"(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)\s+(?P<time_left>(try\s\d\s\d+\ss)|(N/A)|(\d+.*)|(\d+\ss\stry\d))$")
+            r"(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)\s+(?P<time_left>(try\s\d\s\d+\s(s|ms))|(N/A)|(\d+.*)|(\d+\s(s|ms)\stry\d))$")
 
         device_index = 0
 

@@ -1,5 +1,0 @@
-R1#show ntp config
-ntp server vrf Mgmt 10.1.1.1 key 2
-ntp server vrf Mgmt 10.2.2.2 key 3
-ntp server vrf Mgmt 10.3.3.3 key 4
-ntp server vrf Mgmt 10.4.4.4 key 5 prefer

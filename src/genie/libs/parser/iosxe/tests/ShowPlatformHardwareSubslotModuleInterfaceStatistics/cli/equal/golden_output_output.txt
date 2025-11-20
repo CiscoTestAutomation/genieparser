@@ -1,0 +1,17 @@
+HQF queue stats     LP                    HP1                   HP2
+Throttles           0                     0                     0
+Enables             0                     0                     0
+Throttle refresh    0                     0                     0
+Enable refresh      42                    42                    42
+Throttled           0                     0                     0
+Tx Packets          18753                 0                     69
+Tx Bytes            1015174               0                     1208
+Tx Total Drops      0                     0                     0
+Tx Queue Drops      0                     0                     0
+Rx Packets          18489                 0                     0
+Rx Bytes            1405224               0                     0
+Rx Total Drops      0                     0                     0
+Rx Queue Drops      0                     0                     0
+Max Queue Depth     114                   0                     24
+Queue Overflow      0                     0                     0
+Queue Depth         0                     0                     0

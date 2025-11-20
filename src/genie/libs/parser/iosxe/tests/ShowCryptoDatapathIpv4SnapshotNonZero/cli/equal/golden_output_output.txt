@@ -1,0 +1,40 @@
+Router# show crypto datapath ipv4 snapshot non-zero
+ 
+Success Statistics: Snapshot at 21:34:30 PST Mar 4 2006 
+  crypto check input core 
+    2nd round ok:            245      1st round ok:            118 
+  post crypto ip encrypt 
+    post encrypt ipflowok:   230 
+  crypto ceal post encrypt switch 
+    post encrypt ipflowok-2: 230 
+Error Statistics: Snapshot at 21:34:30 PST Mar 4 2006 
+Punt Statistics: Snapshot at 21:34:30 PST Mar 4 2006 
+  crypto ceal post decrypt switch 
+    fs to ps:                245 
+Internal Statistics: Snapshot at 21:34:30 PST Mar 4 2006 
+  crypto check input 
+    check input core not con 378      check input core consume 623 
+  crypto check input core 
+    came back from ce:       245      deny pak:                15 
+  crypto ipsec les fs 
+    not esp or ah:           1113 
+  post crypto ip decrypt 
+    decrypt switch:          245 
+  crypto decrypt ipsec sa check 
+    check ident success:     245 
+  crypto ceal post decrypt switch 
+    fs:                      245 
+  crypto ceal post decrypt fs 
+    les ip turbo fs:         245      tunnel ip les fs:        245 
+  crypto ceal post decrypt ps 
+    proc inline:             245 
+  crypto ceal punt to process inline 
+    coalesce:                245      simple enq:              245 
+  crypto ceal post encrypt switch 
+    ps:                      230 
+  crypto ceal post encrypt ps 
+    ps coalesce:             230      simple enq:              230 
+  crypto engine ps vec 
+    ip encrypt:              230 
+  crypto send epa packets 
+    ucast next hop:          230      ip ps send:              230
