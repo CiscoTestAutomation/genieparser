@@ -112,11 +112,11 @@ class ShowPtpPlatformServo(ShowPtpPlatformServoSchema):
 
         # Offset from master: 17 secs, 34645173 nsecs
         # Offset from master: -0 secs, 22 nsecs
-        p13 = re.compile(r'^Offset\s+from\s+master:\s+(?P<offset_from_master>[-\w ]+),\s+\d+\s+nsecs$')
+        p13 = re.compile(r'^Offset\s+from\s+master:\s+(?P<offset_from_master>.*)$')
 
         # Mean path delay : 0 secs, 2215 nsecs
         # Mean path delay   :  0 secs, 9732 nsecs
-        p14 = re.compile(r'^Mean\s+path\s+delay\s+:\s+(?P<mean_path_delay>[\w ]+),\s+\d+\s+nsecs$')
+        p14 = re.compile(r'^Mean\s+path\s+delay\s+:\s+(?P<mean_path_delay>.*)$')
 
         # setTime():1854 stepTime():7989 adjustFreq():789 adjustFreqTime():437113
         # setTime():2  stepTime():1  adjustFreq():420942 adjustFreqTime():0
@@ -355,16 +355,16 @@ class ShowPtpForeignMastersInterfaceSchema(MetaParser):
     schema = {
         'interface' : {
             Any () : {
-                'interface' : str,
-                'port_number' : str,
-                'address_family' : {
+                'interface': str,
+                'port_number': str,
+                'address_family': {
                     Any() : {
-                        'address_family' : str,
+                        'address_family': str,
                         'ip_address': str,
-                        'priority' : str,
+                        'priority': str,
                         'clock_class': str,
                         'delay_asymmetry': str,
-                        'announce_messages': {
+                        Optional('announce_messages'): {
                             Any () : {
                                 'rate_limit': str,
                                 'duration': str,
@@ -409,7 +409,8 @@ class ShowPtpForeignMastersInterface(ShowPtpForeignMastersInterfaceSchema):
         p1 = re.compile(r'^Interface\s+(?P<interface>\S+)\s\(?PTP\s+port\s+number\s+(?P<port_number>\d+)\)$')
         
         # IPv4, Address 192.168.254.1, Unicast
-        p2 = re.compile(r'^(?P<address_family>\S+),\s+Address\s+(?P<ip_address>[\d.]+),\s+Unicast$')
+        # Ethernet, Address xxxx.xxxx.xxxx, Multicast
+        p2 = re.compile(r'^(?P<address_family>\S+),\s+Address\s+(?P<ip_address>\S+),\s+(Unicast|Multicast)$')
         
         # Configured priority: None (128)
         p3 = re.compile(r'^Configured\s+priority:\s+(?P<priority>\S+\s+\S+)$')
@@ -426,7 +427,7 @@ class ShowPtpForeignMastersInterface(ShowPtpForeignMastersInterfaceSchema):
         p6 = re.compile(r'^(?P<announce_message>\w+-?\w+\s+\w+):\s+(?P<rate_limit>\d+\s+\w+-?\w+),\s+(?P<duration>\d+\s+\w+)$')
         
         # Qualified for 8 hours, 26 minutes, 9 seconds
-        p7 = re.compile(r'^Qualified\s+for\s(?P<qualified_period>\d+\s+\w+,\s+\d+\s+\w+,\s+\d+\s+\w+)$')
+        p7 = re.compile(r'^Qualified\s+for\s(?P<qualified_period>.*)$')
        
         # Clock ID: b0aefffe04cc9b
         p8 = re.compile(r'Clock\s+ID:\s+(?P<clock_id>\S+)')
@@ -447,6 +448,7 @@ class ShowPtpForeignMastersInterface(ShowPtpForeignMastersInterfaceSchema):
         p13 = re.compile(r'Current\s+UTC\s+offset:\s+(?P<current_utc_offset>\d+\s+\w+\s+\(valid)')
         
         ret_dict = {}
+        clock_id_flag = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -514,8 +516,10 @@ class ShowPtpForeignMastersInterface(ShowPtpForeignMastersInterfaceSchema):
             # Clock ID: b0aefffe04cc9b
             m = p8.match(line)
             if m:
-                group = m.groupdict()
-                address_dict['clock_id'] = group['clock_id']
+                if not clock_id_flag:
+                    group = m.groupdict()
+                    address_dict['clock_id'] = group['clock_id']
+                    clock_id_flag = True
                 continue
             
             # Domain: 44, Priority1: 128, Priority2: 128, Class: 6
