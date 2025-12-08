@@ -138,6 +138,7 @@ class ShowRedundancyApplicationGroupSchema(MetaParser):
                         "protocol_state": str,
                         "ctrl_interfaces_state": str,
                         "active_peer": {
+                            Optional("local"): str,
                             Optional("address"): str,
                             Optional("priority"): int,
                             Optional("interface"): str,
@@ -179,19 +180,19 @@ class ShowRedundancyApplicationGroupSchema(MetaParser):
                             "ha_seq": int,
                             "seq_number": int,
                             "pkt_loss": int,
-                            "authentication": str,
-                            "authentication_failures": int,
-                            "reload_peer": {"tx": int, "rx": int},
-                            "resign": {"tx": int, "rx": int},
+                            Optional("authentication"): str,
+                            Optional("authentication_failures"): int,
+                            Optional("reload_peer"): {"tx": int, "rx": int},
+                            Optional("resign"): {"tx": int, "rx": int},
                         },
                         "active_peer": {
-                            "pkts": int,
-                            "bytes": int,
-                            "ha_seq": int,
-                            "seq_number": int,
-                            "pkt_loss": int,
-                            "status": str,
-                            "hold_timer": int
+                            Optional("pkts"): int,
+                            Optional("bytes"): int,
+                            Optional("ha_seq"): int,
+                            Optional("seq_number"): int,
+                            Optional("pkt_loss"): int,
+                            Optional("status"): str,
+                            Optional("hold_timer"): int
                         }
                     }
                 }
@@ -362,6 +363,9 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
 
         # Active Peer: Present. Hold Timer: 9000
         p46 = re.compile(r'^Active Peer: +(?P<active_peer>\S+)\. +Hold Timer: +(?P<hold_timer>\d+)$')
+
+        # Standby Peer: Present. Hold Timer: 750
+        p47 = re.compile(r'^Standby Peer: +(?P<standby_peer>\S+)\. +Hold Timer: +(?P<hold_timer>\d+)$')
 
         # return dictionary
         ret_dict = {}
@@ -658,6 +662,7 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
             m = p40.match(line)
             if m:
                 stats_dict = rg_media_dict.setdefault('stats', {})
+                media_active_peer = rg_media_dict.setdefault('active_peer', {})
                 continue
 
             # Pkts 144780, Bytes 8976360, HA Seq 0, Seq Number 144780, Pkt Loss 0
@@ -725,6 +730,14 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
             if m:
                 media_active_peer = rg_media_dict.setdefault('active_peer', {})
                 media_active_peer.update({'status': m.groupdict()['active_peer'],
+                                          'hold_timer': int(m.groupdict()['hold_timer'])})
+                continue
+
+            # Standby Peer: Present. Hold Timer: 750
+            m = p47.match(line)
+            if m:
+                media_active_peer = rg_media_dict.setdefault('active_peer', {})
+                media_active_peer.update({'status': m.groupdict()['standby_peer'],
                                           'hold_timer': int(m.groupdict()['hold_timer'])})
                 continue
 

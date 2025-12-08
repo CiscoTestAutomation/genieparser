@@ -61,6 +61,7 @@
     * 'show platform software bp crimson content oper'
     * 'show platform software audit monitor status'
     * 'show platform software audit ruleset'
+    * show platform software firewall qfp active runtime
 """
 
 # Python
@@ -15192,5 +15193,886 @@ class ShowPlatformSoftwareAuditRuleset(ShowPlatformSoftwareAuditRulesetSchema, M
                 "name": current_ruleset,
                 "rules": current_rules
             })
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareFirewallQfpActiveRuntimeSchema(MetaParser):
+    """Schema for show platform software firewall qfp active runtime"""
+    schema = {
+        "global": {
+            "address": str,
+            "ha_state": str,
+            "fw_configured": str,
+            "init_done": str,
+            "init_requested": str,
+            "syslog_deployed": str
+        },
+        "global2": {
+            "address": str,
+            "salt": int,
+            "global_num_simul_pkt_per_sess_allowed": int,
+            "default_num_simul_pkt_per_sess_allowed": int
+        },
+        "global3": {
+            "address": str,
+            "same_zone_policy": str,
+            "vpn_zone_security": str,
+            "teardowns": int,
+            "pam_cce": str,
+            "num_zp_with_policy": int,
+            "high_priority_recycle_queue_addr": str,
+            "low_priority_recycle_queue_addr": str,
+            "lock_upgrades": int,
+            "half_open_aggressive_aging": int,
+            "num_ack_exceeds_limit": int,
+            "num_rst_exceeds_limit": int,
+            "unknown_vrf_limit_exceeds": int,
+            "syncookie_over_rate_cnt": int,
+            "fw_tcp_session_termination_rst_segment_control": {
+                "halfopen": {
+                    "rst_sent": int,
+                    "blocked": int
+                },
+                "idle": {
+                    "rst_sent": int,
+                    "blocked": int
+                },
+                "halfclose": {
+                    "rst_sent": int,
+                    "blocked": int
+                }
+            },
+            "nat_caching": {
+                "nat_registration": int,
+                "nat_unregistration": int,
+                "too_many_nat_sessions": int,
+                "cant_register_with_nat": int,
+                "invalid_nat_session": int,
+                "no_nat_session_caching": int,
+                "nat_cached_session": int
+            },
+            "l2_firewall": {
+                "l2_unknown_encap": int,
+                "l2_skip_tcp_pkt": int,
+                "timer_stop_failed": int
+            },
+            "vrf_global_action_block": {
+                "l7_inspection_disable_flags": str
+            },
+            "total_sessions": {
+                "max_limit": int,
+                "current_count": int,
+                "exceed": int,
+                "aggr_age_high_watermark": int,
+                "aggr_age_low_watermark": int,
+                "num_times_enter_aggr_age": int,
+                "aggr_age_period": str
+            },
+            "tcp_syn_cookie": {
+                "max_limit": int,
+                "current_count": int,
+                "exceed": int
+            },
+            "total_half_open_sessions": {
+                "max_limit": int,
+                "current_count": int,
+                "exceed": int,
+                "aggr_age_high_watermark": int,
+                "aggr_age_low_watermark": int,
+                "num_times_enter_aggr_age": int,
+                "aggr_age_period": str
+            },
+            "tcp_half_open_sessions": {
+                "max_limit": int,
+                "current_count": int,
+                "exceed": int
+            },
+            "udp_half_open_sessions": {
+                "max_limit": int,
+                "current_count": int,
+                "exceed": int
+            },
+            "icmp_half_open_sessions": {
+                "max_limit": int,
+                "current_count": int,
+                "exceed": int
+            },
+            "domain_flags": str,
+            "box_action_block": {
+                "l7_inspection_disable_flags": str
+            },
+            "current_count": {
+                "total_sessions": int,
+                "aggr_age_high_watermark": int,
+                "aggr_age_low_watermark": int,
+                "num_times_enter_aggr_age": int,
+                "aggr_age_period": str,
+                "tcp_syn_cookie": {
+                    "max_limit": int,
+                    "current_count": int,
+                    "exceed": int
+                },
+                "total_half_open_sessions": {
+                    "max_limit": int,
+                    "current_count": int,
+                    "exceed": int,
+                    "aggr_age_high_watermark": int,
+                    "aggr_age_low_watermark": int,
+                    "num_times_enter_aggr_age": int,
+                    "aggr_age_period": str
+                },
+                "tcp_half_open_sessions": {
+                    "max_limit": int,
+                    "current_count": int,
+                    "exceed": int
+                },
+                "udp_half_open_sessions": {
+                    "max_limit": int,
+                    "current_count": int,
+                    "exceed": int
+                },
+                "icmp_half_open_sessions": {
+                    "max_limit": int,
+                    "current_count": int,
+                    "exceed": int
+                },
+                "domain_flags": str
+            },
+            "fw_persona_alert_rlimit": int,
+            "backpressure": str,
+            "invalid_rg_exceeds_max_rg": int,
+            "invalid_ha_message_version": int,
+            "rii_hash_table": {
+                "address": str,
+                "size": int
+            },
+            "vrf_action_table": {
+                "address": str,
+                "size": int
+            },
+            "avc_stats_table_index_out_of_range": int
+        },
+        "vrf_id_name_table": ListOf(
+            {
+                "id": int,
+                "name": str,
+                "vrf_namehash": str,
+                "ipv4": int,
+                "ipv6": int
+            }
+        ),
+        "w_persona": str,
+        "vpn_zone_table": {
+            "address": str,
+            "size": int
+        },
+        "vpn_to_zone_mappings": ListOf(
+            {
+                "vpn": int,
+                "zone": int
+            }
+        )
+    }
+
+
+class ShowPlatformSoftwareFirewallQfpActiveRuntime(ShowPlatformSoftwareFirewallQfpActiveRuntimeSchema):
+    """Parser for show platform software firewall qfp active runtime"""
+    cli_command = "show platform software firewall qfp active runtime"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        current_section = None
+        current_fw_rst = None
+        current_nat_caching = None
+        current_l2_firewall = None
+        current_vrf_block = None
+        current_box_block = None
+        inside_current_count = False
+        current_current_count = None
+        current_session_block = None
+        current_session_block_name = None
+        vrf_id_name_list = []
+        vpn_to_zone_list = []
+
+        # global 0x020001a1:
+        p1 = re.compile(r'^global\s+(?P<addr>0x[0-9a-fA-F]+):$')
+        # HA state Allow-New-Sess
+        p2 = re.compile(r'^HA state\s+(?P<ha_state>.+)$')
+        # FW Configured (0x00000020)
+        p3 = re.compile(r'^FW Configured\s+\((?P<fw_conf>0x[0-9a-fA-F]+)\)$')
+        # Init Done (0x00000080)
+        p4 = re.compile(r'^Init Done\s+\((?P<init_done>0x[0-9a-fA-F]+)\)$')
+        # Init Requested (0x00000100)
+        p5 = re.compile(r'^Init Requested\s+\((?P<init_req>0x[0-9a-fA-F]+)\)$')
+        # Syslog Deployed (0x02000000)
+        p6 = re.compile(r'^Syslog Deployed\s+\((?P<syslog_deployed>0x[0-9a-fA-F]+)\)$')
+        # global2 0x190000b7:
+        p7 = re.compile(r'^global2\s+(?P<addr>0x[0-9a-fA-F]+):$')
+        # Salt 183
+        p8 = re.compile(r'^Salt\s+(?P<salt>\d+)$')
+        # Global number of simultaneous packet per session allowed 0
+        p9 = re.compile(r'^Global number of simultaneous packet per session allowed\s+(?P<val>\d+)$')
+        # Default number of simultaneous packet per session allowed 25
+        p10 = re.compile(r'^Default number of simultaneous packet per session allowed\s+(?P<val>\d+)$')
+        # global3 0x00000009:
+        p11 = re.compile(r'^global3\s+(?P<addr>0x[0-9a-fA-F]+):$')
+        # Same Zone Policy (0x00000001)
+        p12 = re.compile(r'^Same Zone Policy\s+\((?P<val>0x[0-9a-fA-F]+)\)$')
+        # vpn zone security (0x00000008)
+        p13 = re.compile(r'^vpn zone security\s+\((?P<val>0x[0-9a-fA-F]+)\)$')
+        # teardowns 0, pam_cce 0x0 00000000
+        p14 = re.compile(r'^teardowns\s+(?P<teardowns>\d+), pam_cce\s+(?P<pam>0x[0-9a-fA-F]+ [0-9a-fA-F]+)$')
+        # num zp with policy 1
+        p15 = re.compile(r'^num zp with policy\s+(?P<val>\d+)$')
+        # High priority recycle queue address 0x84969ea0
+        p16 = re.compile(r'^High priority recycle queue address\s+(?P<addr>0x[0-9a-fA-F]+)$')
+        # Low priority recycle queue address 0x84969eb0
+        p17 = re.compile(r'^Low priority recycle queue address\s+(?P<addr>0x[0-9a-fA-F]+)$')
+        # Lock upgrades 0
+        p18 = re.compile(r'^Lock upgrades\s+(?P<val>\d+)$')
+        # Half open aggressive aging: 0
+        p19 = re.compile(r'^Half open aggressive aging:\s+(?P<val>\d+)$')
+        # Num of ACK exceeds limit(5): 0
+        p20 = re.compile(r'^Num of ACK exceeds limit\(5\):\s+(?P<val>\d+)$')
+        # Num of RST exceeds limit(5) 0
+        p21 = re.compile(r'^Num of RST exceeds limit\(5\)\s+(?P<val>\d+)$')
+        # Unknown VRF limit exceeds 0
+        p22 = re.compile(r'^Unknown VRF limit exceeds\s+(?P<val>\d+)$')
+        # syncookie over rate cnt 0
+        p23 = re.compile(r'^syncookie over rate cnt\s+(?P<val>\d+)$')
+        # fw tcp session termination RST segment control:
+        p24 = re.compile(r'^fw tcp session termination RST segment control:$')
+        # halfopen: RST sent 0, blocked 0
+        p25 = re.compile(r'^(?P<state>halfopen|idle|halfclose): RST sent (?P<rst>\d+), blocked (?P<blocked>\d+)$')
+        # NAT caching:
+        p26 = re.compile(r'^NAT caching:$')
+        # NAT registration 1
+        p27 = re.compile(r'^NAT registration\s+(?P<val>\d+)$')
+        # NAT unregistration 1
+        p28 = re.compile(r'^NAT unregistration\s+(?P<val>\d+)$')
+        # Too many nat sessions 0
+        p29 = re.compile(r'^Too many nat sessions\s+(?P<val>\d+)$')
+        # Can't register with NAT 0
+        p30 = re.compile(r"^Can't register with NAT\s+(?P<val>\d+)$")
+        # Invalid nat session 0
+        p31 = re.compile(r'^Invalid nat session\s+(?P<val>\d+)$')
+        # No NAT session caching 0
+        p32 = re.compile(r'^No NAT session caching\s+(?P<val>\d+)$')
+        # NAT cached session 0
+        p33 = re.compile(r'^NAT cached session\s+(?P<val>\d+)$')
+        # L2 Firewall:
+        p34 = re.compile(r'^L2 Firewall:$')
+        # L2 unknown encap 0
+        p35 = re.compile(r'^L2 unknown encap\s+(?P<val>\d+)$')
+        # L2 skip tcp pkt 0
+        p36 = re.compile(r'^L2 skip tcp pkt\s+(?P<val>\d+)$')
+        # Timer stop failed 0
+        p37 = re.compile(r'^Timer stop failed\s+(?P<val>\d+)$')
+        # VRF Global Action Block:
+        p38 = re.compile(r'^VRF Global Action Block:$')
+        # L7 Inspection disable flags: 0x0
+        p39 = re.compile(r'^L7 Inspection disable flags:\s+(?P<flags>0x[0-9a-fA-F]+)$')
+        # Total Sessions:
+        p40 = re.compile(r'^Total Sessions:$')
+        # max limit: 4294967295, current count: 0, exceed: 0
+        p41 = re.compile(r'^max limit:\s+(?P<max>\d+), current count:\s+(?P<count>\d+), exceed:\s+(?P<exceed>\d+)$')
+        # aggr-age high watermark: 4294967295, low watermark: 0
+        p42 = re.compile(r'^aggr-age high watermark:\s+(?P<high>\d+), low watermark:\s+(?P<low>\d+)$')
+        # num of times enter aggr-age: 0, aggr-age period: off
+        p43 = re.compile(r'^num of times enter aggr-age:\s+(?P<num>\d+), aggr-age period:\s+(?P<period>\S+)$')
+        # TCP SYN Cookie:
+        p44 = re.compile(r'^TCP SYN Cookie:$')
+        # Total Half Open Sessions:
+        p45 = re.compile(r'^Total Half Open Sessions:$')
+        # TCP Half Open Sessions:
+        p46 = re.compile(r'^TCP Half Open Sessions:$')
+        # UDP Half Open Sessions:
+        p47 = re.compile(r'^UDP Half Open Sessions:$')
+        # ICMP Half Open Sessions:
+        p48 = re.compile(r'^ICMP Half Open Sessions:$')
+        # Domain flags: 0x0
+        p49 = re.compile(r'^Domain flags: (?P<flags>0x[0-9a-fA-F]+)$')
+        # Box Action Block:
+        p50 = re.compile(r'^Box Action Block:$')
+        # Current count::
+        p51 = re.compile(r'^Current count::$')
+        # Total Sessions 0
+        p52 = re.compile(r'^Total Sessions\s+(?P<val>\d+)$')
+        # FW persona alert_rlimit: 0, backpressure: 0x0
+        p53 = re.compile(r'^FW persona alert_rlimit: (?P<rlimit>\d+), backpressure: (?P<bp>0x[0-9a-fA-F]+)$')
+        # Invalid RG (exceeds max RG): 0
+        p54 = re.compile(r'^Invalid RG \(exceeds max RG\): (?P<val>\d+)$')
+        # Invalid HA message version: 0
+        p55 = re.compile(r'^Invalid HA message version: (?P<val>\d+)$')
+        # RII Hash Table: address 0x093c9c10 size 128
+        p56 = re.compile(r'^RII Hash Table: address (?P<addr>0x[0-9a-fA-F]+) size (?P<size>\d+)$')
+        # VRF Action Table Addr 0x0x1237c000, Size 4096
+        p57 = re.compile(r'^VRF Action Table Addr (?P<addr>0x[0-9a-fA-Fx]+), Size (?P<size>\d+)$')
+        # AVC stats table index out-of-range 0
+        p58 = re.compile(r'^AVC stats table index out-of-range (?P<val>\d+)$')
+        # VRF ID-Name Table:
+        p59 = re.compile(r'^VRF ID-Name Table:$')
+        # VRF:(id=4106:name=__Platform_iVRF:ID00)
+        p60 = re.compile(r'^VRF:\(id=(?P<id>\d+):name=(?P<name>[^)]+)\)$')
+        # vrf_namehash 9f30f5f1fd89b0f0 ipv4 4106, ipv6 65535
+        p61 = re.compile(r'^vrf_namehash (?P<hash>[0-9a-fA-F]+) ipv4 (?P<ipv4>\d+), ipv6 (?P<ipv6>\d+)$')
+        # w_persona: 0x84969ec0 vpn zone table address: 0x13b00400, size 65536
+        p62 = re.compile(r'^w_persona: (?P<wpersona>0x[0-9a-fA-F]+) vpn zone table address: (?P<addr>0x[0-9a-fA-F]+), size (?P<size>\d+)$')
+        # VPN to Zone mappings
+        p63 = re.compile(r'^VPN to Zone mappings$')
+        # vpn: 1 zone: 1
+        p64 = re.compile(r'^vpn: (?P<vpn>\d+) zone: (?P<zone>\d+)$')
+
+        # State for vrf_id_name_list
+        current_vrf_entry = None
+        inside_vrf_id_name_table = False
+        inside_vpn_to_zone = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # global 0x020001a1:
+            m = p1.match(line)
+            if m:
+                current_section = ret_dict.setdefault("global", {})
+                current_section["address"] = m.group("addr")
+                continue
+
+            # HA state Allow-New-Sess
+            m = p2.match(line)
+            if m and current_section is ret_dict.get("global"):
+                current_section["ha_state"] = m.group("ha_state")
+                continue
+
+            # FW Configured (0x00000020)
+            m = p3.match(line)
+            if m and current_section is ret_dict.get("global"):
+                current_section["fw_configured"] = m.group("fw_conf")
+                continue
+
+            # Init Done (0x00000080)
+            m = p4.match(line)
+            if m and current_section is ret_dict.get("global"):
+                current_section["init_done"] = m.group("init_done")
+                continue
+
+            # Init Requested (0x00000100)
+            m = p5.match(line)
+            if m and current_section is ret_dict.get("global"):
+                current_section["init_requested"] = m.group("init_req")
+                continue
+
+            # Syslog Deployed (0x02000000)
+            m = p6.match(line)
+            if m and current_section is ret_dict.get("global"):
+                current_section["syslog_deployed"] = m.group("syslog_deployed")
+                continue
+
+            # global2 0x190000b7:
+            m = p7.match(line)
+            if m:
+                current_section = ret_dict.setdefault("global2", {})
+                current_section["address"] = m.group("addr")
+                continue
+
+            # Salt 183
+            m = p8.match(line)
+            if m and current_section is ret_dict.get("global2"):
+                current_section["salt"] = int(m.group("salt"))
+                continue
+
+            # Global number of simultaneous packet per session allowed 0
+            m = p9.match(line)
+            if m and current_section is ret_dict.get("global2"):
+                current_section["global_num_simul_pkt_per_sess_allowed"] = int(m.group("val"))
+                continue
+
+            # Default number of simultaneous packet per session allowed 25
+            m = p10.match(line)
+            if m and current_section is ret_dict.get("global2"):
+                current_section["default_num_simul_pkt_per_sess_allowed"] = int(m.group("val"))
+                continue
+
+            # global3 0x00000009:
+            m = p11.match(line)
+            if m:
+                current_section = ret_dict.setdefault("global3", {})
+                current_section["address"] = m.group("addr")
+                continue
+
+            # Same Zone Policy (0x00000001)
+            m = p12.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["same_zone_policy"] = m.group("val")
+                continue
+
+            # vpn zone security (0x00000008)
+            m = p13.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["vpn_zone_security"] = m.group("val")
+                continue
+
+            # teardowns 0, pam_cce 0x0 00000000
+            m = p14.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["teardowns"] = int(m.group("teardowns"))
+                current_section["pam_cce"] = m.group("pam")
+                continue
+
+            # num zp with policy 1
+            m = p15.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["num_zp_with_policy"] = int(m.group("val"))
+                continue
+
+            # High priority recycle queue address 0x84969ea0
+            m = p16.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["high_priority_recycle_queue_addr"] = m.group("addr")
+                continue
+
+            # Low priority recycle queue address 0x84969eb0
+            m = p17.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["low_priority_recycle_queue_addr"] = m.group("addr")
+                continue
+
+            # Lock upgrades 0
+            m = p18.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["lock_upgrades"] = int(m.group("val"))
+                continue
+
+            # Half open aggressive aging: 0
+            m = p19.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["half_open_aggressive_aging"] = int(m.group("val"))
+                continue
+
+            # Num of ACK exceeds limit(5): 0
+            m = p20.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["num_ack_exceeds_limit"] = int(m.group("val"))
+                continue
+
+            # Num of RST exceeds limit(5) 0
+            m = p21.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["num_rst_exceeds_limit"] = int(m.group("val"))
+                continue
+
+            # Unknown VRF limit exceeds 0
+            m = p22.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["unknown_vrf_limit_exceeds"] = int(m.group("val"))
+                continue
+
+            # syncookie over rate cnt 0
+            m = p23.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["syncookie_over_rate_cnt"] = int(m.group("val"))
+                continue
+
+            # fw tcp session termination RST segment control:
+            m = p24.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_fw_rst = current_section.setdefault("fw_tcp_session_termination_rst_segment_control", {})
+                continue
+
+            # halfopen: RST sent 0, blocked 0
+            m = p25.match(line)
+            if m and current_fw_rst is not None:
+                state = m.group("state")
+                current_fw_rst[state] = {
+                    "rst_sent": int(m.group("rst")),
+                    "blocked": int(m.group("blocked"))
+                }
+                continue
+
+            # NAT caching:
+            m = p26.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_nat_caching = current_section.setdefault("nat_caching", {})
+                continue
+
+            # NAT registration 1
+            m = p27.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["nat_registration"] = int(m.group("val"))
+                continue
+
+            # NAT unregistration 1
+            m = p28.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["nat_unregistration"] = int(m.group("val"))
+                continue
+
+            # Too many nat sessions 0
+            m = p29.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["too_many_nat_sessions"] = int(m.group("val"))
+                continue
+
+            # Can't register with NAT 0
+            m = p30.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["cant_register_with_nat"] = int(m.group("val"))
+                continue
+
+            # Invalid nat session 0
+            m = p31.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["invalid_nat_session"] = int(m.group("val"))
+                continue
+
+            # No NAT session caching 0
+            m = p32.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["no_nat_session_caching"] = int(m.group("val"))
+                continue
+
+            # NAT cached session 0
+            m = p33.match(line)
+            if m and current_nat_caching is not None:
+                current_nat_caching["nat_cached_session"] = int(m.group("val"))
+                continue
+
+            # L2 Firewall:
+            m = p34.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_l2_firewall = current_section.setdefault("l2_firewall", {})
+                continue
+
+            # L2 unknown encap 0
+            m = p35.match(line)
+            if m and current_l2_firewall is not None:
+                current_l2_firewall["l2_unknown_encap"] = int(m.group("val"))
+                continue
+
+            # L2 skip tcp pkt 0
+            m = p36.match(line)
+            if m and current_l2_firewall is not None:
+                current_l2_firewall["l2_skip_tcp_pkt"] = int(m.group("val"))
+                continue
+
+            # Timer stop failed 0
+            m = p37.match(line)
+            if m and current_l2_firewall is not None:
+                current_l2_firewall["timer_stop_failed"] = int(m.group("val"))
+                continue
+
+            # VRF Global Action Block:
+            m = p38.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_vrf_block = current_section.setdefault("vrf_global_action_block", {})
+                continue
+
+            # L7 Inspection disable flags: 0x0
+            m = p39.match(line)
+            if m:
+                if current_vrf_block is not None:
+                    current_vrf_block["l7_inspection_disable_flags"] = m.group("flags")
+                elif current_box_block is not None:
+                    current_box_block["l7_inspection_disable_flags"] = m.group("flags")
+                continue
+
+            # Total Sessions:
+            m = p40.match(line)
+            if m and current_section is ret_dict.get("global3") and not inside_current_count:
+                current_session_block = current_section.setdefault("total_sessions", {})
+                current_session_block_name = "total_sessions"
+                continue
+            if m and inside_current_count and current_section is ret_dict.get("global3"):
+                current_session_block = current_current_count.setdefault("total_sessions", None)
+                current_session_block_name = "total_sessions"
+                continue
+
+            # max limit: 4294967295, current count: 0, exceed: 0
+            m = p41.match(line)
+            if m and current_session_block_name:
+                d = {
+                    "max_limit": int(m.group("max")),
+                    "current_count": int(m.group("count")),
+                    "exceed": int(m.group("exceed"))
+                }
+                if inside_current_count and current_current_count is not None and current_session_block_name:
+                    if current_session_block_name == "total_sessions":
+                        current_current_count["total_sessions"] = d["current_count"]
+                    elif current_session_block_name == "tcp_syn_cookie":
+                        current_current_count.setdefault("tcp_syn_cookie", {}).update(d)
+                    elif current_session_block_name == "total_half_open_sessions":
+                        current_current_count.setdefault("total_half_open_sessions", {}).update(d)
+                    elif current_session_block_name == "tcp_half_open_sessions":
+                        current_current_count.setdefault("tcp_half_open_sessions", {}).update(d)
+                    elif current_session_block_name == "udp_half_open_sessions":
+                        current_current_count.setdefault("udp_half_open_sessions", {}).update(d)
+                    elif current_session_block_name == "icmp_half_open_sessions":
+                        current_current_count.setdefault("icmp_half_open_sessions", {}).update(d)
+                elif current_section is ret_dict.get("global3"):
+                    if current_session_block_name == "total_sessions":
+                        current_section.setdefault("total_sessions", {}).update(d)
+                    elif current_session_block_name == "tcp_syn_cookie":
+                        current_section.setdefault("tcp_syn_cookie", {}).update(d)
+                    elif current_session_block_name == "total_half_open_sessions":
+                        current_section.setdefault("total_half_open_sessions", {}).update(d)
+                    elif current_session_block_name == "tcp_half_open_sessions":
+                        current_section.setdefault("tcp_half_open_sessions", {}).update(d)
+                    elif current_session_block_name == "udp_half_open_sessions":
+                        current_section.setdefault("udp_half_open_sessions", {}).update(d)
+                    elif current_session_block_name == "icmp_half_open_sessions":
+                        current_section.setdefault("icmp_half_open_sessions", {}).update(d)
+                continue
+
+            # aggr-age high watermark: 4294967295, low watermark: 0
+            m = p42.match(line)
+            if m and current_session_block_name:
+                d = {
+                    "aggr_age_high_watermark": int(m.group("high")),
+                    "aggr_age_low_watermark": int(m.group("low"))
+                }
+                if inside_current_count and current_current_count is not None and current_session_block_name:
+                    if current_session_block_name == "total_sessions":
+                        current_current_count["aggr_age_high_watermark"] = d["aggr_age_high_watermark"]
+                        current_current_count["aggr_age_low_watermark"] = d["aggr_age_low_watermark"]
+                    elif current_session_block_name == "total_half_open_sessions":
+                        current_current_count.setdefault("total_half_open_sessions", {}).update(d)
+                elif current_section is ret_dict.get("global3"):
+                    if current_session_block_name == "total_sessions":
+                        current_section.setdefault("total_sessions", {}).update(d)
+                    elif current_session_block_name == "total_half_open_sessions":
+                        current_section.setdefault("total_half_open_sessions", {}).update(d)
+                continue
+
+            # num of times enter aggr-age: 0, aggr-age period: off
+            m = p43.match(line)
+            if m and current_session_block_name:
+                d = {
+                    "num_times_enter_aggr_age": int(m.group("num")),
+                    "aggr_age_period": m.group("period")
+                }
+                if inside_current_count and current_current_count is not None and current_session_block_name:
+                    if current_session_block_name == "total_sessions":
+                        current_current_count["num_times_enter_aggr_age"] = d["num_times_enter_aggr_age"]
+                        current_current_count["aggr_age_period"] = d["aggr_age_period"]
+                    elif current_session_block_name == "total_half_open_sessions":
+                        current_current_count.setdefault("total_half_open_sessions", {}).update(d)
+                elif current_section is ret_dict.get("global3"):
+                    if current_session_block_name == "total_sessions":
+                        current_section.setdefault("total_sessions", {}).update(d)
+                    elif current_session_block_name == "total_half_open_sessions":
+                        current_section.setdefault("total_half_open_sessions", {}).update(d)
+                continue
+
+            # TCP SYN Cookie:
+            m = p44.match(line)
+            if m and current_section is ret_dict.get("global3") and not inside_current_count:
+                current_session_block = current_section.setdefault("tcp_syn_cookie", {})
+                current_session_block_name = "tcp_syn_cookie"
+                continue
+            if m and inside_current_count and current_section is ret_dict.get("global3"):
+                current_session_block = current_current_count.setdefault("tcp_syn_cookie", {})
+                current_session_block_name = "tcp_syn_cookie"
+                continue
+
+            # Total Half Open Sessions:
+            m = p45.match(line)
+            if m and current_section is ret_dict.get("global3") and not inside_current_count:
+                current_session_block = current_section.setdefault("total_half_open_sessions", {})
+                current_session_block_name = "total_half_open_sessions"
+                continue
+            if m and inside_current_count and current_section is ret_dict.get("global3"):
+                current_session_block = current_current_count.setdefault("total_half_open_sessions", {})
+                current_session_block_name = "total_half_open_sessions"
+                continue
+
+            # TCP Half Open Sessions:
+            m = p46.match(line)
+            if m and current_section is ret_dict.get("global3") and not inside_current_count:
+                current_session_block = current_section.setdefault("tcp_half_open_sessions", {})
+                current_session_block_name = "tcp_half_open_sessions"
+                continue
+            if m and inside_current_count and current_section is ret_dict.get("global3"):
+                current_session_block = current_current_count.setdefault("tcp_half_open_sessions", {})
+                current_session_block_name = "tcp_half_open_sessions"
+                continue
+
+            # UDP Half Open Sessions:
+            m = p47.match(line)
+            if m and current_section is ret_dict.get("global3") and not inside_current_count:
+                current_session_block = current_section.setdefault("udp_half_open_sessions", {})
+                current_session_block_name = "udp_half_open_sessions"
+                continue
+            if m and inside_current_count and current_section is ret_dict.get("global3"):
+                current_session_block = current_current_count.setdefault("udp_half_open_sessions", {})
+                current_session_block_name = "udp_half_open_sessions"
+                continue
+
+            # ICMP Half Open Sessions:
+            m = p48.match(line)
+            if m and current_section is ret_dict.get("global3") and not inside_current_count:
+                current_session_block = current_section.setdefault("icmp_half_open_sessions", {})
+                current_session_block_name = "icmp_half_open_sessions"
+                continue
+            if m and inside_current_count and current_section is ret_dict.get("global3"):
+                current_session_block = current_current_count.setdefault("icmp_half_open_sessions", {})
+                current_session_block_name = "icmp_half_open_sessions"
+                continue
+
+            # Domain flags: 0x0
+            m = p49.match(line)
+            if m:
+                if inside_current_count and current_current_count is not None:
+                    current_current_count["domain_flags"] = m.group("flags")
+                elif current_section is ret_dict.get("global3"):
+                    current_section["domain_flags"] = m.group("flags")
+                continue
+
+            # Box Action Block:
+            m = p50.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_box_block = current_section.setdefault("box_action_block", {})
+                current_vrf_block = None
+                continue
+
+            # Current count::
+            m = p51.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                inside_current_count = True
+                current_current_count = current_section.setdefault("current_count", {})
+                current_session_block = None
+                current_session_block_name = None
+                continue
+
+            # Total Sessions 0
+            m = p52.match(line)
+            if m and inside_current_count and current_current_count is not None:
+                current_current_count["total_sessions"] = int(m.group("val"))
+                continue
+
+            # aggr-age high watermark: 4294967295, low watermark: 0 (inside current_count)
+            m = p42.match(line)
+            if m and inside_current_count and current_current_count is not None and not current_session_block_name:
+                current_current_count["aggr_age_high_watermark"] = int(m.group("high"))
+                current_current_count["aggr_age_low_watermark"] = int(m.group("low"))
+                continue
+
+            # num of times enter aggr-age: 0, aggr-age period: off (inside current_count)
+            m = p43.match(line)
+            if m and inside_current_count and current_current_count is not None and not current_session_block_name:
+                current_current_count["num_times_enter_aggr_age"] = int(m.group("num"))
+                current_current_count["aggr_age_period"] = m.group("period")
+                continue
+
+            # FW persona alert_rlimit: 0, backpressure: 0x0
+            m = p53.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["fw_persona_alert_rlimit"] = int(m.group("rlimit"))
+                current_section["backpressure"] = m.group("bp")
+                continue
+
+            # Invalid RG (exceeds max RG): 0
+            m = p54.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["invalid_rg_exceeds_max_rg"] = int(m.group("val"))
+                continue
+
+            # Invalid HA message version: 0
+            m = p55.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["invalid_ha_message_version"] = int(m.group("val"))
+                continue
+
+            # RII Hash Table: address 0x093c9c10 size 128
+            m = p56.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["rii_hash_table"] = {
+                    "address": m.group("addr"),
+                    "size": int(m.group("size"))
+                }
+                continue
+
+            # VRF Action Table Addr 0x0x1237c000, Size 4096
+            m = p57.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["vrf_action_table"] = {
+                    "address": m.group("addr"),
+                    "size": int(m.group("size"))
+                }
+                continue
+
+            # AVC stats table index out-of-range 0
+            m = p58.match(line)
+            if m and current_section is ret_dict.get("global3"):
+                current_section["avc_stats_table_index_out_of_range"] = int(m.group("val"))
+                continue
+
+            # VRF ID-Name Table:
+            m = p59.match(line)
+            if m:
+                inside_vrf_id_name_table = True
+                continue
+
+            # VRF:(id=4106:name=__Platform_iVRF:ID00)
+            m = p60.match(line)
+            if m and inside_vrf_id_name_table:
+                current_vrf_entry = {
+                    "id": int(m.group("id")),
+                    "name": m.group("name")
+                }
+                continue
+
+            # vrf_namehash 9f30f5f1fd89b0f0 ipv4 4106, ipv6 65535
+            m = p61.match(line)
+            if m and inside_vrf_id_name_table and current_vrf_entry:
+                current_vrf_entry["vrf_namehash"] = m.group("hash")
+                current_vrf_entry["ipv4"] = int(m.group("ipv4"))
+                current_vrf_entry["ipv6"] = int(m.group("ipv6"))
+                vrf_id_name_list.append(current_vrf_entry)
+                current_vrf_entry = None
+                continue
+
+            # w_persona: 0x84969ec0 vpn zone table address: 0x13b00400, size 65536
+            m = p62.match(line)
+            if m:
+                ret_dict["w_persona"] = m.group("wpersona")
+                ret_dict["vpn_zone_table"] = {
+                    "address": m.group("addr"),
+                    "size": int(m.group("size"))
+                }
+                continue
+
+            # VPN to Zone mappings
+            m = p63.match(line)
+            if m:
+                inside_vpn_to_zone = True
+                continue
+
+            # vpn: 1 zone: 1
+            m = p64.match(line)
+            if m and inside_vpn_to_zone:
+                vpn_to_zone_list.append({
+                    "vpn": int(m.group("vpn")),
+                    "zone": int(m.group("zone"))
+                })
+                continue
+
+            # End of current_count section (when a blank line or a section header is hit)
+            if inside_current_count and (line.startswith("VRF ID-Name Table:") or line.startswith("w_persona:") or line.startswith("VPN to Zone mappings") or not line):
+                inside_current_count = False
+                current_current_count = None
+                current_session_block = None
+                current_session_block_name = None
+                continue
+
+        if vrf_id_name_list:
+            ret_dict["vrf_id_name_table"] = vrf_id_name_list
+        if vpn_to_zone_list:
+            ret_dict["vpn_to_zone_mappings"] = vpn_to_zone_list
 
         return ret_dict

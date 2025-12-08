@@ -1,0 +1,49 @@
+show ipv6 traffic
+IPv6 statistics:
+        Rcvd:  2 total, 112 total_bytes, 2 local destination
+               0 source-routed, 0 truncated, 0 no route
+               0 format errors, 0 hop count exceeded
+               0 bad header, 0 unknown option, 0 bad source
+               0 unknown protocol, 0 not a router
+               0 fragments, 0 total reassembled
+               0 reassembly timeouts, 0 reassembly failures
+        Sent:  161 total, 18670 total_bytes
+               162 generated, 161 forwarded
+               0 fragmented into 0 fragments, 0 failed
+               0 encapsulation failed, 0 no route, 0 too big
+               0 RPF drops, 0 RPF suppressed drops
+        Mcast: 2 received, 112 received bytes
+               0 sent, 0 sent bytes
+
+ICMP statistics:
+        Rcvd: 2 input, 0 checksum errors, 0 too short
+              0 unknown info type, 0 unknown error type
+              unreach: 0 routing, 0 admin, 0 neighbor, 0 address, 0 port
+                       0 sa policy, 0 reject route
+              parameter: 0 error, 0 header, 0 option
+              0 hopcount expired, 0 reassembly timeout,0 too big
+              0 bad embedded ipv6
+              0 hopcount expired, 0 reassembly timeout,0 too big
+              0 bad embedded ipv6
+              0 echo request, 0 echo reply
+              0 group query, 0 group report, 0 group reduce
+              2 router solicit, 0 router advert, 0 redirects
+              0 neighbor solicit, 0 neighbor advert
+        Sent: 162 output, 0 rate-limited
+              unreach: 0 routing, 0 admin, 0 neighbor, 0 address, 0 port
+                       0 sa policy, 0 reject route
+              parameter: 0 error, 0 header, 0 option
+              0 hopcount expired, 0 reassembly timeout,0 too big
+              0 echo request, 0 echo reply
+              0 group query, 0 group report, 0 group reduce
+              0 router solicit, 162 router advert, 0 redirects
+              0 neighbor solicit, 0 neighbor advert
+
+UDP statistics:
+  Rcvd: 0 input, 0 checksum errors, 0 length errors
+        0 no port, 0 dropped
+  Sent: 0 output
+
+TCP statistics:
+  Rcvd: 0 input, 0 checksum errors
+  Sent: 0 output, 0 retransmitted 

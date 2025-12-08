@@ -132,6 +132,7 @@ class ShowCloudMgmtConnectSchema(MetaParser):
             Optional('client_last_restart(utc)'): str,
         },
         Optional('cloud-mgmt_tunnel_interface'): {
+            Optional('vrf'): str,
             'status': str,
             'rx_packets': int,
             'tx_packets': int,
@@ -139,6 +140,12 @@ class ShowCloudMgmtConnectSchema(MetaParser):
             'tx_errors': int,
             'rx_drop_packets': int,
             'tx_drop_packets': int,
+            Optional('rx_packets_(last_5s)'): int,
+            Optional('tx_packets_(last_5s)'): int,
+            Optional('rx_errors_(last_5s)'): int,
+            Optional('tx_errors_(last_5s)'): int,
+            Optional('rx_drop_packets_(last_5s)'): int,
+            Optional('tx_drop_packets_(last_5s)'): int,
         },
        Optional('cloud-mgmt_device_registration'):{
         'url': str,
@@ -192,6 +199,12 @@ class ShowCloudMgmtConnect(ShowCloudMgmtConnectSchema):
         #   Tx Errors:                  0
         #   Rx Drop Packets:            0
         #   Tx Drop Packets:            0
+        #   Rx Packets (Last 5s):       18
+        #   Tx Packets (Last 5s):       17
+        #   Rx Errors (Last 5s):        0
+        #   Tx Errors (Last 5s):        0
+        #   Rx Drop Packets (Last 5s):  0
+        #   Tx Drop Packets (Last 5s):  0
         
         #   url:                        https://catalyst.meraki.com/nodes/register
         #   Device Number:              1
@@ -212,7 +225,10 @@ class ShowCloudMgmtConnect(ShowCloudMgmtConnectSchema):
         
         #service meraki connect is disabled
         p3 = re.compile(r"^(service\s+cloud-mgmt\s+connect)\s+is\s+(disabled)$")
-        
+
+        # # Pattern to match delta fields "(Last 5s)"
+        # p4 = re.compile(r'\(last\s+\d+s\)', re.IGNORECASE)
+
         ret_dict = {} #level-0 dictionary
         stack_dict_index = 0 #level-1 dictionary
         stack_dict_1_index = 0 #level-2 dictionary
@@ -241,7 +257,13 @@ class ShowCloudMgmtConnect(ShowCloudMgmtConnectSchema):
             #   Tx Errors:                  0
             #   Rx Drop Packets:            0
             #   Tx Drop Packets:            0
-            
+            #   Rx Packets (Last 5s):       18
+            #   Tx Packets (Last 5s):       17
+            #   Rx Errors (Last 5s):        0
+            #   Tx Errors (Last 5s):        0
+            #   Rx Drop Packets (Last 5s):  0
+            #   Tx Drop Packets (Last 5s):  0    
+                    
             #   url:                        https://catalyst.meraki.com/nodes/register
             #   Device Number:              1
             #   PID:                        C9300-24U
@@ -298,4 +320,5 @@ class ShowCloudMgmtConnect(ShowCloudMgmtConnectSchema):
                 #if meraki mode is disabled append the key-value pair to ret_dict level-0
                 ret_dict[key_converted_to_lowercase_with_underscore] = m3.group(2)
                 continue
+
         return ret_dict

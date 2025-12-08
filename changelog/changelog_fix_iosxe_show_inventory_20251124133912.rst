@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
                             Fix
 --------------------------------------------------------------------------------
-* NXOS
-    * Modified ShowBgpVrfAllAllSummary:
-        * Handle cases where BGP neighbor information is spread over 3 lines
+* IOSXE
+    * Modified ShowPolicyMapTypeInspectZonePair:
+    *  Added SM keyword to match new output line printed in show inventory command

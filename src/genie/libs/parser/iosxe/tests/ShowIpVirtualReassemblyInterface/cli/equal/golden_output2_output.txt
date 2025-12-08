@@ -1,0 +1,23 @@
+GigabitEthernet0/0/2:
+   Virtual Fragment Reassembly (VFR) is ENABLED [in]
+   Concurrent reassemblies (max-reassemblies): 16
+   Fragments per reassembly (max-fragments): 32
+   Reassembly timeout (timeout): 3 seconds
+   Drop fragments: OFF
+
+   Current reassembly count:0
+   Current fragment count:0
+   Total reassembly count:1
+   Total reassembly timeout count:0
+
+GigabitEthernet0/0/2:
+   Virtual Fragment Reassembly (VFR) is ENABLED [out]
+   Concurrent reassemblies (max-reassemblies): 16
+   Fragments per reassembly (max-fragments): 32
+   Reassembly timeout (timeout): 3 seconds
+   Drop fragments: OFF
+
+   Current reassembly count:0
+   Current fragment count:0
+   Total reassembly count:0
+   Total reassembly timeout count:0

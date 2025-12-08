@@ -1,0 +1,22 @@
+Global Per Cause Statistics
+
+  Number of punt causes =   165
+
+  Per Punt Cause Statistics
+                                                        Packets               Packets
+  Counter ID  Punt Cause Name                           Received              Transmitted
+  ------------------------------------------------------------------------------------------------
+  003         Layer2 control and legacy                 859                   859
+  007         ARP request or response                   2424                  2424
+  021         RP<->QFP keepalive                        303                   303
+  055         For-us control                            4                     4
+
+
+  Number of inject causes = 56
+
+  Per Inject Cause Statistics
+                                                        Packets               Packets
+  Counter ID  Inject Cause Name                         Received              Transmitted
+  ------------------------------------------------------------------------------------------------
+  005         QFP <->RP keepalive                       303                   0
+  007         QFP adjacency-id lookup                   3                     3

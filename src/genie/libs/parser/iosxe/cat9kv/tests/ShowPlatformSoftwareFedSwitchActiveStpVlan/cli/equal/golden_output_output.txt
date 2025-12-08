@@ -1,0 +1,10 @@
+                   Interface   pvlan_mode   stp_state    stp_state(HW)  vtp pruned    Untagged      Ingress(HW)       Egress(HW)         GID     Mac learn  
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+        GigabitEthernet1/0/8         none    disabled         Blocking          No         Yes         Blocking         Blocking      122884        Enable  
+        GigabitEthernet1/0/7         none  forwarding       Forwarding          No         Yes       Forwarding       Forwarding      122883        Enable  
+        GigabitEthernet1/0/6         none    disabled         Blocking          No         Yes         Blocking         Blocking      122880        Enable  
+        GigabitEthernet1/0/5         none  forwarding       Forwarding          No         Yes       Forwarding       Forwarding      122887        Enable  
+        GigabitEthernet1/0/4         none    disabled         Blocking          No         Yes         Blocking         Blocking      122882        Enable  
+        GigabitEthernet1/0/3         none    disabled         Blocking          No         Yes         Blocking         Blocking      122881        Enable  
+        GigabitEthernet1/0/1         none    disabled         Blocking          No         Yes         Blocking         Blocking      122885        Enable  
+HW flood list: : GigabitEthernet1/0/5, GigabitEthernet1/0/7

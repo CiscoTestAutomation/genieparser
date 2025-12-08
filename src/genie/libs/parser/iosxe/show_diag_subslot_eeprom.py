@@ -3,6 +3,7 @@
 IOSXE parsers for the following show commands:
 
     * show diag subslot {subslot} eeprom detail
+    * show diag subslot {subslot} eeprom
 '''
 
 import re
@@ -336,5 +337,97 @@ class ShowDiagSubslotEepromDetail(ShowDiagSubslotEepromDetailSchema):
         # Handle case where platform_features is the last field
         if platform_features_buffer is not None and current_dict is not None:
             current_dict['platform_features'] = platform_features_buffer
+        
+        return ret_dict
+
+class ShowDiagSubslotEepromSchema(MetaParser):
+    """Schema for 'show diag subslot {subslot} eeprom'"""
+    
+    schema = {
+        'spa_eeprom_data': {
+            Any(): {  # subslot like '1/0'
+                'product_identifier_pid': str,
+                'version_identifier_vid': str,
+                'pcb_serial_number': str,
+                'hardware_revision': str,
+                'clei_code': str,
+            }
+        }
+    }
+
+class ShowDiagSubslotEeprom(ShowDiagSubslotEepromSchema):
+    """Parser for 'show diag subslot {subslot} eeprom'"""
+    
+    cli_command = 'show diag subslot {subslot} eeprom'
+    
+    def cli(self, subslot=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(subslot=subslot))
+        
+        ret_dict = {}
+        
+        # SPA EEPROM data for subslot 1/0:
+        p1 = re.compile(r'^SPA EEPROM data for subslot (?P<subslot>\d+/\d+):$')
+        
+        # Product Identifier (PID) : SM-X-ES3-24-P
+        p2 = re.compile(r'^\s*Product Identifier \(PID\)\s+:\s+(?P<product_identifier_pid>\S+)$')
+        
+        # Version Identifier (VID) : V01
+        p3 = re.compile(r'^\s*Version Identifier \(VID\)\s+:\s+(?P<version_identifier_vid>\S+)$')
+        
+        # PCB Serial Number        : FOC21484UY5
+        p4 = re.compile(r'^\s*PCB Serial Number\s+:\s+(?P<pcb_serial_number>\S+)$')
+        
+        # Hardware Revision        : 1.0
+        p5 = re.compile(r'^\s*Hardware Revision\s+:\s+(?P<hardware_revision>\S+)$')
+        
+        # CLEI Code                : IP3CAAECAA
+        p6 = re.compile(r'^\s*CLEI Code\s+:\s+(?P<clei_code>\S+)$')
+        
+        current_dict = None
+        
+        for line in output.splitlines():
+            line = line.rstrip()
+            
+            # SPA EEPROM data for subslot 1/0:
+            m = p1.match(line)
+            if m:
+                subslot = m.group('subslot')
+                spa_dict = ret_dict.setdefault('spa_eeprom_data', {})
+                current_dict = spa_dict.setdefault(subslot, {})
+                continue
+            
+            if current_dict is None:
+                continue
+            
+            # Product Identifier (PID) : SM-X-ES3-24-P
+            m = p2.match(line)
+            if m:
+                current_dict['product_identifier_pid'] = m.group('product_identifier_pid')
+                continue
+            
+            # Version Identifier (VID) : V01
+            m = p3.match(line)
+            if m:
+                current_dict['version_identifier_vid'] = m.group('version_identifier_vid')
+                continue
+            
+            # PCB Serial Number        : FOC21484UY5
+            m = p4.match(line)
+            if m:
+                current_dict['pcb_serial_number'] = m.group('pcb_serial_number')
+                continue
+            
+            # Hardware Revision        : 1.0
+            m = p5.match(line)
+            if m:
+                current_dict['hardware_revision'] = m.group('hardware_revision')
+                continue
+            
+            # CLEI Code                : IP3CAAECAA
+            m = p6.match(line)
+            if m:
+                current_dict['clei_code'] = m.group('clei_code')
+                continue
         
         return ret_dict

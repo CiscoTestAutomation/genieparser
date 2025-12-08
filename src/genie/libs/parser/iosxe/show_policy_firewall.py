@@ -3,6 +3,7 @@
 IOSXE parsers for the following show commands:
     * show policy-firewall stats vrf {vrf}
     * show policy-firewall stats zone {zone}
+    * show policy-firewall stats global
 """
 
 # Python
@@ -284,6 +285,109 @@ class ShowPolicyFirewallStatsZone(ShowPolicyFirewallStatsZoneSchema):
                 fw_policy['current_eps'] = int(m.group('fw_policy_current'))
                 fw_policy['threats'] = int(m.group('fw_policy_threats'))
                 fw_policy['total_events'] = int(m.group('fw_policy_events'))
+                continue
+
+        return ret_dict
+
+
+# ======================================================
+# Schema for 'show policy-firewall stats global'
+# ======================================================
+class ShowPolicyFirewallStatsGlobalSchema(MetaParser):
+    """Schema for show policy-firewall stats global"""
+
+    schema = {
+        'global_per_box_statistics': {
+            'total_session_aggressive_aging_period': str,
+            'total_session_event_count': int,
+            'half_open': {
+                'protocol_stats': {
+                    Any(): {  # Protocol name (All, UDP, ICMP, TCP)
+                        'session_count': int,
+                        'exceed': int
+                    }
+                },
+                'tcp_syn_flood_half_open_count': int,
+                'tcp_syn_flood_exceed': int,
+                'half_open_aggressive_aging_period': str,
+                'half_open_event_count': int
+            }
+        }
+    }
+
+
+# ======================================================
+# Parser for 'show policy-firewall stats global'
+# ======================================================
+class ShowPolicyFirewallStatsGlobal(ShowPolicyFirewallStatsGlobalSchema):
+    """Parser for show policy-firewall stats global"""
+
+    cli_command = 'show policy-firewall stats global'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Total Session Aggressive Aging Period On, Event Count: 1
+        p1 = re.compile(r'^Total\s+Session\s+Aggressive\s+Aging\s+Period\s+(?P<aggressive_aging_period>On|Off),\s+Event\s+Count:\s+(?P<event_count>\d+)$')
+
+        # Protocol Session Cnt     Exceed
+        # All      12              0
+        # UDP      12              0
+        # ICMP     0               0
+        # TCP      0               0
+        p2 = re.compile(r'^(?P<protocol>All|UDP|ICMP|TCP)\s+(?P<session_count>\d+)\s+(?P<exceed>\d+)$')
+
+        # TCP Syn Flood Half Open Count: 0, Exceed: 0
+        p3 = re.compile(r'^TCP\s+Syn\s+Flood\s+Half\s+Open\s+Count:\s+(?P<tcp_syn_flood_count>\d+),\s+Exceed:\s+(?P<tcp_syn_flood_exceed>\d+)$')
+
+        # Half Open Aggressive Aging Period Off, Event Count: 0
+        p4 = re.compile(r'^Half\s+Open\s+Aggressive\s+Aging\s+Period\s+(?P<half_open_aging_period>On|Off),\s+Event\s+Count:\s+(?P<half_open_event_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total Session Aggressive Aging Period On, Event Count: 1
+            m = p1.match(line)
+            if m:
+                global_stats = ret_dict.setdefault('global_per_box_statistics', {})
+                global_stats['total_session_aggressive_aging_period'] = m.group('aggressive_aging_period')
+                global_stats['total_session_event_count'] = int(m.group('event_count'))
+                continue
+
+            # All      12              0
+            m = p2.match(line)
+            if m:
+                protocol = m.group('protocol')
+                session_count = int(m.group('session_count'))
+                exceed = int(m.group('exceed'))
+                
+                global_stats = ret_dict.setdefault('global_per_box_statistics', {})
+                half_open_dict = global_stats.setdefault('half_open', {})
+                protocol_stats_dict = half_open_dict.setdefault('protocol_stats', {})
+                protocol_dict = protocol_stats_dict.setdefault(protocol, {})
+                protocol_dict['session_count'] = session_count
+                protocol_dict['exceed'] = exceed
+                continue
+
+            # TCP Syn Flood Half Open Count: 0, Exceed: 0
+            m = p3.match(line)
+            if m:
+                global_stats = ret_dict.setdefault('global_per_box_statistics', {})
+                half_open_dict = global_stats.setdefault('half_open', {})
+                half_open_dict['tcp_syn_flood_half_open_count'] = int(m.group('tcp_syn_flood_count'))
+                half_open_dict['tcp_syn_flood_exceed'] = int(m.group('tcp_syn_flood_exceed'))
+                continue
+
+            # Half Open Aggressive Aging Period Off, Event Count: 0
+            m = p4.match(line)
+            if m:
+                global_stats = ret_dict.setdefault('global_per_box_statistics', {})
+                half_open_dict = global_stats.setdefault('half_open', {})
+                half_open_dict['half_open_aggressive_aging_period'] = m.group('half_open_aging_period')
+                half_open_dict['half_open_event_count'] = int(m.group('half_open_event_count'))
                 continue
 
         return ret_dict

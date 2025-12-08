@@ -393,7 +393,7 @@ class ShowParameterMapInspectGlobalSchema(MetaParser):
             'log_dropped_packet': str,
             'log_flow': str,
             'log_flow_export_fnf': str,
-            'log_flow_export_template_timeout_rate': int,
+            Optional('log_flow_export_template_timeout_rate'): int,
             'alert': str,
             'lisp_inner_packet_inspection': str,
             'multi_tenancy': str,

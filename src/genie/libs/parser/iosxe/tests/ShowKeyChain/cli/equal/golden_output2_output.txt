@@ -1,0 +1,21 @@
+Key-chain test1:
+TCP key chain
+Preferred MKT id - 1
+key 1 -- text "C!$c0123-1"
+cryptographic-algorithm: hmac-sha-1
+accept lifetime (10:30:00 UTC Oct 3 2025) - (infinite) [valid now]
+send lifetime (10:30:00 UTC Oct 3 2025) - (infinite) [valid now]
+send-id - 1
+recv-id - 1
+include-tcp-options
+accept-ao-mismatch
+MKT ready - true
+MKT preferred - true
+MKT in-use - false
+MKT id - 1
+MKT send-id - 1
+MKT recv-id - 1
+MKT alive (send) - true
+MKT alive (recv) - true
+MKT include TCP options - true
+MKT accept AO mismatch - true

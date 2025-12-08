@@ -1,0 +1,33 @@
+show cts sxp connections brief
+ SXP              : Enabled
+ Highest Version Supported: 5
+ Default Password : Set
+ Default Key-Chain: Not Set
+ Default Key-Chain Name: Not Applicable
+ Default Source IP: Not Set
+ Default Source IPv6: 2200:1:1::1
+Connection retry open period: 10 secs
+Reconcile period: 30 secs
+Retry open timer is running
+Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for import: Not Set
+
+=== IPv4 SXP Connections ===
+
+----------------------------------------------------------------------------------------------------------------------------------
+Peer_IP          Source_IP        Conn Status                                          Duration
+----------------------------------------------------------------------------------------------------------------------------------
+33.1.1.1         33.1.1.2         Off(Speaker)::Pending_On(Listener)        0:02:44:45 (dd:hr:mm:sec)::0:00:00:24 (dd:hr:mm:sec)
+
+Total num of SXP IPv4 Connections = 1
+
+
+=== IPv6 SXP Connections ===
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Peer_IP                                        Source_IP                                      Conn Status                                          Duration
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1100:1:1::1                                    2200:1:1::1                                    Off(Speaker)::Off(Listener)               0:02:44:45 (dd:hr:mm:sec)::0:02:44:45 (dd:hr:mm:sec)
+1133:1:1::1                                    1133:1:1::2                                    Off(Speaker)::Off(Listener)               0:02:44:45 (dd:hr:mm:sec)::0:00:00:04 (dd:hr:mm:sec)
+
+Total num of SXP IPv6 Connections = 2 

@@ -799,15 +799,28 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteSchema(MetaParser):
     schema = {
         "index": {
             Any(): {
-                "object_id": str,
+                Optional("object_id"): str,
                 "ipv4_addr": str,
                 "mask_len": int,
-                "parent_type": str,
-                "parent_object_id": str,
+                Optional("parent_type"): str,
+                Optional("parent_object_id"): str,
                 Optional("sgt"): int,
+                Optional("vrf"): int,
+                Optional("mpls"): int,
+                Optional("htm"): str,
+                Optional("flags"): str,
+                Optional("dgid"): int,
+                Optional("last_modified_year"): int,
+                Optional("month"): int,
+                Optional("date"): int,
+                Optional("hours"): int,
+                Optional("minutes"): int,
+                Optional("seconds"): int,
+                Optional("millseconds"): int,
+                Optional("secssincehit"): int,
             },
         },
-        "number_of_npi_ipv4route_entries": int,
+        Optional("number_of_npi_ipv4route_entries"): int,
     }
 
 
@@ -850,6 +863,12 @@ class ShowPlatformSoftwareFedSwitchActiveIpRoute(
         # Number of npi_ipv4route entries = 6
         p1 = re.compile(
             r"^Number of npi_ipv4route entries = +(?P<number_of_npi_ipv4route_entries>\d+)$"
+        )
+
+        # 0     0.0.0.0/0                                     0x71aa2521a8e8 0x0     0     0         2025/11/16 20:09:44.619            9
+        p2 = re.compile(
+            r"^(?P<vrf>\d+)\s+(?P<ipv4_addr>[\d\.]+)/(?P<mask_len>\d+)\s+(?P<htm>\w+)\s+(?P<flags>\w+)\s+(?P<sgt>\d+)\s+(?P<dgid>\d+)\s+(?P<mpls>\w+)?\s+"+
+            r"(?P<last_modified_year>\d+)/(?P<month>\d+)/(?P<date>\d+) (?P<hours>\d+):(?P<minutes>\d+):(?P<seconds>\d+).(?P<millseconds>\d+)\s+(?P<secssincehit>\d+)$"
         )
 
         for line in output.splitlines():
@@ -899,6 +918,35 @@ class ShowPlatformSoftwareFedSwitchActiveIpRoute(
                 ret_dict["number_of_npi_ipv4route_entries"] = int(
                     group["number_of_npi_ipv4route_entries"]
                 )
+                continue
+
+            # 0     0.0.0.0/0       0x71aa2521a8e8 0x0     0     0         2025/11/16 20:09:44.619            9
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault("index", {}).setdefault(index, {})
+                index_dict.update(
+                    {
+                        "ipv4_addr": group["ipv4_addr"],
+                        "mask_len": int(group["mask_len"]),
+                        "vrf": int(group["vrf"]),
+                        "htm": group["htm"],
+                        "flags": group["flags"],
+                        "sgt": int(group["sgt"]),
+                        "dgid": int(group["dgid"]),
+                        "last_modified_year": int(group["last_modified_year"]),
+                        "month": int(group["month"]),
+                        "date": int(group["date"]),
+                        "hours": int(group["hours"]),
+                        "minutes": int(group["minutes"]),
+                        "seconds": int(group["seconds"]),
+                        "millseconds": int(group["millseconds"]),
+                        "secssincehit": int(group["secssincehit"]),
+                    }
+                )
+                if "mpls" in group and group["mpls"] is not None:
+                    index_dict["mpls"] = group["mpls"]
+                index += 1
                 continue
 
         return ret_dict
@@ -2168,15 +2216,28 @@ class ShowPlatformSoftwareFedSwitchActiveIpv6RouteSchema(MetaParser):
     schema = {
         "index": {
             Any(): {
-                "object_id": str,
+                Optional("object_id"): str,
                 "ipv6_addr": str,
                 "mask_len": int,
-                "parent_type": str,
-                "parent_object_id": str,
+                Optional("parent_type"): str,
+                Optional("parent_object_id"): str,
                 Optional("sgt"): int,
+                Optional("vrf"): int,
+                Optional("mpls"): int,
+                Optional("htm"): str,
+                Optional("flags"): str,
+                Optional("dgid"): int,
+                Optional("last_modified_year"): int,
+                Optional("month"): int,
+                Optional("date"): int,
+                Optional("hours"): int,
+                Optional("minutes"): int,
+                Optional("seconds"): int,
+                Optional("millseconds"): int,
+                Optional("secssincehit"): int,
             },
         },
-        "number_of_npi_ipv6route_entries": int,
+        Optional("number_of_npi_ipv6route_entries"): int,
     }
 
 
@@ -2217,6 +2278,12 @@ class ShowPlatformSoftwareFedSwitchActiveIpv6Route(
             r"^Number of npi_ipv6route entries = +(?P<number_of_npi_ipv6route_entries>\d+)$"
         )
 
+        # 0     0000:0000:0000:0000:0000:0000:0000:0000/0       0x71aa2521a8e8 0x0     0     0         2025/11/16 20:09:44.619            9
+        p2 = re.compile(
+            r"^(?P<vrf>\d+)\s+(?P<ipv6_addr>[\da-fA-F:]+)/(?P<mask_len>\d+)\s+(?P<htm>\w+)\s+(?P<flags>\w+)\s+(?P<sgt>\d+)\s+(?P<dgid>\d+)\s+(?P<mpls>\w+)?\s+"+
+            r"(?P<last_modified_year>\d+)/(?P<month>\d+)/(?P<date>\d+) (?P<hours>\d+):(?P<minutes>\d+):(?P<seconds>\d+).(?P<millseconds>\d+)\s+(?P<secssincehit>\d+)$"
+        )
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -2246,6 +2313,35 @@ class ShowPlatformSoftwareFedSwitchActiveIpv6Route(
                 ret_dict["number_of_npi_ipv6route_entries"] = int(
                     group["number_of_npi_ipv6route_entries"]
                 )
+                continue
+
+            # 0     0000:0000:0000:0000:0000:0000:0000:0000/0       0x71aa2521a8e8 0x0     0     0         2025/11/16 20:09:44.619            9
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index_dict = ret_dict.setdefault("index", {}).setdefault(index, {})
+                index_dict.update(
+                    {
+                        "ipv6_addr": group["ipv6_addr"],
+                        "mask_len": int(group["mask_len"]),
+                        "vrf": int(group["vrf"]),
+                        "htm": group["htm"],
+                        "flags": group["flags"],
+                        "sgt": int(group["sgt"]),
+                        "dgid": int(group["dgid"]),
+                        "last_modified_year": int(group["last_modified_year"]),
+                        "month": int(group["month"]),
+                        "date": int(group["date"]),
+                        "hours": int(group["hours"]),
+                        "minutes": int(group["minutes"]),
+                        "seconds": int(group["seconds"]),
+                        "millseconds": int(group["millseconds"]),
+                        "secssincehit": int(group["secssincehit"]),
+                    }
+                )
+                if "mpls" in group and group["mpls"] is not None:
+                    index_dict["mpls"] = group["mpls"]
+                index += 1
                 continue
 
         return ret_dict
