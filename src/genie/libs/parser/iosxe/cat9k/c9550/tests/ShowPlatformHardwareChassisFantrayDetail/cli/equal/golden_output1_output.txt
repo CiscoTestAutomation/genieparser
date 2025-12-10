@@ -1,0 +1,6 @@
+FT1:
+Inlet:4031 RPM, Outlet:5203 RPM, PWM:30%
+FT2:
+Inlet:4031 RPM, Outlet:5203 RPM, PWM:30%
+FT3:
+Inlet:4031 RPM, Outlet:5203 RPM, PWM:30%

@@ -6,7 +6,8 @@ expected_output = {
             'start_time': '06:39:18 UTC Wed Oct 13 2021',
             'return_code':'Timeout',
             'no_of_success': 0,
-            'no_of_failures': 27
+            'no_of_failures': 27,
+            'ttl': 'Forever'
         }
     }
 }

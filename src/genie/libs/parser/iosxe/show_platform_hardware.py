@@ -78,6 +78,8 @@
     * 'show platform hardware qfp active feature alg statistics login clear'
     * 'show platform hardware qfp active feature firewall zonepair 1'
     * 'show platform hardware qfp active feature ess session'
+    * 'show platform hardware qfp <instance> feature firewall ucode scb a a a a a a a detail'
+    * 'show platform hardware qfp active infrastructure punt statistics type per-cause clear'
 """
 import re
 import logging
@@ -13194,12 +13196,17 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDrop(ShowPlatformHardwareQfpAc
                   show platform hardware qfp active feature firewall drop clear
                   show platform hardware qfp active feature firewall drop verbose"""
 
+    cli_command = [
+                  'show platform hardware qfp active feature firewall drop',
+                  'show platform hardware qfp active feature firewall drop {actions}'
+                  ]
 
-    cli_command = 'show platform hardware qfp active feature firewall drop {actions}'
- 
     def cli(self, actions="", output=None):
         if output is None:
-            cmd = self.cli_command.format(actions=actions)
+            if actions:
+                cmd = self.cli_command[1].format(actions=actions)
+            else:
+                cmd = self.cli_command[0]
             output = self.device.execute(cmd)
 
         parsed_dict = {}
@@ -17087,5 +17094,664 @@ class ShowPlatformHardwareQfpActiveFeatureNatDatapathTime(ShowPlatformHardwareQf
             if m:
                 parsed_dict.update({k: int(v) for k, v in m.groupdict().items()})
                 continue
+
+        return parsed_dict
+
+
+# ============================================================================================================
+# Schema for 'show platform hardware qfp <instance> feature firewall ucode scb a a a a a a a detail'
+# ============================================================================================================
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallUcodeScbDetailSchema(MetaParser):
+    """Schema for show platform hardware qfp <instance> feature firewall ucode scb a a a a a a a detail"""
+    
+    schema = {
+        'sessions': {
+            Any(): {
+                'session_id': str,
+                'src_ip': str,
+                'src_port': int,
+                'dst_ip': str,
+                'dst_port': int,
+                'protocol': int,
+                'vrf_pair': str,
+                'protocol_name': str,
+                'flags': str,
+                'timing_info': int,
+                'pscb': str,
+                'key1_flags': str,
+                'bucket': int,
+                'prev': str,
+                'next': str,
+                'fw_flags': ListOf(str),
+                Optional('vrf_flags'): ListOf(str),
+                'protocol_state': ListOf(str),
+                'icmp_error_count': int,
+                'ureachable_arrived': str,
+                'scb_state': str,
+                'nxt_timeout': int,
+                'refcnt': int,
+                'ha_nak_cnt': int,
+                'rg': int,
+                'hostdb': str,
+                'l7': str,
+                'stats': str,
+                'child': str,
+                'isn_in': str,
+                'last_ack_in': str,
+                'next_seq_in': str,
+                'wnd_size_in': int,
+                'wnd_scale_in': int,
+                'isn_out': str,
+                'last_ack_out': str,
+                'next_ack_out': str,
+                'wnd_size_out': int,
+                'wnd_scale_out': int,
+                'tcp_flags': str,
+                Optional('tcp_flag_desc'): str,
+                'proto_num': str,
+                'l7_ooo_drop': str,
+                'root_scb': str,
+                'act_blk': str,
+                'ingress_intf': str,
+                'ingress_intf_id': int,
+                'egress_intf': str,
+                'egress_intf_id': int,
+                'current_time': int,
+                'create_tstamp': int,
+                'last_access': int,
+                'nat_out_local_addr': str,
+                'nat_out_local_port': int,
+                'nat_in_global_addr': str,
+                'nat_in_global_port': int,
+                'syncookie_fixup': str,
+                'halfopen_linkage': ListOf(str),
+                'cxsc_cft_fid': str,
+                'tw_timer': ListOf(str),
+                'packets_per_session': int,
+                Optional('timer_info'): {
+                    Optional('bucket'): int,
+                    Optional('flags'): str,
+                    Optional('func'): int,
+                    Optional('idx'): int,
+                    Optional('wheel'): str,
+                    'timer_status': str,
+                    'num_buckets': int,
+                    'cur': int,
+                    'mask': str,
+                    'gran': int,
+                    'flag': str,
+                    'ticks': int,
+                },
+                'sgt': int,
+                'dgt': int,
+                'nat_handles': ListOf(str),
+                'flowdb_in2out': str,
+                'flowdb_in2out_alloc_epoch': int,
+                'flowdb_out2in': str,
+                'flowdb_out2in_alloc_epoch': int,
+                'ppe_tid': int,
+                'icmp_err_time': int,
+                'utd_context_id': int,
+                'avc_class_stats': str,
+                'vpn_id_src': int,
+                'vpn_id_dst': int,
+            }
+        }
+    }
+
+# ============================================================================================================
+# Parser for 'show platform hardware qfp <instance> feature firewall ucode scb a a a a a a a detail'
+# ============================================================================================================
+
+class ShowPlatformHardwareQfpActiveFeatureFirewallUcodeScbDetail(ShowPlatformHardwareQfpActiveFeatureFirewallUcodeScbDetailSchema):
+    """Parser for show platform hardware qfp <instance> feature firewall ucode scb a a a a a a a detail"""
+
+    cli_command = 'show platform hardware qfp {instance} feature firewall ucode scb a a a a a a a detail'
+
+    def cli(self, instance='active', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(instance=instance))
+
+        parsed_dict = {}
+
+        # Session ID:0x00C31BAA 2002::1 46583 4002::1 80 proto 6 (2:2) (0x1:tcp)	[sd] 1879179108
+        p1 = re.compile(r'^Session ID:(?P<session_id>0x[0-9a-fA-F]+)\s+(?P<src_ip>[^\s]+)\s+(?P<src_port>\d+)\s+(?P<dst_ip>[^\s]+)\s+(?P<dst_port>\d+)\s+proto\s+(?P<protocol>\d+)\s+\((?P<vrf_pair>[^)]+)\)\s+\((?P<protocol_hex>0x[0-9a-fA-F]+):(?P<protocol_name>[^)]+)\)\s+\[(?P<flags>[^\]]+)\]\s+(?P<timing_info>\d+)$')
+
+        # pscb : 0x8025a40,  key1_flags: 0x00000030
+        p2 = re.compile(r'^\s*pscb\s*:\s*(?P<pscb>0x[0-9a-fA-F]+),\s*key1_flags:\s*(?P<key1_flags>0x[0-9a-fA-F]+)$')
+
+        # bucket : 2382, prev 0x0, next 0x0
+        p3 = re.compile(r'^\s*bucket\s*:\s*(?P<bucket>\d+),\s*prev\s+(?P<prev>0x[0-9a-fA-F]+),\s*next\s+(?P<next>0x[0-9a-fA-F]+)$')
+
+        # fw_flags: 0x00000004 0x24401821,
+        p4 = re.compile(r'^\s*fw_flags:\s*(?P<fw_flags>(?:0x[0-9a-fA-F]+\s*)+),$')
+
+        # VRF1-rsrc-limit
+        p5 = re.compile(r'^\s*(?P<vrf_flags>VRF\d+[-\w]*(?:\s+[-\w]+)*)$')
+
+        # Root Protocol-TCP Alert Proto-State:SYN-sent Session-db Half-open Max-session
+        p6 = re.compile(r'^\s*(?P<protocol_state>Root\s+Protocol-[^\s]+(?:\s+[^\s]+)*)$')
+
+        # icmp_error count 0 ureachable arrived: no
+        p7 = re.compile(r'^\s*icmp_error\s+count\s+(?P<icmp_error_count>\d+)\s+ureachable\s+arrived:\s+(?P<ureachable_arrived>yes|no)$')
+
+        # scb state: open, nxt_timeout: 3000, refcnt: 1
+        p8 = re.compile(r'^\s*scb\s+state:\s+(?P<scb_state>\w+),\s*nxt_timeout:\s+(?P<nxt_timeout>\d+),\s*refcnt:\s+(?P<refcnt>\d+)$')
+
+        # ha nak cnt: 0,  rg: 0
+        p9 = re.compile(r'^\s*ha\s+nak\s+cnt:\s+(?P<ha_nak_cnt>\d+),\s*rg:\s+(?P<rg>\d+)$')
+
+        # hostdb: 0x303c9230, L7: 0x0, stats: 0x2aecf240, child: 0x0
+        p10 = re.compile(r'^\s*hostdb:\s+(?P<hostdb>0x[0-9a-fA-F]+),\s*L7:\s+(?P<l7>0x[0-9a-fA-F]+),\s*stats:\s+(?P<stats>0x[0-9a-fA-F]+),\s*child:\s+(?P<child>0x[0-9a-fA-F]+)$')
+
+        # isn:         00000000 last ack:        00000000 next seq:          00000001 wnd_size:          1879741492
+        p11 = re.compile(r'^\s*isn:\s+(?P<isn>[0-9a-fA-F]+)\s+last\s+ack:\s+(?P<last_ack>[0-9a-fA-F]+)\s+next\s+seq:\s+(?P<next_seq>[0-9a-fA-F]+)\s+wnd_size:\s+(?P<wnd_size>\d+)$')
+
+        # wnd_scale:         0
+        p12 = re.compile(r'^\s*wnd_scale:\s+(?P<wnd_scale>\d+)$')
+
+        # isn:         00000000    last ack:        00000000    next ack:        00000000 wnd_size:          1879741492
+        p13 = re.compile(r'^\s*isn:\s+(?P<isn>[0-9a-fA-F]+)\s+last\s+ack:\s+(?P<last_ack>[0-9a-fA-F]+)\s+next\s+ack:\s+(?P<next_ack>[0-9a-fA-F]+)\s+wnd_size:\s+(?P<wnd_size>\d+)$')
+
+        # tcp flags:     0x00000000 :  : proto: 0001: l7 ooo drop 0x010
+        p14 = re.compile(r'^\s*tcp\s+flags:\s+(?P<tcp_flags>0x[0-9a-fA-F]+)\s+:\s*(?P<tcp_flag_desc>[^:]*):\s*proto:\s+(?P<proto>\d+):\s+l7\s+ooo\s+drop\s+(?P<l7_ooo_drop>0x[0-9a-fA-F]+)$')
+
+        # root scb: 0x0 act_blk: 0x2aec7200
+        p15 = re.compile(r'^\s*root\s+scb:\s+(?P<root_scb>0x[0-9a-fA-F]+)\s+act_blk:\s+(?P<act_blk>0x[0-9a-fA-F]+)$')
+
+        # ingress/egress intf: GigabitEthernet0/1/1 (1014), vasileft1 (65514)
+        p16 = re.compile(r'^\s*ingress/egress\s+intf:\s+(?P<ingress_intf>[^\s\(]+)\s+\((?P<ingress_intf_id>\d+)\),\s+(?P<egress_intf>[^\s\(]+)\s+\((?P<egress_intf_id>\d+)\)$')
+
+        # current time 258769226801 create tstamp: 258572084136 last access: 258572084136
+        p17 = re.compile(r'^\s*current\s+time\s+(?P<current_time>\d+)\s+create\s+tstamp:\s+(?P<create_tstamp>\d+)\s+last\s+access:\s+(?P<last_access>\d+)$')
+
+        # nat_out_local_addr:port: 0.0.0.0:0
+        p18 = re.compile(r'^\s*nat_out_local_addr:port:\s+(?P<addr>[\d\.]+):(?P<port>\d+)$')
+
+        # nat_in_global_addr:port: 0.0.0.0:0
+        p19 = re.compile(r'^\s*nat_in_global_addr:port:\s+(?P<addr>[\d\.]+):(?P<port>\d+)$')
+
+        # syncookie fixup: 0x0,  halfopen linkage: 0x2f025978 0x2f025c38
+        p20 = re.compile(r'^\s*syncookie\s+fixup:\s+(?P<syncookie_fixup>0x[0-9a-fA-F]+),\s*halfopen\s+linkage:\s+(?P<halfopen_linkage>(?:0x[0-9a-fA-F]+\s*)+)$')
+
+        # cxsc_cft_fid: 0x00000000
+        p21 = re.compile(r'^\s*cxsc_cft_fid:\s+(?P<cxsc_cft_fid>0x[0-9a-fA-F]+)$')
+
+        # tw timer: 0x00000000 0x00000000 0x00000000 0x01d43129
+        p22 = re.compile(r'^\s*tw\s+timer:\s+(?P<tw_timer>(?:0x[0-9a-fA-F]+\s*)+)$')
+
+        # Packets/session: 25     SGT: 0 DGT: 0, NAT handles 0x00000000 0x00000000
+        p23 = re.compile(r'^\s*Packets/session:\s+(?P<packets_per_session>\d+)\s+SGT:\s+(?P<sgt>\d+)\s+DGT:\s+(?P<dgt>\d+),\s+NAT\s+handles\s+(?P<nat_handles>(?:0x[0-9a-fA-F]+\s*)+)$')
+
+        # Packets/session: 25 (standalone)
+        p23a = re.compile(r'^\s*Packets/session:\s+(?P<packets_per_session>\d+)\s*$')
+
+        # bucket 7521 flags 0x00000001 func 1 idx 6 wheel 0x30999940
+        p24 = re.compile(r'^\s*bucket\s+(?P<bucket>\d+)\s+flags\s+(?P<flags>0x[0-9a-fA-F]+)\s+func\s+(?P<func>\d+)\s+idx\s+(?P<idx>\d+)\s+wheel\s+(?P<wheel>0x[0-9a-fA-F]+)$')
+
+        # Timer within range
+        p25 = re.compile(r'^\s*(?P<timer_status>Timer\s+within\s+range)$')
+
+        # num buckets 131072 cur 4574 mask 0x1ffff gran 160 flag 0x0 ticks 0
+        p26 = re.compile(r'^\s*num\s+buckets\s+(?P<num_buckets>\d+)\s+cur\s+(?P<cur>\d+)\s+mask\s+(?P<mask>0x[0-9a-fA-F]+)\s+gran\s+(?P<gran>\d+)\s+flag\s+(?P<flag>0x[0-9a-fA-F]+)\s+ticks\s+(?P<ticks>\d+)$')
+
+        # SGT: 0 DGT: 0, NAT handles 0x00000000 0x00000000
+        p27 = re.compile(r'^\s*SGT:\s+(?P<sgt>\d+)\s+DGT:\s+(?P<dgt>\d+),\s+NAT\s+handles\s+(?P<nat_handles>(?:0x[0-9a-fA-F]+\s*)+)$')
+
+        # FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+        p28 = re.compile(r'^\s*FlowDB\s+in2out\s+(?P<flowdb_in2out>0x[0-9a-fA-F]+)\s+alloc_epoch\s+(?P<flowdb_in2out_alloc_epoch>\d+)\s+out2in\s+(?P<flowdb_out2in>0x[0-9a-fA-F]+)\s+alloc_epoch\s+(?P<flowdb_out2in_alloc_epoch>\d+)\s+ppe\s+tid\s+(?P<ppe_tid>\d+)$')
+
+        # icmp_err_time 0 utd_context_id 0, avc class stats 0x0, VPN id src 65535, dst 65535
+        p29 = re.compile(r'^\s*icmp_err_time\s+(?P<icmp_err_time>\d+)\s+utd_context_id\s+(?P<utd_context_id>\d+),\s+avc\s+class\s+stats\s+(?P<avc_class_stats>0x[0-9a-fA-F]+),\s+VPN\s+id\s+src\s+(?P<vpn_id_src>\d+),\s+dst\s+(?P<vpn_id_dst>\d+)$')
+
+        current_session = None
+        current_session_dict = None
+        in_wnd_processing = False
+        wnd_direction = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('[s=session'):
+                continue
+
+            # Session ID:0x00C31BAA 2002::1 46583 4002::1 80 proto 6 (2:2) (0x1:tcp)	[sd] 1879179108
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                session_id = group['session_id']
+                current_session = session_id
+                
+                sessions_dict = parsed_dict.setdefault('sessions', {})
+                current_session_dict = sessions_dict.setdefault(session_id, {})
+                
+                current_session_dict['session_id'] = session_id
+                current_session_dict['src_ip'] = group['src_ip']
+                current_session_dict['src_port'] = int(group['src_port'])
+                current_session_dict['dst_ip'] = group['dst_ip']
+                current_session_dict['dst_port'] = int(group['dst_port'])
+                current_session_dict['protocol'] = int(group['protocol'])
+                current_session_dict['vrf_pair'] = group['vrf_pair']
+                current_session_dict['protocol_name'] = group['protocol_name']
+                current_session_dict['flags'] = group['flags']
+                current_session_dict['timing_info'] = int(group['timing_info'])
+                in_wnd_processing = False
+                continue
+
+            if not current_session_dict:
+                continue
+
+            # pscb : 0x8025a40,  key1_flags: 0x00000030
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['pscb'] = group['pscb']
+                current_session_dict['key1_flags'] = group['key1_flags']
+                continue
+
+            # bucket : 2382, prev 0x0, next 0x0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['bucket'] = int(group['bucket'])
+                current_session_dict['prev'] = group['prev']
+                current_session_dict['next'] = group['next']
+                continue
+
+            # fw_flags: 0x00000004 0x24401821,
+            m = p4.match(line)
+            if m:
+                fw_flags = m.group('fw_flags').rstrip(',').split()
+                current_session_dict['fw_flags'] = fw_flags
+                continue
+
+            # VRF1-rsrc-limit
+            m = p5.match(line)
+            if m:
+                vrf_flags = m.group('vrf_flags').split()
+                current_session_dict['vrf_flags'] = vrf_flags
+                continue
+
+            # Root Protocol-TCP Alert Proto-State:SYN-sent Session-db Half-open Max-session
+            m = p6.match(line)
+            if m:
+                protocol_state = m.group('protocol_state').split()
+                current_session_dict['protocol_state'] = protocol_state
+                continue
+
+            # icmp_error count 0 ureachable arrived: no
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['icmp_error_count'] = int(group['icmp_error_count'])
+                current_session_dict['ureachable_arrived'] = group['ureachable_arrived']
+                continue
+
+            # scb state: open, nxt_timeout: 3000, refcnt: 1
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['scb_state'] = group['scb_state']
+                current_session_dict['nxt_timeout'] = int(group['nxt_timeout'])
+                current_session_dict['refcnt'] = int(group['refcnt'])
+                continue
+
+            # ha nak cnt: 0,  rg: 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['ha_nak_cnt'] = int(group['ha_nak_cnt'])
+                current_session_dict['rg'] = int(group['rg'])
+                continue
+
+            # hostdb: 0x303c9230, L7: 0x0, stats: 0x2aecf240, child: 0x0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['hostdb'] = group['hostdb']
+                current_session_dict['l7'] = group['l7']
+                current_session_dict['stats'] = group['stats']
+                current_session_dict['child'] = group['child']
+                continue
+
+            # isn:         00000000 last ack:        00000000 next seq:          00000001 wnd_size:          1879741492
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                if not in_wnd_processing:
+                    # First isn line is for inbound
+                    current_session_dict['isn_in'] = group['isn']
+                    current_session_dict['last_ack_in'] = group['last_ack']
+                    current_session_dict['next_seq_in'] = group['next_seq']
+                    current_session_dict['wnd_size_in'] = int(group['wnd_size'])
+                    wnd_direction = 'in'
+                    in_wnd_processing = True
+                continue
+
+            # wnd_scale:         0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                if wnd_direction == 'in':
+                    current_session_dict['wnd_scale_in'] = int(group['wnd_scale'])
+                elif wnd_direction == 'out':
+                    current_session_dict['wnd_scale_out'] = int(group['wnd_scale'])
+                continue
+
+            # isn:         00000000    last ack:        00000000    next ack:        00000000 wnd_size:          1879741492
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if in_wnd_processing:
+                    # Second isn line is for outbound
+                    current_session_dict['isn_out'] = group['isn']
+                    current_session_dict['last_ack_out'] = group['last_ack']
+                    current_session_dict['next_ack_out'] = group['next_ack']
+                    current_session_dict['wnd_size_out'] = int(group['wnd_size'])
+                    wnd_direction = 'out'
+                continue
+
+            # tcp flags:     0x00000000 :  : proto: 0001: l7 ooo drop 0x010
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['tcp_flags'] = group['tcp_flags']
+                # Only add tcp_flag_desc if it has content (not empty string)
+                if group['tcp_flag_desc'].strip():
+                    current_session_dict['tcp_flag_desc'] = group['tcp_flag_desc']
+                current_session_dict['proto_num'] = group['proto']
+                current_session_dict['l7_ooo_drop'] = group['l7_ooo_drop']
+                continue
+
+            # root scb: 0x0 act_blk: 0x2aec7200
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['root_scb'] = group['root_scb']
+                current_session_dict['act_blk'] = group['act_blk']
+                continue
+
+            # ingress/egress intf: GigabitEthernet0/1/1 (1014), vasileft1 (65514)
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['ingress_intf'] = group['ingress_intf']
+                current_session_dict['ingress_intf_id'] = int(group['ingress_intf_id'])
+                current_session_dict['egress_intf'] = group['egress_intf']
+                current_session_dict['egress_intf_id'] = int(group['egress_intf_id'])
+                continue
+
+            # current time 258769226801 create tstamp: 258572084136 last access: 258572084136
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['current_time'] = int(group['current_time'])
+                current_session_dict['create_tstamp'] = int(group['create_tstamp'])
+                current_session_dict['last_access'] = int(group['last_access'])
+                continue
+
+            # nat_out_local_addr:port: 0.0.0.0:0
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['nat_out_local_addr'] = group['addr']
+                current_session_dict['nat_out_local_port'] = int(group['port'])
+                continue
+
+            # nat_in_global_addr:port: 0.0.0.0:0
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['nat_in_global_addr'] = group['addr']
+                current_session_dict['nat_in_global_port'] = int(group['port'])
+                continue
+
+            # syncookie fixup: 0x0,  halfopen linkage: 0x2f025978 0x2f025c38
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['syncookie_fixup'] = group['syncookie_fixup']
+                halfopen_linkage = group['halfopen_linkage'].split()
+                current_session_dict['halfopen_linkage'] = halfopen_linkage
+                continue
+
+            # cxsc_cft_fid: 0x00000000
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['cxsc_cft_fid'] = group['cxsc_cft_fid']
+                continue
+
+            # tw timer: 0x00000000 0x00000000 0x00000000 0x01d43129
+            m = p22.match(line)
+            if m:
+                tw_timer = m.group('tw_timer').split()
+                current_session_dict['tw_timer'] = tw_timer
+                continue
+
+            # Packets/session: 25     SGT: 0 DGT: 0, NAT handles 0x00000000 0x00000000
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['packets_per_session'] = int(group['packets_per_session'])
+                current_session_dict['sgt'] = int(group['sgt'])
+                current_session_dict['dgt'] = int(group['dgt'])
+                nat_handles = group['nat_handles'].split()
+                current_session_dict['nat_handles'] = nat_handles
+                continue
+
+            # Packets/session: 25 (standalone)
+            m = p23a.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['packets_per_session'] = int(group['packets_per_session'])
+                continue
+
+            # bucket 7521 flags 0x00000001 func 1 idx 6 wheel 0x30999940
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                timer_info = current_session_dict.setdefault('timer_info', {})
+                timer_info['bucket'] = int(group['bucket'])
+                timer_info['flags'] = group['flags']
+                timer_info['func'] = int(group['func'])
+                timer_info['idx'] = int(group['idx'])
+                timer_info['wheel'] = group['wheel']
+                continue
+
+            # Timer within range
+            m = p25.match(line)
+            if m:
+                timer_info = current_session_dict.setdefault('timer_info', {})
+                timer_info['timer_status'] = m.group('timer_status')
+                continue
+
+            # num buckets 131072 cur 4574 mask 0x1ffff gran 160 flag 0x0 ticks 0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                timer_info = current_session_dict.setdefault('timer_info', {})
+                timer_info['num_buckets'] = int(group['num_buckets'])
+                timer_info['cur'] = int(group['cur'])
+                timer_info['mask'] = group['mask']
+                timer_info['gran'] = int(group['gran'])
+                timer_info['flag'] = group['flag']
+                timer_info['ticks'] = int(group['ticks'])
+                continue
+
+            # SGT: 0 DGT: 0, NAT handles 0x00000000 0x00000000
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['sgt'] = int(group['sgt'])
+                current_session_dict['dgt'] = int(group['dgt'])
+                nat_handles = group['nat_handles'].split()
+                current_session_dict['nat_handles'] = nat_handles
+                continue
+
+            # FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['flowdb_in2out'] = group['flowdb_in2out']
+                current_session_dict['flowdb_in2out_alloc_epoch'] = int(group['flowdb_in2out_alloc_epoch'])
+                current_session_dict['flowdb_out2in'] = group['flowdb_out2in']
+                current_session_dict['flowdb_out2in_alloc_epoch'] = int(group['flowdb_out2in_alloc_epoch'])
+                current_session_dict['ppe_tid'] = int(group['ppe_tid'])
+                continue
+
+            # icmp_err_time 0 utd_context_id 0, avc class stats 0x0, VPN id src 65535, dst 65535
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                current_session_dict['icmp_err_time'] = int(group['icmp_err_time'])
+                current_session_dict['utd_context_id'] = int(group['utd_context_id'])
+                current_session_dict['avc_class_stats'] = group['avc_class_stats']
+                current_session_dict['vpn_id_src'] = int(group['vpn_id_src'])
+                current_session_dict['vpn_id_dst'] = int(group['vpn_id_dst'])
+                continue
+
+        return parsed_dict
+
+# ================================================================
+# Schema for 'show platform hardware qfp active infrastructure punt statistics type per-cause clear'
+# ================================================================
+class ShowPlatformHardwareQfpActiveInfrastructurePuntStatisticsTypePerCauseClearSchema(MetaParser):
+    """Schema for show platform hardware qfp active infrastructure punt statistics type per-cause clear"""
+    schema = {
+        'global_per_cause_statistics': {
+            'number_of_punt_causes': int,
+            'per_punt_cause_statistics': {
+                Any(): {
+                    'counter_id': str,
+                    'punt_cause_name': str,
+                    'packets_received': int,
+                    'packets_transmitted': int,
+                }
+            }
+        },
+        Optional('per_inject_cause_statistics'): {
+            'number_of_inject_causes': int,
+            'per_inject_cause_statistics': {
+                Any(): {
+                    'counter_id': str,
+                    'inject_cause_name': str,
+                    'packets_received': int,
+                    'packets_transmitted': int,
+                }
+            }
+        }
+    }
+
+# ================================================================
+# Parser for 'show platform hardware qfp active infrastructure punt statistics type per-cause clear'
+# ================================================================
+class ShowPlatformHardwareQfpActiveInfrastructurePuntStatisticsTypePerCauseClear(ShowPlatformHardwareQfpActiveInfrastructurePuntStatisticsTypePerCauseClearSchema):
+    """Parser for show platform hardware qfp active infrastructure punt statistics type per-cause clear"""
+    cli_command = 'show platform hardware qfp active infrastructure punt statistics type per-cause clear'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        current_section = None
+
+        # Global Per Cause Statistics
+        p1 = re.compile(r'^Global\s+Per\s+Cause\s+Statistics\s*$')
+
+        # Number of punt causes =   165
+        p2 = re.compile(r'^Number\s+of\s+punt\s+causes\s*=\s+(?P<punt_causes>\d+)\s*$')
+
+        # Per Punt Cause Statistics
+        p3 = re.compile(r'^Per\s+Punt\s+Cause\s+Statistics\s*$')
+
+        # 003         Layer2 control and legacy                 859                   859
+        p4 = re.compile(r'^(?P<counter_id>\d+)\s+(?P<punt_cause_name>[^\s].*?)\s{2,}(?P<packets_received>\d+)\s+(?P<packets_transmitted>\d+)\s*$')
+
+        # Number of inject causes = 56
+        p5 = re.compile(r'^Number\s+of\s+inject\s+causes\s*=\s+(?P<inject_causes>\d+)\s*$')
+
+        # Per Inject Cause Statistics
+        p6 = re.compile(r'^Per\s+Inject\s+Cause\s+Statistics\s*$')
+
+        # 005         QFP <->RP keepalive                       303                   0
+        p7 = re.compile(r'^(?P<counter_id>\d+)\s+(?P<inject_cause_name>[^\s].*?)\s{2,}(?P<packets_received>\d+)\s+(?P<packets_transmitted>\d+)\s*$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines and header lines
+            if not line or line.startswith('Counter ID') or line.startswith('Packets') or '---' in line:
+                continue
+
+            # Global Per Cause Statistics
+            m = p1.match(line)
+            if m:
+                current_section = 'global'
+                parsed_dict['global_per_cause_statistics'] = {}
+                continue
+
+            # Number of punt causes =   165
+            m = p2.match(line)
+            if m:
+                parsed_dict['global_per_cause_statistics']['number_of_punt_causes'] = int(m.group('punt_causes'))
+                continue
+
+            # Per Punt Cause Statistics
+            m = p3.match(line)
+            if m:
+                current_section = 'punt_stats'
+                parsed_dict['global_per_cause_statistics']['per_punt_cause_statistics'] = {}
+                continue
+
+            # Number of inject causes = 56
+            m = p5.match(line)
+            if m:
+                if 'per_inject_cause_statistics' not in parsed_dict:
+                    parsed_dict['per_inject_cause_statistics'] = {}
+                parsed_dict['per_inject_cause_statistics']['number_of_inject_causes'] = int(m.group('inject_causes'))
+                continue
+
+            # Per Inject Cause Statistics
+            m = p6.match(line)
+            if m:
+                current_section = 'inject_stats'
+                parsed_dict['per_inject_cause_statistics']['per_inject_cause_statistics'] = {}
+                continue
+
+            # Parse punt cause statistics lines
+            if current_section == 'punt_stats':
+                # 003         Layer2 control and legacy                 859                   859
+                m = p4.match(line)
+                if m:
+                    groups = m.groupdict()
+                    counter_id = groups['counter_id']
+                    punt_cause_name = groups['punt_cause_name'].strip()
+                    
+                    parsed_dict['global_per_cause_statistics']['per_punt_cause_statistics'][counter_id] = {
+                        'counter_id': counter_id,
+                        'punt_cause_name': punt_cause_name,
+                        'packets_received': int(groups['packets_received']),
+                        'packets_transmitted': int(groups['packets_transmitted'])
+                    }
+                    continue
+
+            # Parse inject cause statistics lines
+            if current_section == 'inject_stats':
+                # 005         QFP <->RP keepalive                       303                   0
+                m = p7.match(line)
+                if m:
+                    groups = m.groupdict()
+                    counter_id = groups['counter_id']
+                    inject_cause_name = groups['inject_cause_name'].strip()
+                    
+                    parsed_dict['per_inject_cause_statistics']['per_inject_cause_statistics'][counter_id] = {
+                        'counter_id': counter_id,
+                        'inject_cause_name': inject_cause_name,
+                        'packets_received': int(groups['packets_received']),
+                        'packets_transmitted': int(groups['packets_transmitted'])
+                    }
+                    continue
 
         return parsed_dict

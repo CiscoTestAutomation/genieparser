@@ -1,0 +1,54 @@
+Faults states Group 1 info: 
+	Runtime priority: [150]
+		RG Faults RG State: Up. 
+			Total # of switchovers due to faults:           8
+			Total # of down/up state changes due to faults: 0
+Group ID:1
+Group Name:GREEN
+
+Administrative State: No Shutdown
+Aggregate operational state : Up
+My Role: STANDBY
+Peer Role: ACTIVE
+Peer Presence: Yes
+Peer Comm: Yes
+Peer Progression Started: Yes
+
+RF Domain: btob-one
+	 RF state: STANDBY HOT
+	 Peer RF state: ACTIVE
+
+
+RG Protocol RG 1
+------------------
+        Role: Standby
+        Negotiation: Enabled
+        Priority: 150
+        Protocol state: Standby-hot
+        Ctrl Intf(s) state: Up
+        Active Peer: address 10.240.0.45, priority 255, intf Po60.2511
+        Standby Peer: Local
+        Log counters:
+                role change to active: 10
+                role change to standby: 11
+                disable events: rg down state 0, rg shut 0
+                ctrl intf events: up 1, down 1, admin_down 0
+                reload events: local request 8, peer request 0
+          
+RG Media Context for RG 1
+--------------------------
+        Ctx State: Standby
+        Protocol ID: 1
+        Media type: Default
+        Control Interface: Port-channel60.2511
+        Current Hello timer: 250
+        Configured Hello timer: 250, Hold timer: 750
+        Peer Hello timer: 250, Peer Hold timer: 750
+        Stats:
+                Pkts 54195472, Bytes 5744720032, HA Seq 0, Seq Number 54195472, Pkt Loss 0
+                MD5 Authentication configured
+                Authentication Failure: 0
+                Reload Peer: TX 0, RX 0
+                Resign: TX 10, RX 10
+        Active Peer: Present. Hold Timer: 750
+                Pkts 4092659, Bytes 319227402, HA Seq 0, Seq Number 54194689, Pkt Loss 0

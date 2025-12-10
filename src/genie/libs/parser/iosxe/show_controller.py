@@ -31,6 +31,7 @@ class ShowControllerVDSLSchema(MetaParser):
                 Optional('modem_vendor_specific'): str,
                 Optional('modem_vendor_country'): str,
                 Optional('modem_version_near'): str,
+                Optional('modem_phy_version'): str,
             },
             Optional('trellis'): str,
             Optional('serial_number_far'): str,

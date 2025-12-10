@@ -7,6 +7,7 @@ IOSXE parsers for the following show commands:
     * show cef path sets summary
     * show cef interface <interface>
     * show cef table consistency-check
+    * show cef interface {interface_name} policy-statistics {direction}
 """
 
 # Python
@@ -273,64 +274,138 @@ class ShowCefPathSetsSummary(ShowCefPathSetsSummarySchema):
             
         return ret_dict
 
+# ==============================================
+#  Schema for show cef interface policy-statistics
+# ==============================================
 class ShowCefInterfacePolicyStatisticsSchema(MetaParser):
     """Schema for show cef interface policy-statistics"""
-    
-    schema = {
-            'interfaces': {
-                Any() : {
-                    'status': str,
-                    'if_number': int,
-                    'corr_hwidb_fast_if_number': int,
-                    'corr_hwidb_firstsw_if_number': int
-                },
-            },
-        }
+    """Schema for show cef interface {interface_name} policy-statistics {direction}"""
 
+    schema = {
+        'interfaces': {
+            Any(): {
+                'status': str,
+                'if_number': int,
+                Optional('corr_hwidb_fast_if_number'): int,
+                Optional('corr_hwidb_firstsw_if_number'): int,
+                Optional('policy_accounting_status'): str,
+                Optional('direction'): str,
+                Optional('policy_statistics'): {
+                    Any(): {  # Index number
+                        'packets': int,
+                        'bytes': int,
+                    }
+                }
+            }
+        }
+    }
+
+# ==============================================
+#  Parser for show cef interface policy-statistics
+# ==============================================
 class ShowCefInterfacePolicyStatistics(ShowCefInterfacePolicyStatisticsSchema):
     """Parser for show cef interface policy-statistics"""
+    """Parser for show cef interface {interface_name} policy-statistics {direction}"""
 
-    cli_command = 'show cef interface policy-statistics'
+    cli_command = ['show cef interface policy-statistics',
+                   'show cef interface {interface_name} policy-statistics {direction}']
 
-    def cli(self, output=None):
+    def cli(self, interface_name="", direction="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
-
-        # AppGigabitEthernet1/0/1 is up (if_number 73)
-        p1 = re.compile(r"^(?P<intf>.*)\s+is\s+(?P<status>\w+)\s+\(if_number\s+(?P<if_number>\d+)\)$")
-        #   Corresponding hwidb fast_if_number 73
-        p1_1 = re.compile(r"^\s+Corresponding\s+hwidb\s+fast_if_number\s+(?P<corr_hwidb_fast_if_number>\d+)$")
-        #   Corresponding hwidb firstsw->if_number 73
-        p1_2 = re.compile(r"^\s+Corresponding\s+hwidb\s+firstsw->if_number\s+(?P<corr_hwidb_firstsw_if_number>\d+)$")
+            if interface_name and direction:
+                cmd = self.cli_command[1].format(interface_name=interface_name, direction=direction)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         ret_dict = {}
 
+        # GigabitEthernet0/0/2 is up (if_number 10)
+        p1 = re.compile(r'^(?P<interface>\S+)\s+is\s+(?P<status>\w+)\s+\(if_number\s+(?P<if_number>\d+)\)$')
+
+        # Corresponding hwidb fast_if_number 10
+        p2 = re.compile(r'^Corresponding\s+hwidb\s+fast_if_number\s+(?P<fast_if_number>\d+)$')
+
+        # Corresponding hwidb firstsw->if_number 10
+        p3 = re.compile(r'^Corresponding\s+hwidb\s+firstsw->if_number\s+(?P<firstsw_if_number>\d+)$')
+
+        # BGP based Policy accounting on output is enabled
+        p4 = re.compile(r'^(?P<policy_type>[\w\s]+)\s+Policy\s+accounting\s+on\s+(?P<direction>\w+)\s+is\s+(?P<status>\w+)$')
+
+        # Index         Packets           Bytes
+        p5 = re.compile(r'^Index\s+Packets\s+Bytes$')
+
+        # 1              10            1000
+        p6 = re.compile(r'^(?P<index>\d+)\s+(?P<packets>\d+)\s+(?P<bytes>\d+)$')
+
+        current_interface = None
+
         for line in output.splitlines():
+            line = line.strip()
 
-            #TwentyFiveGigE1/1/2 is down (if_number 72)
-            match_obj = p1.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
-                int_name = dict_val['intf']
-                ret_dict.setdefault('interfaces', {})\
-                    .setdefault(int_name, {})
-                data_dict  = ret_dict['interfaces'][int_name]
-                data_dict['status'] = dict_val['status']
-                data_dict['if_number'] = int(dict_val['if_number'])
+            if not line:
                 continue
 
-            #Corresponding hwidb fast_if_number 72
-            match_obj = p1_1.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
-                data_dict['corr_hwidb_fast_if_number'] = int(dict_val['corr_hwidb_fast_if_number'])
+            # GigabitEthernet0/0/2 is up (if_number 10)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_name = group['interface']
+                current_interface = interface_name
+
+                interface_dict = ret_dict.setdefault('interfaces', {})
+                intf_dict = interface_dict.setdefault(interface_name, {})
+
+                intf_dict['status'] = group['status']
+                intf_dict['if_number'] = int(group['if_number'])
                 continue
 
-            #Corresponding hwidb firstsw->if_number 72
-            match_obj = p1_2.match(line)
-            if match_obj:
-                dict_val = match_obj.groupdict()
-                data_dict['corr_hwidb_firstsw_if_number'] = int(dict_val['corr_hwidb_firstsw_if_number'])
+            # Corresponding hwidb fast_if_number 10
+            m = p2.match(line)
+            if m and current_interface:
+                group = m.groupdict()
+                interface_dict = ret_dict['interfaces'][current_interface]
+                interface_dict['corr_hwidb_fast_if_number'] = int(group['fast_if_number'])
+                continue
+
+            # Corresponding hwidb firstsw->if_number 10
+            m = p3.match(line)
+            if m and current_interface:
+                group = m.groupdict()
+                interface_dict = ret_dict['interfaces'][current_interface]
+                interface_dict['corr_hwidb_firstsw_if_number'] = int(group['firstsw_if_number'])
+                continue
+
+            # BGP based Policy accounting on output is enabled
+            m = p4.match(line)
+            if m and current_interface:
+                group = m.groupdict()
+                interface_dict = ret_dict['interfaces'][current_interface]
+                interface_dict['policy_accounting_status'] = f"{group['policy_type']} Policy accounting on {group['direction']} is {group['status']}"
+                interface_dict['direction'] = group['direction']
+                continue
+
+            # Skip header line
+            m = p5.match(line)
+            if m:
+                continue
+
+            # Statistics entries
+            m = p6.match(line)
+            if m and current_interface:
+                group = m.groupdict()
+                interface_dict = ret_dict['interfaces'][current_interface]
+
+                # Initialize policy_statistics if not already present
+                if 'policy_statistics' not in interface_dict:
+                    interface_dict['policy_statistics'] = {}
+
+                stats_dict = interface_dict['policy_statistics']
+                index = group['index']
+                stats_dict[index] = {
+                    'packets': int(group['packets']),
+                    'bytes': int(group['bytes'])
+                }
                 continue
 
         return ret_dict

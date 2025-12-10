@@ -2751,12 +2751,20 @@ class ShowIpSlaStatisticsSchema(MetaParser):
                 Optional('return_code'): str,
                 Optional('no_of_success'): int,
                 Optional('no_of_failures'): int,
-                Optional('ttl'): int,
-                Optional('return_code'): str,
+                Optional('ttl'): Or(int, str),
+                Optional('ttl_unit'): str,
                 Optional('oper_id'): int,
-                Optional('no_of_failures'): int,
                 Optional('delay'): str,
                 Optional('destination'): str,
+                Optional('type_of_operation'): str,
+                Optional('delay_statistics_for'): str,
+                Optional('distribution_statistics'): str,
+                Optional('interval'): {
+                    Optional('interval_start_time'): str,
+                    Optional('measurements_initiated'): int,
+                    Optional('measurements_completed'): int,
+                    Optional('flag'): str,
+                },
             },
         }
     }
@@ -2806,7 +2814,9 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
         p6 = re.compile(r'^Number of failures: (?P<no_of_failures>\d+)$')
 
         # Operation time to live: 3569 sec
-        p7 = re.compile(r'^Operation time to live: (?P<ttl>\d+).*$')
+        # Operation time to live: Forever
+        # Operation time to live: 3599 se
+        p7 = re.compile(r'^Operation time to live: (?P<ttl>Forever|\d+)(?: +(?P<ttl_unit>\w+))?.*$')
 
         # oper-id        status               lossSD       delay                  destination
         # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
@@ -2816,6 +2826,34 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
                 r'(?P<delay>\d+\/+\d+\/+\d+)\s+'
                 r'(?P<destination>.*)$')
 
+        # Type of operation: Y1731 Delay Measurement
+        p9 = re.compile(r'^Type of operation: (?P<type_of_operation>.*)$')
+
+        # Delay Statistics for Y1731 Operation 10
+        p10 = re.compile(r'^Delay Statistics for (?P<delay_statistics_for>.*)$')
+
+        # Distribution Statistics:
+        p11 = re.compile(r'^(?P<distribution_statistics>Distribution Statistics):$')
+
+        # Interval
+        p12 = re.compile(r'^Interval$')
+
+        # Start time:  *00:00:00.000 UTC Mon Jan 1 1900
+        p13 = re.compile(r'^\s*Start time:\s+(?P<interval_start_time>.*)$')
+
+        # Number of measurements initiated: 0
+        p14 = re.compile(r'^\s*Number of measurements initiated: (?P<measurements_initiated>\d+)$')
+
+        # Number of measurements completed: 0
+        p15 = re.compile(r'^\s*Number of measurements completed: (?P<measurements_completed>\d+)$')
+
+        # Flag: OK
+        p16 = re.compile(r'^\s*Flag: (?P<flag>\w+)$')
+
+        # Initialize variables for handling cases where output doesn't start with "IPSLA operation id"
+        current_id = None
+        id_dict = None
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -2823,8 +2861,8 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                id = group['probe_id']
-                id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
+                current_id = group['probe_id']
+                id_dict = parsed_dict.setdefault('ids', {}).setdefault(current_id, {})
                 id_dict.update({'probe_id':int(group['probe_id'])})
                 continue
 
@@ -2832,42 +2870,55 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'rtt_stats':group['rtt_stats']})
+                if id_dict is not None:
+                    id_dict.update({'rtt_stats':group['rtt_stats']})
                 continue
 
             # Latest operation start time: 00:33:01 PDT Mon Sep 20 2021
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'start_time':group['start_time']})
+                if id_dict is not None:
+                    id_dict.update({'start_time':group['start_time']})
                 continue
 
             # Latest operation return code: Timeout
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'return_code':group['return_code']})
+                if id_dict is not None:
+                    id_dict.update({'return_code':group['return_code']})
                 continue
 
             # Number of successes: 0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'no_of_success':int(group['no_of_success'])})
+                if id_dict is not None:
+                    id_dict.update({'no_of_success':int(group['no_of_success'])})
                 continue
 
             # Number of failures: 1
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'no_of_failures':int(group['no_of_failures'])})
+                if id_dict is not None:
+                    id_dict.update({'no_of_failures':int(group['no_of_failures'])})
                 continue
 
             # Operation time to live: 3569 sec
+            # Operation time to live: Forever
+            # Operation time to live: 3599 se
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'ttl':int(group['ttl'])})
+                if id_dict is not None:
+                    if group['ttl'] == 'Forever':
+                        id_dict.update({'ttl': group['ttl']})
+                    else:
+                        id_dict.update({'ttl': int(group['ttl'])})
+                    if group['ttl_unit']:
+                        id_dict.update({'ttl_unit': group['ttl_unit']})
                 continue
 
             # oper-id        status               lossSD       delay                  destination
@@ -2875,12 +2926,76 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({
-                    'oper_id':int(group['oper_id']),
-                    'return_code': group['return_code'],
-                    'no_of_failures':int(group['no_of_failures']),
-                    'delay': group['delay'],
-                    'destination': group['destination']})
+                if id_dict is not None:
+                    id_dict.update({
+                        'oper_id':int(group['oper_id']),
+                        'return_code': group['return_code'],
+                        'no_of_failures':int(group['no_of_failures']),
+                        'delay': group['delay'],
+                        'destination': group['destination']})
+                continue
+
+            # Type of operation: Y1731 Delay Measurement
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None:
+                    id_dict.update({'type_of_operation': group['type_of_operation']})
+                continue
+
+            # Delay Statistics for Y1731 Operation 10
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None:
+                    id_dict.update({'delay_statistics_for': group['delay_statistics_for']})
+                continue
+
+            # Distribution Statistics:
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None:
+                    id_dict.update({'distribution_statistics': group['distribution_statistics']})
+                continue
+
+            # Interval
+            m = p12.match(line)
+            if m:
+                if id_dict is not None:
+                    interval_dict = id_dict.setdefault('interval', {})
+                continue
+
+            # Start time:  *00:00:00.000 UTC Mon Jan 1 1900
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'interval_start_time': group['interval_start_time']})
+                continue
+
+            # Number of measurements initiated: 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'measurements_initiated': int(group['measurements_initiated'])})
+                continue
+
+            # Number of measurements completed: 0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'measurements_completed': int(group['measurements_completed'])})
+                continue
+
+            # Flag: OK
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'flag': group['flag']})
                 continue
 
         return parsed_dict
@@ -9683,28 +9798,53 @@ class ShowIpVirtualReassemblyInterfaceSchema(MetaParser):
     """Schema for show ip virtual-reassembly {interface}"""
     schema = {
         'virtual_fragment_reassembly_information': {
-                'interface': str,
-                'vfr_enabled': bool,
-                'maximum_number_of_fragments': int,
-                'maximum_packet_length_bytes': int,
-                'timeout_seconds': int,
-                'current_number_of_reassembly_contexts': int,
-                'current_number_of_fragments': int,
-                'reassembly_timeout_events': int,
-                'reassembly_fail_events': int,
-                'reassembly_success_events': int,
-                'last_packet_dropped_due_to_vfr': {
-                    'fragment_count_exceeded': bool,
-                    'packet_length_exceeded': bool,
+            Optional('interface'): str,
+            Optional('vfr_enabled'): bool,
+            Optional('maximum_number_of_fragments'): int,
+            Optional('maximum_packet_length_bytes'): int,
+            Optional('timeout_seconds'): int,
+            Optional('current_number_of_reassembly_contexts'): int,
+            Optional('current_number_of_fragments'): int,
+            Optional('reassembly_timeout_events'): int,
+            Optional('reassembly_fail_events'): int,
+            Optional('reassembly_success_events'): int,
+            Optional('last_packet_dropped_due_to_vfr'): {
+                'fragment_count_exceeded': bool,
+                'packet_length_exceeded': bool,
+            },
+            Optional('statistics_since_last_clear'): {
+                'total_packets_received': int,
+                'total_fragments_received': int,
+                'total_packets_reassembled': int,
+                'total_packets_dropped_due_to_vfr': int,
+            },
+            # New format support - interface-based structure
+            Optional(str): {  # Interface name as key
+                Optional('in'): {
+                    'vfr_enabled': bool,
+                    'max_reassemblies': int,
+                    'max_fragments': int,
+                    'timeout_seconds': int,
+                    'drop_fragments': str,
+                    'current_reassembly_count': int,
+                    'current_fragment_count': int,
+                    'total_reassembly_count': int,
+                    'total_reassembly_timeout_count': int,
                 },
-                'statistics_since_last_clear': {
-                    'total_packets_received': int,
-                    'total_fragments_received': int,
-                    'total_packets_reassembled': int,
-                    'total_packets_dropped_due_to_vfr': int,
+                Optional('out'): {
+                    'vfr_enabled': bool,
+                    'max_reassemblies': int,
+                    'max_fragments': int,
+                    'timeout_seconds': int,
+                    'drop_fragments': str,
+                    'current_reassembly_count': int,
+                    'current_fragment_count': int,
+                    'total_reassembly_count': int,
+                    'total_reassembly_timeout_count': int,
                 }
             }
         }
+    }
 
 # ====================================================
 # Parser for 'show ip virtual-reassembly {interface}'
@@ -9722,174 +9862,280 @@ class ShowIpVirtualReassemblyInterface(ShowIpVirtualReassemblyInterfaceSchema):
         # Initialize the parsed dictionary
         parsed_dict = {}
 
+        # Legacy format patterns
         # Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
-        p1 = re.compile(r'^Virtual Fragment Reassembly \(VFR\) Information for interface (?P<interface>\S+):$')
+        p1_legacy = re.compile(r'^Virtual Fragment Reassembly \(VFR\) Information for interface (?P<interface>\S+):$')
 
         # VFR is enabled
-        p2 = re.compile(r'^VFR is (?P<status>\w+)$')
+        p2_legacy = re.compile(r'^VFR is (?P<status>\w+)$')
 
         # Maximum number of fragments: 128
-        p3 = re.compile(r'^Maximum number of fragments: (?P<maximum_number_of_fragments>\d+)$')
+        p3_legacy = re.compile(r'^Maximum number of fragments: (?P<maximum_number_of_fragments>\d+)$')
 
         # Maximum packet length: 1500 bytes
-        p4 = re.compile(r'^Maximum packet length: (?P<maximum_packet_length_bytes>\d+) bytes$')
+        p4_legacy = re.compile(r'^Maximum packet length: (?P<maximum_packet_length_bytes>\d+) bytes$')
 
         # Timeout (seconds): 30
-        p5 = re.compile(r'^Timeout \(seconds\): (?P<timeout_seconds>\d+)$')
+        p5_legacy = re.compile(r'^Timeout \(seconds\): (?P<timeout_seconds>\d+)$')
 
         # Current number of reassembly contexts: 3
-        p6 = re.compile(r'^Current number of reassembly contexts: (?P<current_number_of_reassembly_contexts>\d+)$')
+        p6_legacy = re.compile(r'^Current number of reassembly contexts: (?P<current_number_of_reassembly_contexts>\d+)$')
 
         # Current number of fragments: 15
-        p7 = re.compile(r'^Current number of fragments: (?P<current_number_of_fragments>\d+)$')
+        p7_legacy = re.compile(r'^Current number of fragments: (?P<current_number_of_fragments>\d+)$')
 
         # Reassembly timeout events: 2
-        p8 = re.compile(r'^Reassembly timeout events: (?P<reassembly_timeout_events>\d+)$')
+        p8_legacy = re.compile(r'^Reassembly timeout events: (?P<reassembly_timeout_events>\d+)$')
 
         # Reassembly fail events: 1
-        p9 = re.compile(r'^Reassembly fail events: (?P<reassembly_fail_events>\d+)$')
+        p9_legacy = re.compile(r'^Reassembly fail events: (?P<reassembly_fail_events>\d+)$')
 
         # Reassembly success events: 20
-        p10 = re.compile(r'^Reassembly success events: (?P<reassembly_success_events>\d+)$')
+        p10_legacy = re.compile(r'^Reassembly success events: (?P<reassembly_success_events>\d+)$')
 
         # Last packet dropped due to VFR:
-        p11 = re.compile(r'^Last packet dropped due to VFR:$')
+        p11_legacy = re.compile(r'^Last packet dropped due to VFR:$')
 
         # Fragment count exceeded
-        p12 = re.compile(r'^Fragment count exceeded$')
+        p12_legacy = re.compile(r'^Fragment count exceeded$')
 
-        # Fragment count exceeded
-        p13 = re.compile(r'^Packet length exceeded$')
+        # Packet length exceeded
+        p13_legacy = re.compile(r'^Packet length exceeded$')
 
         # Statistics since last clear:
-        p14 = re.compile(r'^Statistics since last clear:$')
+        p14_legacy = re.compile(r'^Statistics since last clear:$')
 
         # Total packets received: 1000
-        p15 = re.compile(r'^Total packets received: (?P<total_packets_received>\d+)$')
+        p15_legacy = re.compile(r'^Total packets received: (?P<total_packets_received>\d+)$')
 
         # Total fragments received: 200
-        p16 = re.compile(r'^Total fragments received: (?P<total_fragments_received>\d+)$')
+        p16_legacy = re.compile(r'^Total fragments received: (?P<total_fragments_received>\d+)$')
 
         # Total packets reassembled: 950
-        p17 = re.compile(r'^Total packets reassembled: (?P<total_packets_reassembled>\d+)$')
+        p17_legacy = re.compile(r'^Total packets reassembled: (?P<total_packets_reassembled>\d+)$')
 
         # Total packets dropped due to VFR: 50
-        p18 = re.compile(r'^Total packets dropped due to VFR: (?P<total_packets_dropped_due_to_vfr>\d+)$')
+        p18_legacy = re.compile(r'^Total packets dropped due to VFR: (?P<total_packets_dropped_due_to_vfr>\d+)$')
+
+        # New format patterns
+        # GigabitEthernet0/0/2:
+        p1_new = re.compile(r'^(?P<interface>\S+):$')
+
+        # Virtual Fragment Reassembly (VFR) is ENABLED [in]
+        p2_new = re.compile(r'^Virtual Fragment Reassembly \(VFR\) is (?P<status>ENABLED|DISABLED) \[(?P<direction>in|out)\]$')
+
+        # Concurrent reassemblies (max-reassemblies): 16
+        p3_new = re.compile(r'^Concurrent reassemblies \(max-reassemblies\): (?P<max_reassemblies>\d+)$')
+
+        # Fragments per reassembly (max-fragments): 32
+        p4_new = re.compile(r'^Fragments per reassembly \(max-fragments\): (?P<max_fragments>\d+)$')
+
+        # Reassembly timeout (timeout): 3 seconds
+        p5_new = re.compile(r'^Reassembly timeout \(timeout\): (?P<timeout>\d+) seconds$')
+
+        # Drop fragments: OFF
+        p6_new = re.compile(r'^Drop fragments: (?P<drop_fragments>ON|OFF)$')
+
+        # Current reassembly count:0
+        p7_new = re.compile(r'^Current reassembly count:(?P<current_reassembly_count>\d+)$')
+
+        # Current fragment count:0
+        p8_new = re.compile(r'^Current fragment count:(?P<current_fragment_count>\d+)$')
+
+        # Total reassembly count:1
+        p9_new = re.compile(r'^Total reassembly count:(?P<total_reassembly_count>\d+)$')
+
+        # Total reassembly timeout count:0
+        p10_new = re.compile(r'^Total reassembly timeout count:(?P<total_reassembly_timeout_count>\d+)$')
 
         current_interface = None
+        current_direction = None
+        interface_dict = None
+        last_packet_dropped = None
+        statistics_dict = None
+        is_legacy_format = False
 
         for line in output.splitlines():
             line = line.strip()
 
-            # Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
-            m = p1.match(line)
+            # Check for legacy format first
+            m = p1_legacy.match(line)
             if m:
+                is_legacy_format = True
                 interface_dict = parsed_dict.setdefault('virtual_fragment_reassembly_information', {})
                 interface_dict['interface'] = m.group('interface')
                 continue
 
-            # VFR is enabled
-            m = p2.match(line)
-            if m:
-                interface_dict['vfr_enabled'] = True if m.group('status') == 'enabled' else False
-                continue
+            if is_legacy_format:
+                # Process legacy format
+                # VFR is enabled
+                m = p2_legacy.match(line)
+                if m:
+                    interface_dict['vfr_enabled'] = True if m.group('status') == 'enabled' else False
+                    continue
 
-            # Maximum number of fragments: 128
-            m = p3.match(line)
-            if m:
-                interface_dict['maximum_number_of_fragments'] = int(m.group('maximum_number_of_fragments'))
-                continue
+                # Maximum number of fragments: 128
+                m = p3_legacy.match(line)
+                if m:
+                    interface_dict['maximum_number_of_fragments'] = int(m.group('maximum_number_of_fragments'))
+                    continue
 
-            # Maximum packet length: 1500 bytes
-            m = p4.match(line)
-            if m:
-                interface_dict['maximum_packet_length_bytes'] = int(m.group('maximum_packet_length_bytes'))
-                continue
+                # Maximum packet length: 1500 bytes
+                m = p4_legacy.match(line)
+                if m:
+                    interface_dict['maximum_packet_length_bytes'] = int(m.group('maximum_packet_length_bytes'))
+                    continue
 
-            # Timeout (seconds): 30
-            m = p5.match(line)
-            if m:
-                interface_dict['timeout_seconds'] = int(m.group('timeout_seconds'))
-                continue
+                # Timeout (seconds): 30
+                m = p5_legacy.match(line)
+                if m:
+                    interface_dict['timeout_seconds'] = int(m.group('timeout_seconds'))
+                    continue
 
-            # Current number of reassembly contexts: 3
-            m = p6.match(line)
-            if m:
-                interface_dict['current_number_of_reassembly_contexts'] = int(m.group('current_number_of_reassembly_contexts'))
-                continue
+                # Current number of reassembly contexts: 3
+                m = p6_legacy.match(line)
+                if m:
+                    interface_dict['current_number_of_reassembly_contexts'] = int(m.group('current_number_of_reassembly_contexts'))
+                    continue
 
-            # Current number of fragments: 15
-            m = p7.match(line)
-            if m:
-                interface_dict['current_number_of_fragments'] = int(m.group('current_number_of_fragments'))
-                continue
+                # Current number of fragments: 15
+                m = p7_legacy.match(line)
+                if m:
+                    interface_dict['current_number_of_fragments'] = int(m.group('current_number_of_fragments'))
+                    continue
 
-            # Reassembly timeout events: 2
-            m = p8.match(line)
-            if m:
-                interface_dict['reassembly_timeout_events'] = int(m.group('reassembly_timeout_events'))
-                continue
+                # Reassembly timeout events: 2
+                m = p8_legacy.match(line)
+                if m:
+                    interface_dict['reassembly_timeout_events'] = int(m.group('reassembly_timeout_events'))
+                    continue
 
-            # Reassembly fail events: 1
-            m = p9.match(line)
-            if m:
-                interface_dict['reassembly_fail_events'] = int(m.group('reassembly_fail_events'))
-                continue
+                # Reassembly fail events: 1
+                m = p9_legacy.match(line)
+                if m:
+                    interface_dict['reassembly_fail_events'] = int(m.group('reassembly_fail_events'))
+                    continue
 
-            # Reassembly success events: 20
-            m = p10.match(line)
-            if m:
-                interface_dict['reassembly_success_events'] = int(m.group('reassembly_success_events'))
-                continue
+                # Reassembly success events: 20
+                m = p10_legacy.match(line)
+                if m:
+                    interface_dict['reassembly_success_events'] = int(m.group('reassembly_success_events'))
+                    continue
 
-            # Last packet dropped due to VFR:
-            m = p11.match(line)
-            if m:
-                last_packet_dropped = {'fragment_count_exceeded': False , 'packet_length_exceeded': False}
-                interface_dict['last_packet_dropped_due_to_vfr'] = last_packet_dropped
-                continue
+                # Last packet dropped due to VFR:
+                m = p11_legacy.match(line)
+                if m:
+                    last_packet_dropped = {'fragment_count_exceeded': False , 'packet_length_exceeded': False}
+                    interface_dict['last_packet_dropped_due_to_vfr'] = last_packet_dropped
+                    continue
 
-            # Fragment count exceeded
-            m = p12.match(line)
-            if m:
-                last_packet_dropped['fragment_count_exceeded'] = True
-                continue
+                # Fragment count exceeded
+                m = p12_legacy.match(line)
+                if m:
+                    last_packet_dropped['fragment_count_exceeded'] = True
+                    continue
 
-            # P
-            m = p13.match(line)
-            if m:
-                last_packet_dropped['packet_length_exceeded'] = True
-                continue
+                # Packet length exceeded
+                m = p13_legacy.match(line)
+                if m:
+                    last_packet_dropped['packet_length_exceeded'] = True
+                    continue
 
-            # Statistics since last clear:
-            m = p14.match(line)
-            if m:
-                statistics_dict = interface_dict.setdefault('statistics_since_last_clear', {})
-                continue
+                # Statistics since last clear:
+                m = p14_legacy.match(line)
+                if m:
+                    statistics_dict = interface_dict.setdefault('statistics_since_last_clear', {})
+                    continue
 
-            # Total packets received: 1000
-            m = p15.match(line)
-            if m:
-                statistics_dict['total_packets_received'] = int(m.group('total_packets_received'))
-                continue
+                # Total packets received: 1000
+                m = p15_legacy.match(line)
+                if m:
+                    statistics_dict['total_packets_received'] = int(m.group('total_packets_received'))
+                    continue
 
-            # Total fragments received: 200
-            m = p16.match(line)
-            if m:
-                statistics_dict['total_fragments_received'] = int(m.group('total_fragments_received'))
-                continue
+                # Total fragments received: 200
+                m = p16_legacy.match(line)
+                if m:
+                    statistics_dict['total_fragments_received'] = int(m.group('total_fragments_received'))
+                    continue
 
-            # Total packets reassembled: 950
-            m = p17.match(line)
-            if m:
-                statistics_dict['total_packets_reassembled'] = int(m.group('total_packets_reassembled'))
-                continue
+                # Total packets reassembled: 950
+                m = p17_legacy.match(line)
+                if m:
+                    statistics_dict['total_packets_reassembled'] = int(m.group('total_packets_reassembled'))
+                    continue
 
-            # Total packets dropped due to VFR: 50
-            m = p18.match(line)
-            if m:
-                statistics_dict['total_packets_dropped_due_to_vfr'] = int(m.group('total_packets_dropped_due_to_vfr'))
-                continue
+                # Total packets dropped due to VFR: 50
+                m = p18_legacy.match(line)
+                if m:
+                    statistics_dict['total_packets_dropped_due_to_vfr'] = int(m.group('total_packets_dropped_due_to_vfr'))
+                    continue
+
+            else:
+                # Process new format
+                # GigabitEthernet0/0/2:
+                m = p1_new.match(line)
+                if m:
+                    current_interface = m.group('interface')
+                    base_dict = parsed_dict.setdefault('virtual_fragment_reassembly_information', {})
+                    interface_dict = base_dict.setdefault(current_interface, {})
+                    continue
+
+                # Virtual Fragment Reassembly (VFR) is ENABLED [in]
+                m = p2_new.match(line)
+                if m and current_interface:
+                    current_direction = m.group('direction')
+                    direction_dict = interface_dict.setdefault(current_direction, {})
+                    direction_dict['vfr_enabled'] = True if m.group('status') == 'ENABLED' else False
+                    continue
+
+                # Concurrent reassemblies (max-reassemblies): 16
+                m = p3_new.match(line)
+                if m and current_direction:
+                    direction_dict['max_reassemblies'] = int(m.group('max_reassemblies'))
+                    continue
+
+                # Fragments per reassembly (max-fragments): 32
+                m = p4_new.match(line)
+                if m and current_direction:
+                    direction_dict['max_fragments'] = int(m.group('max_fragments'))
+                    continue
+
+                # Reassembly timeout (timeout): 3 seconds
+                m = p5_new.match(line)
+                if m and current_direction:
+                    direction_dict['timeout_seconds'] = int(m.group('timeout'))
+                    continue
+
+                # Drop fragments: OFF
+                m = p6_new.match(line)
+                if m and current_direction:
+                    direction_dict['drop_fragments'] = m.group('drop_fragments')
+                    continue
+
+                # Current reassembly count:0
+                m = p7_new.match(line)
+                if m and current_direction:
+                    direction_dict['current_reassembly_count'] = int(m.group('current_reassembly_count'))
+                    continue
+
+                # Current fragment count:0
+                m = p8_new.match(line)
+                if m and current_direction:
+                    direction_dict['current_fragment_count'] = int(m.group('current_fragment_count'))
+                    continue
+
+                # Total reassembly count:1
+                m = p9_new.match(line)
+                if m and current_direction:
+                    direction_dict['total_reassembly_count'] = int(m.group('total_reassembly_count'))
+                    continue
+
+                # Total reassembly timeout count:0
+                m = p10_new.match(line)
+                if m and current_direction:
+                    direction_dict['total_reassembly_timeout_count'] = int(m.group('total_reassembly_timeout_count'))
+                    continue
 
         return parsed_dict
 

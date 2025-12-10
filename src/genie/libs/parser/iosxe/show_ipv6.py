@@ -43,6 +43,7 @@
     * sh ipv6 mfib FF03::1:1:1 10::1:1:200 count
     * show ipv6 virtual-reassembly features
     * show ipv6 mfib {group} active
+    * show ipv6 traffic
 """
 
 # Python
@@ -50,7 +51,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, ListOf
 
 from genie.libs.parser.utils.common import Common
 
@@ -3283,3 +3284,634 @@ class ShowIpv6MfibGroupActive(ShowIpv6MfibGroupActiveSchema):
                 continue
 
         return ret
+
+
+class ShowIpv6TrafficSchema(MetaParser):
+    """Schema for show ipv6 traffic"""
+
+    schema = {
+        "ipv6_statistics": {
+            "received": {
+                "total": int,
+                "total_bytes": int,
+                "local_destination": int,
+                "source_routed": int,
+                "truncated": int,
+                "no_route": int,
+                "format_errors": int,
+                "hop_count_exceeded": int,
+                "bad_header": int,
+                "unknown_option": int,
+                "bad_source": int,
+                "unknown_protocol": int,
+                "not_a_router": int,
+                "fragments": int,
+                "total_reassembled": int,
+                "reassembly_timeouts": int,
+                "reassembly_failures": int
+            },
+            "sent": {
+                "total": int,
+                "total_bytes": int,
+                "generated": int,
+                "forwarded": int,
+                "fragmented": int,
+                "fragments": int,
+                "failed": int,
+                "encapsulation_failed": int,
+                "no_route": int,
+                "too_big": int,
+                "rpf_drops": int,
+                "rpf_suppressed_drops": int
+            },
+            "multicast": {
+                "received": int,
+                "received_bytes": int,
+                "sent": int,
+                "sent_bytes": int
+            }
+        },
+        "icmp_statistics": {
+            "received": {
+                "input": int,
+                "checksum_errors": int,
+                "too_short": int,
+                "unknown_info_type": int,
+                "unknown_error_type": int,
+                "unreachable": {
+                    "routing": int,
+                    "admin": int,
+                    "neighbor": int,
+                    "address": int,
+                    "port": int,
+                    "sa_policy": int,
+                    "reject_route": int
+                },
+                "parameter": {
+                    "error": int,
+                    "header": int,
+                    "option": int
+                },
+                "hopcount_expired": int,
+                "reassembly_timeout": int,
+                "too_big": int,
+                "bad_embedded_ipv6": int,
+                "echo_request": int,
+                "echo_reply": int,
+                "group_query": int,
+                "group_report": int,
+                "group_reduce": int,
+                "router_solicit": int,
+                "router_advert": int,
+                "redirects": int,
+                "neighbor_solicit": int,
+                "neighbor_advert": int
+            },
+            "sent": {
+                "output": int,
+                "rate_limited": int,
+                "unreachable": {
+                    "routing": int,
+                    "admin": int,
+                    "neighbor": int,
+                    "address": int,
+                    "port": int,
+                    "sa_policy": int,
+                    "reject_route": int
+                },
+                "parameter": {
+                    "error": int,
+                    "header": int,
+                    "option": int
+                },
+                "hopcount_expired": int,
+                "reassembly_timeout": int,
+                "too_big": int,
+                "echo_request": int,
+                "echo_reply": int,
+                "group_query": int,
+                "group_report": int,
+                "group_reduce": int,
+                "router_solicit": int,
+                "router_advert": int,
+                "redirects": int,
+                "neighbor_solicit": int,
+                "neighbor_advert": int
+            }
+        },
+        "udp_statistics": {
+            "received": {
+                "input": int,
+                "checksum_errors": int,
+                "length_errors": int,
+                "no_port": int,
+                "dropped": int
+            },
+            "sent": {
+                "output": int
+            }
+        },
+        "tcp_statistics": {
+            "received": {
+                "input": int,
+                "checksum_errors": int
+            },
+            "sent": {
+                "output": int,
+                "retransmitted": int
+            }
+        }
+    }
+
+
+class ShowIpv6Traffic(ShowIpv6TrafficSchema):
+    """Parser for show ipv6 traffic"""
+
+    cli_command = "show ipv6 traffic"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        section = None
+        sub_section = None
+        icmp_sub_sub = None
+
+        # IPv6 statistics:
+        p1 = re.compile(r"^IPv6 statistics:$")
+        # ICMP statistics:
+        p2 = re.compile(r"^ICMP statistics:$")
+        # UDP statistics:
+        p3 = re.compile(r"^UDP statistics:$")
+        # TCP statistics:
+        p4 = re.compile(r"^TCP statistics:$")
+        #         Rcvd:  2 total, 112 total_bytes, 2 local destination
+        p5 = re.compile(r"^Rcvd:\s+(\d+) total, (\d+) total_bytes, (\d+) local destination$")
+        #                0 source-routed, 0 truncated, 0 no route
+        p6 = re.compile(r"^(\d+) source-routed, (\d+) truncated, (\d+) no route$")
+        #                0 format errors, 0 hop count exceeded
+        p7 = re.compile(r"^(\d+) format errors, (\d+) hop count exceeded$")
+        #                0 bad header, 0 unknown option, 0 bad source
+        p8 = re.compile(r"^(\d+) bad header, (\d+) unknown option, (\d+) bad source$")
+        #                0 unknown protocol, 0 not a router
+        p9 = re.compile(r"^(\d+) unknown protocol, (\d+) not a router$")
+        #                0 fragments, 0 total reassembled
+        p10 = re.compile(r"^(\d+) fragments, (\d+) total reassembled$")
+        #                0 reassembly timeouts, 0 reassembly failures
+        p11 = re.compile(r"^(\d+) reassembly timeouts, (\d+) reassembly failures$")
+        #         Sent:  161 total, 18670 total_bytes
+        p12 = re.compile(r"^Sent:\s+(\d+) total, (\d+) total_bytes$")
+        #                162 generated, 161 forwarded
+        p13 = re.compile(r"^(\d+) generated, (\d+) forwarded$")
+        #                0 fragmented into 0 fragments, 0 failed
+        p14 = re.compile(r"^(\d+) fragmented into (\d+) fragments, (\d+) failed$")
+        #                0 encapsulation failed, 0 no route, 0 too big
+        p15 = re.compile(r"^(\d+) encapsulation failed, (\d+) no route, (\d+) too big$")
+        #                0 RPF drops, 0 RPF suppressed drops
+        p16 = re.compile(r"^(\d+) RPF drops, (\d+) RPF suppressed drops$")
+        #         Mcast: 2 received, 112 received bytes
+        p17 = re.compile(r"^Mcast:\s+(\d+) received, (\d+) received bytes$")
+        #                0 sent, 0 sent bytes
+        p18 = re.compile(r"^(\d+) sent, (\d+) sent bytes$")
+        #         Rcvd: 2 input, 0 checksum errors, 0 too short
+        p19 = re.compile(r"^Rcvd:\s+(\d+) input, (\d+) checksum errors, (\d+) too short$")
+        #               0 unknown info type, 0 unknown error type
+        p20 = re.compile(r"^(\d+) unknown info type, (\d+) unknown error type$")
+        #               unreach: 0 routing, 0 admin, 0 neighbor, 0 address, 0 port
+        p21 = re.compile(r"^unreach:\s+(\d+) routing, (\d+) admin, (\d+) neighbor, (\d+) address, (\d+) port$")
+        #                        0 sa policy, 0 reject route
+        p22 = re.compile(r"^(\d+) sa policy, (\d+) reject route$")
+        #               parameter: 0 error, 0 header, 0 option
+        p23 = re.compile(r"^parameter:\s+(\d+) error, (\d+) header, (\d+) option$")
+        #               0 hopcount expired, 0 reassembly timeout,0 too big
+        p24 = re.compile(r"^(\d+) hopcount expired, (\d+) reassembly timeout,(\d+) too big$")
+        #               0 bad embedded ipv6
+        p25 = re.compile(r"^(\d+) bad embedded ipv6$")
+        #               0 echo request, 0 echo reply
+        p26 = re.compile(r"^(\d+) echo request, (\d+) echo reply$")
+        #               0 group query, 0 group report, 0 group reduce
+        p27 = re.compile(r"^(\d+) group query, (\d+) group report, (\d+) group reduce$")
+        #               2 router solicit, 0 router advert, 0 redirects
+        p28 = re.compile(r"^(\d+) router solicit, (\d+) router advert, (\d+) redirects$")
+        #               0 neighbor solicit, 0 neighbor advert
+        p29 = re.compile(r"^(\d+) neighbor solicit, (\d+) neighbor advert$")
+        #         Sent: 162 output, 0 rate-limited
+        p30 = re.compile(r"^Sent:\s+(\d+) output, (\d+) rate-limited$")
+        #               unreach: 0 routing, 0 admin, 0 neighbor, 0 address, 0 port
+        p31 = re.compile(r"^unreach:\s+(\d+) routing, (\d+) admin, (\d+) neighbor, (\d+) address, (\d+) port$")
+        #                        0 sa policy, 0 reject route
+        p32 = re.compile(r"^(\d+) sa policy, (\d+) reject route$")
+        #               parameter: 0 error, 0 header, 0 option
+        p33 = re.compile(r"^parameter:\s+(\d+) error, (\d+) header, (\d+) option$")
+        #               0 hopcount expired, 0 reassembly timeout,0 too big
+        p34 = re.compile(r"^(\d+) hopcount expired, (\d+) reassembly timeout,(\d+) too big$")
+        #               0 echo request, 0 echo reply
+        p35 = re.compile(r"^(\d+) echo request, (\d+) echo reply$")
+        #               0 group query, 0 group report, 0 group reduce
+        p36 = re.compile(r"^(\d+) group query, (\d+) group report, (\d+) group reduce$")
+        #               0 router solicit, 162 router advert, 0 redirects
+        p37 = re.compile(r"^(\d+) router solicit, (\d+) router advert, (\d+) redirects$")
+        #               0 neighbor solicit, 0 neighbor advert
+        p38 = re.compile(r"^(\d+) neighbor solicit, (\d+) neighbor advert$")
+        #   Rcvd: 0 input, 0 checksum errors, 0 length errors
+        p39 = re.compile(r"^Rcvd:\s+(\d+) input, (\d+) checksum errors, (\d+) length errors$")
+        #         0 no port, 0 dropped
+        p40 = re.compile(r"^(\d+) no port, (\d+) dropped$")
+        #   Sent: 0 output
+        p41 = re.compile(r"^Sent:\s+(\d+) output$")
+        #   Rcvd: 0 input, 0 checksum errors
+        p42 = re.compile(r"^Rcvd:\s+(\d+) input, (\d+) checksum errors$")
+        #   Sent: 0 output, 0 retransmitted
+        p43 = re.compile(r"^Sent:\s+(\d+) output, (\d+) retransmitted$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # IPv6 statistics:
+            m = p1.match(line)
+            if m:
+                section = "ipv6_statistics"
+                ret_dict.setdefault(section, {})
+                sub_section = None
+                continue
+
+            # ICMP statistics:
+            m = p2.match(line)
+            if m:
+                section = "icmp_statistics"
+                ret_dict.setdefault(section, {})
+                sub_section = None
+                icmp_sub_sub = None
+                continue
+
+            # UDP statistics:
+            m = p3.match(line)
+            if m:
+                section = "udp_statistics"
+                ret_dict.setdefault(section, {})
+                sub_section = None
+                continue
+
+            # TCP statistics:
+            m = p4.match(line)
+            if m:
+                section = "tcp_statistics"
+                ret_dict.setdefault(section, {})
+                sub_section = None
+                continue
+
+            #         Rcvd:  2 total, 112 total_bytes, 2 local destination
+            m = p5.match(line)
+            if m and section == "ipv6_statistics":
+                sub_section = "received"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["total"] = int(m.group(1))
+                d["total_bytes"] = int(m.group(2))
+                d["local_destination"] = int(m.group(3))
+                continue
+
+            #                0 source-routed, 0 truncated, 0 no route
+            m = p6.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["source_routed"] = int(m.group(1))
+                d["truncated"] = int(m.group(2))
+                d["no_route"] = int(m.group(3))
+                continue
+
+            #                0 format errors, 0 hop count exceeded
+            m = p7.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["format_errors"] = int(m.group(1))
+                d["hop_count_exceeded"] = int(m.group(2))
+                continue
+
+            #                0 bad header, 0 unknown option, 0 bad source
+            m = p8.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["bad_header"] = int(m.group(1))
+                d["unknown_option"] = int(m.group(2))
+                d["bad_source"] = int(m.group(3))
+                continue
+
+            #                0 unknown protocol, 0 not a router
+            m = p9.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["unknown_protocol"] = int(m.group(1))
+                d["not_a_router"] = int(m.group(2))
+                continue
+
+            #                0 fragments, 0 total reassembled
+            m = p10.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["fragments"] = int(m.group(1))
+                d["total_reassembled"] = int(m.group(2))
+                continue
+
+            #                0 reassembly timeouts, 0 reassembly failures
+            m = p11.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["reassembly_timeouts"] = int(m.group(1))
+                d["reassembly_failures"] = int(m.group(2))
+                continue
+
+            #         Sent:  161 total, 18670 total_bytes
+            m = p12.match(line)
+            if m and section == "ipv6_statistics":
+                sub_section = "sent"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["total"] = int(m.group(1))
+                d["total_bytes"] = int(m.group(2))
+                continue
+
+            #                162 generated, 161 forwarded
+            m = p13.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["generated"] = int(m.group(1))
+                d["forwarded"] = int(m.group(2))
+                continue
+
+            #                0 fragmented into 0 fragments, 0 failed
+            m = p14.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["fragmented"] = int(m.group(1))
+                d["fragments"] = int(m.group(2))
+                d["failed"] = int(m.group(3))
+                continue
+
+            #                0 encapsulation failed, 0 no route, 0 too big
+            m = p15.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["encapsulation_failed"] = int(m.group(1))
+                d["no_route"] = int(m.group(2))
+                d["too_big"] = int(m.group(3))
+                continue
+
+            #                0 RPF drops, 0 RPF suppressed drops
+            m = p16.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["rpf_drops"] = int(m.group(1))
+                d["rpf_suppressed_drops"] = int(m.group(2))
+                continue
+
+            #         Mcast: 2 received, 112 received bytes
+            m = p17.match(line)
+            if m and section == "ipv6_statistics":
+                sub_section = "multicast"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["received"] = int(m.group(1))
+                d["received_bytes"] = int(m.group(2))
+                continue
+
+            #                0 sent, 0 sent bytes
+            m = p18.match(line)
+            if m and section == "ipv6_statistics" and sub_section == "multicast":
+                d = ret_dict[section][sub_section]
+                d["sent"] = int(m.group(1))
+                d["sent_bytes"] = int(m.group(2))
+                continue
+
+            #         Rcvd: 2 input, 0 checksum errors, 0 too short
+            m = p19.match(line)
+            if m and section == "icmp_statistics":
+                sub_section = "received"
+                ret_dict[section].setdefault(sub_section, {})
+                d = ret_dict[section][sub_section]
+                d["input"] = int(m.group(1))
+                d["checksum_errors"] = int(m.group(2))
+                d["too_short"] = int(m.group(3))
+                continue
+
+            #               0 unknown info type, 0 unknown error type
+            m = p20.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["unknown_info_type"] = int(m.group(1))
+                d["unknown_error_type"] = int(m.group(2))
+                continue
+
+            #               unreach: 0 routing, 0 admin, 0 neighbor, 0 address, 0 port
+            m = p21.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section].setdefault("unreachable", {})
+                d["routing"] = int(m.group(1))
+                d["admin"] = int(m.group(2))
+                d["neighbor"] = int(m.group(3))
+                d["address"] = int(m.group(4))
+                d["port"] = int(m.group(5))
+                icmp_sub_sub = "unreachable"
+                continue
+
+            #                        0 sa policy, 0 reject route
+            m = p22.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received" and icmp_sub_sub == "unreachable":
+                d = ret_dict[section][sub_section]["unreachable"]
+                d["sa_policy"] = int(m.group(1))
+                d["reject_route"] = int(m.group(2))
+                icmp_sub_sub = None
+                continue
+
+            #               parameter: 0 error, 0 header, 0 option
+            m = p23.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section].setdefault("parameter", {})
+                d["error"] = int(m.group(1))
+                d["header"] = int(m.group(2))
+                d["option"] = int(m.group(3))
+                icmp_sub_sub = "parameter"
+                continue
+
+            #               0 hopcount expired, 0 reassembly timeout,0 too big
+            m = p24.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["hopcount_expired"] = int(m.group(1))
+                d["reassembly_timeout"] = int(m.group(2))
+                d["too_big"] = int(m.group(3))
+                continue
+
+            #               0 bad embedded ipv6
+            m = p25.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["bad_embedded_ipv6"] = int(m.group(1))
+                continue
+
+            #               0 echo request, 0 echo reply
+            m = p26.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["echo_request"] = int(m.group(1))
+                d["echo_reply"] = int(m.group(2))
+                continue
+
+            #               0 group query, 0 group report, 0 group reduce
+            m = p27.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["group_query"] = int(m.group(1))
+                d["group_report"] = int(m.group(2))
+                d["group_reduce"] = int(m.group(3))
+                continue
+
+            #               2 router solicit, 0 router advert, 0 redirects
+            m = p28.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["router_solicit"] = int(m.group(1))
+                d["router_advert"] = int(m.group(2))
+                d["redirects"] = int(m.group(3))
+                continue
+
+            #               0 neighbor solicit, 0 neighbor advert
+            m = p29.match(line)
+            if m and section == "icmp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["neighbor_solicit"] = int(m.group(1))
+                d["neighbor_advert"] = int(m.group(2))
+                continue
+
+            #         Sent: 162 output, 0 rate-limited
+            m = p30.match(line)
+            if m and section == "icmp_statistics":
+                sub_section = "sent"
+                ret_dict[section].setdefault(sub_section, {})
+                d = ret_dict[section][sub_section]
+                d["output"] = int(m.group(1))
+                d["rate_limited"] = int(m.group(2))
+                continue
+
+            #               unreach: 0 routing, 0 admin, 0 neighbor, 0 address, 0 port
+            m = p31.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section].setdefault("unreachable", {})
+                d["routing"] = int(m.group(1))
+                d["admin"] = int(m.group(2))
+                d["neighbor"] = int(m.group(3))
+                d["address"] = int(m.group(4))
+                d["port"] = int(m.group(5))
+                icmp_sub_sub = "unreachable"
+                continue
+
+            #                        0 sa policy, 0 reject route
+            m = p32.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent" and icmp_sub_sub == "unreachable":
+                d = ret_dict[section][sub_section]["unreachable"]
+                d["sa_policy"] = int(m.group(1))
+                d["reject_route"] = int(m.group(2))
+                icmp_sub_sub = None
+                continue
+
+            #               parameter: 0 error, 0 header, 0 option
+            m = p33.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section].setdefault("parameter", {})
+                d["error"] = int(m.group(1))
+                d["header"] = int(m.group(2))
+                d["option"] = int(m.group(3))
+                icmp_sub_sub = "parameter"
+                continue
+
+            #               0 hopcount expired, 0 reassembly timeout,0 too big
+            m = p34.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["hopcount_expired"] = int(m.group(1))
+                d["reassembly_timeout"] = int(m.group(2))
+                d["too_big"] = int(m.group(3))
+                continue
+
+            #               0 echo request, 0 echo reply
+            m = p35.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["echo_request"] = int(m.group(1))
+                d["echo_reply"] = int(m.group(2))
+                continue
+
+            #               0 group query, 0 group report, 0 group reduce
+            m = p36.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["group_query"] = int(m.group(1))
+                d["group_report"] = int(m.group(2))
+                d["group_reduce"] = int(m.group(3))
+                continue
+
+            #               0 router solicit, 162 router advert, 0 redirects
+            m = p37.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["router_solicit"] = int(m.group(1))
+                d["router_advert"] = int(m.group(2))
+                d["redirects"] = int(m.group(3))
+                continue
+
+            #               0 neighbor solicit, 0 neighbor advert
+            m = p38.match(line)
+            if m and section == "icmp_statistics" and sub_section == "sent":
+                d = ret_dict[section][sub_section]
+                d["neighbor_solicit"] = int(m.group(1))
+                d["neighbor_advert"] = int(m.group(2))
+                continue
+
+            #   Rcvd: 0 input, 0 checksum errors, 0 length errors
+            m = p39.match(line)
+            if m and section == "udp_statistics":
+                sub_section = "received"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["input"] = int(m.group(1))
+                d["checksum_errors"] = int(m.group(2))
+                d["length_errors"] = int(m.group(3))
+                continue
+
+            #         0 no port, 0 dropped
+            m = p40.match(line)
+            if m and section == "udp_statistics" and sub_section == "received":
+                d = ret_dict[section][sub_section]
+                d["no_port"] = int(m.group(1))
+                d["dropped"] = int(m.group(2))
+                continue
+
+            #   Sent: 0 output
+            m = p41.match(line)
+            if m and section == "udp_statistics":
+                sub_section = "sent"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["output"] = int(m.group(1))
+                continue
+
+            #   Rcvd: 0 input, 0 checksum errors
+            m = p42.match(line)
+            if m and section == "tcp_statistics":
+                sub_section = "received"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["input"] = int(m.group(1))
+                d["checksum_errors"] = int(m.group(2))
+                continue
+
+            #   Sent: 0 output, 0 retransmitted 
+            m = p43.match(line)
+            if m and section == "tcp_statistics":
+                sub_section = "sent"
+                d = ret_dict[section].setdefault(sub_section, {})
+                d["output"] = int(m.group(1))
+                d["retransmitted"] = int(m.group(2))
+                continue
+
+        return ret_dict
