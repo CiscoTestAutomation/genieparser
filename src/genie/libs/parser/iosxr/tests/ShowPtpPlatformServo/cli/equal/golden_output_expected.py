@@ -22,8 +22,8 @@ expected_output = {
 			't3': 1674494194.4559314,
 			't4': 1674494194.4559336
 		},
-		'offset_from_master': '-0 secs',
-		'mean_path_delay': '0 secs',
+    'offset_from_master':'-0 secs, 16 nsecs',
+    'mean_path_delay':'0 secs, 2237 nsecs',
 		'set_time': 17,
 		'step_time': 1497,
 		'adjust_freq': 4891,
