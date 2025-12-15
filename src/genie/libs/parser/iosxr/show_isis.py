@@ -472,7 +472,7 @@ class ShowIsisSchema(MetaParser):
         'instance': {
             Any(): {
                 'process_id': str,
-                'instance': str,
+                Optional('instance'): str,
                 'vrf': {
                     Any(): {
                         'system_id': str,
@@ -684,6 +684,11 @@ class ShowIsis(ShowIsisSchema):
             if result:
                 group = result.groupdict()
                 is_levels = group['is_levels']
+                if 'vrf_dict' not in locals():
+                    vrf_dict = instance_dict\
+                        .setdefault('vrf', {})\
+                        .setdefault(vrf, {})
+                    vrf_dict['system_id'] = system_id
                 vrf_dict['is_levels'] = is_levels
 
                 continue
@@ -1037,27 +1042,27 @@ class ShowIsisStatisticsSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
-                'psnp_cache': {
+                Optional('psnp_cache'): {
                     'hits': int,
                     'tries': int,
                 },
-                'csnp_cache': {
+                Optional('csnp_cache'): {
                     'hits': int,
                     'tries': int,
                     'updates': int,
                 },
-                'lsp': {
+                Optional('lsp'): {
                     'checksum_errors_received': int,
                     'dropped': int,
                 },
-                'upd': {
+                Optional('upd'): {
                     'max_queue_size': int,
                     Optional('queue_size'): int,
                 },
-                'snp': {
+                Optional('snp'): {
                     'dropped': int
                 },
-                'transmit_time': {
+                Optional('transmit_time'): {
                     'hello': {
                         'rate_per_sec': int,
                         'average_transmit_time_sec': int,
@@ -1079,7 +1084,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                         Optional('average_transmit_time_nsec'): int,
                     },
                 },
-                'process_time': {
+                Optional('process_time'): {
                     'hello': {
                         'rate_per_sec': int,
                         'average_process_time_sec': int,
@@ -1111,7 +1116,7 @@ class ShowIsisStatisticsSchema(MetaParser):
                             Any(): {
                                 'total_spf_calculation': int,
                                 'full_spf_calculation': int,
-                                'ispf_calculation': int,
+                                Optional('ispf_calculation'): int,
                                 'next_hop_calculation': int,
                                 'partial_route_calculation': int,
                                 'periodic_spf_calculation': int,
@@ -1126,8 +1131,8 @@ class ShowIsisStatisticsSchema(MetaParser):
                                 Optional('lsps_sourced'): {
                                     'sent': int,
                                     'received': int,
-                                    'arrival_time_throttled': int,
-                                    'flooding_duplicates': int,
+                                    Optional('arrival_time_throttled'): int,
+                                    Optional('flooding_duplicates'): int,
                                 },
                                 Optional('csnp'):  {
                                     'sent': int,
@@ -1166,7 +1171,9 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
             output = self.device.execute(self.cli_command)
 
         # IS-IS test statistics:
-        r1 = re.compile(r'IS\-IS\s+(?P<isis>.+)\s+statistics\:')
+        # IS-IS 1 Packet and Event Statistics
+        r1 = re.compile(r'IS\-IS\s+(?P<isis>.+)\s+'
+                        r'(statistics\:|Packet and Event Statistics)')
 
         # Fast PSNP cache (hits/tries): 21/118
         r2 = re.compile(r'Fast\s+PSNP\s+cache\s*\(hits/tries\): '
@@ -1226,7 +1233,8 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                          r'\d+)\s*\w+\,)?\s+(?P<rate>\d+)/\w+')
 
         # Level-1:
-        r16 = re.compile(r'Level\-(?P<level>\d+):')
+        # Level-2
+        r16 = re.compile(r'Level\-(?P<level>\d+)(:)?$')
 
         # LSPs sourced (new/refresh): 11/15
         # LSPs sourced (new/refresh): 13/11
@@ -1235,14 +1243,18 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         # IPv4 Unicast
         # IPv6 Unicast
-        r18 = re.compile(r'(?P<address_family>(IPv4|IPv6) Unicast)')
+        # IPv4 Unicast Total:        17912
+        # IPv6 Unicast Total:        17901
+        r18 = re.compile(r'(?P<address_family>(IPv4\s+Unicast|IPv6\s+Unicast))'
+                         r'(?: Total:?\s*(?P<total_spf_calculation>\d+))?')
 
         # Total SPF calculations     : 23
         r19 = re.compile(r'Total\s+SPF\s+calculations\s*:\s*'
                          r'(?P<total_spf_calculation>\d+)')
 
         # Full SPF calculations      : 16
-        r20 = re.compile(r'Full\s+SPF\s+calculations\s*:\s*'
+        # Full SPF Calculations:   17832
+        r20 = re.compile(r'Full\s+SPF\s+[Cc]alculations\s*:\s*'
                          r'(?P<full_spf_calculation>\d+)')
 
         # ISPF calculations          : 0
@@ -1254,29 +1266,46 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                          r'(?P<next_hop_calculation>\d+)')
 
         # Partial Route Calculations : 2
-        r23 = re.compile(r'Partial\s+Route\s+Calculations\s*:\s*'
+        # Partial Route Calc:      61
+        r23 = re.compile(r'Partial\s+Route\s+Calc.*:\s*'
                          r'(?P<partial_route_calculation>\d+)')
 
         # Periodic SPF calculations  : 3
-        r24 = re.compile(r'Periodic\s+SPF\s+calculations\s*:\s*'
+        # Periodic:              17747
+        r24 = re.compile(r'Periodic.*:\s*'
                          r'(?P<periodic_spf_calculation>\d+)')
 
         # Interface Loopback0:
         # Interface GigabitEthernet0/0/0/1:
-        r25 = re.compile(r'Interface\s+(?P<interface>\S+):')
+        #r25 = re.compile(r'Interface\s+(?P<interface>\S+):')
+        r25 = re.compile(r'(?:Interface )?'
+                         r'(?P<interface>('
+                         r'Loopback|'
+                         r'GigabitEthernet|'
+                         r'TenGigE|'
+                         r'TwentyFiveGigE|'
+                         r'FortyGigE|'
+                         r'HundredGigE|'
+                         r'Bundle-Ether'
+                         r')'
+                         r'+[0-9|/|\.]*)'
+                         r'(?::)?')
 
         # Level-1 LSPs (sent/rcvd)  : 0/0
         # Level-2 LSPs (sent/rcvd)  : 0/0
-        r26 = re.compile(r'Level\-(?P<level>\d+)\s+LSPs\s+\(sent\/rcvd\)\s*:'
-                         r'\s*(?P<lsp_sent>\d+)/(?P<lsp_received>\d+)')
+        # LSPs (sent/rcvd):            9/27
+        r26 = re.compile(r'(?:Level\-(?P<level>\d+)\s+)?LSPs\s+\(sent\/rcvd\)\s*:'
+                         r'\s*(?P<lsp_sent>\d+)\/(?P<lsp_received>\d+)')
 
         # Level-2 CSNPs (sent/rcvd) : 0/0
         # Level-1 CSNPs (sent/rcvd) : 339/0
-        r27 = re.compile(r'Level\-(?P<level>\d+)\s+CSNPs\s+\(sent\/rcvd\)\s*:'
+        # CSNPs (sent/rcvd):           1/1826825
+        r27 = re.compile(r'(?:Level\-(?P<level>\d+)\s+)?CSNPs\s+\(sent\/rcvd\)\s*:'
                          r'\s*(?P<csnp_sent>\d+)/(?P<csnp_received>\d+)')
 
         # Level-1 PSNPs (sent/rcvd) : 0/0
-        r28 = re.compile(r'Level\-(?P<level>\d+)\s+PSNPs\s+\(sent/rcvd\)\s*:'
+        # PSNPs (sent/rcvd):           92/20
+        r28 = re.compile(r'(?:Level\-(?P<level>\d+)\s+)?PSNPs\s+\(sent/rcvd\)\s*:'
                          r'\s*(?P<psnp_sent>\d+)\/(?P<psnp_received>\d+)')
 
         # Level-1 LSP Flooding Duplicates     : 51
@@ -1299,11 +1328,15 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
         parsed_dict = {}
         vrf = 'default'
+        level = 0
+        level_dict = {}
+        interface_dict = {}
 
         for line in output.splitlines():
             line = line.strip()
 
             # IS-IS test statistics:
+            # IS-IS 1 Packet and Event Statistics
             result = r1.match(line)
             if result:
                 group = result.groupdict()
@@ -1464,6 +1497,7 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 continue
 
             # Level-1:
+            # Level-2
             result = r16.match(line)
             if result:
                 group = result.groupdict()
@@ -1487,6 +1521,8 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
             # IPv4 Unicast
             # IPv6 Unicast
+            # IPv4 Unicast Total:        17899
+            # IPv6 Unicast Total:        17888
             result = r18.match(line)
             if result:
                 group = result.groupdict()
@@ -1494,6 +1530,9 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 address_family_dict = level_dict\
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
+                if 'total_spf_calculation' in group and group['total_spf_calculation'] is not None:
+                    total_spf_calculation = int(group['total_spf_calculation'])
+                    address_family_dict['total_spf_calculation'] = total_spf_calculation
 
                 continue
 
@@ -1553,6 +1592,10 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
             # Interface Loopback0:
             # Interface GigabitEthernet0/0/0/1:
+            # Loopback0
+            # GigabitEthernet0/0/0/0
+            # TenGigE0/0/0/14
+            # HundredGigE0/0/1/0
             result = r25.match(line)
             if result:
                 group = result.groupdict()
@@ -1564,10 +1607,12 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
             # Level-1 LSPs (sent/rcvd)  : 0/0
             # Level-2 LSPs (sent/rcvd)  : 0/0
+            # LSPs (sent/rcvd):            2350/277
             result = r26.match(line)
             if result:
                 group = result.groupdict()
-                level = int(group['level'])
+                if group['level'] is not None:
+                    level = int(group['level'])
                 lsp_sent = int(group['lsp_sent'])
                 lsp_received = int(group['lsp_received'])
                 lsp_interface_dict = interface_dict\
@@ -1581,12 +1626,15 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
 
             # Level-2 CSNPs (sent/rcvd) : 0/0
             # Level-1 CSNPs (sent/rcvd) : 339/0
+            # CSNPs (sent/rcvd):           1/1828150
             result = r27.match(line)
             if result:
                 group = result.groupdict()
-                level = int(group['level'])
+                if group['level'] is not None:
+                    level = int(group['level'])
                 csnp_sent = int(group['csnp_sent'])
                 csnp_received = int(group['csnp_received'])
+                print(f"addding csnp dict to interface dict with line: {line}")
                 csnp_interface_dict = interface_dict\
                     .setdefault('level', {})\
                     .setdefault(level, {})\
@@ -1597,10 +1645,12 @@ class ShowIsisStatistics(ShowIsisStatisticsSchema):
                 continue
 
             # Level-1 PSNPs (sent/rcvd) : 0/0
+            # PSNPs (sent/rcvd):           266/2250
             result = r28.match(line)
             if result:
                 group = result.groupdict()
-                level = int(group['level'])
+                if group['level'] is not None:
+                    level = int(group['level'])
                 psnp_sent = int(group['psnp_sent'])
                 psnp_received = int(group['psnp_received'])
                 psnp_interface_dict = interface_dict\
