@@ -2158,7 +2158,7 @@ class ShowInventory(ShowInventorySchema):
         # SPA subslot 0/0
         # IM subslot 0/1
         # NIM subslot 0/0
-        p1_3 = re.compile(r'^(SPA|IM|NIM|PVDM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
+        p1_3 = re.compile(r'^(SPA|IM|NIM|PVDM|SM) +subslot +(?P<slot>(\d+))/(?P<subslot>(\d+))')
 
         # subslot 0/0 transceiver 0
         p1_4 = re.compile(r'^subslot +(?P<slot>(\d+))\/(?P<subslot>(.*))')
@@ -12894,4 +12894,457 @@ class ShowPlatformHardwareSubslotModuleHostIfStatistics(ShowPlatformHardwareSubs
 
         return ret_dict
 
+class ShowPlatformSoftwareInfrastructureThreadFastpathSchema(MetaParser):
+    '''Schema for show platform software infrastructure thread fastpath.'''
+    schema = {
+        'syspage_index': int,
+        'packet_stats': {
+            'min_packet_received': int,
+            'max_packet_received': int,
+        },
+        'message_stats': {
+            'min_message_sent': int,
+            'max_message_sent': int,
+            'total_message_received': int,
+            'total_message_sent': int,
+        },
+        'runtime_stats': {
+            'min_clock_runtime_msec': int,
+            'max_clock_runtime_msec': int,
+            'min_cpu_runtime_msec': int,
+            'max_cpu_runtime_msec': int,
+        },
+        'fastpath_stats': {
+            'fastpath_invocation': int,
+            'epoll_timeout': int,
+            'epoll_intr': int,
+            'fastpath_triggered_by_ios': int,
+            'wakeup': int,
+            'fastpath_top_epoll_error': int,
+            'second_level_epoll_error': int,
+            'special_ipc_request': int,
+        },
+        'file_descriptors': {
+            'mstr_efd': int,
+            'fastpath_wakeup_fd': int,
+            'rd_efd': {
+                'fd': int,
+                'epoll_add_failed': int,
+                'epoll_del_failed': int,
+            },
+            'rd_hdlr_efd': {
+                'fd': int,
+                'epoll_add_failed': int,
+                'epoll_del_failed': int,
+            },
+            'wr_efd': {
+                'fd': int,
+                'epoll_add_failed': int,
+                'epoll_del_failed': int,
+            },
+        },
+        'event_stats': {
+            'wakeup_efd_ready': int,
+            'rd_efd_ready': int,
+            'rd_efd_processed': int,
+            'rd_hdlr_efd_ready': int,
+            'rd_hdlr_efd_processed': int,
+            'wr_efd_ready': int,
+            'wr_efd_processed': int,
+        },
+        'ios_stats': {
+            'ios_triggered_by_fastpath': int,
+            'ios_triggered_by_packet': int,
+            'ios_scheduler_wakeup': int,
+        },
+        'data_path_stats': {
+            'console_data_path_invocation': int,
+            'stdout_data_path_invocation': int,
+            'chasfs_process_thread_event': int,
+            'tipc_process_thread_event': int,
+        },
+        'memory_stats': {
+            'memory_allocation_failures': int,
+            'read_paused': int,
+            'read_pause_cleared': int,
+            'read_disabled': int,
+            'read_disable_cleared': int,
+        },
+        'current_state': {
+            'read_paused': str,
+            'read_disabled': str,
+        },
+        'utilization': {
+            '5_seconds': {
+                'clock_percent': int,
+                'cpu_percent': int,
+            },
+            '1_min': {
+                'clock_percent': int,
+                'cpu_percent': int,
+            },
+            '5_min': {
+                'clock_percent': int,
+                'cpu_percent': int,
+            },
+        },
+        'mutex_stats': {
+            'max_acquire_time_msec': int,
+            'timestamp': str,
+        }
+    }
 
+class ShowPlatformSoftwareInfrastructureThreadFastpath(ShowPlatformSoftwareInfrastructureThreadFastpathSchema):
+    '''Parser for show platform software infrastructure thread fastpath.'''
+    cli_command = 'show platform software infrastructure thread fastpath.'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+
+        # Regex patterns with named groups
+        # Syspage index for the Fastpath thread: 6
+        p0 = re.compile(r'^\s*Syspage index for the Fastpath thread:\s*(?P<index>\d+)')
+
+        # 1 minimum packet received, 216 maximum packet received
+        p1 = re.compile(r'^\s*(?P<min>\d+)\s*minimum packet received,\s*(?P<max>\d+)\s*maximum packet received')
+
+        # 1 minimum message sent, 1 maximum message sent
+        p2 = re.compile(r'^\s*(?P<min>\d+)\s*minimum message sent,\s*(?P<max>\d+)\s*maximum message sent')
+
+        # 14458 total message received, 2 total message sent
+        p3 = re.compile(r'^\s*(?P<total_received>\d+)\s*total message received,\s*(?P<total_sent>\d+)\s*total message sent')
+
+        # 0 msec minimum clock runtime, 5 msec maximum clock runtime
+        p4 = re.compile(r'^\s*(?P<min>\d+)\s*msec minimum clock runtime,\s*(?P<max>\d+)\s*msec maximum clock runtime')
+
+        # 0 msec minimum cpu runtime, 5 msec maximum cpu runtime
+        p5 = re.compile(r'^\s*(?P<min>\d+)\s*msec minimum cpu runtime,\s*(?P<max>\d+)\s*msec maximum cpu runtime')
+
+        # 20413 fastpath invocation, 9062 epoll timeout, 0 epoll intr
+        p6 = re.compile(r'^\s*(?P<invocation>\d+)\s*fastpath invocation,\s*(?P<timeout>\d+)\s*epoll timeout,\s*(?P<intr>\d+)\s*epoll intr')
+
+        # 48 fastpath triggered by IOS thread, 13 wakeup
+        p7 = re.compile(r'^\s*(?P<triggered>\d+)\s*fastpath triggered by IOS thread,\s*(?P<wakeup>\d+)\s*wakeup')
+
+        # 0 fastpath top epoll error, 0 second level epoll error
+        p8 = re.compile(r'^\s*(?P<top_error>\d+)\s*fastpath top epoll error,\s*(?P<second_error>\d+)\s*second level epoll error')
+
+        # 0 special IPC request
+        p9 = re.compile(r'^\s*(?P<request>\d+)\s*special IPC request')
+
+        # mstr_efd 9, fastpath_wakeup_fd 7
+        p10 = re.compile(r'^\s*mstr_efd\s*(?P<mstr>\d+),\s*fastpath_wakeup_fd\s*(?P<wakeup>\d+)')
+
+        # rd_efd 10 (epoll add failed 0, epoll del failed 0)
+        p11 = re.compile(r'^\s*rd_efd\s*(?P<fd>\d+)\s*\(epoll add failed\s*(?P<add_failed>\d+),\s*epoll del failed\s*(?P<del_failed>\d+)\)')
+
+        # rd_hdlr_efd 11 (epoll add failed 0, epoll del failed 0)
+        p12 = re.compile(r'^\s*rd_hdlr_efd\s*(?P<fd>\d+)\s*\(epoll add failed\s*(?P<add_failed>\d+),\s*epoll del failed\s*(?P<del_failed>\d+)\)')
+
+        # wr_efd 12 (epoll add failed 0, epoll del failed 0)
+        p13 = re.compile(r'^\s*wr_efd\s*(?P<fd>\d+)\s*\(epoll add failed\s*(?P<add_failed>\d+),\s*epoll del failed\s*(?P<del_failed>\d+)\)')
+
+        # 13 wakeup_efd_ready
+        p14 = re.compile(r'^\s*(?P<ready>\d+)\s*wakeup_efd_ready')
+
+        # 7607 rd_efd_ready, 7607 rd_efd_processed
+        p15 = re.compile(r'^\s*(?P<ready>\d+)\s*rd_efd_ready,\s*(?P<processed>\d+)\s*rd_efd_processed')
+
+        # 3738 rd_hdlr_efd_ready, 3738 rd_hdlr_efd_processed
+        p16 = re.compile(r'^\s*(?P<ready>\d+)\s*rd_hdlr_efd_ready,\s*(?P<processed>\d+)\s*rd_hdlr_efd_processed')
+
+        # 2 wr_efd_ready, 2 wr_efd_processed
+        p17 = re.compile(r'^\s*(?P<ready>\d+)\s*wr_efd_ready,\s*(?P<processed>\d+)\s*wr_efd_processed')
+
+        # 15930 IOS triggered by fastpath thread
+        p18 = re.compile(r'^\s*(?P<triggered>\d+)\s*IOS triggered by fastpath thread')
+
+        # 27691 IOS triggered by packet thread
+        p19 = re.compile(r'^\s*(?P<triggered>\d+)\s*IOS triggered by packet thread')
+
+        # 43504 IOS scheduler thread wakeup
+        p20 = re.compile(r'^\s*(?P<wakeup>\d+)\s*IOS scheduler thread wakeup')
+
+        # 845 console data path invocation
+        p21 = re.compile(r'^\s*(?P<invocation>\d+)\s*console data path invocation')
+
+        # 0 stdout data path invocation
+        p22 = re.compile(r'^\s*(?P<invocation>\d+)\s*stdout data path invocation')
+
+        # 2535 chasfs process thread event invocation
+        p23 = re.compile(r'^\s*(?P<invocation>\d+)\s*chasfs process thread event invocation')
+
+        # 0 tipc process thread event invocation
+        p24 = re.compile(r'^\s*(?P<invocation>\d+)\s*tipc process thread event invocation')
+
+        # 0 memory allocation failures, 0 read paused, 0 read pause cleared
+        p25 = re.compile(r'^\s*(?P<failures>\d+)\s*memory allocation failures,\s*(?P<paused>\d+)\s*read paused,\s*(?P<pause_cleared>\d+)\s*read pause cleared')
+
+        # 0 read disabled, 0 read disable cleared
+        p26 = re.compile(r'^\s*(?P<disabled>\d+)\s*read disabled,\s*(?P<disable_cleared>\d+)\s*read disable cleared')
+
+        # Current state: read paused: no, read disabled: no
+        p27 = re.compile(r'^\s*Current state: read paused:\s*(?P<paused>yes|no),\s*read disabled:\s*(?P<disabled>yes|no)')
+
+        # Clock/CPU utilization with 5 seconds 0%/0%, 1 min 0%/0%, 5 min 0%/0%
+        p28 = re.compile(r'^\s*Clock/CPU utilization with 5 seconds\s*(?P<clock_5s>\d+)%/(?P<cpu_5s>\d+)%,\s*1 min\s*(?P<clock_1m>\d+)%/(?P<cpu_1m>\d+)%,\s*5 min\s*(?P<clock_5m>\d+)%/(?P<cpu_5m>\d+)%')
+
+        # Maximum mutex acquire time: 11937 msec at *Apr 14 18:15:50.475
+        p29 = re.compile(r'^\s*Maximum mutex acquire time:\s*(?P<time>\d+)\s*msec at\s*(?P<timestamp>[*]?\w+\s+\d+\s+\d+:\d+:\d+\.\d+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Syspage index for the Fastpath thread: 6
+            m0 = p0.match(line)
+            if m0:
+                result['syspage_index'] = int(m0.group('index'))
+                continue
+
+            # 1 minimum packet received, 216 maximum packet received
+            m1 = p1.match(line)
+            if m1:
+                packet_stats = result.setdefault('packet_stats', {})
+                packet_stats['min_packet_received'] = int(m1.group('min'))
+                packet_stats['max_packet_received'] = int(m1.group('max'))
+                continue
+
+            # 1 minimum message sent, 1 maximum message sent
+            m2 = p2.match(line)
+            if m2:
+                message_stats = result.setdefault('message_stats', {})
+                message_stats['min_message_sent'] = int(m2.group('min'))
+                message_stats['max_message_sent'] = int(m2.group('max'))
+                continue
+
+            # 14458 total message received, 2 total message sent
+            m3 = p3.match(line)
+            if m3:
+                message_stats = result.setdefault('message_stats', {})
+                message_stats['total_message_received'] = int(m3.group('total_received'))
+                message_stats['total_message_sent'] = int(m3.group('total_sent'))
+                continue
+
+            # 0 msec minimum clock runtime, 5 msec maximum clock runtime
+            m4 = p4.match(line)
+            if m4:
+                runtime_stats = result.setdefault('runtime_stats', {})
+                runtime_stats['min_clock_runtime_msec'] = int(m4.group('min'))
+                runtime_stats['max_clock_runtime_msec'] = int(m4.group('max'))
+                continue
+
+            # 0 msec minimum cpu runtime, 5 msec maximum cpu runtime
+            m5 = p5.match(line)
+            if m5:
+                runtime_stats = result.setdefault('runtime_stats', {})
+                runtime_stats['min_cpu_runtime_msec'] = int(m5.group('min'))
+                runtime_stats['max_cpu_runtime_msec'] = int(m5.group('max'))
+                continue
+
+            # 20413 fastpath invocation, 9062 epoll timeout, 0 epoll intr
+            m6 = p6.match(line)
+            if m6:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['fastpath_invocation'] = int(m6.group('invocation'))
+                fastpath_stats['epoll_timeout'] = int(m6.group('timeout'))
+                fastpath_stats['epoll_intr'] = int(m6.group('intr'))
+                continue
+
+            # 48 fastpath triggered by IOS thread, 13 wakeup
+            m7 = p7.match(line)
+            if m7:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['fastpath_triggered_by_ios'] = int(m7.group('triggered'))
+                fastpath_stats['wakeup'] = int(m7.group('wakeup'))
+                continue
+
+            # 0 fastpath top epoll error, 0 second level epoll error
+            m8 = p8.match(line)
+            if m8:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['fastpath_top_epoll_error'] = int(m8.group('top_error'))
+                fastpath_stats['second_level_epoll_error'] = int(m8.group('second_error'))
+                continue
+
+            # 0 special IPC request
+            m9 = p9.match(line)
+            if m9:
+                fastpath_stats = result.setdefault('fastpath_stats', {})
+                fastpath_stats['special_ipc_request'] = int(m9.group('request'))
+                continue
+
+            # mstr_efd 9, fastpath_wakeup_fd 7
+            m10 = p10.match(line)
+            if m10:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                file_descriptors['mstr_efd'] = int(m10.group('mstr'))
+                file_descriptors['fastpath_wakeup_fd'] = int(m10.group('wakeup'))
+                continue
+
+            # rd_efd 10 (epoll add failed 0, epoll del failed 0)
+            m11 = p11.match(line)
+            if m11:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                rd_efd = file_descriptors.setdefault('rd_efd', {})
+                rd_efd['fd'] = int(m11.group('fd'))
+                rd_efd['epoll_add_failed'] = int(m11.group('add_failed'))
+                rd_efd['epoll_del_failed'] = int(m11.group('del_failed'))
+                continue
+
+            # rd_hdlr_efd 11 (epoll add failed 0, epoll del failed 0)
+            m12 = p12.match(line)
+            if m12:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                rd_hdlr_efd = file_descriptors.setdefault('rd_hdlr_efd', {})
+                rd_hdlr_efd['fd'] = int(m12.group('fd'))
+                rd_hdlr_efd['epoll_add_failed'] = int(m12.group('add_failed'))
+                rd_hdlr_efd['epoll_del_failed'] = int(m12.group('del_failed'))
+                continue
+
+            # wr_efd 12 (epoll add failed 0, epoll del failed 0)
+            m13 = p13.match(line)
+            if m13:
+                file_descriptors = result.setdefault('file_descriptors', {})
+                wr_efd = file_descriptors.setdefault('wr_efd', {})
+                wr_efd['fd'] = int(m13.group('fd'))
+                wr_efd['epoll_add_failed'] = int(m13.group('add_failed'))
+                wr_efd['epoll_del_failed'] = int(m13.group('del_failed'))
+                continue
+
+            # 13 wakeup_efd_ready
+            m14 = p14.match(line)
+            if m14:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['wakeup_efd_ready'] = int(m14.group('ready'))
+                continue
+
+            # 7607 rd_efd_ready, 7607 rd_efd_processed
+            m15 = p15.match(line)
+            if m15:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['rd_efd_ready'] = int(m15.group('ready'))
+                event_stats['rd_efd_processed'] = int(m15.group('processed'))
+                continue
+
+            # 3738 rd_hdlr_efd_ready, 3738 rd_hdlr_efd_processed
+            m16 = p16.match(line)
+            if m16:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['rd_hdlr_efd_ready'] = int(m16.group('ready'))
+                event_stats['rd_hdlr_efd_processed'] = int(m16.group('processed'))
+                continue
+
+            # 2 wr_efd_ready, 2 wr_efd_processed
+            m17 = p17.match(line)
+            if m17:
+                event_stats = result.setdefault('event_stats', {})
+                event_stats['wr_efd_ready'] = int(m17.group('ready'))
+                event_stats['wr_efd_processed'] = int(m17.group('processed'))
+                continue
+
+            # 15930 IOS triggered by fastpath thread
+            m18 = p18.match(line)
+            if m18:
+                ios_stats = result.setdefault('ios_stats', {})
+                ios_stats['ios_triggered_by_fastpath'] = int(m18.group('triggered'))
+                continue
+
+            # 27691 IOS triggered by packet thread
+            m19 = p19.match(line)
+            if m19:
+                ios_stats = result.setdefault('ios_stats', {})
+                ios_stats['ios_triggered_by_packet'] = int(m19.group('triggered'))
+                continue
+
+            # 43504 IOS scheduler thread wakeup
+            m20 = p20.match(line)
+            if m20:
+                ios_stats = result.setdefault('ios_stats', {})
+                ios_stats['ios_scheduler_wakeup'] = int(m20.group('wakeup'))
+                continue
+
+            # 845 console data path invocation
+            m21 = p21.match(line)
+            if m21:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['console_data_path_invocation'] = int(m21.group('invocation'))
+                continue
+
+            # 0 stdout data path invocation
+            m22 = p22.match(line)
+            if m22:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['stdout_data_path_invocation'] = int(m22.group('invocation'))
+                continue
+
+            # 2535 chasfs process thread event invocation
+            m23 = p23.match(line)
+            if m23:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['chasfs_process_thread_event'] = int(m23.group('invocation'))
+                continue
+
+            # 0 tipc process thread event invocation
+            m24 = p24.match(line)
+            if m24:
+                data_path_stats = result.setdefault('data_path_stats', {})
+                data_path_stats['tipc_process_thread_event'] = int(m24.group('invocation'))
+                continue
+
+            # 0 memory allocation failures, 0 read paused, 0 read pause cleared
+            m25 = p25.match(line)
+            if m25:
+                memory_stats = result.setdefault('memory_stats', {})
+                memory_stats['memory_allocation_failures'] = int(m25.group('failures'))
+                memory_stats['read_paused'] = int(m25.group('paused'))
+                memory_stats['read_pause_cleared'] = int(m25.group('pause_cleared'))
+                continue
+
+            # 0 read disabled, 0 read disable cleared
+            m26 = p26.match(line)
+            if m26:
+                memory_stats = result.setdefault('memory_stats', {})
+                memory_stats['read_disabled'] = int(m26.group('disabled'))
+                memory_stats['read_disable_cleared'] = int(m26.group('disable_cleared'))
+                continue
+
+            # Current state: read paused: no, read disabled: no
+            m27 = p27.match(line)
+            if m27:
+                current_state = result.setdefault('current_state', {})
+                current_state['read_paused'] = m27.group('paused').lower()
+                current_state['read_disabled'] = m27.group('disabled').lower()
+                continue
+
+            # Clock/CPU utilization with 5 seconds 0%/0%, 1 min 0%/0%, 5 min 0%/0%
+            m28 = p28.match(line)
+            if m28:
+                utilization = result.setdefault('utilization', {})
+
+                five_seconds = utilization.setdefault('5_seconds', {})
+                five_seconds['clock_percent'] = int(m28.group('clock_5s'))
+                five_seconds['cpu_percent'] = int(m28.group('cpu_5s'))
+
+                one_min = utilization.setdefault('1_min', {})
+                one_min['clock_percent'] = int(m28.group('clock_1m'))
+                one_min['cpu_percent'] = int(m28.group('cpu_1m'))
+
+                five_min = utilization.setdefault('5_min', {})
+                five_min['clock_percent'] = int(m28.group('clock_5m'))
+                five_min['cpu_percent'] = int(m28.group('cpu_5m'))
+                continue
+
+            # Maximum mutex acquire time: 11937 msec at *Apr 14 18:15:50.475
+            m29 = p29.match(line)
+            if m29:
+                mutex_stats = result.setdefault('mutex_stats', {})
+                mutex_stats['max_acquire_time_msec'] = int(m29.group('time'))
+                mutex_stats['timestamp'] = m29.group('timestamp')
+                continue
+
+        return result

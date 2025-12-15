@@ -5,13 +5,14 @@
         *  show ip mfib vrf <vrf> active
         *  show ip mfib summary
         *  show ipv6 mfib interface 
+        *  show ipv6 mfib active
 """
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or
 
 class ShowIpMfibVrfSummarySchema(MetaParser):
     """Schema for:
@@ -694,6 +695,71 @@ class ShowIpv6MfibInterface(ShowIpv6MfibInterfaceSchema):
                 cef_based_output_dict = interface_dict.setdefault('cef_based_output', {})
                 cef_based_output_dict['configured'] = m.group('configured')
                 cef_based_output_dict['available'] = m.group('available')
+                continue
+
+        return parsed_dict
+
+
+# ===============================================
+# Schema for:
+#   * 'show ipv6 mfib active'
+# ===============================================
+class ShowIpv6MfibActiveSchema(MetaParser):
+    """Schema for show ipv6 mfib active."""
+
+    schema = {
+        'active_multicast_sources': {
+            'threshold': str,
+            Optional('group'): str
+        }
+    }
+
+
+# ===============================================
+# Parser for:
+#   * 'show ipv6 mfib active'
+# ===============================================
+class ShowIpv6MfibActive(ShowIpv6MfibActiveSchema):
+    """Parser for show ipv6 mfib active."""
+
+    cli_command = 'show ipv6 mfib active'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        parsed_dict = {}
+
+        # Active Multicast Sources - sending >= 4 kbps
+        p1 = re.compile(r'^Active\s+Multicast\s+Sources\s+-\s+sending\s+>=\s+(?P<threshold>\S+\s+\S+)$')
+
+        # Default
+        p2 = re.compile(r'^(?P<vrf>\S+)$')
+
+        current_vrf = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Active Multicast Sources - sending >= 4 kbps
+            m = p1.match(line)
+            if m:
+                threshold = m.groupdict()['threshold']
+                parsed_dict['active_multicast_sources'] = {
+                    'threshold': threshold
+                }
+                continue
+
+            # Default
+            m = p2.match(line)
+            if m:
+                vrf_name = m.groupdict()['vrf']
+                current_vrf = vrf_name
+                
+                parsed_dict['active_multicast_sources']['group'] = current_vrf
                 continue
 
         return parsed_dict

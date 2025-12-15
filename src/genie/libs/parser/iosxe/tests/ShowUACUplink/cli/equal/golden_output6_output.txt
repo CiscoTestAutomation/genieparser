@@ -1,0 +1,16 @@
+Uplink Autoconfig: Enable
+Uplink Allow-list enforce: IPv4:No  IPv6:No
+Configured IPv4 Uplink interface: Vlan 1 (Default)
+Uplink IPv4 interface: Vlan 1
+        IP Address: 19.1.23.116/255.255.0.0
+        Type:       DHCP
+        SVI:        Configured
+        Port Used:  GigabitEthernet2/0/1
+        GW IP:      19.1.1.1
+        GW MAC:     9818.8810.8d23
+        Score:      8
+        VRF:
+Configured IPv6 Uplink interface: Vlan 1 (Default)
+Uplink IPv6 interface: None
+Uplink Reachable: IPv4
+

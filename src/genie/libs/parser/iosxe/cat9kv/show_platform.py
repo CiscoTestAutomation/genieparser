@@ -97,3 +97,98 @@ class ShowSwitch(ShowSwitchSchema):
                 continue
 
         return ret_dict
+
+
+# =================================================================
+# Schema for 'show platform software fed switch active stp-vlan 1 '
+# =================================================================
+
+
+class ShowPlatformSoftwareFedSwitchActiveStpVlanSchema(MetaParser):
+    """Schema for show platform software fed switch active stp-vlan {vlan_id}"""
+
+    schema = {
+        "hw_flood_list": ListOf(str),
+        "interface": {
+            Any(): {
+                "pvlan_mode": str,
+                "stp_state": str,
+                "stp_state_hw": str,
+                "vtp_pruned": str,
+                "untagged": str,
+                "ingress": str,
+                "egress": str,
+                "gid": str,
+                "mac_learn": str
+            }
+        },
+    }
+
+
+# =================================================================
+# Parser for 'show platform software fed switch active stp-vlan {vlan_id}'
+# =================================================================
+
+
+class ShowPlatformSoftwareFedSwitchActiveStpVlan(
+    ShowPlatformSoftwareFedSwitchActiveStpVlanSchema
+):
+    """Parser for show platform software fed switch active stp-vlan {vlan_id}"""
+
+    cli_command = [
+        "show platform software fed switch {switch_num} stp-vlan {vlan_id}",
+        "show platform software fed active stp-vlan {vlan_id}",
+    ]
+
+    def cli(self, vlan_id="", switch_num=None, output=None):
+        if output is None:
+            self.cli_command = (
+                self.cli_command[0].format(switch_num=switch_num, vlan_id=vlan_id)
+                if switch_num
+                else self.cli_command[1].format(vlan_id=vlan_id)
+            )
+            output = self.device.execute(self.cli_command)
+
+        #                    Interface   pvlan_mode   stp_state  vtp pruned          Untagged          Ingress           Egress
+        p1 = re.compile(
+            r"^(?P<interface>\S+) +(?P<pvlan_mode>\S+) +(?P<stp_state>\S+) +(?P<stp_state_hw>\S+) +"
+            r"(?P<vtp_pruned>\S+) +(?P<untagged>\w+) +(?P<ingress>\w+) +(?P<egress>\w+) +(?P<gid>\d+) +(?P<mac_learn>\S+)$"
+        )
+
+        # HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1
+        p2 = re.compile(r"^HW flood list\:\s+:(?P<hw_flood_list>[\w\s\,/\.]*)$")
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # TenGigabitEthernet2/0/23         none    disabled          No               Yes         blocking         blocking
+            m = p1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                key_chain_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(dict_val["interface"]), {}
+                )
+                key_chain_dict["pvlan_mode"] = dict_val["pvlan_mode"]
+                key_chain_dict["stp_state"] = dict_val["stp_state"]
+                key_chain_dict["stp_state_hw"] = dict_val["stp_state_hw"]
+                key_chain_dict["vtp_pruned"] = dict_val["vtp_pruned"]
+                key_chain_dict["untagged"] = dict_val["untagged"]
+                key_chain_dict["ingress"] = dict_val["ingress"]
+                key_chain_dict["egress"] = dict_val["egress"]
+                key_chain_dict["gid"] = dict_val["gid"]
+                key_chain_dict["mac_learn"] = dict_val["mac_learn"]
+                continue
+
+            # HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1
+            m = p2.match(line)
+            if m:
+                ret_dict["hw_flood_list"] = (
+                    m.groupdict()["hw_flood_list"].replace(" ", "").split(",")
+                    if len(m.groupdict()["hw_flood_list"]) > 0
+                    else []
+                )
+                continue
+
+        return ret_dict

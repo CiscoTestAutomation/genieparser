@@ -1,0 +1,59 @@
+Slot R0 EEPROM data:
+
+        EEPROM version           : 4
+        Compatible Type          : 0xFF
+        Controller Type          : 4601
+        Hardware Revision        : 0.9
+        PCB Part Number          : 73-21411-02
+        Board Revision           : 02
+        Deviation Number         : 0
+        Fab Version              : 03
+        PCB Serial Number        : FDO28160V7Y
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        Top Assy. Part Number    : 68-07899-01
+        Top Assy. Revision       : 10  
+        CLEI Code                : 
+        Product Identifier (PID) : C9610-SUP-3
+        Version Identifier (VID) : V00
+        Base MAC Address         : 8C 44 A5 86 66 80 
+        MAC Address block size   : 128
+        Environment Monitor Data : 06 00 00 00 89 88 98 
+        Max Power Requirement    : 2200 Watts
+        Typical Power Requirement: 2200 Watts
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00 
+        Platform features        : 00 00 00 00 00 00 00 00 
+                                   00 00 00 00 00 00 00 00 
+                                   00 00 00 00 00 00 00 00 
+
+Slot R1 EEPROM data:
+
+        EEPROM version           : 4
+        Compatible Type          : 0xFF
+        Controller Type          : 4601
+        Hardware Revision        : 0.9
+        PCB Part Number          : 73-21411-02
+        Board Revision           : 02
+        Deviation Number         : 0
+        Fab Version              : 03
+        PCB Serial Number        : FDO28160V7U
+        RMA Test History         : 00
+        RMA Number               : 0-0-0-0
+        RMA History              : 00
+        Top Assy. Part Number    : 68-07899-01
+        Top Assy. Revision       : 10  
+        CLEI Code                : 
+        Product Identifier (PID) : C9610-SUP-3
+        Version Identifier (VID) : V00
+        Base MAC Address         : 8C 44 A5 86 65 80 
+        MAC Address block size   : 128
+        Environment Monitor Data : 06 00 00 00 89 88 98 
+        Max Power Requirement    : 2200 Watts
+        Typical Power Requirement: 2200 Watts
+        Manufacturing Test Data  : 00 00 00 00 00 00 00 00 
+        Field Diagnostics Data   : 00 00 00 00 00 00 00 00 
+        Platform features        : 00 00 00 00 00 00 00 00 
+                                   00 00 00 00 00 00 00 00 
+                                   00 00 00 00 00 00 00 00 

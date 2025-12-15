@@ -1,0 +1,71 @@
+Controller VDSL 0/2/0 is UP
+
+Daemon Status:		UP 
+
+			XTU-R (DS)		XTU-C (US)
+Chip Vendor ID:		'RETK'			 'BDCM'
+Chip Vendor Specific:   0x0000			 0x0000
+Chip Vendor Country:    0xB500			 0xB500
+Modem Vendor ID:	'RETK'			 'BDCM'
+Modem Vendor Specific:  0x0000			 0x0000
+Modem Vendor Country:   0xB500			 0xB500
+Serial Number Near:     08-04-25 AVM br u318 MIPS32 EUR
+Serial Number Far:      08-04-25 AVM br u318 MIPS32 EUR
+Modem Version Near:     G137L310
+Modem Version Far:      G137L310
+
+Modem Status:		TC Sync (Showtime!) 
+DSL Config Mode:	AUTO 
+Trained Mode:		G.992.5 (ADSL2+) Annex J 
+
+TC Mode:		ATM 
+Selftest Result:	0x00 
+DELT configuration:	disabled 
+DELT state:		not running 
+
+Failed full inits:	0
+Short inits:		0
+Failed short inits:	0
+
+Modem FW  Version:	Linux(none)3.18.20#6
+Modem PHY Version:	G137L310 AVM b_08-04-25 AVM b
+Modem PHY Source:	System
+
+Line 0:
+
+			XTU-R (DS)		XTU-C (US)
+Trellis:		 OFF			 ON
+SRA: 			 enabled		 enabled
+SRA count: 		 0			 0
+Bit swap: 		 enabled		 enabled
+Bit swap count:		 0			 0
+Line Attenuation:	  7.9 dB		  2.0 dB
+Signal Attenuation:	  7.9 dB		  3.5 dB
+Noise Margin:		  7.0 dB		 7.3 dB
+Attainable Rate:	0 kbits/s		 0 kbits/s
+Actual Power:		 0.0 dBm		 0.0 dBm
+Total FECC:		0			 0
+Total ES:		0			 0
+Total SES:		0			 0
+Total LOSS:		0			 0
+Total UAS:		361			 0
+Total LPRS:		0			 0
+Total LOFS:		0			 0
+Total LOLS:		0			 0
+
+cannot access pm lineinit counters
+
+ 		  DS Channel1	  DS Channel0	US Channel1	  US Channel0
+Speed (kbps):		  NA	       23839		NA	        2079
+SRA Previous Speed:	  NA	           0		NA	           0
+Previous Speed:		  NA	       99999		NA	       60015
+Total Cells:		  NA	           0		NA	           0
+User Cells:		  NA	           0		NA	           0
+Reed-Solomon EC:	  NA	           0		NA	           0
+CRC Errors:		  NA	           0		NA	           0
+Header Errors:		  NA	           0		NA	           0
+Interleave (ms):	  NA	        0.00		NA	        0.00
+Actual INP:		  NA	        0.00		NA	        0.00
+
+Training Log :	Stopped
+Training Log Filename :	flash:vdsllog.bin

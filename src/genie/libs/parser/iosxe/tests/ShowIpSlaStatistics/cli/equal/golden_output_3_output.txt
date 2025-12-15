@@ -1,0 +1,23 @@
+show ip sla statistics 10
+Latest operation return code: OK
+Number of successes: 23
+Number of failures: 0
+Operation time to live: Forever
+
+
+
+IPSLA operation id: 10
+Delay Statistics for Y1731 Operation 10
+Type of operation: Y1731 Delay Measurement
+Latest operation start time: *00:00:00.000 UTC Mon Jan 1 1900
+Latest operation return code: OK
+Distribution Statistics:
+
+
+Interval
+ Start time:  *00:00:00.000 UTC Mon Jan 1 1900
+ Number of measurements initiated: 0
+ Number of measurements completed: 0
+ Flag: OK
+
+Operation time to live: 3599 se

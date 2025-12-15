@@ -1,0 +1,7 @@
+SPA EEPROM data for subslot 1/0:
+
+	Product Identifier (PID) : SM-X-ES3-24-P
+	Version Identifier (VID) : V01
+	PCB Serial Number        : FOC21484UY5
+	Hardware Revision        : 1.0
+	CLEI Code                : IP3CAAECAA

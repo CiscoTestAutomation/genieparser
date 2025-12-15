@@ -2221,13 +2221,12 @@ class ShowCryptoPkiTimerDetail(ShowCryptoPkiTimerDetailSchema):
 
         # |  6d23:59:57.701  (2025-01-14T08:48:18Z) ER EXPIRE 1
         p15 = re.compile(r'^\s*\|?\s*(?P<er_expiry>\S+)\s+\((?P<er_expiry_iso>\S+)\)\s+ER\s+EXPIRE\s+\d+$')
-
+        ser_dict = ret_dict.setdefault('timer', {})
         for line in output.splitlines():
             line = line.strip()
             #  |        8:02.030  (2022-01-16T03:09:36Z) SESSION CLEANUP
             m = p1.match(line)
             if m:
-                ser_dict = ret_dict.setdefault('timer', {})
                 ser_dict['session_cleanup'] = m.groupdict()['sess_cleanup']
                 ser_dict['session_cleanup_iso'] = m.groupdict()['sess_cleanup_iso']
                 continue

@@ -352,16 +352,17 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         # Hardware is Loopback
-        p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
-                        r'(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
-                        r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
+        # Hardware is i82543 (Livengood), address is 0003.fdfe.641c (bia 0003.fdfe.641c)
+        p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+\(\)\_]+?)'
+                        r'(, +address +is +(?P<mac_address>[a-fA-F0-9\.]+)'
+                        r' *\(bia +(?P<phys_address>[a-fA-F0-9\.]+)\))?$')
 
         # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS
         # Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6c (bia 8c1e.8068.9f6c)
-        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\\_+ ]+)(, +address +is +(?P<mac_address>[a-f0-9\.]+)( +\(bia +(?P<phys_address>.*)\))?)?')
-
-        # Hardware is not present
-        p2_3 = re.compile(r'^Hardware +is +not +present$')
+        # Hardware is i82543 (Livengood), address is 0003.fdfe.641c (bia 0003.fdfe.641c)
+        p2_2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\\_\+\(\) ]+?)'
+                          r'(, +address +is +(?P<mac_address>[a-fA-F0-9\.]+)'
+                          r' *\(bia +(?P<phys_address>[a-fA-F0-9\.]+)\))?$')
 
         # Hardware is not present
         p2_3 = re.compile(r'^Hardware +is +not +present$')

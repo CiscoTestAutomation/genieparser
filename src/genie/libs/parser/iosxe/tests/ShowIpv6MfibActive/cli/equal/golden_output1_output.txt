@@ -1,0 +1,4 @@
+show ipv6 mfib active
+
+Active Multicast Sources - sending >= 4 kbps
+Default

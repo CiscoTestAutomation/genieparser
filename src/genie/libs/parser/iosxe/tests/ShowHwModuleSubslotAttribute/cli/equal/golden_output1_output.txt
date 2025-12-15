@@ -1,0 +1,10 @@
+Slot 1 Bay 0 Board 0 Module[SM-X-6X1G] spa_type 0xBC4 Daughter Board Not Present
+Base mac_addr 500f.8001.c3f8 mac_blk_sz 10  Endpt MAC Address offset(s) : 0
+Basic attributes : length 11, version [2], module-type [ngio], width [Single Wide]
+Power Rating [75], Control Endpoint count [1], Daughter Board Count [0]
+KR Support [0x01], 16-bit GPIO [Present], Submodule reset support [Not required]
+
+Extended Attributes for [SM-X-6X1G]
+Port type Ethernet Range [0 5] Per-port Information : Max IID [1] Connector [SFP] Network clocking [disable]
+Module OID: 1 3 6 1 4 1 9 12 3 1 9 96 2
+Port OID: 1 3 6 1 4 1 9 12 3 1 10 109

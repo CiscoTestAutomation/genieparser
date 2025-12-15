@@ -813,3 +813,58 @@ class ShowPlatformStatus(ShowPlatformStatusSchema):
                 continue
 
         return ret_dict
+    
+class ShowLocateSwitchSchema(MetaParser):
+    """Schema for show locate switch"""
+
+    schema = {
+        'locate_switch_status': str,
+        Optional('total_time'): int,
+        Optional('time_left'): int,
+    }
+
+class ShowLocateSwitch(ShowLocateSwitchSchema):
+    """Parser for show locate switch"""
+
+    cli_command = 'show locate switch'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Locate Switch disabled!!
+        p1 = re.compile(r'^Locate +[Ss]witch +(?P<status>disabled|enabled)!!$')
+
+        # total time: 100 sec
+        p2 = re.compile(r'^total +time: +(?P<total_time>\d+) +sec$')
+
+        # time left:  96 sec
+        p3 = re.compile(r'^time +left: +(?P<time_left>\d+) +sec$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Locate Switch disabled!!
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'locate_switch_status': group['status']})
+                continue
+
+            # total time: 100 sec
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'total_time': int(group['total_time'])})
+                continue
+
+            # time left:  96 sec
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'time_left': int(group['time_left'])})
+                continue
+
+        return ret_dict

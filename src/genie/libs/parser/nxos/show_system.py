@@ -739,3 +739,74 @@ class ShowSystemInternalProcessesMemory(ShowSystemInternalProcessesMemorySchema)
                 pid_dict['time'] = group['time']
 
         return ret_dict
+
+# =======================================
+# Schema for 'show system internal flash'
+# =================================
+
+class ShowSystemInternalFlashSchema(MetaParser):
+
+    ''' Schema for "show system internal flash" '''
+
+    schema = {
+        'mounted_on': {
+            Any(): {
+                'total': int,
+                'used': int,
+                'available': int,
+                'use_percent': int,
+                'file_system': str
+            }
+        }
+    }
+
+# =======================================
+# Parser for 'show system internal flash'
+# =======================================
+
+class ShowSystemInternalFlash(ShowSystemInternalFlashSchema):
+
+    ''' Parser for "show system internal flash"'''
+
+    cli_command = 'show system internal flash'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        # Initial return dictionary
+        flash_dict = {}
+        result_dict = {}
+
+        # Pattern p0 matches a single flash usage line:
+        # <mounted_on> <total> <used> <available> <use_percent> <file_system>
+        #  /proc           0       0       0           0            proc
+        p0 = re.compile(r'^(?P<mounted_on>\/.+?)\s+(?P<total>\d+)\s+(?P<used>\d+)\s+(?P<available>\d+)\s+(?P<use_percent>\d+)\s+(?P<file_system>[a-z\/0-9.:A-Z]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #/proc                             0         0           0      0   proc
+            #/sys                              0         0           0      0   none
+            #/isan                       2359296   1076712     1282584     46   none
+            m = p0.match(line)
+            if m:
+                if 'mounted_on' not in result_dict:
+                    flash_dict = result_dict.setdefault('mounted_on', {})
+                mounted_on = m.groupdict()['mounted_on']
+                total = m.groupdict()['total']
+                used = m.groupdict()['used']
+                available = m.groupdict()['available']
+                use_percent = m.groupdict()['use_percent']
+                file_system = m.groupdict()['file_system']
+                flash_dict[mounted_on] = {
+                    "total": int(total),
+                    "used": int(used),
+                    "available": int(available),
+                    "use_percent": int(use_percent),
+                    "file_system": file_system,
+                }
+                continue
+        return result_dict
