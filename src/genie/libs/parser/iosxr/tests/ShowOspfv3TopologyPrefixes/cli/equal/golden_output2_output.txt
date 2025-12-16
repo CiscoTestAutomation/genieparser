@@ -1,0 +1,69 @@
+show ospfv3 topology prefixes
+
+Mon Oct 13 10:46:15.979 UTC
+
+        Process ospfv3-1
+
+  Instance : default
+   Router ID : 192.168.0.5
+
+    Area : 0 (6 nodes)
+      Node : 192.168.0.3  (1 prefix(es))  ABR
+        Prefix : 192:168::3/128
+      Node : 192.168.0.4  (2 prefix(es))
+        Prefix : 192:168::4/128
+        Prefix : 192:168:1::4/128
+      Node : 192.168.0.4 interface-id 35 (pseudo) (1 prefix(es))
+        Prefix : 34:34:1::/64
+      Node : 192.168.0.5 (root) (1 prefix(es))  ABR, ASBR
+        Prefix : 192:168::5/128
+      Node : 192.168.0.5 interface-id 63 (pseudo) (1 prefix(es))
+        Prefix : 45:45:1::/64
+      Node : 192.168.0.5 interface-id 65 (pseudo) (1 prefix(es))
+        Prefix : 35:35:1::/64
+
+    Area : 1 (18 nodes)
+      Node : 192.168.0.1  (2 prefix(es))   ASBR
+        Prefix : 192:168::1/128
+        Prefix : 192:168:1::1/128
+      Node : 192.168.0.2  (2 prefix(es))
+        Prefix : 192:168::2/128
+        Prefix : 192:168:1::2/128
+      Node : 192.168.0.2 interface-id 35 (pseudo) (1 prefix(es))
+        Prefix : 12:12:1::/64
+      Node : 192.168.0.2 interface-id 66 (pseudo) (1 prefix(es))
+        Prefix : 12:12:2::/64
+      Node : 192.168.0.3  (1 prefix(es))  ABR
+        Prefix : 192:168:1::3/128
+      Node : 192.168.0.3 interface-id 35 (pseudo) (1 prefix(es))
+        Prefix : 13:13:1::/64
+      Node : 192.168.0.3 interface-id 65 (pseudo) (1 prefix(es))
+        Prefix : 23:23:2::/64
+      Node : 192.168.0.3 interface-id 66 (pseudo) (1 prefix(es))
+        Prefix : 23:23:1::/64
+      Node : 192.168.0.5 (root) (1 prefix(es))  ABR, ASBR
+        Prefix : 192:168:1::5/128
+      Node : 192.168.0.5 interface-id 35 (pseudo) (1 prefix(es))
+        Prefix : 15:15:1::/64
+      Node : 192.168.0.5 interface-id 64 (pseudo) (1 prefix(es))
+        Prefix : 35:35:2::/64
+      Node : 192.168.0.5 interface-id 66 (pseudo) (1 prefix(es))
+        Prefix : 25:25:1::/64
+      Node : 192.168.0.6  (2 prefix(es))
+        Prefix : 192:168::6/128
+        Prefix : 192:168:1::6/128
+      Node : 192.168.0.6 interface-id 35 (pseudo) (1 prefix(es))
+        Prefix : 16:16:1::/64
+      Node : 192.168.0.6 interface-id 63 (pseudo) (1 prefix(es))
+        Prefix : 56:56:3::/64
+      Node : 192.168.0.6 interface-id 64 (pseudo) (1 prefix(es))
+        Prefix : 56:56:2::/64
+      Node : 192.168.0.6 interface-id 65 (pseudo) (1 prefix(es))
+        Prefix : 56:56:1::/64
+      Node : 192.168.0.6 interface-id 66 (pseudo) (1 prefix(es))
+        Prefix : 36:36:1::/64
+
+    Area : 2 (1 nodes)
+      Node : 192.168.0.5 (root) (1 prefix(es))  ABR, ASBR
+        Prefix : 192:168:2::5/128
+

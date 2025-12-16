@@ -1,0 +1,46 @@
+show lslib cache ospf 1 links attributes
+Tue Sep 23 12:19:32.739 UTC
+
+Prefix codes: E link, V node, T IP reachable route, S SRv6 SID, SP SRTE Policy, u/U unknown
+              I Identifier, N local node, R remote node, L link, P prefix, S SID, C candidate path
+              L1/L2 ISIS level-1/level-2, O OSPF, O3 OSPFv3, D direct, ST static/peer-node, SR Segment Routing
+              a area-ID, l link-ID, t topology-ID, s ISO-ID,
+              c confed-ID/ASN, b bgp-identifier, r router-ID, te te-router-ID, sd SID
+              i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
+              d designated router address, po protocol-origin, f flag
+              e endpoint-ip, cl color, as originator-asn oa originator-address
+              di discriminator, q bgp-router-ID
+              * placeholder node
+
+  [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.1]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.2]][L[i99.1.2.1][n99.1.2.2]]
+  Attributes: Link ID: Local:109 Remote:16, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+                  .43.5f.30.5f.30.5f.30.20.20.20
+
+  [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.2]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.1]][L[i99.1.2.2][n99.1.2.1]]
+  Attributes: Link ID: Local:16 Remote:109, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.49.4c.41.2d
+                  .43.5f.30.5f.30.5f.32.20.20.20
+
+  [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.2]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.3]][L[i99.3.2.1][n99.3.2.2]]
+  Attributes: Link ID: Local:15 Remote:16, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.49.4c.41.2d
+                  .43.5f.30.5f.30.5f.30.20.20.20
+
+  [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.3]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.2]][L[i99.3.2.2][n99.3.2.1]]
+  Attributes: Link ID: Local:16 Remote:15, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.49.4c.41.2d
+                  .43.5f.30.5f.30.5f.32.20.20.20
+
+  [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.3]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.4]][L[i99.2.3.3][n99.2.3.4]]
+  Attributes: Link ID: Local:15 Remote:44, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.49.4c.41.2d
+                  .43.5f.30.5f.30.5f.30.20.20.20
+
+  [E][O][I0x0][N[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.4]][R[c65535.65535][b255.255.255.255][a0.0.0.0][r1.1.1.3]][L[i99.2.3.4][n99.2.3.3]]
+  Attributes: Link ID: Local:44 Remote:15, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+                  .43.5f.30.5f.30.5f.30.20.20.20
+
+
+Retrieved 6 entries

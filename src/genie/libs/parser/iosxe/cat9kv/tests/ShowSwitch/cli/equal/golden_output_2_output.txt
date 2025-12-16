@@ -1,0 +1,5 @@
+Chassis/Stack Mac Address : 0000.0000.0000 - Foreign Mac Address
+Mac persistency wait time: Indefinite
+                                             H/W   Current
+Switch#   Role    Mac Address     Priority Version  State 
+-------------------------------------------------------------------------------------

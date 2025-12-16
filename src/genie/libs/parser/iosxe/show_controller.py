@@ -31,6 +31,7 @@ class ShowControllerVDSLSchema(MetaParser):
                 Optional('modem_vendor_specific'): str,
                 Optional('modem_vendor_country'): str,
                 Optional('modem_version_near'): str,
+                Optional('modem_phy_version'): str,
             },
             Optional('trellis'): str,
             Optional('serial_number_far'): str,
@@ -2975,10 +2976,16 @@ class ShowControllerT1Schema(MetaParser):
         'interface': {
             str: {
                 'status': str,
-                'applique_type': str,
+                Optional('applique_type'): str,
+                Optional('interface_type'): str,
+                Optional('current_mode'): str,
                 Optional('cable_length'): str,
+                Optional('bandwidth_limit'): int,
+                Optional('dsu_mode'): int,
+                Optional('rx_febe_since_last_clear'): int,
+                Optional('rx_febe_since_reset'): int,
                 'alarms': str,
-                'alarm_trigger': str,
+                Optional('alarm_trigger'): str,
                 Optional('soaking_time'): str,
                 Optional('clearance_time'): str,
                 Optional('ais_state'): str,
@@ -2987,35 +2994,56 @@ class ShowControllerT1Schema(MetaParser):
                 Optional('international_bit'): str,
                 Optional('national_bits'): str,
                 'framing': str,
-                'line_code': str,
+                Optional('line_code'): str,
                 'clock_source': str,
                 Optional('ber_thresholds'): { # Made BER thresholds optional as it might not always be present or fully parsed
                     'sf': str,
                     'sd': str,
                 },
-                'data_current_interval': {
-                    'line_code_violations': int,
-                    'path_code_violations': int,
-                    'slip_secs': int,
-                    'fr_loss_secs': int,
-                    'line_err_secs': int,
-                    'degraded_mins': int,
-                    'errored_secs': int,
-                    'bursty_err_secs': int,
-                    'severely_err_secs': int,
-                    'unavail_secs': int,
+                Optional('feac_code_status'): str,
+                Optional('mdl_transmission'): str,
+                Optional('data_current_interval'): {
+                    Optional('line_code_violations'): int,
+                    Optional('path_code_violations'): int,
+                    Optional('p_bit_coding_violation'): int,
+                    Optional('c_bit_coding_violation'): int,
+                    Optional('p_bit_err_secs'): int,
+                    Optional('p_bit_sev_err_secs'): int,
+                    Optional('sev_err_framing_secs'): int,
+                    Optional('unavailable_secs'): int,
+                    Optional('line_errored_secs'): int,
+                    Optional('c_bit_errored_secs'): int,
+                    Optional('c_bit_sev_err_secs'): int,
+                    Optional('severely_errored_line_secs'): int,
+                    Optional('far_end_errored_secs'): int,
+                    Optional('far_end_severely_errored_secs'): int,
+                    Optional('cp_bit_far_end_unavailable_secs'): int,
+                    Optional('near_end_path_failures'): int,
+                    Optional('far_end_path_failures'): int,
+                    Optional('far_end_code_violations'): int,
+                    Optional('ferf_defect_secs'): int,
+                    Optional('ais_defect_secs'): int,
+                    Optional('los_defect_secs'): int,
+                    Optional('slip_secs'): int,
+                    Optional('fr_loss_secs'): int,
+                    Optional('line_err_secs'): int,
+                    Optional('degraded_mins'): int,
+                    Optional('errored_secs'): int,
+                    Optional('bursty_err_secs'): int,
+                    Optional('severely_err_secs'): int,
+                    Optional('unavail_secs'): int,
                 },
-                'total_data': {
-                    'line_code_violations': int,
-                    'path_code_violations': int,
-                    'slip_secs': int,
-                    'fr_loss_secs': int,
-                    'line_err_secs': int,
-                    'degraded_mins': int,
-                    'errored_secs': int,
-                    'bursty_err_secs': int,
-                    'severely_err_secs': int,
-                    'unavail_secs': int,
+                Optional('total_data'): {
+                    Optional('line_code_violations'): int,
+                    Optional('path_code_violations'): int,
+                    Optional('slip_secs'): int,
+                    Optional('fr_loss_secs'): int,
+                    Optional('line_err_secs'): int,
+                    Optional('degraded_mins'): int,
+                    Optional('errored_secs'): int,
+                    Optional('bursty_err_secs'): int,
+                    Optional('severely_err_secs'): int,
+                    Optional('unavail_secs'): int,
                 },
             },
         },
@@ -3026,25 +3054,34 @@ class ShowControllerT1(ShowControllerT1Schema):
     '''Parser for show controller {controller_name} '''
     cli_command = 'show controller {controller_name}'
 
-    def cli(self, output=None):
+    def cli(self, controller_name='', output=None):
         if output is None:
             # In a real Genie environment, self.device.execute(self.cli_command) would be used.
             # For standalone testing, 'output' would be passed directly.
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(controller_name=controller_name))
 
         parsed = {}
         interface_dict = {}
         current_data_section = None # State variable to track which data section we are in
 
         # T1 0/1/0 is up 
-        # Updated regex to match either T1 or E1
-        p1 = re.compile(r'^(?P<interface>(T1|E1) \d+/\d+/\d+) is (?P<status>\w+)$')
+        # Updated regex to match T1, E1, or Serial interfaces
+        p1 = re.compile(r'^(?P<interface>((T1|E1) \d+/\d+/\d+)|(Serial\d+/\d+/\d+)) (?:- \((?P<interface_type>[^)]+)\) )?is (?P<status>\w+)$')
+
+        # Current mode is T3
+        p1a = re.compile(r'^Current mode is (?P<current_mode>\w+)$')
 
         # Applique type is XYZ
         p2 = re.compile(r'^Applique type is (?P<applique_type>.+)$')
 
-        # Cablelength is 10m
-        p3 = re.compile(r'^Cablelength is (?P<cable_length>.+)$')
+        # Cablelength is 10m or Cable length is 10 feet
+        p3 = re.compile(r'^(?:Cablelength|Cable length) is (?P<cable_length>.+)$')
+
+        # Bandwidth limit is 44210, DSU mode 0, Cable length is 10 feet
+        p3a = re.compile(r'^Bandwidth limit is (?P<bandwidth_limit>\d+), DSU mode (?P<dsu_mode>\d+), Cable length is (?P<cable_length>.+)$')
+
+        # rx FEBE since last clear counter 0, since reset 0
+        p3b = re.compile(r'^rx FEBE since last clear counter (?P<since_last_clear>\d+), since reset (?P<since_reset>\d+)$')
 
         # No alarms detected.
         p4 = re.compile(r'^No alarms detected\.$')
@@ -3059,7 +3096,8 @@ class ShowControllerT1(ShowControllerT1Schema):
         p7 = re.compile(r'^AIS State:(?P<ais_state>\w+)  LOS State:(?P<los_state>\w+)  LOF State:(?P<lof_state>\w+)$')
 
         # Framing is ESF, Line Code is B8ZS, Clock Source is Line.
-        p8 = re.compile(r'^Framing is (?P<framing>\w+), Line Code is (?P<line_code>\w+), Clock Source is (?P<clock_source>[^.]+)\.$')
+        # Framing is c-bit, Clock Source is Internal
+        p8 = re.compile(r'^Framing is (?P<framing>[^,]+)(?:, Line Code is (?P<line_code>[^,]+))?, Clock Source is (?P<clock_source>.+?)\.?$')
 
         # BER thresholds:  SF = 10e-3  SD = 10e-6
         p9 = re.compile(r'^BER thresholds:  SF = (?P<sf>[\d.e-]+)  SD = (?P<sd>[\d.e-]+)$')
@@ -3088,17 +3126,66 @@ class ShowControllerT1(ShowControllerT1Schema):
         # International Bit: 1, National Bits: 11111 
         p17 = re.compile(r'^International Bit: (?P<international_bit>\d+), National Bits: (?P<national_bits>\d+)$')
 
+        # No FEAC code is being received
+        p18 = re.compile(r'^No FEAC code is being received$')
+
+        # MDL transmission is disabled
+        p19 = re.compile(r'^MDL transmission is (?P<mdl_transmission>.+)$')
+
+        # T3/E3 specific patterns
+        # 0 Line Code Violations, 0 P-bit Coding Violation
+        p20 = re.compile(r'^\s*(?P<line_code_violations>\d+) Line Code Violations, (?P<p_bit_coding_violation>\d+) P-bit Coding Violation$')
+
+        # 0 C-bit Coding Violation
+        p21 = re.compile(r'^\s*(?P<c_bit_coding_violation>\d+) C-bit Coding Violation$')
+
+        # 0 P-bit Err Secs, 0 P-bit Sev Err Secs
+        p22 = re.compile(r'^\s*(?P<p_bit_err_secs>\d+) P-bit Err Secs, (?P<p_bit_sev_err_secs>\d+) P-bit Sev Err Secs$')
+
+        # 0 Sev Err Framing Secs, 0 Unavailable Secs
+        p23 = re.compile(r'^\s*(?P<sev_err_framing_secs>\d+) Sev Err Framing Secs, (?P<unavailable_secs>\d+) Unavailable Secs$')
+
+        # 0 Line Errored Secs, 0 C-bit Errored Secs, 0 C-bit Sev Err Secs
+        p24 = re.compile(r'^\s*(?P<line_errored_secs>\d+) Line Errored Secs, (?P<c_bit_errored_secs>\d+) C-bit Errored Secs, (?P<c_bit_sev_err_secs>\d+) C-bit Sev Err Secs$')
+
+        # 0 Severely Errored Line Secs
+        p25 = re.compile(r'^\s*(?P<severely_errored_line_secs>\d+) Severely Errored Line Secs$')
+
+        # 0 Far-End Errored Secs, 0 Far-End Severely Errored Secs
+        p26 = re.compile(r'^\s*(?P<far_end_errored_secs>\d+) Far-End Errored Secs, (?P<far_end_severely_errored_secs>\d+) Far-End Severely Errored Secs$')
+
+        # 0 CP-bit Far-end Unavailable Secs
+        p27 = re.compile(r'^\s*(?P<cp_bit_far_end_unavailable_secs>\d+) CP-bit Far-end Unavailable Secs$')
+
+        # 0 Near-end path failures, 0 Far-end path failures
+        p28 = re.compile(r'^\s*(?P<near_end_path_failures>\d+) Near-end path failures, (?P<far_end_path_failures>\d+) Far-end path failures$')
+
+        # 0 Far-end code violations, 0 FERF Defect Secs
+        p29 = re.compile(r'^\s*(?P<far_end_code_violations>\d+) Far-end code violations, (?P<ferf_defect_secs>\d+) FERF Defect Secs$')
+
+        # 0 AIS Defect Secs, 0 LOS Defect Secs
+        p30 = re.compile(r'^\s*(?P<ais_defect_secs>\d+) AIS Defect Secs, (?P<los_defect_secs>\d+) LOS Defect Secs$')
+
         for line in output.splitlines():
             line = line.strip()
 
-            # T1 0/1/0 is up
+            # T1 0/1/0 is up OR Serial1/0/0 - (SM-X-1T3/E3 Interface) is up
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 interface_name = group['interface']
                 interface_dict = parsed.setdefault('interface', {}).setdefault(interface_name, {})
                 interface_dict['status'] = group['status']
+                if group['interface_type']:
+                    interface_dict['interface_type'] = group['interface_type']
                 current_data_section = None # Reset section for new interface
+                continue
+
+            # Current mode is T3
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['current_mode'] = group['current_mode']
                 continue
 
             # Applique type is XYZ
@@ -3108,7 +3195,24 @@ class ShowControllerT1(ShowControllerT1Schema):
                 interface_dict['applique_type'] = group['applique_type']
                 continue
 
-            # Cablelength is 10m
+            # Bandwidth limit is 44210, DSU mode 0, Cable length is 10 feet
+            m = p3a.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['bandwidth_limit'] = int(group['bandwidth_limit'])
+                interface_dict['dsu_mode'] = int(group['dsu_mode'])
+                interface_dict['cable_length'] = group['cable_length']
+                continue
+
+            # rx FEBE since last clear counter 0, since reset 0
+            m = p3b.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['rx_febe_since_last_clear'] = int(group['since_last_clear'])
+                interface_dict['rx_febe_since_reset'] = int(group['since_reset'])
+                continue
+
+            # Cablelength is 10m or Cable length is 10 feet (fallback for simple patterns)
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -3149,7 +3253,8 @@ class ShowControllerT1(ShowControllerT1Schema):
             if m:
                 group = m.groupdict()
                 interface_dict['framing'] = group['framing']
-                interface_dict['line_code'] = group['line_code']
+                if group['line_code']:
+                    interface_dict['line_code'] = group['line_code']
                 interface_dict['clock_source'] = group['clock_source']
                 continue
 
@@ -3168,6 +3273,19 @@ class ShowControllerT1(ShowControllerT1Schema):
                 group = m.groupdict()
                 interface_dict['international_bit'] = group['international_bit']
                 interface_dict['national_bits'] = group['national_bits']
+                continue
+
+            # No FEAC code is being received
+            m = p18.match(line)
+            if m:
+                interface_dict['feac_code_status'] = 'No FEAC code is being received'
+                continue
+
+            # MDL transmission is disabled
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict['mdl_transmission'] = group['mdl_transmission']
                 continue
 
             # Data in current interval (446 seconds elapsed):
@@ -3190,6 +3308,94 @@ class ShowControllerT1(ShowControllerT1Schema):
 
                 # Lines for 'data_current_interval' (no trailing comma)
                 if current_data_section == 'data_current_interval':
+                    # T3/E3 specific patterns
+                    # 0 Line Code Violations, 0 P-bit Coding Violation
+                    m = p20.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['line_code_violations'] = int(group['line_code_violations'])
+                        target_dict['p_bit_coding_violation'] = int(group['p_bit_coding_violation'])
+                        continue
+
+                    # 0 C-bit Coding Violation
+                    m = p21.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['c_bit_coding_violation'] = int(group['c_bit_coding_violation'])
+                        continue
+
+                    # 0 P-bit Err Secs, 0 P-bit Sev Err Secs
+                    m = p22.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['p_bit_err_secs'] = int(group['p_bit_err_secs'])
+                        target_dict['p_bit_sev_err_secs'] = int(group['p_bit_sev_err_secs'])
+                        continue
+
+                    # 0 Sev Err Framing Secs, 0 Unavailable Secs
+                    m = p23.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['sev_err_framing_secs'] = int(group['sev_err_framing_secs'])
+                        target_dict['unavailable_secs'] = int(group['unavailable_secs'])
+                        continue
+
+                    # 0 Line Errored Secs, 0 C-bit Errored Secs, 0 C-bit Sev Err Secs
+                    m = p24.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['line_errored_secs'] = int(group['line_errored_secs'])
+                        target_dict['c_bit_errored_secs'] = int(group['c_bit_errored_secs'])
+                        target_dict['c_bit_sev_err_secs'] = int(group['c_bit_sev_err_secs'])
+                        continue
+
+                    # 0 Severely Errored Line Secs
+                    m = p25.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['severely_errored_line_secs'] = int(group['severely_errored_line_secs'])
+                        continue
+
+                    # 0 Far-End Errored Secs, 0 Far-End Severely Errored Secs
+                    m = p26.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['far_end_errored_secs'] = int(group['far_end_errored_secs'])
+                        target_dict['far_end_severely_errored_secs'] = int(group['far_end_severely_errored_secs'])
+                        continue
+
+                    # 0 CP-bit Far-end Unavailable Secs
+                    m = p27.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['cp_bit_far_end_unavailable_secs'] = int(group['cp_bit_far_end_unavailable_secs'])
+                        continue
+
+                    # 0 Near-end path failures, 0 Far-end path failures
+                    m = p28.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['near_end_path_failures'] = int(group['near_end_path_failures'])
+                        target_dict['far_end_path_failures'] = int(group['far_end_path_failures'])
+                        continue
+
+                    # 0 Far-end code violations, 0 FERF Defect Secs
+                    m = p29.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['far_end_code_violations'] = int(group['far_end_code_violations'])
+                        target_dict['ferf_defect_secs'] = int(group['ferf_defect_secs'])
+                        continue
+
+                    # 0 AIS Defect Secs, 0 LOS Defect Secs
+                    m = p30.match(line)
+                    if m:
+                        group = m.groupdict()
+                        target_dict['ais_defect_secs'] = int(group['ais_defect_secs'])
+                        target_dict['los_defect_secs'] = int(group['los_defect_secs'])
+                        continue
+
+                    # T1/E1 patterns (existing)
                     # 0 Line Code Violations, 0 Path Code Violations
                     m = p11.match(line)
                     if m:

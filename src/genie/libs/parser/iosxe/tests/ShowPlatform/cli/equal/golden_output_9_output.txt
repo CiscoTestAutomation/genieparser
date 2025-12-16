@@ -1,0 +1,41 @@
+Chassis type: C9610R
+
+Slot      Type                State                 Insert time (ago) 
+--------- ------------------- --------------------- ----------------- 
+1         C9600X-LC-56YL4C    ok                    1d04h         
+ 1/0      C9600X-LC-56YL4C    ok                    1d04h         
+2         C9610-LC-32CD       ok                    1d04h         
+ 2/0      C9610-LC-32CD       ok                    1d04h         
+3         C9610-LC-40YL4CD    ok                    1d04h         
+ 3/0      C9610-LC-40YL4CD    ok                    1d04h         
+4         C9610-LC-40YL4CD    ok                    1d04h         
+ 4/0      C9610-LC-40YL4CD    ok                    1d04h         
+9         C9600X-LC-32CD      ok                    1d04h         
+ 9/0      C9600X-LC-32CD      ok                    1d04h         
+10        C9600-LC-40YL4CD    ok                    1d04h         
+ 10/0     C9600-LC-40YL4CD    ok                    1d04h         
+R0        C9610-SUP-3XL       ok, active            1d04h         
+R1        C9610-SUP-3XL       ok, standby           1d04h         
+F0        C9610-SUP-3XL       ok, active            1d04h         
+F1        C9610-SUP-3XL       ok, standby           1d04h         
+P1        C9600-PWR-2KWAC     ok                    1d04h         
+P2        C9600-PWR-2KWAC     ok                    1d04h         
+P4        C9600-PWR-2KWAC     ok                    1d04h         
+P5        C9600-PWR-2KWAC     ok                    1d04h         
+P6        C9600-PWR-2KWAC     ok                    1d04h         
+P8        C9600-PWR-2KWAC     ok                    1d04h         
+FT1       C9610-FAN           fan:1, fail           1d04h         
+FT2       C9610-FAN           fan:1, fail           1d04h         
+FT3       C9610-FAN           fan:1, fail           1d04h         
+FT4       C9610-FAN           fan:1, fail           1d04h         
+
+Slot      CPLD Version        Firmware Version                        
+--------- ------------------- --------------------------------------- 
+1         23102385            17.18.1r                            
+2         24030144            17.18.1r                            
+3         24030144            17.18.1r                            
+4         24030144            17.18.1r                            
+R0        25060231            17.18.1r                            
+R1        25060231            17.18.1r                            
+9         21121742            17.18.1r                            
+10        21121742            17.18.1r                            

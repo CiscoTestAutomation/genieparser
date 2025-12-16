@@ -1,0 +1,68 @@
+
+--------------------------------------------------------------------------------
+UPTIME SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+First customer power on : 01/23/2023 05:19:47
+Total uptime            :  0  years  33 weeks  5  days  20 hours  30 minutes
+Total downtime          :  0  years  9  weeks  4  days  3  hours  21 minutes
+Number of resets        : 1451
+Number of slot changes  : 1
+Current reset reason    : Image Install 
+Current reset timestamp : 11/22/2023 01:08:54
+Current slot            : 5
+Chassis type            : C9610R
+Current uptime          :  0  years  0  weeks  1  days  4  hours  2  minutes
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+UPTIME CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+Time Stamp          | Reset
+MM/DD/YYYY HH:MM:SS | Reason
+--------------------------------------------------------------------------------
+Uptime
+years weeks days hours minutes
+--------------------------------------------------------------------------------
+11/20/2023 21:27:11   Reload Command                                                                                       
+ 0     0     0     0     19 
+11/20/2023 21:44:04   Reload Command                                                                                       
+ 0     0     0     0     15 
+11/20/2023 21:54:24   Reload Command                                                                                       
+ 0     0     0     0     9  
+11/20/2023 22:06:37   Reload Command                                                                                       
+ 0     0     0     0     9  
+11/20/2023 22:17:15   Reload Command                                                                                       
+ 0     0     0     0     9  
+11/20/2023 23:46:05   Reload Command                                                                                       
+ 0     0     0     0     15 
+11/21/2023 00:01:38   Install                                                                                              
+ 0     0     0     0     14 
+11/21/2023 00:31:05   Critical software exception                                                                          
+ 0     0     0     0     29 
+11/21/2023 01:04:29   Critical software exception                                                                          
+ 0     0     0     0     30 
+11/21/2023 12:40:34   Force Failover                                                                                       
+ 0     0     0     11    5  
+11/21/2023 13:07:50   Force Failover                                                                                       
+ 0     0     0     0     25 
+11/21/2023 14:00:02   Force Failover                                                                                       
+ 0     0     0     0     50 
+11/21/2023 14:26:15   Reload Command                                                                                       
+ 0     0     0     0     25 
+11/21/2023 14:44:29   Force Failover                                                                                       
+ 0     0     0     0     16 
+11/21/2023 15:07:35   Reload Command                                                                                       
+ 0     0     0     0     20 
+11/21/2023 15:19:39   Reload Command                                                                                       
+ 0     0     0     0     9  
+11/21/2023 15:39:55   Reload Command                                                                                       
+ 0     0     0     0     19 
+11/21/2023 15:56:40   Reload Command                                                                                       
+ 0     0     0     0     15 
+11/21/2023 17:03:35   Install                                                                                              
+ 0     0     0     1     4  
+11/21/2023 17:34:15   Critical software exception                                                                          
+ 0     0     0     0     29 
+11/22/2023 01:08:54   Image Install                                                                                        
+ 0     0     0     7     5  
+--------------------------------------------------------------------------------

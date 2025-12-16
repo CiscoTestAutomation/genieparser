@@ -1,0 +1,47 @@
+show inventory raw
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+INFO: Please use "show license UDI" to get serial number for licensing.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+NAME: "Chassis", DESCR: "Cisco ISR4461 Chassis"
+PID: ISR4461/K9        , VID: V00  , SN: FDO2151A2HJ
+
+NAME: "Power Supply Module 0", DESCR: "1000W AC Power Supply for Cisco ISR4450, ISR4460, VG450"
+PID: PWR-4450-1000W-AC , VID: V02  , SN: DCA2128Y07N
+
+NAME: "Fan Tray", DESCR: "Cisco ISR4460 Forward-flow Fan Assembly"
+PID: ACS-4460-FANASSY  , VID:      , SN:
+
+NAME: "module 0", DESCR: "Cisco ISR4461 Built-In NIM controller"
+PID: ISR4461/K9        , VID:      , SN:
+
+NAME: "NIM subslot 0/1", DESCR: "NIM-2GE-CU-SFP"
+PID: NIM-2GE-CU-SFP    , VID: V02  , SN: FOC22010WTB
+
+NAME: "NIM subslot 0/0", DESCR: "Front Panel 6 ports Ten/Gigabitethernet Module"
+PID: ISR4461-4x1G-2xTG , VID: V01  , SN:
+
+NAME: "subslot 0/0 transceiver 5", DESCR: "SFP+ 10GBASE-SR"
+PID: SFP-10G-SR-S        , VID: V01  , SN: FNS22030KVN
+
+NAME: "module 1", DESCR: "Cisco ISR4461 Built-In SM controller"
+PID: ISR4461/K9        , VID:      , SN:
+
+NAME: "SM subslot 1/0", DESCR: "SM-X-6X1G"
+PID: SM-X-6X1G         , VID: V02  , SN: FOC22032B37
+
+NAME: "subslot 1/0 transceiver 2", DESCR: "GE SX"
+PID: GLC-SX-MMD          , VID: V01  , SN: FNS1742149W
+
+NAME: "module 2", DESCR: "Cisco ISR4461 Built-In SM controller"
+PID: ISR4461/K9        , VID:      , SN:
+
+NAME: "module 3", DESCR: "Cisco ISR4461 Built-In SM controller"
+PID: ISR4461/K9        , VID:      , SN:
+
+NAME: "module R0", DESCR: "Cisco ISR4461 Route Processor"
+PID: ISR4461/K9        , VID: V00  , SN: FDO21481BWN
+
+NAME: "module F0", DESCR: "Cisco ISR4461 Forwarding Processor"
+PID: ISR4461/K9        , VID:      , SN:

@@ -1071,9 +1071,12 @@ class ShowLispPublisherSuperParser(ShowLispPublisherSchema):
         # 23.23.23.23                 Reachable                  Up
         # 2001:199:199:199::199       ETR Map-Server             Down    S     Off
         # 101.101.101.101             No ETR MS                  Down    ?     Established
+        # 12.12.12.12                 Reachable                  Up      LI    Established
+        # 12.12.12.12                 Reachable                  Up      LP    Established
+
         p2 = re.compile(r'^(?P<publisher_ip>[\da-fA-F\.:]+)\s+(?P<state>ETR Map-Server '
                         r'not found|ETR Map-Server|Unreachable|Reachable|No ETR MS)\s+'
-                        r'(?P<session>\w+)\s+((?P<type>L|T|S|\?)\s+)?(?P<pubsub_state>.+)$')
+                        r'(?P<session>\w+)\s+((?P<type>(L|T|S|P|I|\?)+)\s+)?(?P<pubsub_state>.+)$')
 
         for line in output.splitlines():
             line = line.strip()

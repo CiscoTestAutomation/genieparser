@@ -1,0 +1,21 @@
+expected_output = {
+   "autoconfig_status":"Enable",
+   "ipv4":{
+      "configured_interface":"Vlan1",
+      "config_in_progress":False,
+      "interface":"Vlan1",
+      "ip_address":"19.1.23.116/255.255.0.0",
+      "type":"DHCP",
+      "svi":"Configured",
+      "port_used":"GigabitEthernet2/0/1",
+      "gw_ip":"19.1.1.1",
+      "gw_mac":"9818.8810.8d23",
+      "score":8
+   },
+   "ipv6":{
+      "configured_interface":"Vlan1",
+      "config_in_progress":False,
+      "interface":"None"
+   },
+   "uplink_reachable":"IPv4"
+}

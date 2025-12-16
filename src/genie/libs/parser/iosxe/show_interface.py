@@ -60,6 +60,7 @@ except Exception:
     pass
 
 from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any, ListOf
 from genie.metaparser.util import merge_dict, keynames_convert
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.metaparser.util.schemaengine import Schema, \
@@ -351,16 +352,17 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Hardware is Gigabit Ethernet, address is 0057.d2ff.428c (bia 0057.d2ff.428c)
         # Hardware is Loopback
-        p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+]+)'
-                        r'(, *address +is +(?P<mac_address>[a-z0-9\.]+)'
-                        r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\))?$')
+        # Hardware is i82543 (Livengood), address is 0003.fdfe.641c (bia 0003.fdfe.641c)
+        p2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\s\+\(\)\_]+?)'
+                        r'(, +address +is +(?P<mac_address>[a-fA-F0-9\.]+)'
+                        r' *\(bia +(?P<phys_address>[a-fA-F0-9\.]+)\))?$')
 
         # Hardware is LTE Adv CAT6 - Multimode LTE/DC-HSPA+/HSPA+/HSPA/UMTS/EDGE/GPRS
         # Hardware is BUILT-IN-4x2_5GE, address is 8c1e.8068.9f6c (bia 8c1e.8068.9f6c)
-        p2_2 = re.compile(r'Hardware +is +(?P<type>[a-zA-Z0-9\-\/\\_+ ]+)(, +address +is +(?P<mac_address>[a-f0-9\.]+)( +\(bia +(?P<phys_address>.*)\))?)?')
-
-        # Hardware is not present
-        p2_3 = re.compile(r'^Hardware +is +not +present$')
+        # Hardware is i82543 (Livengood), address is 0003.fdfe.641c (bia 0003.fdfe.641c)
+        p2_2 = re.compile(r'^Hardware +is +(?P<type>[a-zA-Z0-9\-\/\\_\+\(\) ]+?)'
+                          r'(, +address +is +(?P<mac_address>[a-fA-F0-9\.]+)'
+                          r' *\(bia +(?P<phys_address>[a-fA-F0-9\.]+)\))?$')
 
         # Hardware is not present
         p2_3 = re.compile(r'^Hardware +is +not +present$')
@@ -4904,6 +4906,11 @@ class ShowInterfacesTransceiverSupportedlistSchema(MetaParser):
                 'cisco_pin_min_version_supporting_dom' : str,
             },
         },
+        Optional('management_interface_transceivers'): {
+            Any(): {
+                'cisco_pin_min_version_supporting_dom' : str,
+            },
+        }
     }
 
 #====================================================
@@ -4922,26 +4929,39 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
         else:
             out = output
 
-
         transceivers_supported_list = {}
 
-        #------------------       -------------------------
-        #p1 will match dashes pattern used to create dict that to start adiing the transceiver types
+        # p1 will match dashes pattern used to create dict that to start adding the transceiver types
         p1 = re.compile(r"\-+\s+\-+")
 
         #   GLC-FE-100FX-RGD         ALL
         #   GLC-SX-MM                NONE
-        p2 = re.compile(r"^(?P<transceiver>[\w-]+)\s+(?P<pin_version>.+)$")
+        #   SFP-10/25G-CSR-S         CPN 1234-56
+        #   QSFP-100G-SR1.2          ALL    
+        p2 = re.compile(r"^(?P<transceiver>[\w\-\/\.]+)\s+(?P<pin_version>.+)$")
+
+        # Transceivers supported on management interface
+        p3 = re.compile(r"^Transceivers supported on management interface")
 
         transceiver_dict = {}
+        management_interface_transceivers = False
 
         for line in out.splitlines():
             line = line.strip()
+            
+            # Transceivers supported on management interface
+            m3 = p3.match(line)
+            if m3:
+                management_interface_transceivers = True
+                mgmt_dict = transceivers_supported_list.setdefault('management_interface_transceivers', {})
+                transceiver_dict = mgmt_dict
+                continue
 
-            #------------------       -------------------------
+            # p1 will match dashes pattern used to create dict that to start adding the transceiver types
             m1 = p1.match(line)
             if m1:
-                transceiver_dict = transceivers_supported_list.setdefault('transceiver_type',{})
+                if not management_interface_transceivers:
+                    transceiver_dict = transceivers_supported_list.setdefault('transceiver_type',{})
                 continue
 
             #   GLC-FE-100FX-RGD         ALL
@@ -4949,9 +4969,9 @@ class ShowInterfacesTransceiverSupportedlist(ShowInterfacesTransceiverSupportedl
             #   GLC-SX-MM-RGD            CPN 2274-02
             m2 = p2.match(line)
             if m2:
-                transceiver_dict.update({m2.groupdict()['transceiver'] :
-                                        { "cisco_pin_min_version_supporting_dom" :
-                                        m2.groupdict()['pin_version']}})
+                transceiver_name = m2.groupdict()['transceiver']
+                pin_version = m2.groupdict()['pin_version'].strip()
+                transceiver_dict.update({transceiver_name : {"cisco_pin_min_version_supporting_dom":pin_version}})
                 continue
 
         return transceivers_supported_list
@@ -6386,3 +6406,158 @@ class ShowInterfacesTransceiverModule(ShowInterfacesTransceiverModuleSchema):
                 continue
 
         return ret_dict
+
+
+class ShowInterfaceTeAccountSchema(MetaParser):
+    """Schema for 'show interfaces' (any interface)"""
+    schema = {
+        Any(): {  # Any interface name as a key
+            Optional('descriptions'): {
+                'pkts_in_desc': str,
+                'pkts_out_desc': str,
+                'chars_in_desc': str,
+                'chars_out_desc': str,
+                'rxbs_desc': str,
+                'rxps_desc': str,
+                'txbs_desc': str,
+                'txps_desc': str,
+            },
+            'protocols': ListOf(
+                {
+                    'protocol': str,
+                    'pkts_in': int,
+                    'chars_in': int,
+                    'pkts_out': int,
+                    'chars_out': int,
+                    'rxbs': int,
+                    'rxps': int,
+                    'txbs': int,
+                    'txps': int,
+                }
+            )
+        }
+    }
+
+class ShowInterfaceTeAccount(ShowInterfaceTeAccountSchema):
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+            
+        result = {}
+        current_intf = None
+        
+        # TenGigabitEthernet0/1/1
+        p0 = re.compile(r'^([A-Za-z]+\d+(?:/\d+)*)\s*$')
+        
+        # Pkts In: input pkts                 Pkts Out: output pkts
+        p1 = re.compile(r'^\s*Pkts In:\s*(.+?)\s+Pkts Out:\s*(.+)$')
+        
+        # Chars In: input bytes received      Chars Out: output bytes transmitted
+        p2 = re.compile(r'^\s*Chars In:\s*(.+?)\s+Chars Out:\s*(.+)$')
+        
+        # RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+        p3 = re.compile(r'^\s*RXBS:\s*(.+?)\s+RXPS:\s*(.+)$')
+        
+        # TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+        p4 = re.compile(r'^\s*TXBS:\s*(.+?)\s+TXPS:\s*(.+)$')
+        
+        #   Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+        p5 = re.compile(r'^\s*Protocol\s+Pkts In\s+Chars In\s+Pkts Out\s+Chars Out\s+RXBS\s+RXPS\s+TXBS\s+TXPS\s*$')
+        
+        # ---------------------------------------------------------------------------------------
+        p6 = re.compile(r'^-+$')
+        
+        # IPv6           87        11094         6138       491064        1000            1        14000           21
+        p7 = re.compile(
+            r'^\s*(\w+)\s+'      # protocol name
+            r'(\d+)\s+'          # pkts_in
+            r'(\d+)\s+'          # chars_in
+            r'(\d+)\s+'          # pkts_out
+            r'(\d+)\s+'          # chars_out
+            r'(\d+)\s+'          # rxbs
+            r'(\d+)\s+'          # rxps
+            r'(\d+)\s+'          # txbs
+            r'(\d+)\s*$'         # txps
+        )
+
+        for line in output.splitlines():
+            # Keep original line for pattern matching
+            original_line = line
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+            
+            # TenGigabitEthernet0/1/1
+            m0 = p0.match(line)
+            if m0:
+                current_intf = m0.group(1)
+                if current_intf not in result:
+                    result[current_intf] = {'protocols': []}
+                continue
+            
+            # Pkts In: input pkts                 Pkts Out: output pkts
+            m1 = p1.match(original_line)
+            if m1 and current_intf:
+                if 'descriptions' not in result[current_intf]:
+                    result[current_intf]['descriptions'] = {}
+                result[current_intf]['descriptions']['pkts_in_desc'] = m1.group(1).strip()
+                result[current_intf]['descriptions']['pkts_out_desc'] = m1.group(2).strip()
+                continue
+            
+            # Chars In: input bytes received      Chars Out: output bytes transmitted
+            m2 = p2.match(original_line)
+            if m2 and current_intf:
+                if 'descriptions' not in result[current_intf]:
+                    result[current_intf]['descriptions'] = {}
+                result[current_intf]['descriptions']['chars_in_desc'] = m2.group(1).strip()
+                result[current_intf]['descriptions']['chars_out_desc'] = m2.group(2).strip()
+                continue
+            
+            # RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+            m3 = p3.match(original_line)
+            if m3 and current_intf:
+                if 'descriptions' not in result[current_intf]:
+                    result[current_intf]['descriptions'] = {}
+                result[current_intf]['descriptions']['rxbs_desc'] = m3.group(1).strip()
+                result[current_intf]['descriptions']['rxps_desc'] = m3.group(2).strip()
+                continue
+            
+            # TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+            m4 = p4.match(original_line)
+            if m4 and current_intf:
+                if 'descriptions' not in result[current_intf]:
+                    result[current_intf]['descriptions'] = {}
+                result[current_intf]['descriptions']['txbs_desc'] = m4.group(1).strip()
+                result[current_intf]['descriptions']['txps_desc'] = m4.group(2).strip()
+                continue
+            
+            #   Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+            m5 = p5.match(line)
+            if m5:
+                continue
+            
+            # ---------------------------------------------------------------------------------------------------------------------
+            m6 = p6.match(line)
+            if m6:
+                continue
+            
+            # Match protocol data: IPv6           87        11094         6138       491064        1000            1        14000           21
+            m7 = p7.match(line)
+            if m7 and current_intf:
+                protocol_data = {
+                    'protocol': m7.group(1),
+                    'pkts_in': int(m7.group(2)),
+                    'chars_in': int(m7.group(3)),
+                    'pkts_out': int(m7.group(4)),
+                    'chars_out': int(m7.group(5)),
+                    'rxbs': int(m7.group(6)),
+                    'rxps': int(m7.group(7)),
+                    'txbs': int(m7.group(8)),
+                    'txps': int(m7.group(9)),
+                }
+                result[current_intf]['protocols'].append(protocol_data)
+
+        return result

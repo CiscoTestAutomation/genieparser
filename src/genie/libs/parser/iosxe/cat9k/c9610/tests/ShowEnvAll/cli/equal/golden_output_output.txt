@@ -1,0 +1,207 @@
+
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     0
+
+
+Sensor List:  Environmental Monitoring 
+ Sensor           Location      State     Reading        Threshold(Minor,Major,Critical,Shutdown)
+ --------------   ----------    ------    ------------   ---------------------------------------
+ HotSwap: P_MB    R0            Normal    424   Watts   	na
+ HotSwap: V_MB    R0            Normal    11888 mV      	na
+ HotSwap: P_DB    R0            Normal    299   Watts   	na
+ HotSwap: V_DB    R0            Normal    11929 mV      	na
+ Temp: CPUcore:0  R0            Normal    27    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:1  R0            Normal    29    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:2  R0            Normal    30    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:3  R0            Normal    28    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:4  R0            Normal    28    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:5  R0            Normal    28    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:6  R0            Normal    28    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:7  R0            Normal    28    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: InltL_MB   R0            Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltR_MB   R0            Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltL_MB   R0            Normal    27    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltR_MB   R0            Normal    26    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltL_DB   R0            Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltR_DB   R0            Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltL_DB   R0            Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltR_DB   R0            Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: CPUDB_MB   R0            Normal    28    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K1_O_L_MB  R0            Normal    29    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K1_O_R_MB  R0            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: IOFPGA_MB  R0            Normal    28    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K0_O_R_MB  R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: TMFPGA_MB  R0            Normal    26    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: GB_O_MB    R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K0_O_L_MB  R0            Normal    28    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: MEM_CPUDB  R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: SB_CPUDB   R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: VCC_CPUDB  R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: FL_CPUDB   R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: PWR_CPUDB  R0            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: S1_I_00    R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_01    R0            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_02    R0            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_03    R0            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_04    R0            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_05    R0            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_06    R0            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_07    R0            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_08    R0            Normal    42    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_09    R0            Normal    44    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_00   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_01   R0            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_02   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_03   R0            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_04   R0            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_05   R0            Normal    40    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_06   R0            Normal    40    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_00   R0            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_01   R0            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_02   R0            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_03   R0            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_04   R0            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_05   R0            Normal    42    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_06   R0            Normal    40    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_00   R0            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_01   R0            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_02   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_03   R0            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_04   R0            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_05   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_06   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_00   R0            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_01   R0            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_02   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_03   R0            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_04   R0            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_05   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_06   R0            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ SUM_MB_GB        R0            Normal    147   Watts   	na
+ SUM_MB_KP0       R0            Normal    116   Watts   	na
+ SUM_MB_KP1       R0            Normal    129   Watts   	na
+ SUM_DB_KP2       R0            Normal    125   Watts   	na
+ SUM_DB_KP3       R0            Normal    129   Watts   	na
+ Temp: FPIO-1     R0            Normal    NA    Sensor Fault	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-2     R0            Normal    NA    Sensor Fault	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-3     R0            Normal    NA    Sensor Fault	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-4     R0            Normal    NA    Sensor Fault	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-5     R0            Normal    NA    Sensor Fault	( 55, 60, 65, 70)(Celsius)
+ HotSwap: P_MB    R1            Normal    416   Watts   	na
+ HotSwap: V_MB    R1            Normal    11862 mV      	na
+ HotSwap: P_DB    R1            Normal    315   Watts   	na
+ HotSwap: V_DB    R1            Normal    11944 mV      	na
+ Temp: CPUcore:0  R1            Normal    30    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:1  R1            Normal    29    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:2  R1            Normal    29    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:3  R1            Normal    29    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:4  R1            Normal    31    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:5  R1            Normal    30    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:6  R1            Normal    28    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: CPUcore:7  R1            Normal    27    Celsius 	( 75, 80, 85,100)(Celsius)
+ Temp: InltL_MB   R1            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltR_MB   R1            Normal    21    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltL_MB   R1            Normal    26    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltR_MB   R1            Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltL_DB   R1            Normal    21    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltR_DB   R1            Normal    20    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltL_DB   R1            Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: OtltR_DB   R1            Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: CPUDB_MB   R1            Normal    27    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K1_O_L_MB  R1            Normal    29    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K1_O_R_MB  R1            Normal    21    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: IOFPGA_MB  R1            Normal    27    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K0_O_R_MB  R1            Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: TMFPGA_MB  R1            Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: GB_O_MB    R1            Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: K0_O_L_MB  R1            Normal    26    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: MEM_CPUDB  R1            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: SB_CPUDB   R1            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: VCC_CPUDB  R1            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: FL_CPUDB   R1            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: PWR_CPUDB  R1            Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: S1_I_00    R1            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_01    R1            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_02    R1            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_03    R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_04    R1            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_05    R1            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_06    R1            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_07    R1            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_08    R1            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_I_09    R1            Normal    41    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_00   R1            Normal    31    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_01   R1            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_02   R1            Normal    30    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_03   R1            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_04   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_05   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K0_06   R1            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_00   R1            Normal    38    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_01   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_02   R1            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_03   R1            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_04   R1            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_05   R1            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K1_06   R1            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_00   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_01   R1            Normal    32    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_02   R1            Normal    33    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_03   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_04   R1            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_05   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K2_06   R1            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_00   R1            Normal    31    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_01   R1            Normal    34    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_02   R1            Normal    35    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_03   R1            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_04   R1            Normal    39    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_05   R1            Normal    37    Celsius 	( 95,105,115,125)(Celsius)
+ Temp: S1_K3_06   R1            Normal    36    Celsius 	( 95,105,115,125)(Celsius)
+ SUM_MB_GB        R1            Normal    150   Watts   	na
+ SUM_MB_KP0       R1            Normal    115   Watts   	na
+ SUM_MB_KP1       R1            Normal    132   Watts   	na
+ SUM_DB_KP2       R1            Normal    125   Watts   	na
+ SUM_DB_KP3       R1            Normal    136   Watts   	na
+ Temp: FPIO-1     R1            Normal    0     Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-2     R1            Normal    0     Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-3     R1            Normal    0     Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-4     R1            Normal    0     Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: FPIO-5     R1            Normal    0     Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: InltRight  1/0           Normal    22    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltRight  1/0           Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltLeft   1/0           Normal    22    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltLeft   1/0           Normal    25    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltRight  3/0           Normal    22    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltRight  3/0           Normal    23    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltLeft   3/0           Normal    22    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltLeft   3/0           Normal    15    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltRight  4/0           Normal    22    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltRight  4/0           Normal    24    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltLeft   4/0           Normal    22    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltLeft   4/0           Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltRight  9/0           Normal    21    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltRight  9/0           Normal    22    Celsius 	( 75, 80, 85, 90)(Celsius)
+ Temp: InltLeft   9/0           Normal    24    Celsius 	( 55, 60, 65, 70)(Celsius)
+ Temp: OtltLeft   9/0           Normal    26    Celsius 	( 75, 80, 85, 90)(Celsius)
+
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     1     2
+------  --------------------  ----  --------  ---------  -----------
+PS1     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS2     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS3     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS4     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS5     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS6     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS7     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+PS8     C9600-PWR-3KWAC       ac    3000 W    active     good  good 
+
+Fan                 Fan States
+Tray    Status       1     2     3     4     5     6     
+------  ----------  ------------------------------------
+FT1     active       good  good  good  good  good  good 
+FT2     marginal     bad   good  good  good  good  good 
+FT3     marginal     bad   good  good  good  good  good 
+FT4     marginal     good  good  good  good  good  bad  

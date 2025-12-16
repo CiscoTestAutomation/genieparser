@@ -1,0 +1,37 @@
+show lslib server topology-db protocol ospf instance-id 0 nlri-type link detail
+Tue Sep 23 12:11:38.031 UTC
+
+Prefix codes: E link, V node, T IP reachable route, S SRv6 SID, SP SRTE Policy, u/U unknown
+              I Identifier, N local node, R remote node, L link, P prefix, S SID, C candidate path
+              L1/L2 ISIS level-1/level-2, O OSPF, O3 OSPFv3, D direct, ST static/peer-node, SR Segment Routing
+              a area-ID, l link-ID, t topology-ID, s ISO-ID,
+              c confed-ID/ASN, b bgp-identifier, r router-ID, te te-router-ID, sd SID
+              i if-address, n nbr-address, o OSPF Route-type, p IP-prefix
+              d designated router address, po protocol-origin, f flag
+              e endpoint-ip, cl color, as originator-asn oa originator-address
+              di discriminator, q bgp-router-ID
+  [E][O][I0x0][N[c0][b0.0.0.0][a0.0.0.0][r1.1.1.1]][R[c0][b0.0.0.0][a0.0.0.0][r1.1.1.2]][L[i99.1.2.1][n99.1.2.2]]/792
+NLRI Length: 99 bytes
+Attribute Length: 51 bytes
+Producers:  
+  0, ospf   
+NLRI Type: Link
+Protocol: OSPF
+Identifier: 0x0
+Local Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.0
+        Router ID IPv4: 1.1.1.1
+Remote Node Descriptor:
+        AS Number: 0
+        BGP Identifier: 0.0.0.0
+        Area ID: 0.0.0.0
+        Router ID IPv4: 1.1.1.2
+Link Descriptor:
+        Local Interface Address IPv4: 99.1.2.1
+        Neighbor Interface Address IPv4: 99.1.2.2
+
+  Attributes: Link ID: Local:109 Remote:16, metric: 1, Opaque-link-attr:
+                  80.02.00.18.00.00.00.09.76.31.2e.30.30.2d.4f.4c.54.2d
+                  .43.5f.30.5f.30.5f.30.20.20.20

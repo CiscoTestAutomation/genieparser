@@ -9,7 +9,9 @@ IOSXE parsers for the following show commands:
     * hw-module beacon slot {slot_num} status
     * show hw-module subslot all oir
     * show hw-module subslot {subslot} entity
+    * show hw-module subslot {slot} attribute
     * show platform hardware chassis rp {rp_state} fan-speed-control-data
+    * hw-module beacon {switch} {switch_num} slot {slot_num} port {port_num} status
 '''
 
 # Python
@@ -1240,6 +1242,196 @@ class ShowHwModuleSubslotEntity(ShowHwModuleSubslotEntitySchema):
 
         return ret_dict
 
+# ==========================
+# Schema for:
+#  * 'show hw-module subslot {slot} attribute'
+# ==========================
+class ShowHwModuleSubslotAttributeSchema(MetaParser):
+    """Schema for show hw-module subslot {slot} attribute"""
+
+    schema = {
+        'slot': {
+            int: {
+                'bay': int,
+                'board': int,
+                'module': str,
+                'spa_type': str,
+                'spa_type_hex': str,
+                'daughter_board_present': bool,
+                'base_mac_addr': str,
+                'mac_blk_sz': int,
+                'endpt_mac_address_offset': str,
+                'basic_attributes': {
+                    'length': int,
+                    'version': str,
+                    'module_type': str,
+                    'width': str,
+                },
+                'power_rating': int,
+                'control_endpoint_count': int,
+                'daughter_board_count': int,
+                'kr_support': str,
+                '16_bit_gpio': str,
+                'submodule_reset_support': str,
+                'extended_attributes': {
+                    'module_name': str,
+                    'port_type': str,
+                    'port_range': str,
+                    'per_port_info': {
+                        'max_iid': int,
+                        'connector': str,
+                        'network_clocking': str,
+                    },
+                },
+                'module_oid': str,
+                'port_oid': str,
+            }
+        }
+    }
+
+
+# ==========================
+# Parser for:
+#  * 'show hw-module subslot {slot} attribute'
+# ==========================
+class ShowHwModuleSubslotAttribute(ShowHwModuleSubslotAttributeSchema):
+    """Parser for show hw-module subslot {slot} attribute"""
+
+    cli_command = 'show hw-module subslot {slot} attribute'
+
+    def cli(self, slot='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(slot=slot))
+
+        # Initial variables
+        ret_dict = {}
+
+        # Slot 1 Bay 0 Board 0 Module[SM-X-6X1G] spa_type 0xBC4 Daughter Board Not Present
+        p1 = re.compile(r'^Slot\s+(?P<slot>\d+)\s+Bay\s+(?P<bay>\d+)\s+Board\s+(?P<board>\d+)\s+'
+                       r'Module\[(?P<module>\S+)\]\s+spa_type\s+(?P<spa_type_hex>0x\w+)\s+'
+                       r'Daughter\s+Board\s+(?P<daughter_board>Not Present|Present)$')
+
+        # Base mac_addr 500f.8001.c3f8 mac_blk_sz 10  Endpt MAC Address offset(s) : 0
+        p2 = re.compile(r'^Base\s+mac_addr\s+(?P<base_mac_addr>\S+)\s+mac_blk_sz\s+(?P<mac_blk_sz>\d+)\s+'
+                       r'Endpt\s+MAC\s+Address\s+offset\(s\)\s*:\s*(?P<endpt_mac_offset>\S+)$')
+
+        # Basic attributes : length 11, version [2], module-type [ngio], width [Single Wide]
+        p3 = re.compile(r'^Basic\s+attributes\s*:\s*length\s+(?P<length>\d+),\s*version\s+\[(?P<version>\d+)\],\s*'
+                       r'module-type\s+\[(?P<module_type>\w+)\],\s*width\s+\[(?P<width>[\w\s]+)\]$')
+
+        # Power Rating [75], Control Endpoint count [1], Daughter Board Count [0]
+        p4 = re.compile(r'^Power\s+Rating\s+\[(?P<power_rating>\d+)\],\s*Control\s+Endpoint\s+count\s+\[(?P<control_endpoint_count>\d+)\],\s*'
+                       r'Daughter\s+Board\s+Count\s+\[(?P<daughter_board_count>\d+)\]$')
+
+        # KR Support [0x01], 16-bit GPIO [Present], Submodule reset support [Not required]
+        p5 = re.compile(r'^KR\s+Support\s+\[(?P<kr_support>0x\w+)\],\s*16-bit\s+GPIO\s+\[(?P<gpio_16_bit>\w+)\],\s*'
+                       r'Submodule\s+reset\s+support\s+\[(?P<submodule_reset_support>[\w\s]+)\]$')
+
+        # Extended Attributes for [SM-X-6X1G]
+        p6 = re.compile(r'^Extended\s+Attributes\s+for\s+\[(?P<module_name>\S+)\]$')
+
+        # Port type Ethernet Range [0 5] Per-port Information : Max IID [1] Connector [SFP] Network clocking [disable]
+        p7 = re.compile(r'^Port\s+type\s+(?P<port_type>\w+)\s+Range\s+\[(?P<port_range>[\d\s]+)\]\s+'
+                       r'Per-port\s+Information\s*:\s*Max\s+IID\s+\[(?P<max_iid>\d+)\]\s+'
+                       r'Connector\s+\[(?P<connector>\w+)\]\s+Network\s+clocking\s+\[(?P<network_clocking>\w+)\]$')
+
+        # Module OID: 1 3 6 1 4 1 9 12 3 1 9 96 2
+        p8 = re.compile(r'^Module\s+OID:\s+(?P<module_oid>[\d\s]+)$')
+
+        # Port OID: 1 3 6 1 4 1 9 12 3 1 10 109
+        p9 = re.compile(r'^Port\s+OID:\s+(?P<port_oid>[\d\s]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Slot 1 Bay 0 Board 0 Module[SM-X-6X1G] spa_type 0xBC4 Daughter Board Not Present
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                slot_num = int(group['slot'])
+                slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot_num, {})
+                slot_dict['bay'] = int(group['bay'])
+                slot_dict['board'] = int(group['board'])
+                slot_dict['module'] = group['module']
+                slot_dict['spa_type_hex'] = group['spa_type_hex']
+                slot_dict['spa_type'] = group['spa_type_hex']  # Store hex value as spa_type
+                slot_dict['daughter_board_present'] = group['daughter_board'] == 'Present'
+                continue
+
+            # Base mac_addr 500f.8001.c3f8 mac_blk_sz 10  Endpt MAC Address offset(s) : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict['base_mac_addr'] = group['base_mac_addr']
+                slot_dict['mac_blk_sz'] = int(group['mac_blk_sz'])
+                slot_dict['endpt_mac_address_offset'] = group['endpt_mac_offset']
+                continue
+
+            # Basic attributes : length 11, version [2], module-type [ngio], width [Single Wide]
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                basic_attr_dict = slot_dict.setdefault('basic_attributes', {})
+                basic_attr_dict['length'] = int(group['length'])
+                basic_attr_dict['version'] = group['version']
+                basic_attr_dict['module_type'] = group['module_type']
+                basic_attr_dict['width'] = group['width']
+                continue
+
+            # Power Rating [75], Control Endpoint count [1], Daughter Board Count [0]
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict['power_rating'] = int(group['power_rating'])
+                slot_dict['control_endpoint_count'] = int(group['control_endpoint_count'])
+                slot_dict['daughter_board_count'] = int(group['daughter_board_count'])
+                continue
+
+            # KR Support [0x01], 16-bit GPIO [Present], Submodule reset support [Not required]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict['kr_support'] = group['kr_support']
+                slot_dict['16_bit_gpio'] = group['gpio_16_bit']
+                slot_dict['submodule_reset_support'] = group['submodule_reset_support']
+                continue
+
+            # Extended Attributes for [SM-X-6X1G]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ext_attr_dict = slot_dict.setdefault('extended_attributes', {})
+                ext_attr_dict['module_name'] = group['module_name']
+                continue
+
+            # Port type Ethernet Range [0 5] Per-port Information : Max IID [1] Connector [SFP] Network clocking [disable]
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ext_attr_dict = slot_dict.get('extended_attributes', {})
+                ext_attr_dict['port_type'] = group['port_type']
+                ext_attr_dict['port_range'] = group['port_range']
+                per_port_dict = ext_attr_dict.setdefault('per_port_info', {})
+                per_port_dict['max_iid'] = int(group['max_iid'])
+                per_port_dict['connector'] = group['connector']
+                per_port_dict['network_clocking'] = group['network_clocking']
+                continue
+
+            # Module OID: 1 3 6 1 4 1 9 12 3 1 9 96 2
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict['module_oid'] = group['module_oid']
+                continue
+
+            # Port OID: 1 3 6 1 4 1 9 12 3 1 10 109
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict['port_oid'] = group['port_oid']
+                continue
+
+        return ret_dict
 
 class ShowPlatformHardwareChassisRpFanSpeedControlDataSchema(MetaParser):
     """Schema for:
@@ -1295,5 +1487,46 @@ class ShowPlatformHardwareChassisRpFanSpeedControlData(ShowPlatformHardwareChass
                 entry['io_pwm'] = m.group('io_pwm')
 
                 continue
+
+        return ret_dict
+
+class HwModuleBeaconSlotPortStatusSchema(MetaParser):
+    """
+    Schema for hw-module beacon [switch {switch_num}] slot {slot_num} port {port_num} status
+    """
+
+    schema = {
+        'beacon_status': str
+    }
+
+class HwModuleBeaconSlotPortStatus(HwModuleBeaconSlotPortStatusSchema):
+    """Parser for hw-module beacon [switch {switch_num}] slot {slot_num} port {port_num} status"""
+
+    cli_command = [
+        "hw-module beacon switch {switch_num} slot {slot_num} port {port_num} status",
+        "hw-module beacon slot {slot_num} port {port_num} status"
+    ]
+
+    def cli(self, slot_num='', port_num='', switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[0].format(switch_num=switch_num, slot_num=slot_num, port_num=port_num)
+            else:
+                cmd = self.cli_command[1].format(slot_num=slot_num, port_num=port_num)
+
+            output = self.device.execute(cmd)
+
+        # BEACON OFF
+        p1 = re.compile(r'^BEACON\s+(?P<beacon_status>\w+)$')
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            # BEACON OFF
+            m = p1.match(line)
+            if m:
+                ret_dict['beacon_status'] = m.group('beacon_status')
+                break
 
         return ret_dict

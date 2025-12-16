@@ -1,0 +1,2 @@
+EPCOT_HA_ETV#show platform management-interface                                   
+ Management interface is GigabitEthernet0/0 

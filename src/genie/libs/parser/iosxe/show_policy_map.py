@@ -14,6 +14,7 @@ IOSXE parsers for the following show commands:
     * 'show policy-map type control subscriber binding <policymap name>',
     * 'show policy-map type queueing interface {interface} output class {class_name}',
     * 'show policy-map type queueing interface {interface} output',
+    * 'show policy-map multipoint',
 '''
 
 # Python
@@ -3732,3 +3733,212 @@ class ShowPolicyMapTypeInspectPmap(ShowPolicyMapTypeInspectPmapSchema):
                 continue  
         
         return parsed_dict 
+
+
+# ==========================================================================
+# Schema for 'show policy-map multipoint'
+# ==========================================================================
+class ShowPolicyMapMultipointSchema(MetaParser):
+    ''' Schema for
+        * 'show policy-map multipoint'
+    '''
+
+    schema = {
+            'interfaces': {  # Static root key
+                Any(): {  # Interface name like "Tunnel1"
+                    Any(): {  # Peer IP like "50.50.50.2"
+                        'service_policy': {
+                            Any(): {  # Direction like "output"
+                                'policy_name': {
+                                Any(): {  # Policy name like "spoke1_group"
+                                    'class_map': {
+                                        Any(): {  # Class name like "abc" or "class-default"
+                                            'match_evaluation': str,
+                                            'match': list,
+                                            Optional('packets'): int,
+                                            Optional('bytes'): int,
+                                            Optional('rate'): {
+                                                Optional('interval'): int,
+                                                Optional('offered_rate_bps'): int,
+                                                Optional('drop_rate_bps'): int
+                                            },
+                                            Optional('qos_set'): {
+                                                Any(): {
+                                                    Any(): {
+                                                        Optional('marker_statistics'): str,
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ==========================================================================
+# Parser for 'show policy-map multipoint'
+# ==========================================================================
+class ShowPolicyMapMultipoint(ShowPolicyMapMultipointSchema):
+    ''' Parser for
+        * 'show policy-map multipoint'
+    '''
+
+    cli_command = 'show policy-map multipoint'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        current_interface = None
+        current_peer = None
+        current_policy = None
+        current_class = None
+        direction = None
+
+        # Interface Tunnel1 <--> 50.50.50.2
+        p1 = re.compile(r'^Interface\s+(?P<interface>\S+)\s+<-->\s+(?P<peer>\S+)$')
+
+        # Service-policy output: spoke1_group
+        p2 = re.compile(r'^Service-policy\s+(?P<direction>\S+):\s+(?P<policy_name>\S+)$')
+
+        # Class-map: abc (match-any)
+        p3 = re.compile(r'^Class-map:\s+(?P<class_name>\S+)\s+\((?P<match_type>.+)\)$')
+
+        # 600 packets, 76800 bytes
+        p4 = re.compile(r'^(?P<packets>\d+)\s+packets,\s+(?P<bytes>\d+)\s+bytes$')
+
+        # 5 minute offered rate 0000 bps, drop rate 0000 bps
+        p5 = re.compile(r'^(?P<interval>\d+)\s+minute\s+offered\s+rate\s+(?P<offered_rate>\d+)\s+bps,\s+drop\s+rate\s+(?P<drop_rate>\d+)\s+bps$')
+
+        # Match: protocol icmp
+        # Match: any
+        p6 = re.compile(r'^Match:\s+(?P<match>.+)$')
+
+        # QoS Set
+        p7 = re.compile(r'^QoS\s+Set$')
+
+        # dscp af43
+        p8 = re.compile(r'^(?P<qos_type>\w+)\s+(?P<qos_value>\S+)$')
+
+        # Marker statistics: Disabled
+        p9 = re.compile(r'^Marker\s+statistics:\s+(?P<marker_stats>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Interface Tunnel1 <--> 50.50.50.2
+            m = p1.match(line)
+            if m:
+                current_interface = m.group('interface')
+                current_peer = m.group('peer')
+                ret_dict.setdefault(current_interface, {})
+                ret_dict[current_interface].setdefault(current_peer, {'service_policy': {}})
+                continue
+
+            # Service-policy output: spoke1_group
+            m = p2.match(line)
+            if m and current_interface and current_peer:
+                direction = m.group('direction')
+                policy_name = m.group('policy_name')
+                current_policy = policy_name
+                
+                ret_dict[current_interface][current_peer]['service_policy'].setdefault(direction, {})
+                ret_dict[current_interface][current_peer]['service_policy'][direction].setdefault('policy_name', {})
+                ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'].setdefault(policy_name, {'class_map': {}})
+                continue
+
+            # Class-map: abc (match-any)
+            m = p3.match(line)
+            if m and current_interface and current_peer and current_policy and direction:
+                class_name = m.group('class_name')
+                match_type = m.group('match_type')
+                current_class = class_name
+                
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map']
+                class_dict.setdefault(class_name, {})
+                class_dict[class_name]['match_evaluation'] = match_type
+                class_dict[class_name]['match'] = []
+                continue
+
+            # 600 packets, 76800 bytes
+            m = p4.match(line)
+            if m and current_interface and current_peer and current_policy and current_class and direction:
+                packets = int(m.group('packets'))
+                bytes_val = int(m.group('bytes'))
+                
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map'][current_class]
+                class_dict['packets'] = packets
+                class_dict['bytes'] = bytes_val
+                continue
+
+            # 5 minute offered rate 0000 bps, drop rate 0000 bps
+            m = p5.match(line)
+            if m and current_interface and current_peer and current_policy and current_class and direction:
+                interval = int(m.group('interval'))
+                offered_rate = int(m.group('offered_rate'))
+                drop_rate = int(m.group('drop_rate'))
+                
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map'][current_class]
+                class_dict.setdefault('rate', {})
+                class_dict['rate']['interval'] = interval
+                class_dict['rate']['offered_rate_bps'] = offered_rate
+                class_dict['rate']['drop_rate_bps'] = drop_rate
+                continue
+
+            # Match: protocol icmp
+            m = p6.match(line)
+            if m and current_interface and current_peer and current_policy and current_class and direction:
+                match_criteria = m.group('match')
+                
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map'][current_class]
+                class_dict['match'].append(match_criteria)
+                continue
+
+            # QoS Set
+            m = p7.match(line)
+            if m and current_interface and current_peer and current_policy and current_class and direction:
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map'][current_class]
+                class_dict.setdefault('qos_set', {})
+                continue
+
+            # dscp af43
+            m = p8.match(line)
+            if m and current_interface and current_peer and current_policy and current_class and direction:
+                qos_type = m.group('qos_type')
+                qos_value = m.group('qos_value')
+                
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map'][current_class]
+                if 'qos_set' in class_dict:
+                    class_dict['qos_set'].setdefault(qos_type, {})
+                    class_dict['qos_set'][qos_type].setdefault(qos_value, {})
+                continue
+
+            # Marker statistics: Disabled
+            m = p9.match(line)
+            if m and current_interface and current_peer and current_policy and current_class and direction:
+                marker_stats = m.group('marker_stats')
+                
+                class_dict = ret_dict[current_interface][current_peer]['service_policy'][direction]['policy_name'][current_policy]['class_map'][current_class]
+                if 'qos_set' in class_dict:
+                    # Find the most recent qos_set entry to add marker_statistics
+                    for qos_type in class_dict['qos_set']:
+                        for qos_value in class_dict['qos_set'][qos_type]:
+                            class_dict['qos_set'][qos_type][qos_value]['marker_statistics'] = marker_stats
+                            break
+                        break
+                continue
+        if ret_dict:
+            ret_dict = {'interfaces': ret_dict}
+        return ret_dict

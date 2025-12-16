@@ -2736,6 +2736,23 @@ class ShowBgpAllNeighborsSchema(MetaParser):
                             Optional('status_flags'): str,
                             Optional('option_flags'): str,
                             Optional('ip_precedence_value'): int,
+                            Optional('tcp_ao_key_chain'): {
+                                 'keychain_name': str,
+                            Optional('current_key'): {
+                                    'id': int,
+                                    'send_id': int,
+                                    'recv_id': int,
+                                    'include_tcp_options': bool,
+                                    'accept_ao_mismatch': bool,
+                                 },
+                            Optional('next_key'): {
+                                    'id': int,
+                                    'send_id': int,
+                                    'recv_id': int,
+                                    'include_tcp_options': bool,
+                                    'accept_ao_mismatch': bool,
+                                },
+                            }, 
                             Optional('datagram'):
                                 {Optional('datagram_sent'):
                                     {'value': int,
@@ -2834,12 +2851,12 @@ class ShowBgpNeighborSuperParser(MetaParser):
         # Init vars
         ret_dict = {}
         list_of_neighbors = []
-        af_name = None ; af_dict = {} ; nbr_dict = {}
+        af_name = None ; af_dict = {} ; tcp_dict = {} ; nbr_dict = {}
         message_statistics = False
         prefix_activity = True
         local_prefix = False
         refresh_activity = False
-
+     
         # For address family: IPv4 Unicast
         # For address family: L2VPN E-VPN
         p1 = re.compile(r'^For +address +family: +(?P<af>[a-zA-Z0-9\-\s]+)$')
@@ -3205,7 +3222,19 @@ class ShowBgpNeighborSuperParser(MetaParser):
 
         # Member of peer-group T2-ASN1.1 for session parameters
         p73 = re.compile(r'^Member +of +peer-group +(?P<peer_group>(.*)) +for +session +parameters$')
-
+       
+        # tcp ao key chain fix
+        p74 =  re.compile(r'^\s*TCP AO Key chain:\s+(?P<keychain_name>\S+)$')
+        # TCP AO Current Key
+        p75 = re.compile(r'^TCP AO Current Key:$')
+        # TCP AO Next Key
+        p76 = re.compile(r'^TCP AO Next Key:$')
+        # "Id: 1, Send-Id: 1, Recv-Id: 1
+        p77 = re.compile(r'^Id:\s*(?P<id>\d+),\s*Send-Id:\s*(?P<send_id>\d+),\s*Recv-Id:\s*(?P<recv_id>\d+)$')
+        # "Include TCP Options: Yes"
+        p78 = re.compile(r'^Include TCP Options:\s*(?P<include_tcp_options>\S+)$')
+        # "Accept AO Mismatch: No"
+        p79 = re.compile(r'^Accept AO Mismatch:\s*(?P<accept_ao_mismatch>\S+)$')
         for line in output.splitlines():
 
             line = line.strip()
@@ -4044,7 +4073,61 @@ class ShowBgpNeighborSuperParser(MetaParser):
             if m:
                 nbr_dict['peer_group'] = m.groupdict()['peer_group']
                 continue
+            
+            # Match TCP AO Key chain name fix
+            m = p74.match(line)
+            if m:
+                tcp_dict['keychain_name'] = m.group('keychain_name')
+                continue
+         
+            # Current key section
+            if p75.match(line):
+                current_section = 'current_key'
+                tcp_dict.setdefault('current_key', {})
+                continue
 
+            # Next key section
+            if p76.match(line):
+                current_section = 'next_key'
+                tcp_dict.setdefault('next_key', {})
+                continue
+
+            # Match Id, Send-Id, Recv-Id
+            m = p77.match(line)
+            if m and current_section:
+                section = tcp_dict[current_section]
+                group = m.groupdict()
+                section['id'] = int(group['id'])
+                section['send_id'] = int(group['send_id'])
+                section['recv_id'] = int(group['recv_id'])
+                continue
+
+            # Include TCP Options
+            m = p78.match(line)
+            if m and current_section:
+                tcp_dict[current_section]['include_tcp_options'] = True if m.group('include_tcp_options').lower() in ['yes', 'true'] else False
+                continue
+
+            # Accept AO Mismatch
+            m = p79.match(line)
+            if m and current_section:
+                tcp_dict[current_section]['accept_ao_mismatch'] = True if m.group('accept_ao_mismatch').lower() in ['yes', 'true'] else False
+                continue
+
+       
+         # After parsing tcp_dict (your TCP AO section)
+            if tcp_dict:
+                
+            
+                # Navigate to the right nested structure
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                neighbor_dict = vrf_dict.setdefault('neighbor', {}).setdefault(neighbor, {})
+                transport_dict = neighbor_dict.setdefault('bgp_session_transport', {})
+
+                # Assign your parsed tcp dict under bgp_session_transport
+                transport_dict['tcp_ao_key_chain'] = tcp_dict
+        
+        
         return ret_dict
 
 

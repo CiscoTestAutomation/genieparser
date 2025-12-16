@@ -1,0 +1,12 @@
+show cef interface FastEthernet0/1/0 policy-statistics
+
+FastEthernet0/1/0 is down (if_number 5)
+  Corresponding hwidb fast_if_number 5
+  Corresponding hwidb firstsw->if_number 5
+  OSPF based Policy accounting on input is enabled
+ Index         Packets           Bytes
+     1               5             500
+     2               3             300
+     3               0               0
+     4               0               0
+     5               0               0

@@ -36,6 +36,7 @@ class ShowUACUplinkSchema(MetaParser):
             Optional("gw_ip"): str,
             Optional("gw_mac"): str,
             Optional("score"): int,
+            Optional('vrf'): str,
         },
         Optional("ipv6"): {
             "interface": str,
@@ -48,6 +49,7 @@ class ShowUACUplinkSchema(MetaParser):
             Optional("gw_ip"): str,
             Optional("gw_mac"): str,
             Optional("score"): int,
+            Optional('vrf'): str,
         },
         Optional("uplink_reachable"): str,
     }
@@ -70,6 +72,7 @@ class ShowUACUplink(ShowUACUplinkSchema):
         # Regex patterns to match the output lines
         # Uplink Autoconfig: Enable
         p0 = re.compile(r"^Uplink Autoconfig: (\w+)$")
+        
         # Configured IPv4 Uplink interface: Vlan 91
         p1 = re.compile(
             r"^Configured IPv4 Uplink interface: ([^(]+?)\s*(?=\(|$)"
@@ -99,6 +102,10 @@ class ShowUACUplink(ShowUACUplinkSchema):
         # Uplink Reachable: IPv4
         p12 = re.compile(r"^Uplink Reachable: (.+)$")
 
+        #Uplink Allow-list enforce: IPv4:No  IPv6:No
+        p13 = re.compile(r"Uplink Allow-list enforce: IPv4:(\w+)$  IPv6:(\w+)$")
+
+
         current_section = None
 
         for line in out.splitlines():
@@ -109,6 +116,15 @@ class ShowUACUplink(ShowUACUplinkSchema):
             if m:
                 parsed_dict["autoconfig_status"] = m.group(1)
                 continue
+
+            #Uplink Allow-list enforce: IPv4:No  IPv6:No
+            m = p13.match(line)
+            if m:
+                parsed_dict['uplink_allow_list_enforce'] = {}
+                parsed_dict['uplink_allow_list_enforce']['ipv4'] = m.group(1)
+                parsed_dict['uplink_allow_list_enforce']['ipv6'] = m.group(2)
+                continue
+
 
             # Configured IPv4 Uplink interface: Vlan 91
             m = p1.match(line)
@@ -472,7 +488,6 @@ class ShowUACUplinkDB(ShowUACUplinkDBSchema):
 
         return parsed_dict
 
-
 class ShowUACActivePortSchema(MetaParser):
     """Schema for:
     * 'show uac active-port'
@@ -492,6 +507,7 @@ class ShowUACActivePortSchema(MetaParser):
                 "route": tuple,
                 "static": tuple,
                 "score": tuple,
+                Optional("allowed"): tuple,
             }
         },
     }
@@ -517,7 +533,7 @@ class ShowUACActivePort(ShowUACActivePortSchema):
         p0 = re.compile(r"^Uplink Autoconfig: (\w+)$")
         # Vlan1          1      3  Up   No       Yes  ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
         p1 = re.compile(
-            r"^(\S+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+\(\s*(\d+)\s+(\d+)\)\s+\(\s*(\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)$"
+            r"^(\S+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+\(\s*(\d+)\s+(\d+)\)\s+\(\s*(\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)(((\s+))(\((\d+)\s+(\d+)\)))?$"
         )
 
         for line in out.splitlines():
@@ -544,19 +560,35 @@ class ShowUACActivePort(ShowUACActivePortSchema):
                 route = (int(m.group(11)), int(m.group(12)))
                 static = (int(m.group(13)), int(m.group(14)))
                 score = (int(m.group(15)), int(m.group(16)))
+                if m.group(21) and m.group(22):
+                    allowed = (int(m.group(21)), int(m.group(22)))
+                    interfaces[interface_name] = {
+                        "uid": uid,
+                        "state": state,
+                        "l2": l2,
+                        "created": created,
+                        "svi": svi,
+                        "ip_assign": ip_assign,
+                        "ip_state": ip_state,
+                        "route": route,
+                        "static": static,
+                        "score": score,
+                        "allowed": allowed,
+                    }
+                else:
 
-                interfaces[interface_name] = {
-                    "uid": uid,
-                    "state": state,
-                    "l2": l2,
-                    "created": created,
-                    "svi": svi,
-                    "ip_assign": ip_assign,
-                    "ip_state": ip_state,
-                    "route": route,
-                    "static": static,
-                    "score": score,
-                }
+                    interfaces[interface_name] = {
+                        "uid": uid,
+                        "state": state,
+                        "l2": l2,
+                        "created": created,
+                        "svi": svi,
+                        "ip_assign": ip_assign,
+                        "ip_state": ip_state,
+                        "route": route,
+                        "static": static,
+                        "score": score,
+                    }
                 continue
 
         if interfaces:
@@ -583,6 +615,7 @@ class ShowUACActiveVlanSchema(MetaParser):
                 "route": tuple,
                 "static": tuple,
                 "score": tuple,
+                Optional("allowed"): tuple,
             }
         },
     }
@@ -608,7 +641,7 @@ class ShowUACActiveVlan(ShowUACActiveVlanSchema):
         p0 = re.compile(r"^Uplink Autoconfig: (\w+)$")
         #      1      3  Up   No       Yes  ( 0   0)  ( 0  0)  (0 0)  (0  0)  (0 0)
         p1 = re.compile(
-            r"^(\d+)\s+\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+\(\s*(\d+)\s+(\d+)\)\s+\(\s*(\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)$"
+            r"^(\d+)\s+\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+\(\s*(\d+)\s+(\d+)\)\s+\(\s*(\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)\s+\((\d+)\s+(\d+)\)(((\s+))(\((\d+)\s+(\d+)\)))?$"
         )
 
         for line in out.splitlines():
@@ -634,19 +667,33 @@ class ShowUACActiveVlan(ShowUACActiveVlanSchema):
                 route = (int(m.group(10)), int(m.group(11)))
                 static = (int(m.group(12)), int(m.group(13)))
                 score = (int(m.group(14)), int(m.group(15)))
-
-                # Add the interface data to the parsed_dict
-                vlans[interface_name] = {
-                    "state": state,
-                    "l2": l2,
-                    "created": created,
-                    "svi": svi,
-                    "ip_assign": ip_assign,
-                    "ip_state": ip_state,
-                    "route": route,
-                    "static": static,
-                    "score": score,
-                }
+                if m.group(20) and m.group(21):
+                    allowed = (int(m.group(20)), int(m.group(21)))
+                    vlans[interface_name] = {
+                        "state": state,
+                        "l2": l2,
+                        "created": created,
+                        "svi": svi,
+                        "ip_assign": ip_assign,
+                        "ip_state": ip_state,
+                        "route": route,
+                        "static": static,
+                        "score": score,
+                        "allowed": allowed,
+                    }
+                else:
+                    # Add the interface data to the parsed_dict
+                    vlans[interface_name] = {
+                        "state": state,
+                        "l2": l2,
+                        "created": created,
+                        "svi": svi,
+                        "ip_assign": ip_assign,
+                        "ip_state": ip_state,
+                        "route": route,
+                        "static": static,
+                        "score": score,
+                    }
                 continue
 
         if vlans:

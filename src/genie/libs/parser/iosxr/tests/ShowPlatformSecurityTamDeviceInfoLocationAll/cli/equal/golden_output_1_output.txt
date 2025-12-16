@@ -1,0 +1,72 @@
+Thu Sep 25 07:21:05.442 UTC
+---------------------------------------------
+Node - 0/0/CPU0
+---------------------------------------------
+Device Type            -     AIKIDO Extended
+Device PID             -     88-LC0-36FH-M
+Device Serial Number   -     FOC2601N5UN
+Device Firmware Version-     0x26.0013
+Server Version         -     3
+Server Package Version -     10.5.0
+Client Package Version -     10.5.0
+---------------------------------------------
+Node - 0/1/CPU0
+---------------------------------------------
+Device Type            -     AIKIDO Extended
+Device PID             -     88-LC0-36FH-M
+Device Serial Number   -     FOC2601N5TS
+Device Firmware Version-     0x26.0013
+Server Version         -     3
+Server Package Version -     10.5.0
+Client Package Version -     10.5.0
+---------------------------------------------
+Node - 0/RP0/CPU0
+---------------------------------------------
+Device Type            -     AIKIDO Extended
+Device PID             -     8800-RP
+Device Serial Number   -     FOC2614K8WB
+Device Firmware Version-     0x25.0013
+Server Version         -     3
+Server Package Version -     10.5.0
+Client Package Version -     10.5.0
+---------------------------------------------
+Node - 0/RP1/CPU0
+---------------------------------------------
+Device Type            -     AIKIDO Extended
+Device PID             -     8800-RP
+Device Serial Number   -     FOC2344NPKG
+Device Firmware Version-     0x25.0013
+Server Version         -     3
+Server Package Version -     10.5.0
+Client Package Version -     10.5.0
+---------------------------------------------
+Node - 0/FC0
+---------------------------------------------
+Device Type            -     ACT2
+Device PID             -     8808-FC0
+Device Serial Number   -     FOC2607N6FZ
+Device Firmware Version-     0x51.0000
+Server Version         -     N/A
+Server Package Version -     N/A
+Client Package Version -     N/A
+---------------------------------------------
+Node - 0/FC2
+---------------------------------------------
+Device Type            -     ACT2
+Device PID             -     8808-FC0
+Device Serial Number   -     FOC2607N6AX
+Device Firmware Version-     0x51.0000
+Server Version         -     N/A
+Server Package Version -     N/A
+Client Package Version -     N/A
+---------------------------------------------
+Node - 0/0/CPU12
+---------------------------------------------
+Device Type            -     ACT2
+Device PID             -     8808
+Device Serial Number   -     FOX2617P91H
+Device Firmware Version-     0x51.0000
+Server Version         -     N/A
+Server Package Version -     N/A
+Client Package Version -     N/A
+RP/0/RP0/CPU0:f3a-r1-pod10#

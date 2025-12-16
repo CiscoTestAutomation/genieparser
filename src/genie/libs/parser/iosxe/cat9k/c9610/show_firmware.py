@@ -3,6 +3,7 @@
 IOSXE parsers for the following show commands:
 
     * show firmware version all
+    * show firmware version [switch {switch_num}] fantray
 
 '''
 
@@ -149,5 +150,65 @@ class ShowFirmwareVersionAll(ShowFirmwareVersionAllSchema):
                 current_slot = slot
                 current_device_key = device_key
                 continue
+
+        return ret_dict
+
+class ShowFirmwareVersionFantraySchema(MetaParser):
+    """
+    Schema for show firmware version [switch {switch_num}] fantray
+    """
+    schema = {
+        'fantray': {
+            Any(): {
+                'device_name': str,
+                'current_firmware_version': str,
+                'bundled_firmware_version': str,
+                'mismatch': str
+            }
+        }
+    }
+
+class ShowFirmwareVersionFantray(ShowFirmwareVersionFantraySchema):
+    """
+    Parser for show firmware version [switch {switch_num}] fantray
+    """
+
+    cli_command = [
+        'show firmware version switch {switch_num} fantray',
+        'show firmware version fantray'
+    ]
+
+    def cli(self, switch_num=None, output=None):
+        if output is None:
+            if switch_num:
+                cmd = self.cli_command[0].format(switch_num=switch_num)
+            else:
+                cmd = self.cli_command[1]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        fantray_dict = {}
+
+        # FT1  Fantray  25010624  25010624  No
+        p1 = re.compile(
+            r'^(?P<slot>FT\d+)\s+(?P<device_name>\S+)\s+(?P<current>\S+)\s+(?P<bundled>\S+)\s+(?P<mismatch>\S+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # FT1  Fantray  25010624  25010624  No
+            m = p1.match(line)
+            if m:
+                slot = m.group('slot')
+                fantray_dict[slot] = {
+                    'device_name': m.group('device_name'),
+                    'current_firmware_version': m.group('current'),
+                    'bundled_firmware_version': m.group('bundled'),
+                    'mismatch': m.group('mismatch')
+                }
+
+        if fantray_dict:
+            ret_dict['fantray'] = fantray_dict
 
         return ret_dict

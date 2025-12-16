@@ -1,0 +1,5 @@
+Stored system POST messages:
+
+Switch 1
+---------
+No POST information

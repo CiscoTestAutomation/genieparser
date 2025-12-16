@@ -1,0 +1,47 @@
+GE (connecting to BP switch) statistics
+
+                    Rx frames             Rx Bytes              Tx frames             Tx Bytes
+--------------------------------------------------------------------------------------------------------
+pkt forwarded       41355                 3325326               41438                 3465186
+oversize            0                                           2
+undersize           0                                           0
+multicast           4                                           0
+broadcast           0                                           2
+pause               0                                           0
+dropped             0                                           0
+FCS err             0                                           0
+aligmt err          0
+length err          0
+MRU err             0
+SDU err             0
+overrun err         0
+undrrun err                                                     0
+
+
+Total frames
+--------------------------------------------------------------------------------------------------------
+64		1094
+65 ~ 127	80926
+128 ~ 255	27
+256 ~ 511	586
+512 ~ 1023	4
+1024 ~ 1518	154
+1519 ~ 1522	0
+
+Flow Aggregation to BP switch
+--------------------------------------------------------------------------------------------------------
+FlowControl FA
+	pkt fowarded:120 bytes forwarded:3840
+	fpb drop:0 mtu drop:0 tx_q drop:0
+DSP signaling ingress FA
+	pkt fowarded:0 bytes forwarded:0
+	fpb drop:0 mtu drop:0 tx_q drop:0
+DSP media ingress FA
+	pkt fowarded:0 bytes forwarded:0
+	fpb drop:0 mtu drop:0 tx_q drop:0
+Low priority ingress FA (IP/ARP/BC)
+	pkt fowarded:2 bytes forwarded:1180
+	fpb drop:0 mtu drop:0 tx_q drop:0
+Control message ingress FA
+	pkt fowarded:785 bytes forwarded:286794
+	fpb drop:0 mtu drop:0 tx_q drop:0

@@ -1,0 +1,31 @@
+Syspage index for the Fastpath thread: 6
+Statistics for FastPath thread activities:
+ 1 minimum packet received, 216 maximum packet received
+ 1 minimum message sent, 1 maximum message sent
+ 14458 total message received, 2 total message sent
+ 0 msec minimum clock runtime, 5 msec maximum clock runtime
+ 0 msec minimum cpu runtime, 5 msec maximum cpu runtime
+ 20413 fastpath invocation, 9062 epoll timeout, 0 epoll intr
+ 48 fastpath triggered by IOS thread, 13 wakeup
+ 0 fastpath top epoll error, 0 second level epoll error
+ 0 special IPC request
+ mstr_efd 9, fastpath_wakeup_fd 7
+ rd_efd 10 (epoll add failed 0, epoll del failed 0)
+ rd_hdlr_efd 11 (epoll add failed 0, epoll del failed 0)
+ wr_efd 12 (epoll add failed 0, epoll del failed 0)
+ 13 wakeup_efd_ready
+ 7607 rd_efd_ready, 7607 rd_efd_processed
+ 3738 rd_hdlr_efd_ready, 3738 rd_hdlr_efd_processed
+ 2 wr_efd_ready, 2 wr_efd_processed
+ 15930 IOS triggered by fastpath thread
+ 27691 IOS triggered by packet thread
+ 43504 IOS scheduler thread wakeup
+ 845 console data path invocation
+ 0 stdout data path invocation
+ 2535 chasfs process thread event invocation
+ 0 tipc process thread event invocation
+ 0 memory allocation failures, 0 read paused, 0 read pause cleared
+ 0 read disabled, 0 read disable cleared
+Current state: read paused: no, read disabled: no
+ Clock/CPU utilization with 5 seconds 0%/0%, 1 min 0%/0%, 5 min 0%/0%
+ Maximum mutex acquire time: 11937 msec at *Apr 14 18:15:50.475

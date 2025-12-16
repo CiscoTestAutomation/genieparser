@@ -1,0 +1,15 @@
+show platform software yang-management process state 
+  
+ *Sep 30 15:56:14.500: %SYS-5-CONFIG_I: Configured from console by console 
+ *Sep 30 15:56:15.001: %SYS-5-CONFIG_I: Configured from console by consoleConfd Status: Started 
+  
+ Process              Status              State       
+ ------------------------------------------------------- 
+ nesd                 Running             Active      
+ syncfd               Running             Active      
+ ncsshd               Running             Active      
+ dmiauthd             Running             Active      
+ nginx                Running             Not Applicable 
+ ndbmand              Running             Active      
+ pubd                 Running             Active      
+ gnmib                Not Running         Not Applicable

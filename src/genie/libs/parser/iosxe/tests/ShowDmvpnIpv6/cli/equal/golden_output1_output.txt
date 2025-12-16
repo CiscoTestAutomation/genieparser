@@ -1,0 +1,20 @@
+show dmvpn ipv6
+Legend: Attrb --> S - Static, D - Dynamic, I - Incomplete
+	N - NATed, L - Local, X - No Socket
+	T1 - Route Installed, T2 - Nexthop-override, B - BGP
+	C - CTS Capable, I2 - Temporary
+	# Ent --> Number of NHRP entries with same NBMA peer
+	NHS Status: E --> Expecting Replies, R --> Responding, W --> Waiting
+	UpDn Time --> Up or Down Time for a Tunnel
+==========================================================================
+
+Interface: Tunnel1, IPv6 NHRP Details
+Type:Hub, Total NBMA Peers (v4/v6): 2
+    1.Peer NBMA Address: 2001:DB8:1201::122
+	Tunnel IPv6 Address: FD00:192::1201
+	IPv6 Target Network: FD00:192::1201/128
+	# Ent: 1, Status: UP, UpDn Time: 00:02:39, Cache Attrib: D
+    2.Peer NBMA Address: 2001:DB8:1202::123
+	Tunnel IPv6 Address: FD00:192::1202
+	IPv6 Target Network: FD00:192::1202/128
+	# Ent: 1, Status: UP, UpDn Time: 00:02:29, Cache Attrib: D

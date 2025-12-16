@@ -1,0 +1,78 @@
+show isis adjacency vrf all
+
+IS-IS process: 65100 VRF: osatm
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:31   port-channel1.105
+sojxdb001-xdb   N/A             2      UP     00:00:22   Ethernet1/2.105
+oshxdb002-xdb   N/A             2      UP     00:00:23   Ethernet2/2.105
+
+IS-IS process: 65100 VRF: odeprod
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:24   port-channel1.104
+sojxdb001-xdb   N/A             2      UP     00:00:27   Ethernet1/2.104
+oshxdb002-xdb   N/A             2      UP     00:00:25   Ethernet2/2.104
+
+IS-IS process: 65100 VRF: excontrol
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:22   port-channel1.102
+sojxdb001-xdb   N/A             2      UP     00:00:25   Ethernet1/2.102
+oshxdb002-xdb   N/A             2      UP     00:00:23   Ethernet2/2.102
+
+IS-IS process: 65100 VRF: default
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+
+IS-IS process: 65100 VRF: oos-be
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:23   port-channel1.108
+sojxdb001-xdb   N/A             2      UP     00:00:23   Ethernet1/2.108
+oshxdb002-xdb   N/A             2      UP     00:00:24   Ethernet2/2.108
+
+IS-IS process: 65100 VRF: oon-hybrid
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:29   port-channel1.106
+sojxdb001-xdb   N/A             2      UP     00:00:26   Ethernet1/2.106
+oshxdb002-xdb   N/A             2      UP     00:00:28   Ethernet2/2.106
+
+IS-IS process: 65100 VRF: exnotprod
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:25   port-channel1.103
+sojxdb001-xdb   N/A             2      UP     00:00:30   Ethernet1/2.103
+oshxdb002-xdb   N/A             2      UP     00:00:26   Ethernet2/2.103
+
+IS-IS process: 65100 VRF: exrestrict
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:24   port-channel1.100
+sojxdb001-xdb   N/A             2      UP     00:00:22   Ethernet1/2.100
+oshxdb002-xdb   N/A             2      UP     00:00:24   Ethernet2/2.100
+
+IS-IS process: 65100 VRF: exwan-netconf
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:26   port-channel1.107
+sojxdb001-xdb   N/A             2      UP     00:00:24   Ethernet1/2.107
+oshxdb002-xdb   N/A             2      UP     00:00:23   Ethernet2/2.107
+
+IS-IS process: 65100 VRF: exuuser
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+sebxdb002-xdb   N/A             2      UP     00:00:25   port-channel1.101
+sojxdb001-xdb   N/A             2      UP     00:00:24   Ethernet1/2.101
+oshxdb002-xdb   N/A             2      UP     00:00:25   Ethernet2/2.101

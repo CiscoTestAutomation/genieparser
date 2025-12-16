@@ -14,6 +14,8 @@ IOSXE c9610 parsers for the following show commands:
     * show platform software fed {switch} {mode} ipv6 route summary | include {match}'
     * show platform hardware fed {switch} {mode} qos queue stats internal port_type {port_type} port_num {port_num} asic {asic}
     * show platform hardware chassis fantray detail all
+    * show platform hardware chassis fantray detail {slot_num} {switch} {switch_mode}
+    * show env all
 '''
 from genie.metaparser import MetaParser
 from genie.libs.parser.utils.common import Common
@@ -21,6 +23,7 @@ import re
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use, And, ListOf
 from genie.libs.parser.iosxe.cat9k.c9600.show_platform import ShowPlatformFedActiveTcamUtilization as ShowPlatformFedActiveTcamUtilization_c9600
 from genie.libs.parser.iosxe.cat9k.c9600.show_platform import ShowPlatformFedStandbyTcamUtilization as ShowPlatformFedStandbyTcamUtilization_c9600
+
 
 class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilization_c9600):
     """ Parser for show platform hardware fed active fwd-asic resource tcam utilization"""
@@ -1934,6 +1937,391 @@ class ShowPlatformHardwareChassisFantrayDetailAll(ShowPlatformHardwareChassisFan
                 elif key.lower() == 'status led':
                     td['status_led'] = val
 
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareChassisFantrayDetailSchema(MetaParser):
+    """Schema for show platform hardware chassis fantray detail {slot_num} {switch} {switch_mode}"""
+    schema = {
+        'fantray': {
+            Any(): {  # FT1, FT2, etc.
+                'rows': {
+                    Any(): {
+                        'inlet_rpm': int,
+                        'outlet_rpm': int,
+                        'pwm': str,
+                    }
+                },
+                'air_flow_direction': str,
+                'auto_poll_status': str,
+                'auto_poll_interval': str,
+                'control_mode': str,
+                'temperature_slot_5': str,
+                'temperature_slot_6': str,
+                'temperature_local_a': str,
+                'temperature_local_b': str,
+                'input_voltage': str,
+                'input_current': str,
+                'input_power': str,
+                'beacon_led': str,
+                'status_led': str,
+            }
+        }
+    }
+
+class ShowPlatformHardwareChassisFantrayDetail(ShowPlatformHardwareChassisFantrayDetailSchema):
+    """
+    Parser for 
+        show platform hardware chassis fantray detail {slot_num} {switch} {switch_mode}
+        show platform hardware chassis fantray detail all {switch} {switch_mode}
+    """
+    cli_command = [
+        "show platform hardware chassis fantray detail {slot_num} switch {switch_mode}",
+        "show platform hardware chassis fantray detail all switch {switch_mode}",
+        "show platform hardware chassis fantray detail {slot_num}",
+        "show platform hardware chassis fantray detail all",  
+    ]
+
+    def cli(self, slot_num = None, switch_mode=None, output=None):
+        if output is None:
+            if switch_mode:
+                if slot_num:
+                    cmd = self.cli_command[0].format(slot_num=slot_num, switch_mode=switch_mode)
+                else:   
+                    cmd = self.cli_command[1].format(switch_mode=switch_mode)
+            else:
+                if slot_num:
+                    cmd = self.cli_command[2].format(slot_num=slot_num)
+                else:
+                    cmd = self.cli_command[3]
+                
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        current_ft = None
+        row_section = None
+
+        # FT1:
+        p0 = re.compile(r'^(FT\d+):$')
+
+        # 1   14085   14072      90%
+        p1 = re.compile(r'^\s*(\d+)\s+(\d+)\s+(\d+)\s+(\d+%)$')
+
+        # Fantray Air Flow Direction   : Port-Side-Intake
+        p2 = re.compile(r'^Fantray Air Flow Direction\s*:\s*(.+)$')
+
+        # Fantray Auto Poll Status     : true
+        p3 = re.compile(r'^Fantray Auto Poll Status\s*:\s*(.+)$')
+
+        # Fantray Auto Poll Interval   : 2.0 Seconds
+        p4 = re.compile(r'^Fantray Auto Poll Interval\s*:\s*(.+)$')
+
+        # Fantray Control Mode         : Manual
+        p5 = re.compile(r'^Fantray Control Mode\s*:\s*(.+)$')
+
+        # Fantray Temperature Slot-5   : 25 C
+        p6 = re.compile(r'^Fantray Temperature Slot-5\s*:\s*(.+)$')
+
+        # Fantray Temperature Slot-6   : 26 C
+        p7 = re.compile(r'^Fantray Temperature Slot-6\s*:\s*(.+)$')
+
+        # Fantray Temperature Local-A  : 45 C
+        p8 = re.compile(r'^Fantray Temperature Local-A\s*:\s*(.+)$')
+
+        # Fantray Temperature Local-B  : 46 C
+        p9 = re.compile(r'^Fantray Temperature Local-B\s*:\s*(.+)$')
+
+        # Fantray Input Voltage        :  11.5958 V
+        p10 = re.compile(r'^Fantray Input Voltage\s*:\s*(.+)$')
+
+        # Fantray Input Current        :  59.7500 A
+        p11 = re.compile(r'^Fantray Input Current\s*:\s*(.+)$')
+
+        # Fantray Input Power          : 692.8510 W
+        p12 = re.compile(r'^Fantray Input Power\s*:\s*(.+)$')
+
+        # Fantray Beacon LED           : OFF
+        p13 = re.compile(r'^Fantray Beacon LED\s*:\s*(.+)$')
+
+        # Fantray Status LED           : GREEN
+        p14 = re.compile(r'^Fantray Status LED\s*:\s*(.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+        
+            # FT1:
+            m = p0.match(line)
+            if m:
+                fantray_dict = ret_dict.setdefault('fantray', {})
+                current_ft = m.group(1)
+                fantray_dict[current_ft] = {'rows': {}}
+                continue
+
+            # 1   14085   14072      90%
+            m = p1.match(line)
+            if m:
+                row_num = m.group(1)
+                fantray_dict[current_ft]['rows'][row_num] = {
+                    'inlet_rpm': int(m.group(2)),
+                    'outlet_rpm': int(m.group(3)),
+                    'pwm': m.group(4)
+                }
+                continue
+
+            # Fantray Air Flow Direction   : Port-Side-Intake
+            m = p2.match(line)
+            if m:
+                fantray_dict[current_ft]['air_flow_direction'] = m.group(1)
+                continue
+
+            # Fantray Auto Poll Status     : true
+            m = p3.match(line)
+            if m:
+                fantray_dict[current_ft]['auto_poll_status'] = m.group(1)
+                continue
+
+            # Fantray Auto Poll Interval   : 2.0 Seconds
+            m = p4.match(line)
+            if m:
+                fantray_dict[current_ft]['auto_poll_interval'] = m.group(1)
+                continue
+
+            # Fantray Control Mode         : Manual
+            m = p5.match(line)
+            if m:
+                fantray_dict[current_ft]['control_mode'] = m.group(1)
+                continue
+
+            # Fantray Temperature Slot-5   : 25 C        
+            m = p6.match(line)
+            if m:
+                fantray_dict[current_ft]['temperature_slot_5'] = m.group(1)
+                continue
+
+            # Fantray Temperature Slot-6   : 26 C
+            m = p7.match(line)
+            if m:
+                fantray_dict[current_ft]['temperature_slot_6'] = m.group(1)
+                continue
+
+            # Fantray Temperature Local-A  : 45 C
+            m = p8.match(line)
+            if m:
+                fantray_dict[current_ft]['temperature_local_a'] = m.group(1)
+                continue
+
+            # Fantray Temperature Local-B  : 46 C
+            m = p9.match(line)
+            if m:
+                fantray_dict[current_ft]['temperature_local_b'] = m.group(1)
+                continue
+            
+            # Fantray Input Voltage        :  11.5958 V
+            m = p10.match(line)
+            if m:
+                fantray_dict[current_ft]['input_voltage'] = m.group(1)
+                continue
+            
+            # Fantray Input Current        :  59.7500 A
+            m = p11.match(line)
+            if m:
+                fantray_dict[current_ft]['input_current'] = m.group(1)
+                continue
+            
+            # Fantray Input Power          : 692.8510 W
+            m = p12.match(line)
+            if m:
+                fantray_dict[current_ft]['input_power'] = m.group(1)
+                continue
+
+            # Fantray Beacon LED           : OFF
+            m = p13.match(line)
+            if m:
+                fantray_dict[current_ft]['beacon_led'] = m.group(1)
+                continue
+
+            # Fantray Status LED           : GREEN
+            m = p14.match(line)
+            if m:
+                fantray_dict[current_ft]['status_led'] = m.group(1)
+                continue
+
+        return ret_dict
+
+class ShowEnvAllSchema(MetaParser):
+    """Schema for show env all"""
+
+    schema = {
+        "alarms": {
+            "critical": int,
+            "major": int,
+            "minor": int,
+        },
+        "sensors": {
+            Any(): {
+                Any(): {
+                    "state": str,
+                    "reading": {
+                        "value": Any(),
+                        "unit": str
+                    },
+                    Optional("threshold"): {
+                        Optional("minor"): Any(),
+                        Optional("major"): Any(),
+                        Optional("critical"): Any(),
+                        Optional("shutdown"): Any(),
+                        Optional("unit"): str
+                    }
+                }
+            }
+        },
+        Optional("power"): {
+            Any(): {
+                "model": str,
+                "type": str,
+                "capacity": str,
+                "status": str,
+                "fans": {
+                    Any(): str
+                }
+            }
+        },
+        Optional("fan_tray"): {
+            Any(): {
+                "status": str,
+                "fans": {
+                    Any(): str
+                }
+            }
+        }
+    }
+
+
+class ShowEnvAll(ShowEnvAllSchema):
+    """Parser for show env all"""
+
+    cli_command = 'show env all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Number of Critical alarms:  0
+        p1 = re.compile(r'^Number of Critical alarms:\s+(?P<critical>\d+)$')
+
+        # Number of Major alarms:     0
+        p2 = re.compile(r'^Number of Major alarms:\s+(?P<major>\d+)$')
+
+        # Number of Minor alarms:     0
+        p3 = re.compile(r'^Number of Minor alarms:\s+(?P<minor>\d+)$')
+
+        #  Temp: CPUcore:0  R0            Normal    27    Celsius   ( 75, 80, 85, 85,100)(Celsius)  (example pattern)
+        p4 = re.compile(
+            r'^(?P<sensor>\w+:\s+\S+)\s+(?P<location>\S+)\s+(?P<state>\w+)'
+            r'\s+(?P<reading_val>[\w\.NA]+)\s*(?P<reading_unit>\w+)?'
+            r'\s+(?P<threshold>.+)$'
+        )
+
+        # ( 75, 80, 85,100)(Celsius)
+        p4_threshold = re.compile(
+            r'\(\s*(?P<minor>\d+),\s*(?P<major>\d+),\s*(?P<critical>\d+),\s*(?P<shutdown>\d+)\)\((?P<unit>\w+)\)'
+        )
+
+        # PS1     C9600-PWR-3KWAC       ac    3000 W    active     good  good
+        p5 = re.compile(
+            r'^(?P<ps>PS\d+)\s+(?P<model>\S+)\s+(?P<type>\w+)'
+            r'\s+(?P<capacity>\d+\s*\w+)\s+(?P<status>\w+)'
+            r'\s+(?P<fan1>\w+)\s+(?P<fan2>\w+)$',
+            re.IGNORECASE
+        )
+
+        # FT1     active       good  good  good  good  good  good
+        p6 = re.compile(
+            r'^(?P<tray>FT\d+)\s+(?P<status>\w+)\s+(?P<f1>\w+)\s+(?P<f2>\w+)\s+(?P<f3>\w+)'
+            r'\s+(?P<f4>\w+)\s+(?P<f5>\w+)\s+(?P<f6>\w+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Number of Critical alarms:  0
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault("alarms", {})["critical"] = int(m.group("critical"))
+                continue
+
+            # Number of Major alarms:     0
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault("alarms", {})["major"] = int(m.group("major"))
+                continue
+
+            # Number of Minor alarms:     0
+            m = p3.match(line)
+            if m:
+                ret_dict.setdefault("alarms", {})["minor"] = int(m.group("minor"))
+                continue
+
+            #  Temp: CPUcore:0  R0            Normal    27    Celsius   ( 75, 80, 85, 85,100)(Celsius)  (example pattern)
+            m = p4.match(line)
+            if m:
+                loc = m.group("location")
+                sensor = m.group("sensor")
+                sensor_dict = ret_dict.setdefault("sensors", {}).setdefault(loc, {}).setdefault(sensor, {})
+                sensor_dict["state"] = m.group("state")
+                reading_val = m.group("reading_val")
+                reading_unit = m.group("reading_unit") or ""
+                sensor_dict["reading"] = {"value": reading_val, "unit": reading_unit}
+                threshold_str = m.group("threshold").strip()
+                tm = p4_threshold.search(threshold_str)
+                if tm:
+                    sensor_dict["threshold"] = {
+                        "minor": int(tm.group("minor")),
+                        "major": int(tm.group("major")),
+                        "critical": int(tm.group("critical")),
+                        "shutdown": int(tm.group("shutdown")),
+                        "unit": tm.group("unit")
+                    }
+                continue
+
+            # PS1     C9600-PWR-3KWAC       ac    3000 W    active     good  good
+            m = p5.match(line)
+            if m:
+                ps = m.group("ps")
+                ps_dict = ret_dict.setdefault("power", {}).setdefault(ps, {})
+                ps_dict.update({
+                    "model": m.group("model"),
+                    "type": m.group("type"),
+                    "capacity": m.group("capacity"),
+                    "status": m.group("status"),
+                    "fans": {
+                        "1": m.group("fan1"),
+                        "2": m.group("fan2"),
+                    }
+                })
+                continue
+
+            # FT1     active       good  good  good  good  good  good
+            m = p6.match(line)
+            if m:
+                tray = m.group("tray")
+                tray_dict = ret_dict.setdefault("fan_tray", {}).setdefault(tray, {})
+                tray_dict["status"] = m.group("status")
+                tray_dict["fans"] = {
+                    "1": m.group("f1"),
+                    "2": m.group("f2"),
+                    "3": m.group("f3"),
+                    "4": m.group("f4"),
+                    "5": m.group("f5"),
+                    "6": m.group("f6"),
+                }
                 continue
 
         return ret_dict

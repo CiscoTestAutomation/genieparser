@@ -1,0 +1,20 @@
+show policy-map type inspect zone-pair
+  Zone-pair: in-out
+  Service-policy inspect : pmap1
+
+    Class-map: cmap1 (match-any)
+      Match: protocol tcp
+        0 packets, 0 bytes
+      Inspect
+        Session creations since subsystem startup or last reset 0
+        Current session counts (estab/half-open/terminating) [0:0:0]
+        Maxever session counts (estab/half-open/terminating) [0:0:0]
+        Last session created never
+        Last statistic reset never
+        Last session creation rate 0
+        Last half-open session total 0
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop
+        0 packets, 0 bytes

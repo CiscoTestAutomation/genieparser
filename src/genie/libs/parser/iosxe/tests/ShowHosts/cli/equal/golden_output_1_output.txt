@@ -1,0 +1,6 @@
+Default domain is not set
+Name servers are 171.70.168.183
+NAME  TTL  CLASS   TYPE      DATA/ADDRESS
+-----------------------------------------
+ 252.254.255.223.in-addr.arpa   10      IN      PTR     sj20lab-tftp1
+ sj20lab-tftp1  10      IN      A       223.255.254.252

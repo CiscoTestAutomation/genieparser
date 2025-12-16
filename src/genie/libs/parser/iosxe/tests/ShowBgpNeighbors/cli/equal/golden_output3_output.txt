@@ -1,0 +1,130 @@
+BGP neighbor is 34.0.0.1, remote AS 200, external link
+BGP version 4, remote router ID 100.3.1.1
+BGP state = Established up for 00:00:26
+Last read 00:00:26, last write 00:00:25, hold time is 180, keepalive interval is 60 seconds
+Last update received: 00:00:26
+Neighbor sessions:
+1 active, is not multisession capable (disabled)
+Neighbor capabilities:
+Route refresh: advertised and received(new)
+Four-octets ASN Capability: advertised and received
+Address family IPv4 Unicast: advertised and received
+Enhanced Refresh Capability: advertised and received
+Multisession Capability:
+Stateful switchover support enabled: NO for session 1
+Message statistics:
+InQ depth is 0
+OutQ depth is 0
+Sent Rcvd
+Opens: 1 1
+Notifications: 0 0
+Updates: 1 1
+Keepalives: 2 2
+Route Refresh: 0 0
+Total: 4 4
+Do log neighbor state changes (via global configuration)
+Default minimum time between advertisement runs is 30 seconds
+ 
+For address family: IPv4 Unicast
+Session: 34.0.0.1
+BGP table version 1, neighbor version 1/0
+Output queue size : 0
+Index 1, Advertise bit 0
+1 update-group member
+Slow-peer detection is disabled
+Slow-peer split-update-group dynamic is disabled
+Sent Rcvd
+Prefix activity: ---- ----
+Prefixes Current: 0 0
+Prefixes Total: 0 0
+Implicit Withdraw: 0 0
+Explicit Withdraw: 0 0
+Used as bestpath: n/a 0
+Used as multipath: n/a 0
+Used as secondary: n/a 0
+Outbound Inbound
+Local Policy Denied Prefixes: -------- -------
+Total: 0 0
+Number of NLRIs in the update sent: max 0, min 0
+Last detected as dynamic slow peer: never
+Dynamic slow peer recovered: never
+Refresh Epoch: 1
+Last Sent Refresh Start-of-rib: never
+Last Sent Refresh End-of-rib: never
+Last Received Refresh Start-of-rib: never
+Last Received Refresh End-of-rib: never
+Sent Rcvd
+Refresh activity: ---- ----
+Refresh Start-of-RIB 0 0
+Refresh End-of-RIB 0 0
+ 
+Address tracking is enabled, the RIB does have a route to 34.0.0.1
+Route to peer address reachability Up: 1; Down: 0
+Last notification 00:02:49
+Connections established 1; dropped 0
+Last reset never
+External BGP neighbor configured for connected checks (single-hop no-disable-connected-check)
+Interface associated: TwentyFiveGigE1/0/45 (peering address in same link)
+AO keychain test1 include-tcp-options
+Transport(tcp) path-mtu-discovery is enabled
+Graceful-Restart is disabled
+SSO is disabled
+Connection state is ESTAB, I/O status: 1, unread input bytes: 0
+Connection is ECN Disabled, Mininum incoming TTL 0, Outgoing TTL 1
+Local host: 34.0.0.2, Local port: 34825
+Foreign host: 34.0.0.1, Foreign port: 179
+Connection tableid (VRF): 0
+Maximum output segment queue size: 50
+ 
+Enqueued packets for retransmit: 0, input: 0 mis-ordered: 0 (0 bytes)
+ 
+Event Timers (current time is 0x616B9631):
+Timer Starts Wakeups Next
+Retrans 4 0 0x0
+TimeWait 0 0 0x0
+AckHold 4 1 0x0
+SendWnd 0 0 0x0
+KeepAlive 0 0 0x0
+GiveUp 0 0 0x0
+PmtuAger 1 0 0x6174581C
+DeadWait 0 0 0x0
+Linger 0 0 0x0
+ProcessQ 0 0 0x0
+ 
+iss: 714064615 snduna: 714064734 sndnxt: 714064734
+irs: 1403370884 rcvnxt: 1403371003
+ 
+sndwnd: 16266 scale: 0 maxrcvwnd: 16384
+rcvwnd: 16266 scale: 0 delrcvwnd: 118
+ 
+SRTT: 413 ms, RTTO: 3205 ms, RTV: 2792 ms, KRTT: 0 ms
+minRTT: 1 ms, maxRTT: 1000 ms, ACK hold: 120 ms
+uptime: 26070 ms, Sent idletime: 25046 ms, Receive idletime: 24925 ms
+Status Flags: active open
+Option Flags: nagle, path mtu capable, SACK option permitted
+win-scale, TCP AO
+IP Precedence value : 6
+Window update Optimisation : Enabled
+ACK Optimisation : Dynamic ACK Tuning Enabled
+ 
+TCP AO Key chain: test1
+ 
+TCP AO Current Key:
+Id: 1, Send-Id: 1, Recv-Id: 1
+Include TCP Options: Yes
+Accept AO Mismatch: No
+ 
+TCP AO Next Key:
+Id: 1, Send-Id: 1, Recv-Id: 1
+Include TCP Options: Yes
+Accept AO Mismatch: No
+ 
+Datagrams (max data segment is 1460 bytes):
+Peer MSS: 1460
+Rcvd: 7 (out of order: 0), with data: 4, total data bytes: 118
+Sent: 8 (retransmit: 0, fastretransmit: 0, partialack: 0, Second Congestion: 0), with data: 4, total data bytes: 118
+ 
+Packets received in fast path: 0, fast processed: 0, slow path: 0
+fast lock acquisition failures: 0, slow path: 0
+TCP Semaphore 0x7CF66F80A318 FREE
+ 

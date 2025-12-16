@@ -9,11 +9,11 @@ from genie.parsergen import oper_fill_tabular
 #  * 'show cts sxp connections brief'
 # ===================================
 class ShowCtsSxpConnectionsBriefSchema(MetaParser):
-    """Schema for show cts sxp connections brief."""
-
+    """
+    Schema for 'show cts sxp connections brief'
+    """
     schema = {
         "sxp_connections": {
-            "total_sxp_connections": int,
             "status": {
                 "sxp_status": str,
                 "highest_version": int,
@@ -25,36 +25,33 @@ class ShowCtsSxpConnectionsBriefSchema(MetaParser):
                 "reconcile_secs": int,
                 "retry_timer": str,
                 "peer_sequence_traverse_limit_for_export": str,
-                "peer_sequence_traverse_limit_for_import":str
+                "peer_sequence_traverse_limit_for_import": str
             },
             Optional("sxp_peers"): {
-                str: {
+                Any(): {
                     "source_ip": str,
                     "conn_status": str,
                     "duration": str
                 }
-            }
+            },
+            Optional("total_sxp_ipv4_connections"): int,
+            Optional("total_sxp_connections"): int
         }
     }
 
-
-# ===================================
-# Parser for:
-#  * 'show cts sxp connections brief'
-#  * 'Parser for show cts sxp connections vrf {vrf} brief'
-# ===================================
 class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
-    """Parser for show cts sxp connections brief"""
-    """Parser for show cts sxp connections vrf {vrf} brief"""
+    """
+    Parser for 'show cts sxp connections brief'
+    """
 
-    cli_command = ['show cts sxp connections brief', 'show cts sxp connections vrf {vrf} brief']
+    cli_command = 'show cts sxp connections brief'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command[0])
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
+
         sxp_dict = {}
+
         # There are no SXP Connections.
         #  SXP              : Enabled
         #  Highest Version Supported: 4
@@ -114,10 +111,18 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
         p11 = re.compile(r"Retry\s+open\s+timer\s+is\s+(?P<retry_timer>(not\s+running|running))")
         # 10.100.123.12   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
         p12 = re.compile(
-            r"(?P<peer_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<source_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<conn_status>\S+)\s+(?P<duration>\d+:\d+:\d+:\d+)")
+            r"(?P<peer_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<source_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<conn_status>\S+)\s+(?P<duration>\d+:\d+:\d+:\d+)")        
+        # Peer table lines:
+        # "33.1.1.1         33.1.1.2         Off(Speaker)::Pending_On(Listener)        0:02:44:45 (dd:hr:mm:sec)::0:00:00:24 (dd:hr:mm:sec)"
+        p12_1 = re.compile(
+            r"(?P<peer_ip>\S+)\s+(?P<source_ip>\S+)\s+(?P<conn_status>\S+(\(Speaker\)::\S+\(Listener\))?)\s+(?P<duration>\d+:\d+:\d+:\d+)"
+        )
         # Total num of SXP Connections = 16
         p13 = re.compile(r"^Total\s+num\s+of\s+SXP\s+Connections\s+=\s+(?P<total_sxp_connections>\d+)")
-
+        # "Total num of SXP IPv4 Connections = 1"
+        # "Total num of SXP IPv6 Connections = 2"
+        p13_1 = re.compile(r"^Total\s+num\s+of\s+SXP\s+(?P<conn_type>IPv4|IPv6)?\s*Connections\s+=\s+(?P<total_sxp_connections>\d+)")
+        
         # This regex map will be used to split the captured line using ':' as the delimeter
         # if it starts with this string, we will use this regex pattern.
         regex_map = {
@@ -133,10 +138,9 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
             "Peer-Sequence traverse limit for import": p10,
             "Retry open timer is not running": p11,
         }
-
+        
         # Remove lines with these leading strings
         remove_lines = ('---', 'Peer_IP')
-
 
         # Remove unwanted lines from raw text
         def filter_lines(raw_output, remove_lines):
@@ -148,8 +152,8 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
                 if clean_line_strip.startswith(remove_lines):
                     clean_lines.remove(clean_line)
             return clean_lines
-
-        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+            
+        out = filter_lines(raw_output=output, remove_lines=remove_lines)
 
         for line in out:
             line_strip = line.strip()
@@ -162,16 +166,11 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
                     continue
             # Retry open is a one off match that doesn't have a colon.
             elif "Retry open" in line:
-                # Retry open timer is not running
                 match = p11.match(line_strip)
                 if match:
                     groups = match.groupdict()
                     retry_timer = groups['retry_timer']
-                if not sxp_dict.get('sxp_connections'):
-                    sxp_dict.update({"sxp_connections": {}})
-                if not sxp_dict['sxp_connections'].get('status'):
-                    sxp_dict['sxp_connections'].update({"status": {}})
-                sxp_dict["sxp_connections"]['status'].update({'retry_timer': retry_timer})
+                    sxp_dict.setdefault("sxp_connections", {}).setdefault("status", {})['retry_timer'] = retry_timer
                 continue
             elif "Total num of SXP Connections" in line:
                 # Total num of SXP Connections = 16
@@ -181,26 +180,36 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
                     total_sxp_connections = int(groups['total_sxp_connections'])
                 sxp_dict["sxp_connections"]['total_sxp_connections'] = total_sxp_connections
                 continue
+            # Example: "Total num of SXP IPv4 Connections = 1"
+            elif "Total num of SXP" in line:
+                match = p13_1.match(line_strip)
+                if match:
+                    groups = match.groupdict()
+                    total_sxp_connections = int(groups['total_sxp_connections'])
+                    conn_type = groups.get('conn_type')
+                    if conn_type == "IPv4":
+                        key = "total_sxp_ipv4_connections"
+                    elif conn_type == "IPv6":
+                        key = "total_sxp_connections"
+                    else:
+                        key = "total_sxp_connections"
+                    sxp_dict.setdefault("sxp_connections", {})[key] = total_sxp_connections
+                continue
             # All other lines in the output should be p12 and captures peer_ip, source_ip, conn_status, and duration
             else:
                 # 10.100.123.12   192.168.2.24   On                                                   44:18:58:47 (dd:hr:mm:sec)
-                match = p12.match(line_strip)
+                match = p12.match(line_strip) or p12_1.match(line_strip)
                 if match:
                     groups = match.groupdict()
                     peer_ip = groups['peer_ip']
                     source_ip = groups['source_ip']
                     conn_status = groups['conn_status']
                     duration = groups['duration']
-                    if not sxp_dict.get('sxp_connections'):
-                        sxp_dict.update({"sxp_connections": {}})
-                    if not sxp_dict['sxp_connections'].get('sxp_peers'):
-                        sxp_dict['sxp_connections'].update({"sxp_peers": {}})
-                    sxp_dict['sxp_connections']['sxp_peers'].update({
-                        peer_ip: {
-                            'source_ip': source_ip,
-                            'conn_status': conn_status,
-                            'duration': duration
-                        }})
+                    sxp_dict.setdefault("sxp_connections", {}).setdefault("sxp_peers", {})[peer_ip] = {
+                        'source_ip': source_ip,
+                        'conn_status': conn_status,
+                        'duration': duration
+                    }
                 continue
             # After all captures are completed, if a regex match exists, assign a key/value to the root dict key.
             if regex:
@@ -212,16 +221,9 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
                             continue
                         if v.isdigit() and 'peer_sequence_traverse_limit' not in k:
                             v = int(v)
-                        if not sxp_dict.get('sxp_connections'):
-                            sxp_dict.update({"sxp_connections": {}})
-                        if not sxp_dict['sxp_connections'].get('status'):
-                            sxp_dict['sxp_connections'].update({"status": {}})
-                        sxp_dict['sxp_connections']['status'].update({k: v})
-        if sxp_dict:
-            return sxp_dict
-        else:
-            return {}
+                        sxp_dict.setdefault("sxp_connections", {}).setdefault("status", {})[k] = v
 
+        return sxp_dict
 
 # ==================
 # Schema for:
@@ -2633,7 +2635,8 @@ class ShowCtsRoleBasedSgtMapAllSchema(MetaParser):
             Optional('total_local'): int,
             Optional('total_cached'): int,
             Optional('total_l3if') : int,
-            Optional('total_vlan'): int
+            Optional('total_vlan'): int,
+            Optional('total_cli-hi'): int
         }
     }
 
@@ -2664,7 +2667,8 @@ class ShowCtsRoleBasedSgtMapAll(ShowCtsRoleBasedSgtMapAllSchema):
 
         # 1.1.1.2 2 SXP
         # 1.1.1.3 3 SXP
-        p1 = re.compile(r'^(?P<ip_address>(\S+))\s+(?P<sgt>(\d+))\s+(?P<source>(\w+))$')
+        # 1133:1:1::1                                 2       CLI-HI
+        p1 = re.compile(r'^(?P<ip_address>(\S+))\s+(?P<sgt>(\d+))\s+(?P<source>([\w\-]+))$')
 
         # Total number of SXP bindings = 51
         # Total number of active bindings = 51
@@ -3224,7 +3228,9 @@ class ShowCtsServerList(ShowCtsServerListSchema):
         # Installed list: SL1-1E6E6AE57D4E2A9B320D1844C68BA291, 3 server(s):
         p10 = re.compile(r'^Installed\s+list:\s+(?P<list_name>\S+),.*$')
         # *Server: 10.15.20.102, port 1812, A-ID 87B3503255C4384485BB808DC24C6F55
-        p11 = re.compile(r'^\*Server:\s+(?P<server_ip>[\d\.]+),\s+port\s+(?P<port_number>\d+),\s+A-ID\s+(?P<a_id>\S+)$')
+        # Server: 100.8.14.110, port 1812, A-ID 361CB222CFE7E875B7293A50834CC2A4
+        # *Server: 100:8::1234:5678:9ABC:125, port 1812, A-ID 808C88380354243C31CA47541B947782
+        p11 = re.compile(r'^\*?Server:\s+(?P<server_ip>[\w\.\:]+),\s+port\s+(?P<port_number>\d+),\s+A-ID\s+(?P<a_id>\S+)$')
         # Status = ALIVE
         p12 = re.compile(r'^Status\s+=\s+(?P<status>\S+)$')
         # auto-test = TRUE, keywrap-enable = FALSE, idle-time = 120 mins, deadtime = 20 secs
@@ -4330,5 +4336,142 @@ class ShowCtsCredentials(ShowCtsCredentialsSchema):
                 ret_dict['credentials_exist'] = True
                 ret_dict['username'] = m.group('username')
                 continue
+
+        return ret_dict
+
+
+class ShowCtsSxpSgtMapSchema(MetaParser):
+    """Schema for show cts sxp sgt-map"""
+    schema = {
+        'sxp_node_id_generated': str,
+        'sxp_ipv6_node_id_generated': str,
+        Optional('ip_sgt_mappings'): ListOf(dict),
+        Optional('total_number_of_ip_sgt_mappings'): int
+    }
+
+class ShowCtsSxpSgtMap(ShowCtsSxpSgtMapSchema):
+    """Parser for show cts sxp sgt-map"""
+
+    cli_command = 'show cts sxp sgt-map'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        ip_sgt_mappings = []
+        current_mapping = None
+        current_type = None
+
+        # SXP Node ID(generated):0xAC171B96(172.23.27.150)
+        p0 = re.compile(r'^SXP Node ID\(generated\):(?P<node_id>.+)$')
+
+        # SXP IPv6 Node ID(generated):1133:1:1::2
+        p1 = re.compile(r'^SXP IPv6 Node ID\(generated\):(?P<ipv6_node_id>.+)$')
+
+        # IPv4,SGT: <100.1.1.123 , 100>
+        # IPv6,SGT: <100:1::123 , 100>
+        p2 = re.compile(r'^(?P<type>IPv4|IPv6),SGT:\s+<(?P<ip_address>[\da-fA-F:.]+)\s*,\s*(?P<sgt>\d+)>$')
+
+        # source  : SXP;
+        p3 = re.compile(r'^source\s*:\s*(?P<source>[^;]+);?$')
+
+        # Peer IP : 33.1.1.1;
+        p4 = re.compile(r'^Peer IP\s*:\s*(?P<peer_ip>[^;]+);?$')
+
+        # Ins Num : 1;
+        p5 = re.compile(r'^Ins Num\s*:\s*(?P<ins_num>\d+);?$')
+
+        # Status  : Active;
+        p6 = re.compile(r'^Status\s*:\s*(?P<status>\w+);?$')
+
+        # Seq Num : 9
+        p7 = re.compile(r'^Seq Num\s*:\s*(?P<seq_num>\d+);?$')
+
+        # Peer Seq: AC171BC9
+        p8 = re.compile(r'^Peer Seq:\s*(?P<peer_seq>.+)$')
+
+        # Total number of IP-SGT Mappings: 10
+        p9 = re.compile(r'^Total number of IP-SGT Mappings:\s*(?P<total>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # SXP Node ID(generated):0xAC171B96(172.23.27.150)
+            m = p0.match(line)
+            if m:
+                ret_dict['sxp_node_id_generated'] = m.group('node_id')
+                continue
+
+            # SXP IPv6 Node ID(generated):1133:1:1::2
+            m = p1.match(line)
+            if m:
+                ret_dict['sxp_ipv6_node_id_generated'] = m.group('ipv6_node_id')
+                continue
+
+            # IPv4,SGT: <100.1.1.123 , 100>
+            # IPv6,SGT: <100:1::123 , 100>
+            m = p2.match(line)
+            if m:
+                # Save previous mapping if exists
+                if current_mapping:
+                    ip_sgt_mappings.append(current_mapping)
+                current_type = m.group('type').lower()  # 'ipv4' or 'ipv6'
+                current_mapping = {
+                    current_type: m.group('ip_address'),
+                    'SGT': int(m.group('sgt'))
+                }
+                continue
+
+            # source  : SXP;
+            m = p3.match(line)
+            if m and current_mapping is not None:
+                current_mapping['source'] = m.group('source')
+                continue
+                
+            # Peer IP : 33.1.1.1;
+            m = p4.match(line)
+            if m and current_mapping is not None:
+                current_mapping['peer_ip'] = m.group('peer_ip')
+                continue
+            
+            # Ins Num : 1;
+            m = p5.match(line)
+            if m and current_mapping is not None:
+                current_mapping['ins_num'] = int(m.group('ins_num'))
+                continue
+            
+            # Status  : Active;
+            m = p6.match(line)
+            if m and current_mapping is not None:
+                current_mapping['status'] = m.group('status')
+                continue
+            
+            # Seq Num : 9
+            m = p7.match(line)
+            if m and current_mapping is not None:
+                current_mapping['seq_num'] = int(m.group('seq_num'))
+                continue
+            
+            # Peer Seq: AC171BC9
+            m = p8.match(line)
+            if m and current_mapping is not None:
+                current_mapping['peer_seq'] = m.group('peer_seq')
+                continue
+            
+            # Total number of IP-SGT Mappings: 10
+            m = p9.match(line)
+            if m:
+                ret_dict['total_number_of_ip_sgt_mappings'] = int(m.group('total'))
+                continue
+
+        # Append the last mapping if it exists
+        if current_mapping:
+            ip_sgt_mappings.append(current_mapping)
+
+        if ip_sgt_mappings:
+            ret_dict['ip_sgt_mappings'] = ip_sgt_mappings
 
         return ret_dict

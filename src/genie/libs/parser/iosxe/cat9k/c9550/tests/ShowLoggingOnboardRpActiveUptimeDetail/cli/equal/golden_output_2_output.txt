@@ -1,0 +1,71 @@
+show logging onboard switch 1 rp active uptime detail
+--------------------------------------------------------------------------------
+UPTIME SUMMARY INFORMATION
+--------------------------------------------------------------------------------
+First customer power on : 06/19/2025 09:36:05
+Total uptime            :  0  years  1  weeks  4  days  2  hours  5  minutes
+Total downtime          :  0  years  15 weeks  3  days  21 hours  2  minutes
+Number of resets        : 33
+Number of slot changes  : 1
+Current reset reason    : Image Install
+Current reset timestamp : 10/17/2025 08:28:08
+Current slot            : 1
+Chassis type            : C9500X-60L4D
+Current uptime          :  0  years  0  weeks  0  days  0  hours  15 minutes
+Current uptime          :  0  years  0  weeks  0  days  0  hours  15 minutes
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+UPTIME CONTINUOUS INFORMATION
+--------------------------------------------------------------------------------
+Time Stamp          | Reset
+MM/DD/YYYY HH:MM:SS | Reason
+--------------------------------------------------------------------------------
+Uptime
+years weeks days hours minutes
+--------------------------------------------------------------------------------
+10/09/2025 03:17:25   Reload Command
+ 0     0     0     16    0
+10/09/2025 03:24:27   Reload Command
+ 0     0     0     0     0
+10/09/2025 03:30:12   Reload Command
+ 0     0     0     0     0
+10/09/2025 05:58:57   Reload Command
+ 0     0     0     2     0
+10/09/2025 06:49:54   PowerCycleRequest
+ 0     0     0     0     45
+10/09/2025 07:10:39   PowerCycleRequest
+ 0     0     0     0     15
+10/09/2025 07:50:45   PowerCycleRequest
+ 0     0     0     0     35
+10/09/2025 08:08:25   PowerCycleRequest
+ 0     0     0     0     15
+10/09/2025 09:19:20   PowerCycleRequest
+ 0     0     0     1     0
+10/09/2025 09:31:54   PowerCycleRequest
+ 0     0     0     0     5
+10/09/2025 09:49:09   PowerCycleRequest
+ 0     0     0     0     10
+10/09/2025 10:09:25   PowerCycleRequest
+ 0     0     0     0     15
+10/10/2025 09:10:26   PowerCycleRequest
+ 0     0     0     22    0
+10/10/2025 09:21:16   Reload Command
+ 0     0     0     0     5
+10/10/2025 09:54:32   PowerCycleRequest
+ 0     0     0     0     30
+10/10/2025 10:06:34   Reload Command
+ 0     0     0     0     5
+10/10/2025 11:24:17   PowerCycleRequest
+ 0     0     0     1     0
+10/13/2025 10:46:34   PowerCycleRequest
+ 0     0     2     23    0
+10/16/2025 09:50:18   PowerCycleRequest
+ 0     0     2     23    0
+10/17/2025 07:44:28   PowerCycleRequest
+ 0     0     0     21    0
+10/17/2025 08:03:20   PowerCycleRequest
+ 0     0     0     0     15
+10/17/2025 08:28:08   Image Install
+ 0     0     0     0     20
+--------------------------------------------------------------------------------

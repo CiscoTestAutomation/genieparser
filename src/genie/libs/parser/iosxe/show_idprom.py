@@ -31,7 +31,7 @@ class ShowIdpromSchema(MetaParser):
     """
 
     schema = {
-        'switch': {
+        Optional('switch'): {
             Any() : {
                 'module_idprom' : {
                     Any(): {
@@ -65,7 +65,6 @@ class ShowIdpromSchema(MetaParser):
                         'top_assy_part_number' : str,
                         'top_assy_revision': str,
                         'deviation_number' : int,
-
                         'pcb_serial_number' : str,
                         'rma_test_history' : str,
                         'rma_number' : str,
@@ -76,7 +75,6 @@ class ShowIdpromSchema(MetaParser):
                         'manufacturing_test_data': str,
                         'field_diagnostics_data' : str,
                         'environment_monitor_data' : str,
-
                         'max_power_output_watts' : int
                     }                    
                 } ,
@@ -88,12 +86,14 @@ class ShowIdpromSchema(MetaParser):
                         'top_assy_part_number' : str,
                         'top_assy_revision': str,
                         'deviation_number' : int,
-
                         'pcb_serial_number' : str,
                         'clei_code' : str,
                         'pid' : str,
                         'vid' : str,
-                        'manufacturing_test_data': str,
+                        Optional('manufacturing_test_data'): str,
+                        Optional('environment_monitor_data') : str,
+                        Optional('max_power_requirement_watts'): int,
+                        Optional('typical_power_requirement_watts'): int,
                     }                     
                 }
             }
@@ -121,6 +121,10 @@ class ShowIdprom(ShowIdpromSchema):
 
         # output dictionary initialised
         result_dict = {}
+        switch = None
+        switch_dict = None
+        switch_id_dict = {}
+        idprom_type_id_dict = {}
 
         # possible regex patterns below:
 
@@ -218,6 +222,11 @@ class ShowIdprom(ShowIdpromSchema):
             if m:
                 group = m.groupdict()
                 number = group['number']
+
+                if switch_dict is None:
+                    switch = '1'
+                    switch_dict = result_dict.setdefault('switch', {})
+                    switch_id_dict = switch_dict.setdefault(switch, {})
                 idprom_type_dict = switch_id_dict.setdefault('module_idprom', {})
                 idprom_type_id_dict = idprom_type_dict.setdefault(number, {})
                 continue
@@ -227,6 +236,11 @@ class ShowIdprom(ShowIdpromSchema):
             if m:
                 group = m.groupdict()
                 number = group['number']
+
+                if switch_dict is None:
+                    switch = '1'
+                    switch_dict = result_dict.setdefault('switch', {})
+                    switch_id_dict = switch_dict.setdefault(switch, {})
                 idprom_type_dict = switch_id_dict.setdefault('power_supply_idprom', {})
                 idprom_type_id_dict = idprom_type_dict.setdefault(number, {})
                 continue
@@ -236,6 +250,11 @@ class ShowIdprom(ShowIdpromSchema):
             if m:
                 group = m.groupdict()
                 number = group['number']
+
+                if switch_dict is None:
+                    switch = '1'
+                    switch_dict = result_dict.setdefault('switch', {})
+                    switch_id_dict = switch_dict.setdefault(switch, {})
                 idprom_type_dict = switch_id_dict.setdefault('fantray_idprom', {})
                 idprom_type_id_dict = idprom_type_dict.setdefault(number, {})
                 continue
@@ -930,3 +949,105 @@ class ShowIdpromFantrayEepromDetail(ShowIdpromFantrayEepromDetailSchema):
                 continue
 
         return ret_dict
+
+class ShowIdpromSupervisorEepromDetailSchema(MetaParser):
+    """Schema for show idprom supervisor eeprom detail"""
+    schema = {
+        "slots": {
+            str: {
+                "eeprom_version": str,
+                "compatible_type": str,
+                "controller_type": str,
+                "hardware_revision": str,
+                "pcb_part_number": str,
+                "board_revision": str,
+                "deviation_number": str,
+                "fab_version": str,
+                "pcb_serial_number": str,
+                "rma_test_history": str,
+                "rma_number": str,
+                "rma_history": str,
+                "top_assy_part_number": str,
+                "top_assy_revision": str,
+                "clei_code": str,
+                "product_identifier_pid": str,
+                "version_identifier_vid": str,
+                "base_mac_address": str,
+                "mac_address_block_size": str,
+                "environment_monitor_data": str,
+                "max_power_requirement": str,
+                "typical_power_requirement": str,
+                "manufacturing_test_data": str,
+                "field_diagnostics_data": str,
+                "platform_features": str,
+            }
+        }
+    }
+
+class showidpromr(ShowIdpromSupervisorEepromDetailSchema):
+    """Parser for show idprom supervisor eeprom detail"""
+
+    cli_command = 'show idprom supervisor eeprom detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        slot_dict = {}
+        current_slot = None
+        pf_lines = None
+
+        # Slot R0 EEPROM data:
+        p1 = re.compile(r'^Slot\s+(?P<slot>\S+)\s+EEPROM data:')
+
+        # EEPROM version           : 4
+        # Compatible Type          : 0xFF
+        # Controller Type          : 4601
+        # Hardware Revision        : 0.9
+        # PCB Part Number          : 73-21411-02
+        p2 = re.compile(r'^(?P<key>[\w\s\.\(\)-]+):\s*(?P<value>.*)$')
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+            
+            # Slot R0 EEPROM data:
+            m = p1.match(line)
+            
+            if m:
+                current_slot = m.group('slot')
+                slot_dict = ret_dict.setdefault('slots', {}).setdefault(current_slot, {})
+                pf_lines = None
+                continue
+
+            if line.strip().startswith('Platform features'):
+                pf_lines = [line.split(':', 1)[1].strip()]
+                continue
+            if pf_lines is not None and (line.startswith(' ' * 35) or line.startswith(' ' * 36)):
+                pf_lines.append(line.strip())
+                slot_dict['platform_features'] = ' '.join(pf_lines).strip()
+                continue
+            elif pf_lines:
+                slot_dict['platform_features'] = ' '.join(pf_lines).strip()
+                pf_lines = None
+
+            #  EEPROM version           : 4
+            # Compatible Type          : 0xFF
+            # Controller Type          : 4601
+            # Hardware Revision        : 0.9
+            # PCB Part Number          : 73-21411-02
+            m = p2.match(line.strip())
+
+            if m and current_slot:
+                key = m.group('key').strip().lower()
+                key = re.sub(r'[ .()\-]', '_', key)
+                key = re.sub(r'_+', '_', key).strip('_')
+                value = m.group('value').strip()
+                if key in ['max_power_requirement', 'typical_power_requirement'] and value.endswith('Watts'):
+                    value = value.replace('Watts', '').strip()
+                slot_dict[key] = value
+
+        return ret_dict
+

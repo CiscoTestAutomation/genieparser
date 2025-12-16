@@ -1,0 +1,9 @@
+show platform hardware qfp active feature ess session
+
+Current number sessions: 1
+Current number TC flow: 0
+Feature Type: A=Accounting D=Policing(DRL) F=FFR M=DSCP Marking L=L4redirect P=Portbundle T=TC
+
+   Session    Type      Segment1      SegType1      Segment2      SegType2 Feature Other
+----------------------------------------------------------------------------------------
+   4325392     PPP 0x0042001000001008    ETHER 0x0042001000002009   L2TPV3 -------

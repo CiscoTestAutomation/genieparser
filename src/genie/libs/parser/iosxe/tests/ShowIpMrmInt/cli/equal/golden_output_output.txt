@@ -1,0 +1,2 @@
+Interface                Address          Mode                  Status
+GigabitEthernet0/0/0     10.1.1.1         Test-Sender           Up

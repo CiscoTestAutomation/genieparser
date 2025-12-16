@@ -38,6 +38,9 @@ IOSXE parsers for the following show commands:
    * show crypto ikev2 diagnose error
    * show crypto pki counters
    * show crypto pki trustpool count downloaded
+   * show crypto datapath ipv4 snapshot non-zero
+   * show crypto eli
+   * show crypto ikev2 count
 """
 
 # Python
@@ -1437,7 +1440,8 @@ class ShowCryptoIkev2SaDetailSchema(MetaParser):
                     Optional("pushed_ip"): str,
                     Optional("remote_subnets"): list,
                     Optional("quantum_resistance"): str,
-                    Optional("quantum_encry_type"): str
+                    Optional("quantum_encry_type"): str,
+                    Optional("ake"): dict
                 }
             }
         }
@@ -1455,12 +1459,27 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
         # 973       92.1.121.1/500        22.1.1.2/500          none/121             READY
-        r1 = r"^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\w]+)$"
+        r1 = r"^(?P<tunnel_id>[\d]+) +(?P<local>[0-9\.\S]+) +(?P<remote>[0-9\.\S]+) +(?P<fvrf>[\w]+)\/(?P<ivrf>[\d\w]+) +(?P<status>[\S]+)$"
         p1 = re.compile(r1)
+
+        # 2          none/none             READY
+        p1a = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<fvrf>\S+)/(?P<ivrf>\S+)\s+(?P<status>\w+)$')
+
+        # Local  2001:DB8:1101::222/500 
+        p1b = re.compile(r'^Local\s+(?P<local_ip>[\w:]+)/(\d+)$')
+
+        # Remote  2001:DB8:1202::222/500
+        p1c = re.compile(r'^Remote\s+(?P<remote_ip>[\w:]+)/(\d+)$')
 
         # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK, QR
         r2 = r"^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
         p2 = re.compile(r2)
+
+        # Additional Key Exchange Group: AKE1: ML-KEM-1024
+        # AKE group: AKE1: MLKEM1024
+        r2_1 = r'^AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+)$'
+        p2_1 = re.compile(r2_1)
+
 
         # Life/Active Time: 86400/12689 sec
         r3 = r"^Life+\S+Active Time: +(?P<life_time>[\d]+)\/(?P<active_time>[\d]+) +sec$"
@@ -1549,9 +1568,14 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         # Quantum-safe Encryption using Manual PPK
         r24 = r"^Quantum-safe Encryption using +(?P<quantum_encry_type>\w+) +PPK$"
         p24 = re.compile(r24)
+
+        # IETF Std Fragmentation MTU in use: 228 bytes.
+        r25 = r'^IETF Std Fragmentation +(?P<fragmentation>[\d\s\S]+)$'
+        p25 = re.compile(r25)
         
 
         ret_dict={}
+        master_dict = {}
         for line in output.splitlines():
             line=line.strip()
             # 973       92.1.121.1/500        22.1.1.2/500          none/121             READY
@@ -1564,6 +1588,30 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
                 master_dict.update(group)
                 remote_subnets_dict = master_dict.setdefault('remote_subnets', [])
                 continue
+            # 2          none/none             READY
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                group['status'] = group['status'].lower()
+                tunnel_id = int(group.pop('tunnel_id'))
+                master_dict = ret_dict.setdefault('tunnel_id', {}).setdefault(tunnel_id, {})
+                master_dict.update(group)
+                remote_subnets_dict = master_dict.setdefault('remote_subnets', [])
+            # Local  2001:DB8:1101::222/500
+            m = p1b.match(line)
+            if m:
+                group = m.groupdict()
+                local_ip = group.pop('local_ip')
+                master_dict['local'] = local_ip
+                continue
+            # Remote  2001:DB8:1202::222/500
+            m = p1c.match(line)
+            if m:
+                group = m.groupdict()
+                remote_ip = group.pop('remote_ip')
+                master_dict['remote'] = remote_ip
+                continue
+
             # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: PSK, Auth verify: PSK, QR
             m = p2.match(line)
             if m:
@@ -1573,6 +1621,13 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
                 group['keysize'] = int(group['keysize'])
                 master_dict.update(group)
                 continue
+            # Additional Key Exchange Group: AKE1: ML-KEM-1024
+            # AKE group: AKE1: MLKEM1024
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                ake = {group['ake_group']: group['ake_algo']}
+                master_dict.update({"ake":ake})
             # Life/Active Time: 86400/12689 sec
             m = p3.match(line)
             if m:
@@ -1723,6 +1778,13 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
             m = p24.match(line)
             if m:
                 group = m.groupdict()
+                master_dict.update(group)
+                continue
+            # IETF Std Fragmentation MTU in use: 228 bytes.
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                group['fragmentation'] = group['fragmentation'].replace('.','')
                 master_dict.update(group)
                 continue
             
@@ -1882,16 +1944,16 @@ class ShowCryptoPkiServerSchema(MetaParser):
         'server':{
             Any():
                 {
-                    'status': str, 
-                    'state': str, 
-                    'issuer': str,
-                    'fingerprint': str,
+                    Optional('status'): str, 
+                    Optional('state'): str, 
+                    Optional('issuer'): str,
+                    Optional('fingerprint'): str,
                     Optional('subca_fingerprint'): str,
                     Optional('ra_fingerprint'): str,
                     Optional('ca_type'): str,
                     Optional('grant_mode'): str,
                     Optional('last_serial_num'): str,
-                    'ca_expiry_timer': str,
+                    Optional('ca_expiry_timer'): str,
                     Optional('crl_next_update_timer'): str,
                     Optional('primary_storage'): str,
                     Optional('database_level'): str,
@@ -2159,13 +2221,12 @@ class ShowCryptoPkiTimerDetail(ShowCryptoPkiTimerDetailSchema):
 
         # |  6d23:59:57.701  (2025-01-14T08:48:18Z) ER EXPIRE 1
         p15 = re.compile(r'^\s*\|?\s*(?P<er_expiry>\S+)\s+\((?P<er_expiry_iso>\S+)\)\s+ER\s+EXPIRE\s+\d+$')
-
+        ser_dict = ret_dict.setdefault('timer', {})
         for line in output.splitlines():
             line = line.strip()
             #  |        8:02.030  (2022-01-16T03:09:36Z) SESSION CLEANUP
             m = p1.match(line)
             if m:
-                ser_dict = ret_dict.setdefault('timer', {})
                 ser_dict['session_cleanup'] = m.groupdict()['sess_cleanup']
                 ser_dict['session_cleanup_iso'] = m.groupdict()['sess_cleanup_iso']
                 continue
@@ -2661,6 +2722,18 @@ class ShowCryptoIkev2StatsExtSchema(MetaParser):
                     'signature_verify': {
                         'passed': int,
                         'failed': int
+                    },
+                    Optional('mlkem_pubkey_generated'): {
+                        'passed': int,
+                        'failed': int
+                    },
+                    Optional('mlkem_encaps'): {
+                        'passed': int,
+                        'failed': int
+                    },
+                    Optional('mlkem_decaps'): {
+                        'passed': int,
+                        'failed': int
                     }
                 },
                 'pki_operation': {
@@ -2803,6 +2876,15 @@ class ShowCryptoIkev2StatsExt(ShowCryptoIkev2StatsExtSchema):
         # IKE PREROUTE IDB VERIFICATION                     0          0
         p23 = re.compile(r'^IKE\s+PREROUTE\s+IDB\s+VERIFICATION\s+(?P<idb_ver_pass>\d+)\s+(?P<idb_ver_fail>\d+)$')
 
+        # MLKEM PUBKEY GENERATED                     0          0
+        p24 = re.compile(r'^MLKEM\s+PUBKEY\s+GENERATED\s+(?P<mlkem_pubkey_gen_pass>\d+)\s+(?P<mlkem_pubkey_gen_fail>\d+)$')
+
+        # MLKEM ENCAPS                     0          0
+        p25 = re.compile(r'^MLKEM\s+ENCAPS\s+(?P<mlkem_encaps_pass>\d+)\s+(?P<mlkem_encaps_fail>\d+)$')
+
+        # MLKEM DECAPS                     0          0
+        p26 = re.compile(r'^MLKEM\s+DECAPS\s+(?P<mlkem_decaps_pass>\d+)\s+(?P<mlkem_decaps_fail>\d+)$')
+
         # initial return dictionary
         ret_dict = {}
         for line in output.splitlines():
@@ -2930,7 +3012,35 @@ class ShowCryptoIkev2StatsExt(ShowCryptoIkev2StatsExtSchema):
                     }
                 })
                 continue
-            
+
+            # MLKEM PUBKEY GENERATED                            0          0
+            m = p24.match(line)
+            if m:
+                crypto_dict.update ( { 'mlkem_pubkey_generated' : {
+                        'passed': int(m.groupdict()['mlkem_pubkey_gen_pass']),
+                        'failed': int(m.groupdict()['mlkem_pubkey_gen_fail'])
+                    }
+                })
+                continue
+            # MLKEM ENCAPS                            0          0
+            m = p25.match(line)
+            if m:
+                crypto_dict.update ( { 'mlkem_encaps' : {
+                        'passed': int(m.groupdict()['mlkem_encaps_pass']),
+                        'failed': int(m.groupdict()['mlkem_encaps_fail'])
+                    }
+                })
+                continue
+            # MLKEM DECAPS                            0          0
+            m = p26.match(line)
+            if m:
+                crypto_dict.update ( { 'mlkem_decaps' : {
+                        'passed': int(m.groupdict()['mlkem_decaps_pass']),
+                        'failed': int(m.groupdict()['mlkem_decaps_fail'])
+                    }
+                })
+                continue
+
             # VERIFY CERTIFICATE                                0          0
             m = p13.match(line)
             if m:
@@ -4102,6 +4212,7 @@ class ShowCryptoIkev2SessionSchema(MetaParser):
                     Optional('dh_group'): int,
                     Optional('auth_sign'): str,
                     Optional('auth_verify'): str,
+                    Optional('ake'): dict,
                     Optional('lifetime'): int,
                     Optional('activetime'): int,
                     Optional('ce_id'): int,
@@ -4176,6 +4287,14 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
         p3 = re.compile(r'^(?P<t_id>\d+)\s+(?P<loc_ip>\S+)\/(?P<loc_port>\d+)\s+'
                         r'(?P<rem_ip>\S+)\/(?P<rem_port>\d+)\s+'
                         r'(?P<f_vrf>\S+)\/(?P<i_vrf>\S+)\s+(?P<sess_stats>\S+)$')
+        # 2          none/none             READY
+        p3a = re.compile(r'^(?P<t_id>\d+)\s+(?P<f_vrf>\S+)/(?P<i_vrf>\S+)\s+(?P<sess_stats>\w+)$')
+
+        # Local  2001:DB8:1101::222/500 
+        p3b = re.compile(r'^Local\s+(?P<loc_ip>[\w:]+)/(?P<loc_port>\d+)$')
+
+        # Remote  2001:DB8:1202::222/500
+        p3c = re.compile(r'^Remote\s+(?P<rem_ip>[\w:]+)/(?P<rem_port>\d+)$')
  
         # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: RSA, Auth verify: AnyConnect-EAP
         # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
@@ -4183,6 +4302,10 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                         r'PRF:\s+(?P<random>\S+),\s+Hash:\s+(?P<hash>\S+),\s+DH Grp:(?P<dh>\d+),\s+'
                         r'Auth sign:\s+(?P<auth>\S+),\s+Auth verify:\s+(?P<auth_ver>\S+)$')
  
+        # AKE group: AKE1: ML-KEM-1024
+        p4_1 = re.compile(r'^AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+)$')
+        
+
         # Life/Active Time: 86400/38157 sec
         p5 = re.compile(r'^Life\/Active\s+Time:\s+(?P<life>\d+)\/(?P<active>\d+)\s+sec$')
  
@@ -4322,6 +4445,29 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                 ikev2_dict['ivrf'] = group['i_vrf']
                 ikev2_dict['session_status'] = group['sess_stats']
                 continue
+            # 2          none/none             READY
+            m = p3a.match(line)
+            if m:
+                group = m.groupdict()
+                ikev2_dict['tunnel_id'] = int(group['t_id'])
+                ikev2_dict['fvrf'] = group['f_vrf']
+                ikev2_dict['ivrf'] = group['i_vrf']
+                ikev2_dict['session_status'] = group['sess_stats']
+                continue
+            # Local  2001:DB8:1101::222/500 
+            m = p3b.match(line)
+            if m:
+                group = m.groupdict()
+                ikev2_dict['local_ip'] = group['loc_ip']
+                ikev2_dict['local_port'] = int(group['loc_port'])
+                continue
+            # Remote  2001:DB8:1202::222/500
+            m = p3c.match(line)
+            if m:
+                group = m.groupdict()
+                ikev2_dict['remote_ip'] = group['rem_ip']
+                ikev2_dict['remote_port'] = int(group['rem_port'])
+                continue
 
             # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:19, Auth sign: RSA, Auth verify: AnyConnect-EAP
             # Encr: AES-CBC, keysize: 256, PRF: SHA256, Hash: SHA256, DH Grp:14, Auth sign: PSK, Auth verify: PSK
@@ -4335,6 +4481,14 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                 ikev2_dict['dh_group'] = int(group['dh'])
                 ikev2_dict['auth_sign'] = group['auth']
                 ikev2_dict['auth_verify'] = group['auth_ver']
+                continue
+
+            # AKE group: AKE1: ML-KEM-1024
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                ikev2_dict.setdefault('ake', {})
+                ikev2_dict['ake'][group['ake_group']] = group['ake_algo']
                 continue
 
             # Life/Active Time: 86400/38157 sec
@@ -4557,12 +4711,14 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                 child_entry_dict['compression'] = group['comp']
                 child_entry_dict['mode'] = group['tunnel_type']
 
-        if ret_dict['ikev2_session']['IPv4'] == {}:
-            del ret_dict['ikev2_session']['IPv4']
- 
-        if ret_dict['ikev2_session']['IPv6'] == {}:
-            del ret_dict['ikev2_session']['IPv6'] 
- 
+        if 'ikev2_session' in ret_dict:
+            if ret_dict['ikev2_session']['IPv4'] == {}:
+                del ret_dict['ikev2_session']['IPv4']
+
+        if 'ikev2_session' in ret_dict:
+            if ret_dict['ikev2_session']['IPv6'] == {}:
+                del ret_dict['ikev2_session']['IPv6']
+
         return ret_dict
 
 # =================================================
@@ -4622,6 +4778,7 @@ class ShowCryptoIpsecSaDetailSchema(MetaParser):
                             Optional('pkts_verify_failed'): int,
                             Optional('recv_errors'): int,
                             Optional('send_errors'): int,
+                            Optional('ake'): dict,
                             'path_mtu': int,
                             'ip_mtu':int,
                             'pfs': str,
@@ -4746,9 +4903,10 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
         # current outbound spi: 0x397C36EE(964441838) 
         p24 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
 
-        # PFS (Y/N): N, DH group: none 
-        p25 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+).*: +(?P<dh_group>\w+)$')
-
+        # PFS (Y/N): Y, DH group: none
+        # PFS (Y/N): Y, DH group: none, AKE group: AKE1: MLKEM1024
+        p25 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+), +DH group: +(?P<dh_group>\w+)(?:, +AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+))?,?$')
+        
         # inbound esp sas: 
         p26 = re.compile(r'^inbound esp sas:$')
 
@@ -4987,7 +5145,12 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
             # PFS (Y/N): N, DH group: none
             m = p25.match(line)
             if m:
-                ident_dict.update(m.groupdict())
+                group = m.groupdict()
+                ident_dict['pfs'] = group['pfs']
+                ident_dict['dh_group'] = group['dh_group']
+                if "ake_group" in m.groupdict() and group['ake_group'] is not None:
+                    ident_dict.setdefault('ake', {})
+                    ident_dict['ake'][group['ake_group']] = group['ake_algo']
                 continue
 
             # inbound esp sas:
@@ -5806,6 +5969,7 @@ class ShowCryptoIpsecProfileSchema(MetaParser):
                     'security_association_lifetime': str,
                     'responder_only': str,
                     'psf': str,
+                    Optional('ml-kem_only'): str,
                     'mixed_mode': str,
                     'tranform_sets': {
                         Any(): {
@@ -5847,6 +6011,10 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
 
         # PFS (Y/N): N
         p5 = re.compile(r'^PFS \(Y/N\):\s*(?P<psf>(Y|N))$')
+
+
+        # ML-KEM ONLY (Y/N): Y
+        p5_1 = re.compile(r'^ML-KEM ONLY \(Y/N\):\s*(?P<mlkm>(Y|N))$')
 
         # Mixed-mode : Disabled
         p6 = re.compile(r'^Mixed-mode\s*:\s*(?P<mixed_mode>\w+)$')
@@ -5896,6 +6064,12 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
                 psf = groups['psf']
                 profile_name_dict['psf'] = psf
                 continue
+            
+            m = p5_1.match(line)
+            if m:
+                groups = m.groupdict()
+                profile_name_dict['ml-kem_only'] = groups['mlkm']
+                continue
 
             m = p6.match(line)
             if m:
@@ -5935,6 +6109,7 @@ class ShowCryptoIkev2ProposalSchema(MetaParser):
                     'integrity': str,
                     'prf': str,
                     'dh_group': list,
+                    Optional('ake'): Or(None, {Optional(str): str})
                 }
         },
     }
@@ -5969,6 +6144,12 @@ class ShowCryptoIkev2Proposal(ShowCryptoIkev2ProposalSchema):
         # DH Group   : DH_GROUP_256_ECP/Group 19 DH_GROUP_2048_MODP/Group 14 DH_GROUP_521_ECP/Group 21 DH_GROUP_1536_MODP/Group 5
         p5 = re.compile(r'^DH Group\s*:\s*(?P<dh_group>.*)$')
 
+        # AKE field
+        p6 = re.compile(r'^AKE group\s*:\s*(?P<ake_none>none)?\s*$')
+
+        # Nested AKE values
+        p7 = re.compile(r'^\s*(?P<number>\d+):\s*(?P<ake_values>.*)$')
+        
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
@@ -6022,6 +6203,32 @@ class ShowCryptoIkev2Proposal(ShowCryptoIkev2ProposalSchema):
                         l2 = ''
                 proposal_name_dict['dh_group'] = dh_group_list
                 continue
+            
+            # Match AKE field
+            ake_dict = None
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                ake_value = line.split(':')[1].strip()
+                if ake_value.lower() == 'none':
+                    proposal_name_dict['ake'] = None  # Handle 'none' case explicitly
+                else:
+                    proposal_name_dict.setdefault('ake', {})
+                continue
+
+            # Nested AKE values only if AKE is detected
+
+
+            m = p7.match(line)
+            if m : 
+                if 'ake' in proposal_name_dict:
+                    ake_dict = {}
+                    groups = m.groupdict()
+                    number = groups['number']
+                    ake_values = groups['ake_values'].split()
+                    ake_dict[number] = groups['ake_values']
+                    proposal_name_dict['ake'] = ake_dict
+                    continue
 
         return ret_dict
 
@@ -6136,9 +6343,35 @@ class ShowCryptoIkev2SaSchema(MetaParser):
                     Optional('session_id'): int,
                     Optional('local_spi'): str,
                     Optional('remote_spi'): str,
+                    Optional('ake'): dict,
                     }
                 },
-        'ipv6': {}
+        'ipv6': {
+            Any():{
+                    'tunnel_id': int,
+                    'local_ip': str,
+                    'local_port': int,
+                    'remote_ip': str,
+                    'remote_port': int,
+                    'fvrf': str,
+                    'ivrf': str,
+                    'status': str,
+                    'encryption': str,
+                    'keysize': int,
+                    'prf': str,
+                    'hash': str,
+                    'dh_group': int,
+                    'auth_sign': str,
+                    'auth_verify': str,
+                    'life_time': int,
+                    'active_time': int,
+                    Optional('ce_id'): int,
+                    Optional('session_id'): int,
+                    Optional('local_spi'): str,
+                    Optional('remote_spi'): str,
+                    Optional('ake'): dict,
+                    }
+            }
     }
 
 # =================================================
@@ -6157,16 +6390,28 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         ret_dict = {}
 
         # IPv4 Crypto IKEv2  SA  
-        p1 = re.compile(r'^IPv4 Crypto IKEv2 SA$')
+        p1 = re.compile(r'^IPv4 Crypto IKEv2\s+SA$')
 
         # IPv6 Crypto IKEv2  SA 
-        p2 = re.compile(r'^IPv6 Crypto IKEv2 SA$')
+        p2 = re.compile(r'^IPv6 Crypto IKEv2\s+SA$')
 
         # 1         66.66.66.1/500        66.66.66.2/500        none/none            READY
-        p3 = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<local_ip>[\w.]+)/(?P<local_port>\d+)\s+(?P<remote_ip>[\w.]+)/(?P<remote_port>\d+)\s+(?P<fvrf>\w+)/(?P<ivrf>\w+)\s+(?P<status>[\w]+)$')
+        p3 = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<local_ip>[\w.]+)/(?P<local_port>\d+)\s+(?P<remote_ip>[\w.]+)/(?P<remote_port>\d+)\s+(?P<fvrf>\w+)/(?P<ivrf>\w+)\s+(?P<status>[\S]+)$')
+
+        # 2          none/none             READY
+        p3a = re.compile(r'^(?P<tunnel_id>\d+)\s+(?P<fvrf>\S+)/(?P<ivrf>\S+)\s+(?P<status>\S+)$')
+
+        # Local  2001:DB8:1101::222/500 
+        p3b = re.compile(r'^Local\s+(?P<local_ip>[\w:]+)/(?P<local_port>\d+)$')
+
+        # Remote  2001:DB8:1202::222/500
+        p3c = re.compile(r'^Remote\s+(?P<remote_ip>[\w:]+)/(?P<remote_port>\d+)$')
 
         # Encr: AES-CBC, keysize: 128, PRF: SHA1, Hash: SHA96, DH Grp:16, Auth sign: PSK, Auth verify: PSK
         p4 = re.compile(r'^Encr:\s*(?P<encryption>[\w-]+),\s*keysize:\s*(?P<keysize>\d+),\s*PRF:\s*(?P<prf>\w+),\s*Hash:\s*(?P<hash>\w+),\s*DH Grp:(?P<dh_group>\d+),\s*Auth sign:\s*(?P<auth_sign>\w+),\s*Auth verify:\s*(?P<auth_verify>\w+)')
+
+        # AKE group: AKE1: ML-KEM-1024
+        p4_1 = re.compile(r'^AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+)$')
 
         # Life/Active Time: 86400/735 sec
         p5 = re.compile(r'^Life/Active Time:\s*(?P<life_time>\d+)/(?P<active_time>\d+)\s*sec$')
@@ -6213,6 +6458,37 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 tunnel_dict['ivrf'] = ivrf
                 tunnel_dict['status'] = status
 
+            # 2          none/none             READY
+            m = p3a.match(line)
+            if m:
+                groups = m.groupdict()
+                tunnel_id = int(groups['tunnel_id'])
+                fvrf = groups['fvrf']
+                ivrf = groups['ivrf']
+                status = groups['status']
+                tunnel_dict = ipv6_ikev2_dict.setdefault(tunnel_id,{})
+                tunnel_dict['tunnel_id'] = tunnel_id
+                tunnel_dict['fvrf'] = fvrf
+                tunnel_dict['ivrf'] = ivrf
+                tunnel_dict['status'] = status
+            # Local  2001:DB8:1101::222/500
+            m = p3b.match(line)
+            if m:
+                groups = m.groupdict()
+                local_ip = groups['local_ip']
+                local_port = int(groups['local_port'])
+                tunnel_dict['local_ip'] = local_ip
+                tunnel_dict['local_port'] = local_port
+            
+            # Remote  2001:DB8:1202::222/500
+            m = p3c.match(line)
+            if m:
+                groups = m.groupdict()
+                remote_ip = groups['remote_ip']
+                remote_port = int(groups['remote_port'])
+                tunnel_dict['remote_ip'] = remote_ip
+                tunnel_dict['remote_port'] = remote_port
+
             # Encr: AES-CBC, keysize: 128, PRF: SHA1, Hash: SHA96, DH Grp:16, Auth sign: PSK, Auth verify: PSK
             m = p4.match(line)
             if m:
@@ -6232,6 +6508,13 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 tunnel_dict['dh_group'] = dh_group
                 tunnel_dict['auth_sign'] = auth_sign
                 tunnel_dict['auth_verify'] = auth_verify
+
+            # AKE group: AKE1: ML-KEM-1024
+            m = p4_1.match(line)
+            if m:
+                groups = m.groupdict()
+                tunnel_dict.setdefault('ake',{})
+                tunnel_dict['ake']={groups['ake_group']: groups['ake_algo']}
 
             # Life/Active Time: 86400/735 sec
             m = p5.match(line)
@@ -9045,7 +9328,7 @@ class ShowCryptoIpsecSaInterface(ShowCryptoIpsecSaInterfaceSchema):
             output = self.device.execute(self.cli_command.format(interface=interface))
 
         # interface: GigabitEthernet3
-        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d\/]+)$')
+        p1 = re.compile(r'^interface:+ (?P<interface>[\w\d\-/]+|Virtual-Access\d+)$') 
 
         # Crypto map tag: vpn-crypto-map, local addr 1.1.1.2
         p2 = re.compile(r'^Crypto map tag: (?P<crypto_map_tag>[\w\d\-\/]+), +local addr +(?P<local_addr>[\w\.\:]+)$')
@@ -10688,6 +10971,7 @@ class ShowCryptoIpsecSaIpv6DetailedSchema(MetaParser):
                                 'current_outbound_spi': str,
                                 'pfs': str,
                                 'dh_group': str,
+                                Optional('ake'): dict,
                                 'inbound_esp_sas': {
                                     'spi': str,
                                     'transform': str,
@@ -10779,11 +11063,13 @@ class ShowCryptoIpsecSaIpv6Detailed(ShowCryptoIpsecSaIpv6DetailedSchema):
         # current outbound spi: 0x102(258)
         p13 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
 
-        # PFS (Y/N): N, DH group: none
-        p14 = re.compile(r'^PFS \(Y/N\): +(?P<pfs>\S+), +DH group: +(?P<dh_group>\S+)$')
+        # PFS (Y/N): Y, DH group: none
+        # PFS (Y/N): Y, DH group: none, AKE group: AKE1: MLKEM1024
+        p14 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+), +DH group: +(?P<dh_group>\w+)(?:, +AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+))?,?$')
 
         # spi: [Not Available]
-        p15 = re.compile(r'^spi: +(?P<spi>\[Not Available\])$')
+        # spi: 0x658F7C11(1703902225) 
+        p15 = re.compile(r'^spi: +(?P<spi>\[Not Available\]|\S+)$')
 
         # transform: esp-gcm 256 ,
         p16 = re.compile(r'^transform: +(?P<transform>[\S\s]+),$')
@@ -10914,6 +11200,9 @@ class ShowCryptoIpsecSaIpv6Detailed(ShowCryptoIpsecSaIpv6DetailedSchema):
             if m:
                 current_remote_ident['pfs'] = m.group('pfs')
                 current_remote_ident['dh_group'] = m.group('dh_group')
+                if "ake_group" in m.groupdict() and m.group('ake_group') is not None:
+                    current_remote_ident.setdefault('ake', {})
+                    current_remote_ident['ake'][m.group('ake_group')] = m.group('ake_algo')
                 continue
 
             # Match inbound esp sas
@@ -11249,3 +11538,803 @@ class ShowCryptoPkiTrustpoolCountDownloaded(ShowCryptoPkiTrustpoolCountDownloade
                 break
 
         return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto pki trustpool'
+# =================================================
+class ShowCryptoPkiTrustpoolSchema(MetaParser):
+    """Schema for show crypto pki trustpool"""
+    schema = {
+        'certificates': ListOf({
+            'type': str,  # CA Certificate
+            Optional('status'): str,
+            Optional('serial_number_in_hex'): str,
+            Optional('usage'): str,
+            Optional('issuer'): {
+                Optional('cn'): str,
+                Optional('ou'): ListOf(str),
+                Optional('o'): ListOf(str),
+                Optional('l'): str,
+                Optional('c'): str,
+                Optional('st'): str,
+                Optional('e'): str,
+            },
+            Optional('subject'): {
+                Optional('cn'): str,
+                Optional('ou'): ListOf(str),
+                Optional('o'): ListOf(str),
+                Optional('l'): str,
+                Optional('c'): str,
+                Optional('st'): str,
+                Optional('e'): str,
+            },
+            Optional('crl_distribution_points'): ListOf(str),
+            Optional('validity_date'): {
+                Optional('start_date'): str,
+                Optional('end_date'): str,
+            },
+            Optional('associated_trustpoints'): str,
+            Optional('trustpool'): str,
+            Optional('storage'): str,
+        })
+    }
+
+# =================================================
+#  Parser for 'show crypto pki trustpool'
+# =================================================
+class ShowCryptoPkiTrustpool(ShowCryptoPkiTrustpoolSchema):
+    """Parser for show crypto pki trustpool"""
+
+    cli_command = 'show crypto pki trustpool'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        certs = []
+        cert_block = None
+        issuer_block = None
+        subject_block = None
+        crl_points = []
+        in_issuer = False
+        in_subject = False
+        in_crl = False
+
+        # CA Certificate
+        p1 = re.compile(r'^CA Certificate$')
+        # Status: Available
+        p2 = re.compile(r'^\s*Status: +(?P<status>.+)$')
+        # Certificate Serial Number (hex): 01
+        p3 = re.compile(r'^\s*Certificate Serial Number \(hex\): +(?P<serial>.+)$')
+        # Certificate Usage: Signature
+        p4 = re.compile(r'^\s*Certificate Usage: +(?P<usage>.+)$')
+        # Issuer/Subject field patterns: cn=Example CA
+        p5 = re.compile(r'^\s*(?P<key>\w+)=(?P<value>[\S\s]+)$')
+        # CRL Distribution Points URL patterns
+        p6 = re.compile(r'^\s*(?P<url>http[s]?://.+|ldap://.+)$')
+        # start date: Oct  3 13:30:00 2025 GMT
+        p7 = re.compile(r'^\s*start date: +(?P<start_date>.+)$')
+        # end date: Oct  3 13:30:00 2026 GMT
+        p8 = re.compile(r'^\s*end +date: +(?P<end_date>.+)$')
+        # Associated Trustpoints: TP-CA
+        p9 = re.compile(r'^\s*Associated Trustpoints: +(?P<trustpoints>.+)$')
+        # Trustpool: Built-in
+        p10 = re.compile(r'^\s*Trustpool: +(?P<trustpool>.+)$')
+        # Storage: nvram
+        p11 = re.compile(r'^\s*Storage: +(?P<storage>.+)$')
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # CA Certificate
+            m = p1.match(line)
+            if m:
+                if cert_block:
+                    if issuer_block:
+                        cert_block['issuer'] = issuer_block
+                    if subject_block:
+                        cert_block['subject'] = subject_block
+                    if crl_points:
+                        cert_block['crl_distribution_points'] = crl_points
+                    certs.append(cert_block)
+                cert_block = {'type': 'CA Certificate'}
+                issuer_block = None
+                subject_block = None
+                crl_points = []
+                in_issuer = False
+                in_subject = False
+                in_crl = False
+                continue
+
+            # Status: Available
+            m = p2.match(line)
+            if m and cert_block is not None:
+                cert_block['status'] = m.groupdict()['status']
+                continue
+
+            # Certificate Serial Number (hex): 01
+            m = p3.match(line)
+            if m and cert_block is not None:
+                cert_block['serial_number_in_hex'] = m.groupdict()['serial']
+                continue
+
+            # Certificate Usage: Signature
+            m = p4.match(line)
+            if m and cert_block is not None:
+                cert_block['usage'] = m.groupdict()['usage']
+                continue
+
+            # Section headers
+            if line.strip() == 'Issuer:':
+                in_issuer = True
+                in_subject = False
+                in_crl = False
+                issuer_block = {}
+                continue
+            if line.strip() == 'Subject:':
+                in_subject = True
+                in_issuer = False
+                in_crl = False
+                subject_block = {}
+                continue
+            if line.strip() == 'CRL Distribution Points:':
+                in_crl = True
+                in_issuer = False
+                in_subject = False
+                continue
+            if line.strip() in ['Validity Date:', 'Associated Trustpoints:', 'Trustpool:', 'Storage:']:
+                in_crl = False
+                in_issuer = False
+                in_subject = False
+
+            # Parse Issuer fields: cn=Example CA
+            if in_issuer and issuer_block is not None:
+                m = p5.match(line)
+                if m:
+                    key = m.groupdict()['key'].lower()
+                    val = m.groupdict()['value'].strip()
+                    if key in ['ou', 'o']:
+                        issuer_block.setdefault(key, []).append(val)
+                    else:
+                        issuer_block[key] = val
+                continue
+
+            # Parse Subject fields: cn=Example CA
+            if in_subject and subject_block is not None:
+                m = p5.match(line)
+                if m:
+                    key = m.groupdict()['key'].lower()
+                    val = m.groupdict()['value'].strip()
+                    if key in ['ou', 'o']:
+                        subject_block.setdefault(key, []).append(val)
+                    else:
+                        subject_block[key] = val
+                continue
+
+            # CRL Distribution Points URLs
+            if in_crl:
+                m = p6.match(line)
+                if m:
+                    crl_points.append(m.groupdict()['url'].strip())
+                continue
+
+            # start date: Oct  3 13:30:00 2025 GMT
+            m = p7.match(line)
+            if m and cert_block is not None:
+                validity = cert_block.setdefault('validity_date', {})
+                validity['start_date'] = m.groupdict()['start_date']
+                continue
+
+            # end date: Oct  3 13:30:00 2026 GMT
+            m = p8.match(line)
+            if m and cert_block is not None:
+                validity = cert_block.setdefault('validity_date', {})
+                validity['end_date'] = m.groupdict()['end_date']
+                continue
+
+            # Associated Trustpoints: TP-CA
+            m = p9.match(line)
+            if m and cert_block is not None:
+                cert_block['associated_trustpoints'] = m.groupdict()['trustpoints']
+                continue
+
+            # Trustpool: Built-in
+            m = p10.match(line)
+            if m and cert_block is not None:
+                cert_block['trustpool'] = m.groupdict()['trustpool']
+                continue
+
+            # Storage: nvram
+            m = p11.match(line)
+            if m and cert_block is not None:
+                cert_block['storage'] = m.groupdict()['storage']
+                continue
+
+        # Process final certificate block
+        if cert_block:
+            if issuer_block:
+                cert_block['issuer'] = issuer_block
+            if subject_block:
+                cert_block['subject'] = subject_block
+            if crl_points:
+                cert_block['crl_distribution_points'] = crl_points
+            certs.append(cert_block)
+
+        if len(certs) == 0:
+            return ret_dict
+        else:
+            ret_dict['certificates'] = certs
+            
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto datapath ipv4 snapshot non-zero'
+# =================================================
+
+class ShowCryptoDatapathIpv4SnapshotNonZeroSchema(MetaParser):
+    """Schema for `show crypto datapath ipv4 snapshot non-zero`"""
+
+    schema = {
+        'success_statistics': {
+            'snapshot_timestamp': str,
+            Optional('crypto_check_input_core'): {
+                Optional('2nd_round_ok'): int,
+                Optional('1st_round_ok'): int,
+            },
+            Optional('post_crypto_ip_encrypt'): {
+                Optional('post_encrypt_ipflowok'): int,
+            },
+            Optional('crypto_ceal_post_encrypt_switch'): {
+                Optional('post_encrypt_ipflowok_2'): int,
+            },
+        },
+        Optional('error_statistics'): {
+            'snapshot_timestamp': str,
+        },
+        Optional('punt_statistics'): {
+            'snapshot_timestamp': str,
+            Optional('crypto_ceal_post_decrypt_switch'): {
+                Optional('fs_to_ps'): int,
+            },
+        },
+        Optional('internal_statistics'): {
+            'snapshot_timestamp': str,
+            Optional('crypto_check_input'): {
+                Optional('check_input_core_not_con'): int,
+                Optional('check_input_core_consume'): int,
+            },
+            Optional('crypto_check_input_core'): {
+                Optional('came_back_from_ce'): int,
+                Optional('deny_pak'): int,
+            },
+            Optional('crypto_ipsec_les_fs'): {
+                Optional('not_esp_or_ah'): int,
+            },
+            Optional('post_crypto_ip_decrypt'): {
+                Optional('decrypt_switch'): int,
+            },
+            Optional('crypto_decrypt_ipsec_sa_check'): {
+                Optional('check_ident_success'): int,
+            },
+            Optional('crypto_ceal_post_decrypt_switch'): {
+                Optional('fs'): int,
+            },
+            Optional('crypto_ceal_post_decrypt_fs'): {
+                Optional('les_ip_turbo_fs'): int,
+                Optional('tunnel_ip_les_fs'): int,
+            },
+            Optional('crypto_ceal_post_decrypt_ps'): {
+                Optional('proc_inline'): int,
+            },
+            Optional('crypto_ceal_punt_to_process_inline'): {
+                Optional('coalesce'): int,
+                Optional('simple_enq'): int,
+            },
+            Optional('crypto_ceal_post_encrypt_switch'): {
+                Optional('ps'): int,
+            },
+            Optional('crypto_ceal_post_encrypt_ps'): {
+                Optional('ps_coalesce'): int,
+                Optional('simple_enq'): int,
+            },
+            Optional('crypto_engine_ps_vec'): {
+                Optional('ip_encrypt'): int,
+            },
+            Optional('crypto_send_epa_packets'): {
+                Optional('ucast_next_hop'): int,
+                Optional('ip_ps_send'): int,
+            },
+        },
+    }
+
+# =================================================
+#  Parser for 'show crypto datapath ipv4 snapshot non-zero'
+# =================================================
+
+class ShowCryptoDatapathIpv4SnapshotNonZero(ShowCryptoDatapathIpv4SnapshotNonZeroSchema):
+    """Parser for `show crypto datapath ipv4 snapshot non-zero`"""
+
+    cli_command = 'show crypto datapath ipv4 snapshot non-zero'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        current_section = None
+        current_subsection = None
+
+        # Success Statistics: Snapshot at 21:34:30 PST Mar 4 2006
+        p1 = re.compile(r'^Success Statistics: Snapshot at (?P<timestamp>.+)$')
+        # Error Statistics: Snapshot at 21:34:30 PST Mar 4 2006
+        p2 = re.compile(r'^Error Statistics: Snapshot at (?P<timestamp>.+)$')
+        # Punt Statistics: Snapshot at 21:34:30 PST Mar 4 2006
+        p3 = re.compile(r'^Punt Statistics: Snapshot at (?P<timestamp>.+)$')
+        # Internal Statistics: Snapshot at 21:34:30 PST Mar 4 2006
+        p4 = re.compile(r'^Internal Statistics: Snapshot at (?P<timestamp>.+)$')
+
+        for line in output.splitlines():
+            original_line = line
+            line = line.strip()
+            if not line:
+                continue
+            # Success Statistics: Snapshot at timestamp
+            m = p1.match(line)
+            if m:
+                success_stats_dict = parsed_dict.setdefault('success_statistics', {})
+                success_stats_dict['snapshot_timestamp'] = m.group('timestamp')
+                current_section = 'success_statistics'
+                current_subsection = None
+                # Ensure static key after match
+                if 'success_statistics' not in parsed_dict:
+                    parsed_dict['success_statistics'] = {'snapshot_timestamp': ''}
+                continue
+            # Error Statistics: Snapshot at timestamp
+            m = p2.match(line)
+            if m:
+                error_stats_dict = parsed_dict.setdefault('error_statistics', {})
+                error_stats_dict['snapshot_timestamp'] = m.group('timestamp')
+                current_section = 'error_statistics'
+                current_subsection = None
+                continue
+            # Punt Statistics: Snapshot at timestamp
+            m = p3.match(line)
+            if m:
+                punt_stats_dict = parsed_dict.setdefault('punt_statistics', {})
+                punt_stats_dict['snapshot_timestamp'] = m.group('timestamp')
+                current_section = 'punt_statistics'
+                current_subsection = None
+                continue
+            # Internal Statistics: Snapshot at timestamp
+            m = p4.match(line)
+            if m:
+                internal_stats_dict = parsed_dict.setdefault('internal_statistics', {})
+                internal_stats_dict['snapshot_timestamp'] = m.group('timestamp')
+                current_section = 'internal_statistics'
+                current_subsection = None
+                continue
+            # Parse section headers and statistics values
+            if current_section:
+                if original_line.startswith('  ') and not original_line.startswith('    '):
+                    current_subsection = line.replace(' ', '_')
+                    continue
+                elif original_line.startswith('    '):
+                    # Inline stats parsing logic here
+                    stats_line = original_line.strip()
+                    colon_pattern = r'([^:]+):\s*(\d+)'
+                    colon_matches = re.findall(colon_pattern, stats_line)
+                    if colon_matches:
+                        for key_text, value_text in colon_matches:
+                            key = key_text.strip().replace(' ', '_').replace('-', '_')
+                            value = int(value_text)
+                            if current_subsection:
+                                subsection_dict = parsed_dict[current_section].setdefault(current_subsection, {})
+                                subsection_dict[key] = value
+                            else:
+                                parsed_dict[current_section][key] = value
+                    else:
+                        parts = re.split(r'\s{2,}', stats_line)
+                        for part in parts:
+                            tokens = part.strip().split()
+                            if len(tokens) >= 2 and tokens[-1].isdigit():
+                                value = int(tokens[-1])
+                                key = '_'.join(tokens[:-1]).replace('-', '_')
+                                if current_subsection:
+                                    subsection_dict = parsed_dict[current_section].setdefault(current_subsection, {})
+                                    subsection_dict[key] = value
+                                else:
+                                    parsed_dict[current_section][key] = value
+                    continue
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto eli'
+# =================================================
+
+class ShowCryptoEliSchema(MetaParser):
+    """Schema for `show crypto eli`"""
+
+    schema = {
+        'hardware_encryption': str,
+        'number_of_hardware_crypto_engines': int,
+        Optional('crypto_engines'): {
+            Any(): {
+                'name': str,
+                'state': str,
+                'capability': ListOf(str),
+                Optional('ipsec_session'): {
+                    'active': int,
+                    'max': int,
+                    'failed': int,
+                    'created': int,
+                },
+                Optional('number_of_dh_pregenerated'): int,
+                Optional('dh_lifetime_seconds'): int,
+                Optional('dh_calculations'): {
+                    'p1': int,
+                    'ss': int,
+                },
+            },
+        },
+        Optional('software_crypto_engines'): {
+            Any(): {
+                'name': str,
+                'dh_in_use': int,
+                'dh_freeing': int,
+                'dh_free': int,
+            },
+        },
+    }
+
+# =================================================
+#  Parser for 'show crypto eli'
+# =================================================
+
+class ShowCryptoEli(ShowCryptoEliSchema):
+    """Parser for `show crypto eli`"""
+
+    cli_command = 'show crypto eli'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Hardware Encryption : ACTIVE
+        p1 = re.compile(r'^Hardware Encryption\s*:\s*(?P<status>\w+)$')
+
+        # Number of hardware crypto engines = 1
+        p2 = re.compile(r'^Number of hardware crypto engines\s*=\s*(?P<count>\d+)$')
+
+        # CryptoEngine IOSXE-ESG(9) details: state = Active
+        p3 = re.compile(r'^CryptoEngine\s+(?P<name>[\w\-\(\)]+)\s+details:\s+state\s*=\s*(?P<state>\w+)$')
+
+        # Capability    : DES, 3DES, AES, GCM, GMAC, Manual IPsec key, OSPFv3 manual keying, RSA, IPv6, GDOI, FAILCLOSE, ESN
+        p4 = re.compile(r'^Capability\s*:\s*(?P<capabilities>.+)$')
+
+        # IPSec-Session :     2 active, 16000 max, 0 failed, 2 created
+        p5 = re.compile(r'^IPSec-Session\s*:\s*(?P<active>\d+)\s+active,\s*(?P<max>\d+)\s+max,\s*(?P<failed>\d+)\s+failed,\s*(?P<created>\d+)\s+created$')
+
+        # Number of DH's pregenerated = 4
+        p6 = re.compile(r'^Number of DH\'s pregenerated\s*=\s*(?P<count>\d+)$')
+
+        # DH lifetime = 86400 seconds
+        p7 = re.compile(r'^DH lifetime\s*=\s*(?P<lifetime>\d+)\s+seconds$')
+
+        # DH calculations: P1 1, SS 1
+        p8 = re.compile(r'^DH calculations:\s*P1\s+(?P<p1>\d+),\s*SS\s+(?P<ss>\d+)$')
+
+        # crypto engine 1:Software Crypto Engine
+        p9 = re.compile(r'^crypto engine\s+(?P<engine_id>\d+):(?P<name>.+)$')
+
+        # DH in use/freeing/free - 1/0/16049
+        p10 = re.compile(r'^DH in use/freeing/free\s*-\s*(?P<in_use>\d+)/(?P<freeing>\d+)/(?P<free>\d+)$')
+
+        current_crypto_engine = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Hardware Encryption : ACTIVE
+            m = p1.match(line)
+            if m:
+                parsed_dict['hardware_encryption'] = m.group('status')
+                continue
+
+            # Number of hardware crypto engines = 1
+            m = p2.match(line)
+            if m:
+                parsed_dict['number_of_hardware_crypto_engines'] = int(m.group('count'))
+                continue
+
+            # CryptoEngine IOSXE-ESG(9) details: state = Active
+            m = p3.match(line)
+            if m:
+                engine_name = m.group('name')
+                current_crypto_engine = engine_name
+                crypto_engine_dict = parsed_dict.setdefault('crypto_engines', {})
+                crypto_engine_dict[engine_name] = {
+                    'name': engine_name,
+                    'state': m.group('state')
+                }
+                continue
+
+            # Capability    : DES, 3DES, AES, GCM, GMAC, Manual IPsec key, OSPFv3 manual keying, RSA, IPv6, GDOI, FAILCLOSE, ESN
+            m = p4.match(line)
+            if m and current_crypto_engine:
+                capabilities = [cap.strip() for cap in m.group('capabilities').split(',')]
+                parsed_dict['crypto_engines'][current_crypto_engine]['capability'] = capabilities
+                continue
+
+            # IPSec-Session :     2 active, 16000 max, 0 failed, 2 created
+            m = p5.match(line)
+            if m and current_crypto_engine:
+                parsed_dict['crypto_engines'][current_crypto_engine]['ipsec_session'] = {
+                    'active': int(m.group('active')),
+                    'max': int(m.group('max')),
+                    'failed': int(m.group('failed')),
+                    'created': int(m.group('created'))
+                }
+                continue
+
+            # Number of DH's pregenerated = 4
+            m = p6.match(line)
+            if m and current_crypto_engine:
+                parsed_dict['crypto_engines'][current_crypto_engine]['number_of_dh_pregenerated'] = int(m.group('count'))
+                continue
+
+            # DH lifetime = 86400 seconds
+            m = p7.match(line)
+            if m and current_crypto_engine:
+                parsed_dict['crypto_engines'][current_crypto_engine]['dh_lifetime_seconds'] = int(m.group('lifetime'))
+                continue
+
+            # DH calculations: P1 1, SS 1
+            m = p8.match(line)
+            if m and current_crypto_engine:
+                parsed_dict['crypto_engines'][current_crypto_engine]['dh_calculations'] = {
+                    'p1': int(m.group('p1')),
+                    'ss': int(m.group('ss'))
+                }
+                continue
+
+            # crypto engine 1:Software Crypto Engine
+            m = p9.match(line)
+            if m:
+                engine_id = m.group('engine_id')
+                engine_name = m.group('name').strip()
+                software_crypto_engine_dict = parsed_dict.setdefault('software_crypto_engines', {})
+                software_crypto_engine_dict[engine_id] = {
+                    'name': engine_name
+                }
+                current_crypto_engine = None  # Reset current engine context
+                continue
+
+            # DH in use/freeing/free - 1/0/16049
+            m = p10.match(line)
+            if m and 'software_crypto_engines' in parsed_dict:
+                # Find the last software crypto engine added
+                last_engine_id = list(parsed_dict['software_crypto_engines'].keys())[-1]
+                parsed_dict['software_crypto_engines'][last_engine_id].update({
+                    'dh_in_use': int(m.group('in_use')),
+                    'dh_freeing': int(m.group('freeing')),
+                    'dh_free': int(m.group('free'))
+                })
+                continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto ikev2 count'
+# =================================================
+class ShowCryptoIkev2CountSchema(MetaParser):
+    """Schema for `show crypto ikev2 count`"""
+    schema = {
+        'negotiating_sas': int,
+        'session': int,
+        'active_sas': int,
+        'created_sas': int,
+        'deleted_sas': int,
+        'marked_for_deletion_sas': int,
+    }
+# =================================================
+#  Parser for 'show crypto ikev2 count'
+# =================================================
+class ShowCryptoIkev2Count(ShowCryptoIkev2CountSchema):
+    """Parser for `show crypto ikev2 count`"""
+
+    cli_command = 'show crypto ikev2 count'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+
+        parsed_dict = {}
+
+        # 0 Negotiating SAs
+        p1 = re.compile(r'^\s*(?P<negotiating_sas>\d+)\s+Negotiating SAs$')
+
+        # 0 Session
+        p2 = re.compile(r'^\s*(?P<session>\d+)\s+Session$')
+
+        # 0 Active SAs
+        p3 = re.compile(r'^\s*(?P<active_sas>\d+)\s+Active SAs$')
+
+        # 1522 Created SAs
+        p4 = re.compile(r'^\s*(?P<created_sas>\d+)\s+Created SAs$')
+
+        # 1522 Deleted SAs
+        p5 = re.compile(r'^\s*(?P<deleted_sas>\d+)\s+Deleted SAs$')
+
+        # 0 Marked for Deletion SAs
+        p6 = re.compile(r'^\s*(?P<marked_for_deletion_sas>\d+)\s+Marked for Deletion SAs$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0 Negotiating SAs
+            m = p1.match(line)
+            if m:
+                parsed_dict['negotiating_sas'] = int(m.group('negotiating_sas'))
+                continue
+
+            # 0 Session
+            m = p2.match(line)
+            if m:
+                parsed_dict['session'] = int(m.group('session'))
+                continue
+            
+            # 0 Active SAs
+            m = p3.match(line)
+            if m:
+                parsed_dict['active_sas'] = int(m.group('active_sas'))
+                continue
+            
+            # 1522 Created SAs
+            m = p4.match(line)
+            if m:
+                parsed_dict['created_sas'] = int(m.group('created_sas'))
+                continue
+            
+            # 1522 Deleted SAs
+            m = p5.match(line)
+            if m:
+                parsed_dict['deleted_sas'] = int(m.group('deleted_sas'))
+                continue
+                
+            # 0 Marked for Deletion SAs
+            m = p6.match(line)
+            if m:
+                parsed_dict['marked_for_deletion_sas'] = int(m.group('marked_for_deletion_sas'))
+                continue
+
+        return parsed_dict
+
+# =================================================
+#  Schema for 'show crypto pki server {servername} crl'
+# =================================================
+class ShowCryptoPkiServerCrlSchema(MetaParser):
+    """Schema for show crypto pki server {servername} crl"""
+    schema = {
+        'crl': {
+            'issuer': str,
+            'this_update': str,
+            'next_update': str,
+            'number_of_crl_entries': int,
+            'crl_size_bytes': int,
+            'revoked_certificates': ListOf({
+                'serial_number_in_hex': str,
+                'revocation_date': str
+            })
+        }
+    }
+
+# =========================================================
+#  Parser for 'show crypto pki server {servername} crl'
+# =========================================================
+class ShowCryptoPkiServerCrl(ShowCryptoPkiServerCrlSchema):
+    """Parser for show crypto pki server {servername} crl"""
+
+    cli_command = 'show crypto pki server {servername} crl'
+
+    def cli(self, servername='', output=None):
+        # Get command output
+        if output is None:
+            output = self.device.execute(self.cli_command.format(servername=servername))
+
+        # Initialize return dictionary
+        ret_dict = {}
+        crl_dict = {}
+        revoked_certificates = []
+        current_serial = None
+
+        # Issuer: CN=RootCA,O=Example
+        p1 = re.compile(r'^Issuer:\s+(?P<issuer>.+)$')
+
+        # This Update: 12:58:34 UTC Jan 4 2025
+        p2 = re.compile(r'^This Update:\s+(?P<this_update>.+)$')
+
+        # Next Update: 12:58:34 UTC Jan 5 2025
+        p3 = re.compile(r'^Next Update:\s+(?P<next_update>.+)$')
+
+        # Number of CRL entries: 3
+        p4 = re.compile(r'^Number of CRL entries:\s+(?P<num_entries>\d+)$')
+
+        # CRL size: 1024 bytes
+        p5 = re.compile(r'^CRL size:\s+(?P<crl_size>\d+)\s+bytes$')
+
+        # Serial Number (hex): 1A2B3C
+        p6 = re.compile(r'^Serial Number\s+\(hex\):\s+(?P<serial>\w+)$')
+
+        # Revocation Date: 12:58:34 UTC Jan 4 2024
+        p7 = re.compile(r'^Revocation Date:\s+(?P<revocation_date>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Issuer: CN=RootCA,O=Example
+            m = p1.match(line)
+            if m:
+                crl_dict['issuer'] = m.group('issuer')
+                continue
+
+            # This Update: 12:58:34 UTC Jan 4 2025
+            m = p2.match(line)
+            if m:
+                crl_dict['this_update'] = m.group('this_update')
+                continue
+
+            # Next Update: 12:58:34 UTC Jan 5 2025
+            m = p3.match(line)
+            if m:
+                crl_dict['next_update'] = m.group('next_update')
+                continue
+
+            # Number of CRL entries: 3
+            m = p4.match(line)
+            if m:
+                crl_dict['number_of_crl_entries'] = int(m.group('num_entries'))
+                continue
+
+            # CRL size: 1024 bytes
+            m = p5.match(line)
+            if m:
+                crl_dict['crl_size_bytes'] = int(m.group('crl_size'))
+                continue
+
+            # Serial Number (hex): 1A2B3C
+            m = p6.match(line)
+            if m:
+                current_serial = m.group('serial')
+                continue
+
+            # Revocation Date: 12:58:34 UTC Jan 4 2024
+            m = p7.match(line)
+            if m and current_serial:
+                revoked_certificates.append({
+                    'serial_number_in_hex': current_serial,
+                    'revocation_date': m.group('revocation_date')
+                })
+                current_serial = None
+                continue
+
+        # If no data was parsed, return empty dict
+        if not crl_dict:
+            return ret_dict
+
+        # Ensure list key exists even if empty
+        crl_dict.setdefault('revoked_certificates', revoked_certificates)
+
+        # Return parsed data
+        ret_dict['crl'] = crl_dict
+        return ret_dict
+

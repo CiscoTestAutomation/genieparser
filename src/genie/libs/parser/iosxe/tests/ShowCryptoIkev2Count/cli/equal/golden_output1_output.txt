@@ -1,0 +1,6 @@
+    0 Negotiating SAs
+    1 Session
+    1 Active SAs
+    126 Created SAs
+    125 Deleted SAs
+    0 Marked for Deletion SAs

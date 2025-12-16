@@ -69,6 +69,9 @@ expected_output = {
         'QDD-400G-CU1M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
         },
+        'QDD-400G-CU2.5M': {
+            'cisco_pin_min_version_supporting_dom': 'NONE',
+        },
         'QDD-400G-CU2M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
         },
@@ -153,10 +156,16 @@ expected_output = {
         'QSFP-100G-SM-SR': {
             'cisco_pin_min_version_supporting_dom': 'ALL',
         },
+        'QSFP-100G-SR1.2': {
+            'cisco_pin_min_version_supporting_dom': 'ALL',
+        },
         'QSFP-100G-SR4-S': {
             'cisco_pin_min_version_supporting_dom': 'ALL',
         },
         'QSFP-100G-ZR4-S': {
+            'cisco_pin_min_version_supporting_dom': 'ALL',
+        },
+        'QSFP-40/100-SRBD': {
             'cisco_pin_min_version_supporting_dom': 'ALL',
         },
         'QSFP-40G-CSR-S': {
@@ -236,6 +245,18 @@ expected_output = {
         },
         'QSFP-H40G-CU5M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
+        },
+        'SFP-10/25G-BXD-I': {
+            'cisco_pin_min_version_supporting_dom': 'ALL',
+        },
+        'SFP-10/25G-BXU-I': {
+            'cisco_pin_min_version_supporting_dom': 'ALL',
+        },
+        'SFP-10/25G-CSR-S': {
+            'cisco_pin_min_version_supporting_dom': 'ALL',
+        },
+        'SFP-10/25G-LR-S': {
+            'cisco_pin_min_version_supporting_dom': 'ALL',
         },
         'SFP-10G-AOC10M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
@@ -327,7 +348,13 @@ expected_output = {
         'SFP-25G-SR-S': {
             'cisco_pin_min_version_supporting_dom': 'ALL',
         },
+        'SFP-50G-CU1.5M': {
+            'cisco_pin_min_version_supporting_dom': 'NONE',
+        },
         'SFP-50G-CU1M': {
+            'cisco_pin_min_version_supporting_dom': 'NONE',
+        },
+        'SFP-50G-CU2.5M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
         },
         'SFP-50G-CU2M': {
@@ -378,7 +405,13 @@ expected_output = {
         'SFP-H10GB-CU5M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
         },
+        'SFP-H25G-CU1.5M': {
+            'cisco_pin_min_version_supporting_dom': 'NONE',
+        },
         'SFP-H25G-CU1M': {
+            'cisco_pin_min_version_supporting_dom': 'NONE',
+        },
+        'SFP-H25G-CU2.5M': {
             'cisco_pin_min_version_supporting_dom': 'NONE',
         },
         'SFP-H25G-CU2M': {

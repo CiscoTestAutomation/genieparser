@@ -1,0 +1,6 @@
+Access-list                          Index        Num Ref      Num ACEs     
+--------------------------------------------------------------------------
+preauth_v4                           2            0            6            
+preauth_v6                           3            0            10           
+implicit_deny                        4            0            1            
+implicit_deny_v6                     5            0            1            

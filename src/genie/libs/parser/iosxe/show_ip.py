@@ -15,6 +15,7 @@ IOSXE parsers for the following show commands:
     * show ip nat translations
     * show ip nat translations total
     * show ip nat translation {protocol} total
+    * show ip nat translation udp total
     * show ip nat translations vrf {vrf} total
     * show ip nat translations verbose
     * show ip nat statistics
@@ -102,6 +103,8 @@ IOSXE parsers for the following show commands:
     * show ip nat pool name {pool}
     * show ip ospf database nssa
     * show ip nat bpa
+    * show ip pim rp
+    * show ip ssh
     '''
 
 # Python
@@ -114,6 +117,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, ListOf
 # parser utils
 from genie.libs.parser.utils.common import Common
 from genie.libs.parser.iosxe.show_vrf import ShowVrfDetailSchema, ShowVrfDetailSuperParser
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # ==============================
 # Schema for 'show ip aliases', 'show ip aliases vrf {vrf}'
@@ -2747,12 +2751,20 @@ class ShowIpSlaStatisticsSchema(MetaParser):
                 Optional('return_code'): str,
                 Optional('no_of_success'): int,
                 Optional('no_of_failures'): int,
-                Optional('ttl'): int,
-                Optional('return_code'): str,
+                Optional('ttl'): Or(int, str),
+                Optional('ttl_unit'): str,
                 Optional('oper_id'): int,
-                Optional('no_of_failures'): int,
                 Optional('delay'): str,
                 Optional('destination'): str,
+                Optional('type_of_operation'): str,
+                Optional('delay_statistics_for'): str,
+                Optional('distribution_statistics'): str,
+                Optional('interval'): {
+                    Optional('interval_start_time'): str,
+                    Optional('measurements_initiated'): int,
+                    Optional('measurements_completed'): int,
+                    Optional('flag'): str,
+                },
             },
         }
     }
@@ -2802,7 +2814,9 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
         p6 = re.compile(r'^Number of failures: (?P<no_of_failures>\d+)$')
 
         # Operation time to live: 3569 sec
-        p7 = re.compile(r'^Operation time to live: (?P<ttl>\d+).*$')
+        # Operation time to live: Forever
+        # Operation time to live: 3599 se
+        p7 = re.compile(r'^Operation time to live: (?P<ttl>Forever|\d+)(?: +(?P<ttl_unit>\w+))?.*$')
 
         # oper-id        status               lossSD       delay                  destination
         # 60988531       OK                   0            3220998/3222178/3222998             10.50.10.100
@@ -2812,6 +2826,34 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
                 r'(?P<delay>\d+\/+\d+\/+\d+)\s+'
                 r'(?P<destination>.*)$')
 
+        # Type of operation: Y1731 Delay Measurement
+        p9 = re.compile(r'^Type of operation: (?P<type_of_operation>.*)$')
+
+        # Delay Statistics for Y1731 Operation 10
+        p10 = re.compile(r'^Delay Statistics for (?P<delay_statistics_for>.*)$')
+
+        # Distribution Statistics:
+        p11 = re.compile(r'^(?P<distribution_statistics>Distribution Statistics):$')
+
+        # Interval
+        p12 = re.compile(r'^Interval$')
+
+        # Start time:  *00:00:00.000 UTC Mon Jan 1 1900
+        p13 = re.compile(r'^\s*Start time:\s+(?P<interval_start_time>.*)$')
+
+        # Number of measurements initiated: 0
+        p14 = re.compile(r'^\s*Number of measurements initiated: (?P<measurements_initiated>\d+)$')
+
+        # Number of measurements completed: 0
+        p15 = re.compile(r'^\s*Number of measurements completed: (?P<measurements_completed>\d+)$')
+
+        # Flag: OK
+        p16 = re.compile(r'^\s*Flag: (?P<flag>\w+)$')
+
+        # Initialize variables for handling cases where output doesn't start with "IPSLA operation id"
+        current_id = None
+        id_dict = None
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -2819,8 +2861,8 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                id = group['probe_id']
-                id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
+                current_id = group['probe_id']
+                id_dict = parsed_dict.setdefault('ids', {}).setdefault(current_id, {})
                 id_dict.update({'probe_id':int(group['probe_id'])})
                 continue
 
@@ -2828,42 +2870,55 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'rtt_stats':group['rtt_stats']})
+                if id_dict is not None:
+                    id_dict.update({'rtt_stats':group['rtt_stats']})
                 continue
 
             # Latest operation start time: 00:33:01 PDT Mon Sep 20 2021
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'start_time':group['start_time']})
+                if id_dict is not None:
+                    id_dict.update({'start_time':group['start_time']})
                 continue
 
             # Latest operation return code: Timeout
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'return_code':group['return_code']})
+                if id_dict is not None:
+                    id_dict.update({'return_code':group['return_code']})
                 continue
 
             # Number of successes: 0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'no_of_success':int(group['no_of_success'])})
+                if id_dict is not None:
+                    id_dict.update({'no_of_success':int(group['no_of_success'])})
                 continue
 
             # Number of failures: 1
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'no_of_failures':int(group['no_of_failures'])})
+                if id_dict is not None:
+                    id_dict.update({'no_of_failures':int(group['no_of_failures'])})
                 continue
 
             # Operation time to live: 3569 sec
+            # Operation time to live: Forever
+            # Operation time to live: 3599 se
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({'ttl':int(group['ttl'])})
+                if id_dict is not None:
+                    if group['ttl'] == 'Forever':
+                        id_dict.update({'ttl': group['ttl']})
+                    else:
+                        id_dict.update({'ttl': int(group['ttl'])})
+                    if group['ttl_unit']:
+                        id_dict.update({'ttl_unit': group['ttl_unit']})
                 continue
 
             # oper-id        status               lossSD       delay                  destination
@@ -2871,12 +2926,76 @@ class ShowIpSlaStatistics(ShowIpSlaStatisticsSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                id_dict.update({
-                    'oper_id':int(group['oper_id']),
-                    'return_code': group['return_code'],
-                    'no_of_failures':int(group['no_of_failures']),
-                    'delay': group['delay'],
-                    'destination': group['destination']})
+                if id_dict is not None:
+                    id_dict.update({
+                        'oper_id':int(group['oper_id']),
+                        'return_code': group['return_code'],
+                        'no_of_failures':int(group['no_of_failures']),
+                        'delay': group['delay'],
+                        'destination': group['destination']})
+                continue
+
+            # Type of operation: Y1731 Delay Measurement
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None:
+                    id_dict.update({'type_of_operation': group['type_of_operation']})
+                continue
+
+            # Delay Statistics for Y1731 Operation 10
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None:
+                    id_dict.update({'delay_statistics_for': group['delay_statistics_for']})
+                continue
+
+            # Distribution Statistics:
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None:
+                    id_dict.update({'distribution_statistics': group['distribution_statistics']})
+                continue
+
+            # Interval
+            m = p12.match(line)
+            if m:
+                if id_dict is not None:
+                    interval_dict = id_dict.setdefault('interval', {})
+                continue
+
+            # Start time:  *00:00:00.000 UTC Mon Jan 1 1900
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'interval_start_time': group['interval_start_time']})
+                continue
+
+            # Number of measurements initiated: 0
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'measurements_initiated': int(group['measurements_initiated'])})
+                continue
+
+            # Number of measurements completed: 0
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'measurements_completed': int(group['measurements_completed'])})
+                continue
+
+            # Flag: OK
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                if id_dict is not None and 'interval' in id_dict:
+                    interval_dict.update({'flag': group['flag']})
                 continue
 
         return parsed_dict
@@ -6175,7 +6294,8 @@ class ShowIpNhrpSummary(ShowIpNhrpSummarySchema):
             output = self.device.execute(self.cli_command)
 
         # IP NHRP cache 4 entries, 3072 bytes
-        p1 = re.compile(r'^IP +NHRP +cache +(?P<nhrp_entries>[\d]+) +entries, +(?P<size>[\d]+) +bytes$')
+        # IP NHRP cache 1 entry, 784 bytes
+        p1 = re.compile(r'^IP +NHRP +cache +(?P<nhrp_entries>\d+) +entr(?:y|ies), +(?P<size>\d+) +bytes$')
 
         # 2 static 2 dynamic 0 incomplete
         p2 = re.compile(r'^(?P<total_static_entries>[\d]+) +static +(?P<total_dynamic_entries>[\d]+) +dynamic +(?P<total_incomplete_entries>[\d]+) +incomplete$')
@@ -7807,24 +7927,23 @@ class ShowIpNatTranslationUdpTotalSchema(MetaParser):
 
 class ShowIpNatTranslationUdpTotal(ShowIpNatTranslationUdpTotalSchema):
     """Parser for show ip nat translations {protocol} total"""
-
     cli_command = 'show ip nat translations {protocol} total'
-
-    def cli(self, protocol='', output=None):
+    def cli(self, protocol='', output=None):    
         if output is None:
-            # Execute the command on the device
             output = self.device.execute(self.cli_command.format(protocol=protocol))
-
         # Initialize the parsed dictionary
         parsed_dict = {}
 
+        # Define the regex pattern to match the output line
         # Total number of translations: 2
         p1 = re.compile(r'^Total +number +of +translations: +(?P<total>\d+)$')
-
+        
+        # Iterate over each line in the output
         for line in output.splitlines():
             line = line.strip()
 
-            #Total number of translations: 2
+            # Match the line against the pattern
+            # Total number of translations: 2
             m = p1.match(line)
             if m:
                 # Use setdefault to avoid KeyError
@@ -7832,7 +7951,6 @@ class ShowIpNatTranslationUdpTotal(ShowIpNatTranslationUdpTotalSchema):
                 continue
 
         return parsed_dict
-
 # ==============================
 # Schema for 'show ip name-servers', 'show ip name-servers vrf {vrf}'
 # ==============================
@@ -9680,28 +9798,53 @@ class ShowIpVirtualReassemblyInterfaceSchema(MetaParser):
     """Schema for show ip virtual-reassembly {interface}"""
     schema = {
         'virtual_fragment_reassembly_information': {
-                'interface': str,
-                'vfr_enabled': bool,
-                'maximum_number_of_fragments': int,
-                'maximum_packet_length_bytes': int,
-                'timeout_seconds': int,
-                'current_number_of_reassembly_contexts': int,
-                'current_number_of_fragments': int,
-                'reassembly_timeout_events': int,
-                'reassembly_fail_events': int,
-                'reassembly_success_events': int,
-                'last_packet_dropped_due_to_vfr': {
-                    'fragment_count_exceeded': bool,
-                    'packet_length_exceeded': bool,
+            Optional('interface'): str,
+            Optional('vfr_enabled'): bool,
+            Optional('maximum_number_of_fragments'): int,
+            Optional('maximum_packet_length_bytes'): int,
+            Optional('timeout_seconds'): int,
+            Optional('current_number_of_reassembly_contexts'): int,
+            Optional('current_number_of_fragments'): int,
+            Optional('reassembly_timeout_events'): int,
+            Optional('reassembly_fail_events'): int,
+            Optional('reassembly_success_events'): int,
+            Optional('last_packet_dropped_due_to_vfr'): {
+                'fragment_count_exceeded': bool,
+                'packet_length_exceeded': bool,
+            },
+            Optional('statistics_since_last_clear'): {
+                'total_packets_received': int,
+                'total_fragments_received': int,
+                'total_packets_reassembled': int,
+                'total_packets_dropped_due_to_vfr': int,
+            },
+            # New format support - interface-based structure
+            Optional(str): {  # Interface name as key
+                Optional('in'): {
+                    'vfr_enabled': bool,
+                    'max_reassemblies': int,
+                    'max_fragments': int,
+                    'timeout_seconds': int,
+                    'drop_fragments': str,
+                    'current_reassembly_count': int,
+                    'current_fragment_count': int,
+                    'total_reassembly_count': int,
+                    'total_reassembly_timeout_count': int,
                 },
-                'statistics_since_last_clear': {
-                    'total_packets_received': int,
-                    'total_fragments_received': int,
-                    'total_packets_reassembled': int,
-                    'total_packets_dropped_due_to_vfr': int,
+                Optional('out'): {
+                    'vfr_enabled': bool,
+                    'max_reassemblies': int,
+                    'max_fragments': int,
+                    'timeout_seconds': int,
+                    'drop_fragments': str,
+                    'current_reassembly_count': int,
+                    'current_fragment_count': int,
+                    'total_reassembly_count': int,
+                    'total_reassembly_timeout_count': int,
                 }
             }
         }
+    }
 
 # ====================================================
 # Parser for 'show ip virtual-reassembly {interface}'
@@ -9719,174 +9862,280 @@ class ShowIpVirtualReassemblyInterface(ShowIpVirtualReassemblyInterfaceSchema):
         # Initialize the parsed dictionary
         parsed_dict = {}
 
+        # Legacy format patterns
         # Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
-        p1 = re.compile(r'^Virtual Fragment Reassembly \(VFR\) Information for interface (?P<interface>\S+):$')
+        p1_legacy = re.compile(r'^Virtual Fragment Reassembly \(VFR\) Information for interface (?P<interface>\S+):$')
 
         # VFR is enabled
-        p2 = re.compile(r'^VFR is (?P<status>\w+)$')
+        p2_legacy = re.compile(r'^VFR is (?P<status>\w+)$')
 
         # Maximum number of fragments: 128
-        p3 = re.compile(r'^Maximum number of fragments: (?P<maximum_number_of_fragments>\d+)$')
+        p3_legacy = re.compile(r'^Maximum number of fragments: (?P<maximum_number_of_fragments>\d+)$')
 
         # Maximum packet length: 1500 bytes
-        p4 = re.compile(r'^Maximum packet length: (?P<maximum_packet_length_bytes>\d+) bytes$')
+        p4_legacy = re.compile(r'^Maximum packet length: (?P<maximum_packet_length_bytes>\d+) bytes$')
 
         # Timeout (seconds): 30
-        p5 = re.compile(r'^Timeout \(seconds\): (?P<timeout_seconds>\d+)$')
+        p5_legacy = re.compile(r'^Timeout \(seconds\): (?P<timeout_seconds>\d+)$')
 
         # Current number of reassembly contexts: 3
-        p6 = re.compile(r'^Current number of reassembly contexts: (?P<current_number_of_reassembly_contexts>\d+)$')
+        p6_legacy = re.compile(r'^Current number of reassembly contexts: (?P<current_number_of_reassembly_contexts>\d+)$')
 
         # Current number of fragments: 15
-        p7 = re.compile(r'^Current number of fragments: (?P<current_number_of_fragments>\d+)$')
+        p7_legacy = re.compile(r'^Current number of fragments: (?P<current_number_of_fragments>\d+)$')
 
         # Reassembly timeout events: 2
-        p8 = re.compile(r'^Reassembly timeout events: (?P<reassembly_timeout_events>\d+)$')
+        p8_legacy = re.compile(r'^Reassembly timeout events: (?P<reassembly_timeout_events>\d+)$')
 
         # Reassembly fail events: 1
-        p9 = re.compile(r'^Reassembly fail events: (?P<reassembly_fail_events>\d+)$')
+        p9_legacy = re.compile(r'^Reassembly fail events: (?P<reassembly_fail_events>\d+)$')
 
         # Reassembly success events: 20
-        p10 = re.compile(r'^Reassembly success events: (?P<reassembly_success_events>\d+)$')
+        p10_legacy = re.compile(r'^Reassembly success events: (?P<reassembly_success_events>\d+)$')
 
         # Last packet dropped due to VFR:
-        p11 = re.compile(r'^Last packet dropped due to VFR:$')
+        p11_legacy = re.compile(r'^Last packet dropped due to VFR:$')
 
         # Fragment count exceeded
-        p12 = re.compile(r'^Fragment count exceeded$')
+        p12_legacy = re.compile(r'^Fragment count exceeded$')
 
-        # Fragment count exceeded
-        p13 = re.compile(r'^Packet length exceeded$')
+        # Packet length exceeded
+        p13_legacy = re.compile(r'^Packet length exceeded$')
 
         # Statistics since last clear:
-        p14 = re.compile(r'^Statistics since last clear:$')
+        p14_legacy = re.compile(r'^Statistics since last clear:$')
 
         # Total packets received: 1000
-        p15 = re.compile(r'^Total packets received: (?P<total_packets_received>\d+)$')
+        p15_legacy = re.compile(r'^Total packets received: (?P<total_packets_received>\d+)$')
 
         # Total fragments received: 200
-        p16 = re.compile(r'^Total fragments received: (?P<total_fragments_received>\d+)$')
+        p16_legacy = re.compile(r'^Total fragments received: (?P<total_fragments_received>\d+)$')
 
         # Total packets reassembled: 950
-        p17 = re.compile(r'^Total packets reassembled: (?P<total_packets_reassembled>\d+)$')
+        p17_legacy = re.compile(r'^Total packets reassembled: (?P<total_packets_reassembled>\d+)$')
 
         # Total packets dropped due to VFR: 50
-        p18 = re.compile(r'^Total packets dropped due to VFR: (?P<total_packets_dropped_due_to_vfr>\d+)$')
+        p18_legacy = re.compile(r'^Total packets dropped due to VFR: (?P<total_packets_dropped_due_to_vfr>\d+)$')
+
+        # New format patterns
+        # GigabitEthernet0/0/2:
+        p1_new = re.compile(r'^(?P<interface>\S+):$')
+
+        # Virtual Fragment Reassembly (VFR) is ENABLED [in]
+        p2_new = re.compile(r'^Virtual Fragment Reassembly \(VFR\) is (?P<status>ENABLED|DISABLED) \[(?P<direction>in|out)\]$')
+
+        # Concurrent reassemblies (max-reassemblies): 16
+        p3_new = re.compile(r'^Concurrent reassemblies \(max-reassemblies\): (?P<max_reassemblies>\d+)$')
+
+        # Fragments per reassembly (max-fragments): 32
+        p4_new = re.compile(r'^Fragments per reassembly \(max-fragments\): (?P<max_fragments>\d+)$')
+
+        # Reassembly timeout (timeout): 3 seconds
+        p5_new = re.compile(r'^Reassembly timeout \(timeout\): (?P<timeout>\d+) seconds$')
+
+        # Drop fragments: OFF
+        p6_new = re.compile(r'^Drop fragments: (?P<drop_fragments>ON|OFF)$')
+
+        # Current reassembly count:0
+        p7_new = re.compile(r'^Current reassembly count:(?P<current_reassembly_count>\d+)$')
+
+        # Current fragment count:0
+        p8_new = re.compile(r'^Current fragment count:(?P<current_fragment_count>\d+)$')
+
+        # Total reassembly count:1
+        p9_new = re.compile(r'^Total reassembly count:(?P<total_reassembly_count>\d+)$')
+
+        # Total reassembly timeout count:0
+        p10_new = re.compile(r'^Total reassembly timeout count:(?P<total_reassembly_timeout_count>\d+)$')
 
         current_interface = None
+        current_direction = None
+        interface_dict = None
+        last_packet_dropped = None
+        statistics_dict = None
+        is_legacy_format = False
 
         for line in output.splitlines():
             line = line.strip()
 
-            # Virtual Fragment Reassembly (VFR) Information for interface GigabitEthernet4:
-            m = p1.match(line)
+            # Check for legacy format first
+            m = p1_legacy.match(line)
             if m:
+                is_legacy_format = True
                 interface_dict = parsed_dict.setdefault('virtual_fragment_reassembly_information', {})
                 interface_dict['interface'] = m.group('interface')
                 continue
 
-            # VFR is enabled
-            m = p2.match(line)
-            if m:
-                interface_dict['vfr_enabled'] = True if m.group('status') == 'enabled' else False
-                continue
+            if is_legacy_format:
+                # Process legacy format
+                # VFR is enabled
+                m = p2_legacy.match(line)
+                if m:
+                    interface_dict['vfr_enabled'] = True if m.group('status') == 'enabled' else False
+                    continue
 
-            # Maximum number of fragments: 128
-            m = p3.match(line)
-            if m:
-                interface_dict['maximum_number_of_fragments'] = int(m.group('maximum_number_of_fragments'))
-                continue
+                # Maximum number of fragments: 128
+                m = p3_legacy.match(line)
+                if m:
+                    interface_dict['maximum_number_of_fragments'] = int(m.group('maximum_number_of_fragments'))
+                    continue
 
-            # Maximum packet length: 1500 bytes
-            m = p4.match(line)
-            if m:
-                interface_dict['maximum_packet_length_bytes'] = int(m.group('maximum_packet_length_bytes'))
-                continue
+                # Maximum packet length: 1500 bytes
+                m = p4_legacy.match(line)
+                if m:
+                    interface_dict['maximum_packet_length_bytes'] = int(m.group('maximum_packet_length_bytes'))
+                    continue
 
-            # Timeout (seconds): 30
-            m = p5.match(line)
-            if m:
-                interface_dict['timeout_seconds'] = int(m.group('timeout_seconds'))
-                continue
+                # Timeout (seconds): 30
+                m = p5_legacy.match(line)
+                if m:
+                    interface_dict['timeout_seconds'] = int(m.group('timeout_seconds'))
+                    continue
 
-            # Current number of reassembly contexts: 3
-            m = p6.match(line)
-            if m:
-                interface_dict['current_number_of_reassembly_contexts'] = int(m.group('current_number_of_reassembly_contexts'))
-                continue
+                # Current number of reassembly contexts: 3
+                m = p6_legacy.match(line)
+                if m:
+                    interface_dict['current_number_of_reassembly_contexts'] = int(m.group('current_number_of_reassembly_contexts'))
+                    continue
 
-            # Current number of fragments: 15
-            m = p7.match(line)
-            if m:
-                interface_dict['current_number_of_fragments'] = int(m.group('current_number_of_fragments'))
-                continue
+                # Current number of fragments: 15
+                m = p7_legacy.match(line)
+                if m:
+                    interface_dict['current_number_of_fragments'] = int(m.group('current_number_of_fragments'))
+                    continue
 
-            # Reassembly timeout events: 2
-            m = p8.match(line)
-            if m:
-                interface_dict['reassembly_timeout_events'] = int(m.group('reassembly_timeout_events'))
-                continue
+                # Reassembly timeout events: 2
+                m = p8_legacy.match(line)
+                if m:
+                    interface_dict['reassembly_timeout_events'] = int(m.group('reassembly_timeout_events'))
+                    continue
 
-            # Reassembly fail events: 1
-            m = p9.match(line)
-            if m:
-                interface_dict['reassembly_fail_events'] = int(m.group('reassembly_fail_events'))
-                continue
+                # Reassembly fail events: 1
+                m = p9_legacy.match(line)
+                if m:
+                    interface_dict['reassembly_fail_events'] = int(m.group('reassembly_fail_events'))
+                    continue
 
-            # Reassembly success events: 20
-            m = p10.match(line)
-            if m:
-                interface_dict['reassembly_success_events'] = int(m.group('reassembly_success_events'))
-                continue
+                # Reassembly success events: 20
+                m = p10_legacy.match(line)
+                if m:
+                    interface_dict['reassembly_success_events'] = int(m.group('reassembly_success_events'))
+                    continue
 
-            # Last packet dropped due to VFR:
-            m = p11.match(line)
-            if m:
-                last_packet_dropped = {'fragment_count_exceeded': False , 'packet_length_exceeded': False}
-                interface_dict['last_packet_dropped_due_to_vfr'] = last_packet_dropped
-                continue
+                # Last packet dropped due to VFR:
+                m = p11_legacy.match(line)
+                if m:
+                    last_packet_dropped = {'fragment_count_exceeded': False , 'packet_length_exceeded': False}
+                    interface_dict['last_packet_dropped_due_to_vfr'] = last_packet_dropped
+                    continue
 
-            # Fragment count exceeded
-            m = p12.match(line)
-            if m:
-                last_packet_dropped['fragment_count_exceeded'] = True
-                continue
+                # Fragment count exceeded
+                m = p12_legacy.match(line)
+                if m:
+                    last_packet_dropped['fragment_count_exceeded'] = True
+                    continue
 
-            # P
-            m = p13.match(line)
-            if m:
-                last_packet_dropped['packet_length_exceeded'] = True
-                continue
+                # Packet length exceeded
+                m = p13_legacy.match(line)
+                if m:
+                    last_packet_dropped['packet_length_exceeded'] = True
+                    continue
 
-            # Statistics since last clear:
-            m = p14.match(line)
-            if m:
-                statistics_dict = interface_dict.setdefault('statistics_since_last_clear', {})
-                continue
+                # Statistics since last clear:
+                m = p14_legacy.match(line)
+                if m:
+                    statistics_dict = interface_dict.setdefault('statistics_since_last_clear', {})
+                    continue
 
-            # Total packets received: 1000
-            m = p15.match(line)
-            if m:
-                statistics_dict['total_packets_received'] = int(m.group('total_packets_received'))
-                continue
+                # Total packets received: 1000
+                m = p15_legacy.match(line)
+                if m:
+                    statistics_dict['total_packets_received'] = int(m.group('total_packets_received'))
+                    continue
 
-            # Total fragments received: 200
-            m = p16.match(line)
-            if m:
-                statistics_dict['total_fragments_received'] = int(m.group('total_fragments_received'))
-                continue
+                # Total fragments received: 200
+                m = p16_legacy.match(line)
+                if m:
+                    statistics_dict['total_fragments_received'] = int(m.group('total_fragments_received'))
+                    continue
 
-            # Total packets reassembled: 950
-            m = p17.match(line)
-            if m:
-                statistics_dict['total_packets_reassembled'] = int(m.group('total_packets_reassembled'))
-                continue
+                # Total packets reassembled: 950
+                m = p17_legacy.match(line)
+                if m:
+                    statistics_dict['total_packets_reassembled'] = int(m.group('total_packets_reassembled'))
+                    continue
 
-            # Total packets dropped due to VFR: 50
-            m = p18.match(line)
-            if m:
-                statistics_dict['total_packets_dropped_due_to_vfr'] = int(m.group('total_packets_dropped_due_to_vfr'))
-                continue
+                # Total packets dropped due to VFR: 50
+                m = p18_legacy.match(line)
+                if m:
+                    statistics_dict['total_packets_dropped_due_to_vfr'] = int(m.group('total_packets_dropped_due_to_vfr'))
+                    continue
+
+            else:
+                # Process new format
+                # GigabitEthernet0/0/2:
+                m = p1_new.match(line)
+                if m:
+                    current_interface = m.group('interface')
+                    base_dict = parsed_dict.setdefault('virtual_fragment_reassembly_information', {})
+                    interface_dict = base_dict.setdefault(current_interface, {})
+                    continue
+
+                # Virtual Fragment Reassembly (VFR) is ENABLED [in]
+                m = p2_new.match(line)
+                if m and current_interface:
+                    current_direction = m.group('direction')
+                    direction_dict = interface_dict.setdefault(current_direction, {})
+                    direction_dict['vfr_enabled'] = True if m.group('status') == 'ENABLED' else False
+                    continue
+
+                # Concurrent reassemblies (max-reassemblies): 16
+                m = p3_new.match(line)
+                if m and current_direction:
+                    direction_dict['max_reassemblies'] = int(m.group('max_reassemblies'))
+                    continue
+
+                # Fragments per reassembly (max-fragments): 32
+                m = p4_new.match(line)
+                if m and current_direction:
+                    direction_dict['max_fragments'] = int(m.group('max_fragments'))
+                    continue
+
+                # Reassembly timeout (timeout): 3 seconds
+                m = p5_new.match(line)
+                if m and current_direction:
+                    direction_dict['timeout_seconds'] = int(m.group('timeout'))
+                    continue
+
+                # Drop fragments: OFF
+                m = p6_new.match(line)
+                if m and current_direction:
+                    direction_dict['drop_fragments'] = m.group('drop_fragments')
+                    continue
+
+                # Current reassembly count:0
+                m = p7_new.match(line)
+                if m and current_direction:
+                    direction_dict['current_reassembly_count'] = int(m.group('current_reassembly_count'))
+                    continue
+
+                # Current fragment count:0
+                m = p8_new.match(line)
+                if m and current_direction:
+                    direction_dict['current_fragment_count'] = int(m.group('current_fragment_count'))
+                    continue
+
+                # Total reassembly count:1
+                m = p9_new.match(line)
+                if m and current_direction:
+                    direction_dict['total_reassembly_count'] = int(m.group('total_reassembly_count'))
+                    continue
+
+                # Total reassembly timeout count:0
+                m = p10_new.match(line)
+                if m and current_direction:
+                    direction_dict['total_reassembly_timeout_count'] = int(m.group('total_reassembly_timeout_count'))
+                    continue
 
         return parsed_dict
 
@@ -10551,6 +10800,228 @@ class ShowIpNatPoolName(ShowIpNatPoolNameSchema):
 
         return parsed_dict
 
+
+class ShowIpOspfDatabaseNssaSchema(MetaParser):
+    '''Schema for show ip ospf database nssa'''
+    schema = {
+        'ospf_router': {
+            'router_id': str,
+            'process_id': int,
+            'type_7_as_external_link_states': {
+                'area': int,
+                'link_states': {
+                    Any(): {
+                        'ls_age': int,
+                        'options': str,
+                        'ls_type': str,
+                        'link_state_id': str,
+                        'advertising_router': str,
+                        'ls_seq_number': str,
+                        'checksum': int,
+                        'length': int,
+                        'network_mask': int,
+                        'metric_type': int,
+                        'mtid': int,
+                        'metric': int,
+                        'forward_address': str,
+                        'external_route_tag': int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowIpOspfDatabaseNssa(ShowIpOspfDatabaseNssaSchema):
+    '''Parser for show ip ospf database nssa'''
+    cli_command = 'show ip ospf database nssa'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed = {}
+        # OSPF Router with ID (10.0.0.1) (Process ID 1)
+        p1 = re.compile(r'^OSPF Router with ID \((?P<router_id>[\d\.]+)\) \(Process ID (?P<process_id>\d+)\)$')
+        # Type-7 AS External Link States (Area 40)
+        p2 = re.compile(r'^\s*Type-7 AS External Link States \(Area (?P<area>\d+)\)$')
+        # LS age: 117
+        p3 = re.compile(r'^\s*LS age: (?P<ls_age>\d+)$')
+        # Options: (No TOS-capability, Type 7/5 translation, DC)
+        p4 = re.compile(r'^\s*Options: (?P<options>.*)$')
+        # LS Type: AS External Link
+        p5 = re.compile(r'^\s*LS Type: (?P<ls_type>.*)$')
+        # Link State ID: 223.255.0.0 (External Network Number )
+        p6 = re.compile(r'^\s*Link State ID: (?P<link_state_id>[\d\.]+) \(External Network Number \)$')
+        # Advertising Router: 1.1.1.1
+        p7 = re.compile(r'^\s*Advertising Router: (?P<advertising_router>[\d\.]+)$')
+        # LS Seq Number: 80000001
+        p8 = re.compile(r'^\s*LS Seq Number: (?P<ls_seq_number>\w+)$')
+        # Checksum: 0x66B7
+        p9 = re.compile(r'^\s*Checksum: (?P<checksum>0x\w+)$')
+        # Length: 36
+        p10 = re.compile(r'^\s*Length: (?P<length>\d+)$')
+        #  Network Mask: /16
+        p11 = re.compile(r'^\s*Network Mask: (?P<network_mask>/\d+)$')
+        # Metric Type: 1 (Comparable directly to link state metric)
+        p12 = re.compile(r'^\s*Metric Type: (?P<metric_type>\d+) \((?P<metric_type_desc>.*)\)$')
+        # MTID: 0
+        p13 = re.compile(r'^\s*MTID: (?P<mtid>\d+)$')
+        # Metric: 10
+        p14 = re.compile(r'^\s*Metric: (?P<metric>\d+)$')
+        # Forward Address: 10.10.10.1
+        p15 = re.compile(r'^\s*Forward Address: (?P<forward_address>[\d\.]+)$')
+        # External Route Tag: 0
+        p16 = re.compile(r'^\s*External Route Tag: (?P<external_route_tag>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # OSPF Router with ID (1.1.1.1) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_router_dict = parsed.setdefault('ospf_router', {})
+                ospf_router_dict['router_id'] = group['router_id']
+                ospf_router_dict['process_id'] = int(group['process_id'])
+                continue
+            # Type-7 AS External Link States (Area 40)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                link_states_dict = ospf_router_dict.setdefault('type_7_as_external_link_states', {})
+                link_states_dict['area'] = int(group['area'])
+                link_states_dict['link_states'] = {}
+                continue
+            # LS age: 117
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict = link_states_dict['link_states'].setdefault(len(link_states_dict['link_states']), {})
+                link_state_dict['ls_age'] = int(group['ls_age'])
+                continue
+            # Options: (No TOS-capability, Type 7/5 translation, DC)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['options'] = group['options']
+                continue
+            # LS Type: AS External Link
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['ls_type'] = group['ls_type']
+                continue
+            # Link State ID: 223.255.0.0 (External Network Number )
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['link_state_id'] = group['link_state_id']
+                continue
+            # Advertising Router: 1.1.1.1
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['advertising_router'] = group['advertising_router']
+                continue
+            # LS Seq Number: 80000001
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['ls_seq_number'] = group['ls_seq_number']
+                continue
+            # Checksum: 0x66B7
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['checksum'] = int(group['checksum'], 16)
+                continue
+            # Length: 36
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['length'] = int(group['length'])
+                continue
+            # Network Mask: /16
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['network_mask'] = int(group['network_mask'].lstrip('/'))
+                continue
+            # Metric Type: 1 (Comparable directly to link state metric)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['metric_type'] = int(group['metric_type'])
+                continue
+            # MTID: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['mtid'] = int(group['mtid'])
+                continue
+            # Metric: 10
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['metric'] = int(group['metric'])
+                continue
+            # Forward Address: 10.10.10.1
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['forward_address'] = group['forward_address']
+                continue
+            # External Route Tag: 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                link_state_dict['external_route_tag'] = int(group['external_route_tag'])
+                continue
+
+        return parsed
+
+class ShowIpMrmIntSchema(MetaParser):
+    """Schema for show ip mrm int"""
+    schema = {
+        'interfaces': {
+            Any(): {    # The interface name will be the key
+                'address': str,
+                'mode': str,
+                'status': str,
+            }
+        }
+    }
+
+class ShowIpMrmInt(ShowIpMrmIntSchema):
+    """Parser for show ip mrm int"""
+
+    cli_command = 'show ip mrm int'
+
+    def cli(self, output=None):
+        if output is None:
+            # Execute the command on the device if no output is provided
+            output = self.device.execute(self.cli_command)
+
+        parsed_output = {}
+        # GigabitEthernet0/0/0     10.1.1.1         Test-Sender           Up
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<mode>\S+)\s+(?P<status>\S+)$')
+
+        # Split the output into lines and process them
+        lines = output.strip().splitlines()
+
+        for line in lines:
+            # GigabitEthernet0/0/0     10.1.1.1         Test-Sender           Up
+            m = p1.match(line.strip())
+            if m:
+                interfaces = parsed_output.setdefault('interfaces', {})
+                interface_name = m.group('interface')
+                interfaces[interface_name] = {
+                    'address': m.group('address'),
+                    'mode': m.group('mode'),
+                    'status': m.group('status'),
+                }
+
+        return parsed_output
+
 class ShowIpOspfDatabaseNssaSchema(MetaParser):
     '''Schema for show ip ospf database nssa'''
     schema = {
@@ -10799,4 +11270,332 @@ class ShowIpNatBpa(ShowIpNatBpaSchema):
                 bulk_port_allocation['single_set'] = m.group('single_set').lower() == 'true'
                 continue
 
+        return parsed_dict
+
+class ShowIpPimRpSchema(MetaParser):
+    """Schema for show ip pim rp"""
+    schema = {
+        Optional('pim_rp'): {
+            Any(): {  # Group address as key (e.g., '224.0.1.40')
+                'rp_address': str,     # RP IP address
+                Optional('expires'): str,        # Expiry time or "never"
+                Optional('uptime'): str,    # Uptime duration (if present)
+                Optional('group'): str # Group address (duplicate for clarity)
+            }
+        }
+}
+
+class ShowIpPimRp(ShowIpPimRpSchema):
+    """Parser for show ip pim rp"""
+
+    cli_command = 'show ip pim rp'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        # Define regex pattern for PIM RP entries
+        # Group: 224.0.1.40, RP: 60.1.1.1, uptime 00:00:29, expires never
+        p1 = re.compile(r'^Group:\s+(?P<group>[\d\.]+),\s+'
+                             r'RP:\s+(?P<rp_address>[\d\.]+)'
+                             r'(?:,\s+uptime\s+(?P<uptime>[\d\:]+),\s+'
+                             r'expires\s+(?P<expires>\S+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Group: 224.0.1.40, RP: 60.1.1.1, uptime 00:00:29, expires never
+            m = p1.match(line)
+            if m:
+                group_data = m.groupdict()
+                group_address = group_data['group']
+                
+                # Initialize pim_rp section if not exists
+                if 'pim_rp' not in ret_dict:
+                    ret_dict['pim_rp'] = {}
+                
+                rp_info = {
+                    'rp_address': group_data['rp_address'],
+                    'group': group_address
+                }
+
+                # Only add uptime and expires if they were captured (i.e., not None)
+                if group_data.get('uptime'):
+                    rp_info['uptime'] = group_data['uptime']
+                if group_data.get('expires'):
+                    rp_info['expires'] = group_data['expires']
+
+                # Store the PIM RP information
+                ret_dict['pim_rp'][group_address] = rp_info
+
+        return ret_dict
+
+
+# ==============================
+# Schema for 'show ip ssh'
+# ==============================
+class ShowIpSshSchema(MetaParser):
+    """Schema for show ip ssh"""
+    
+    schema = {
+        Optional('ssh'): {
+            Optional('enabled'): bool,
+            Optional('version'): str,
+            Optional('authentication_methods'): ListOf(str),
+            Optional('authentication_publickey_algorithms'): ListOf(str),
+            Optional('hostkey_algorithms'): ListOf(str),
+            Optional('encryption_algorithms'): ListOf(str),
+            Optional('mac_algorithms'): ListOf(str),
+            Optional('kex_algorithms'): ListOf(str),
+            Optional('authentication_timeout'): int,
+            Optional('authentication_retries'): int,
+            Optional('min_dh_key_size'): int,
+            Optional('rsa_key'): {
+                'present': bool,
+                Optional('modulus_size'): int,
+                Optional('key_data'): str,
+            },
+            Optional('ecdsa_key'): {
+                'present': bool,
+                Optional('key_size'): int,
+                Optional('key_data'): str,
+            },
+        }
+    }
+
+
+# ==============================
+# Parser for 'show ip ssh'
+# ==============================
+class ShowIpSsh(ShowIpSshSchema):
+    """Parser for:
+        show ip ssh
+    """
+    
+    cli_command = 'show ip ssh'
+    
+    def cli(self, output=None):
+        """parsing mechanism: cli
+        
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: execute, transform, return
+        """
+        
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+            
+        # Init vars
+        parsed_dict = {}
+        
+        # SSH Enabled - version 2.0
+        p1 = re.compile(r'^SSH\s+(?P<status>Enabled|Disabled)(?:\s+-\s+version\s+(?P<version>\d+\.\d+))?$')
+        
+        # Authentication methods:publickey,keyboard-interactive,password
+        p2 = re.compile(r'^Authentication\s+methods:\s*(?P<methods>.+)$')
+        
+        # Authentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+        p3 = re.compile(r'^Authentication\s+Publickey\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # Hostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+        p4 = re.compile(r'^Hostkey\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # Encryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
+        p5 = re.compile(r'^Encryption\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # MAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+        p6 = re.compile(r'^MAC\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # KEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,mlkem1024nistp384-sha384,mlkem768x25519-sha256,mlkem768nistp256-sha256
+        p7 = re.compile(r'^KEX\s+Algorithms:\s*(?P<algorithms>.+)$')
+        
+        # Authentication timeout: 120 secs; Authentication retries: 3
+        p8 = re.compile(r'^Authentication\s+timeout:\s*(?P<timeout>\d+)\s+secs;\s+Authentication\s+retries:\s+(?P<retries>\d+)$')
+        
+        # Minimum expected Diffie Hellman key size : 2048 bits
+        p9 = re.compile(r'^Minimum\s+expected\s+Diffie\s+Hellman\s+key\s+size\s*:\s*(?P<size>\d+)\s+bits$')
+        
+        # IOS Keys in SECSH format(ssh-rsa, base64 encoded): NETCONF_SSH_RSA_KEY
+        p10 = re.compile(r'^IOS\s+Keys\s+in\s+SECSH\s+format\(ssh-rsa,\s+base64\s+encoded\):\s*(?P<status>.+)$')
+        
+        # Modulus Size : 2048 bits
+        p11 = re.compile(r'^Modulus\s+Size\s*:\s*(?P<size>\d+)\s+bits$')
+        
+        # IOS Keys in SECSH format(ssh-ec, base64 encoded): NONE
+        # IOS Keys in SECSH format(ecdsa-sha2-nistp256, base64 encoded): PI-CAT9K15-1.cisco.com
+        p12 = re.compile(r'^IOS\s+Keys\s+in\s+SECSH\s+format\((?:ssh-ec|ecdsa-sha2-nistp\d+),\s+base64\s+encoded\):\s*(?P<status>.+)$')
+        
+        # Key Size : 256 bits
+        p13 = re.compile(r'^Key\s+Size\s*:\s*(?P<size>\d+)\s+bits$')
+        
+        current_key_type = None
+        rsa_key_data_lines = []
+        ecdsa_key_data_lines = []
+            
+        ssh_dict = None  # Only create when we find SSH content
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Skip empty lines
+            if not line:
+                continue
+                
+            # SSH Enabled - version 2.0
+            m = p1.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                groups = m.groupdict()
+                ssh_dict['enabled'] = groups['status'] == 'Enabled'
+                if groups.get('version'):
+                    ssh_dict['version'] = groups['version']
+                continue
+                
+            # Authentication methods:publickey,keyboard-interactive,password
+            m = p2.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                methods = [method.strip() for method in m.groupdict()['methods'].split(',')]
+                ssh_dict['authentication_methods'] = methods
+                continue
+                
+            # Authentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+            m = p3.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['authentication_publickey_algorithms'] = algorithms
+                continue
+                
+            # Hostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+            m = p4.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['hostkey_algorithms'] = algorithms
+                continue
+                
+            # Encryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
+            m = p5.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['encryption_algorithms'] = algorithms
+                continue
+                
+            # MAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+            m = p6.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['mac_algorithms'] = algorithms
+                continue
+                
+            # KEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group18-sha512,diffie-hellman-group16-sha512,diffie-hellman-group14-sha256,diffie-hellman-group14-sha1,mlkem1024nistp384-sha384,mlkem768x25519-sha256,mlkem768nistp256-sha256
+            m = p7.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                algorithms = [alg.strip() for alg in m.groupdict()['algorithms'].split(',')]
+                ssh_dict['kex_algorithms'] = algorithms
+                continue
+                
+            # Authentication timeout: 120 secs; Authentication retries: 3
+            m = p8.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                groups = m.groupdict()
+                ssh_dict['authentication_timeout'] = int(groups['timeout'])
+                ssh_dict['authentication_retries'] = int(groups['retries'])
+                continue
+                
+            # Minimum expected Diffie Hellman key size : 2048 bits
+            m = p9.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                ssh_dict['min_dh_key_size'] = int(m.groupdict()['size'])
+                continue
+                
+            # IOS Keys in SECSH format(ssh-rsa, base64 encoded): NETCONF_SSH_RSA_KEY
+            m = p10.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                current_key_type = 'rsa'
+                rsa_dict = ssh_dict.setdefault('rsa_key', {})
+                status = m.groupdict()['status'].strip()
+                rsa_dict['present'] = status not in ['NONE', 'None', '']
+                rsa_key_data_lines = []
+                continue
+                
+            # Modulus Size : 2048 bits
+            m = p11.match(line)
+            if m and current_key_type == 'rsa' and ssh_dict is not None:
+                rsa_dict = ssh_dict.setdefault('rsa_key', {})
+                rsa_dict['modulus_size'] = int(m.groupdict()['size'])
+                continue
+                
+            # IOS Keys in SECSH format(ecdsa-sha2-nistp256, base64 encoded): PI-CAT9K15-1.cisco.com
+            m = p12.match(line)
+            if m:
+                if ssh_dict is None:
+                    ssh_dict = parsed_dict.setdefault('ssh', {})
+                current_key_type = 'ecdsa'
+                ecdsa_dict = ssh_dict.setdefault('ecdsa_key', {})
+                status = m.groupdict()['status'].strip()
+                ecdsa_dict['present'] = status not in ['NONE', 'None', '']
+                ecdsa_key_data_lines = []
+                continue
+                
+            # Key Size : 256 bits
+            m = p13.match(line)
+            if m and current_key_type == 'ecdsa' and ssh_dict is not None:
+                ecdsa_dict = ssh_dict.setdefault('ecdsa_key', {})
+                ecdsa_dict['key_size'] = int(m.groupdict()['size'])
+                continue
+                
+            # Handle multi-line key data (ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQ...)
+            if current_key_type == 'rsa' and ssh_dict is not None and (line.startswith('ssh-rsa') or 
+                (rsa_key_data_lines and not any([
+                    p1.match(line), p2.match(line), p3.match(line), p4.match(line),
+                    p5.match(line), p6.match(line), p7.match(line), p8.match(line),
+                    p9.match(line), p10.match(line), p11.match(line), p12.match(line), p13.match(line)
+                ]) and not line.startswith('IOS Keys') and not line.startswith('ecdsa-sha2'))):
+                rsa_key_data_lines.append(line)
+            elif current_key_type == 'ecdsa' and ssh_dict is not None and (line.startswith('ecdsa-sha2') or 
+                (ecdsa_key_data_lines and not any([
+                    p1.match(line), p2.match(line), p3.match(line), p4.match(line),
+                    p5.match(line), p6.match(line), p7.match(line), p8.match(line),
+                    p9.match(line), p10.match(line), p11.match(line), p12.match(line), p13.match(line)
+                ]) and not line.startswith('IOS Keys') and not line.startswith('ssh-rsa'))):
+                ecdsa_key_data_lines.append(line)
+                    
+        # Store collected key data at the end
+        if ssh_dict is not None:
+            if rsa_key_data_lines:
+                key_data = ' '.join(rsa_key_data_lines)
+                ssh_dict.setdefault('rsa_key', {})['key_data'] = key_data
+                
+            if ecdsa_key_data_lines:
+                key_data = ' '.join(ecdsa_key_data_lines)
+                ssh_dict.setdefault('ecdsa_key', {})['key_data'] = key_data
+                    
         return parsed_dict

@@ -1,0 +1,5 @@
+RP/0/RP0/CPU0:ios#show controllers optics 0/0/0/25 prbs-capability-info 
+Mon Sep 22 17:43:57.835 UTC
+
+PRBS capability information is not available on the port
+

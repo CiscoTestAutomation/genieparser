@@ -1,0 +1,13 @@
+  Global (Per-Box) statistics
+       Total Session Aggressive Aging Period On, Event Count: 1
+
+               	Half Open
+       Protocol	Session Cnt	Exceed
+       --------	-----------	------
+       All	12		0
+       UDP	12		0
+       ICMP	0		0
+       TCP 	0		0
+
+       TCP Syn Flood Half Open Count: 0, Exceed: 0
+       Half Open Aggressive Aging Period Off, Event Count: 0

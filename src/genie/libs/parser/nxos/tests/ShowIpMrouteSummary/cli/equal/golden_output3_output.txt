@@ -1,0 +1,20 @@
+IP Multicast Routing Table for VRF "default"
+Route Statistics unavailable - only liveness detected
+
+Total number of routes: 6
+Total number of (*,G) routes: 2
+Total number of (S,G) routes: 4
+Total number of (*,G-prefix) routes: 0
+Group count: 2, rough average sources per group: 2.0
+
+Group: 225.0.0.1/32, Source count: 2
+Source          packets      bytes           aps   pps       bit-rate     oifs
+(*,G)           0            0               0     0         0.000   bps  2
+100.100.100.5   1704         86904           51    0         1.500   mbps  2
+100.100.100.6   1700         86700           51    0         500.000 kbps  1
+
+Group: 225.0.0.2/32, Source count: 2
+Source          packets      bytes           aps   pps       bit-rate     oifs
+(*,G)           0            0               0     0         0.000   bps  2
+100.100.100.7   1743         88893           51    0         2.000   gbps  1
+100.100.100.8   1891         100806          53    0         1.000   tbps  2

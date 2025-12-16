@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 
 # ===================
@@ -20,7 +20,7 @@ class ShowClassMapSchema(MetaParser):
               "index": {
                   int: {
                       Optional("match"): {
-                          Optional(str): list
+                          Optional(str): ListOf(str)
                       }
                   }
               }
@@ -269,3 +269,113 @@ class ShowClassMap(ShowClassMapSchema):
                 continue
 
         return class_map_dict
+
+
+# ===================
+# Schema for:
+#  * 'show class-map type inspect {name}'
+# ===================
+class ShowClassMapTypeInspectSchema(MetaParser):
+    """Schema for show class-map type inspect {name}."""
+
+    schema = {
+        "class_map": {
+            "name": str,
+            "match_criteria": str,
+            "id": int,
+            Optional("matches"): {
+                Any(): {
+                    "match_type": str,
+                    Optional("value"): str,
+                }
+            }
+        }
+    }
+
+
+# ===================
+# Parser for:
+#  * 'show class-map type inspect {name}'
+# ===================
+class ShowClassMapTypeInspect(ShowClassMapTypeInspectSchema):
+    """Parser for show class-map type inspect {name}"""
+
+    cli_command = 'show class-map type inspect {name}'
+
+    def cli(self, name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(name=name)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Class Map type inspect match-all parent (id 1)
+        p1 = re.compile(r'^\s*Class\s+Map\s+type\s+inspect\s+(?P<match_criteria>match-\w+)\s+(?P<name>\S+)\s+\(id\s+(?P<id>\d+)\)$')
+        
+        #   Match protocol udp
+        p2 = re.compile(r'^\s+Match\s+protocol\s+(?P<protocol>\S+)$')
+        
+        #   Match access-group  101
+        #   Match access-group name ipv6ACL_for_drop_test
+        p3 = re.compile(r'^\s+Match\s+access-group\s+(?:name\s+)?(?P<access_group>\S+)$')
+        
+        #   Match class-map child1
+        p4 = re.compile(r'^\s+Match\s+class-map\s+(?P<class_map>\S+)$')
+
+        ret_dict = {}
+        match_index = 1
+
+        for line in out.splitlines():
+            line = line.rstrip()
+            
+            # Class Map type inspect match-any child3 (id 4)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                class_map_dict = ret_dict.setdefault('class_map', {})
+                class_map_dict['name'] = group['name']
+                class_map_dict['match_criteria'] = group['match_criteria']
+                class_map_dict['id'] = int(group['id'])
+                continue
+                
+            #   Match protocol udp
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                class_map_dict = ret_dict.setdefault('class_map', {})
+                matches_dict = class_map_dict.setdefault('matches', {})
+                matches_dict[match_index] = {
+                    'match_type': 'protocol',
+                    'value': group['protocol']
+                }
+                match_index += 1
+                continue
+                
+            #   Match access-group name ipv6ACL_for_drop_test
+            #   Match access-group  101
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                class_map_dict = ret_dict.setdefault('class_map', {})
+                matches_dict = class_map_dict.setdefault('matches', {})
+                matches_dict[match_index] = {
+                    'match_type': 'access_group',
+                    'value': group['access_group']
+                }
+                match_index += 1
+                continue
+                
+            #   Match class-map child1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                class_map_dict = ret_dict.setdefault('class_map', {})
+                matches_dict = class_map_dict.setdefault('matches', {})
+                matches_dict[match_index] = {
+                    'match_type': 'class_map',
+                    'value': group['class_map']
+                }
+                match_index += 1
+                continue
+
+        return ret_dict

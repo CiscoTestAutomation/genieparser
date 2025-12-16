@@ -1,0 +1,33 @@
+Interface Tunnel1 <--> 2001:DB8:1201::122
+
+  Service-policy output: spoke1_group
+
+    Class-map: abc (match-any)
+      215 packets, 31820 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: protocol icmp
+      QoS Set
+        dscp af43
+          Marker statistics: Disabled
+
+    Class-map: class-default (match-any)
+      118 packets, 12949 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any
+
+Interface Tunnel1 <--> 2001:DB8:1202::123
+
+  Service-policy output: spoke2_group
+
+    Class-map: abc (match-any)
+      215 packets, 31820 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: protocol icmp
+      QoS Set
+        dscp af11
+          Marker statistics: Disabled
+
+    Class-map: class-default (match-any)
+      111 packets, 12211 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any

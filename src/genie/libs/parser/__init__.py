@@ -8,7 +8,7 @@
 '''
 
 # metadata
-__version__ = "25.9"
+__version__ = "25.11"
 __author__ = 'Cisco Systems Inc.'
 __contact__ = ['pyats-support@cisco.com', 'pyats-support-ext@cisco.com']
 __copyright__ = 'Copyright (c) 2018, Cisco Systems Inc.'
@@ -21,4 +21,3 @@ from .base import tcl_invoke_ats_cmd,\
 
 from genie import abstract
 abstract.declare_package(feature='parser')
-
