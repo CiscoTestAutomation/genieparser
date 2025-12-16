@@ -35,10 +35,30 @@ expected_output = {
                       "path": "65108.65108"
                     }
                   }
+                },
+                "82.102.71.0/24": {
+                  "index": {
+                    1: {
+                      "froms": "193.22.30.151",
+                      "next_hop": "213.140.196.25",
+                      "origin_code": "i",
+                      "path": "(64612) 8544"
+                    }
+                  }
+                },
+                "82.102.72.0/24": {
+                  "index": {
+                    1: {
+                      "froms": "193.22.30.151",
+                      "next_hop": "213.140.196.25",
+                      "origin_code": "i",
+                      "path": "(64612) 8544 30916"
+                    }
+                  }
                 }
               },
-              "processed_paths": "3",
-              "processed_prefixes": "3"
+              "processed_paths": "5",
+              "processed_prefixes": "5"
             }
           }
         }
