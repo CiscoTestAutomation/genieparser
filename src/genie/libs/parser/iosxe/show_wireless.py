@@ -5668,8 +5668,8 @@ class ShowWirelessIotCoexistenceSummarySchema(MetaParser):
     """Schema for show wireless iot-coexistence summary"""
 
     schema = {
-        Optional('ap_list'): {
-            Any(): {
+        'ap_list': {
+            Optional(Any()): {
                 'radio_mac': str,
                 'coex_admin_state': str,
                 'coex_oper_state': str,
@@ -5721,9 +5721,8 @@ class ShowWirelessIotCoexistenceSummary(ShowWirelessIotCoexistenceSummarySchema)
         
         Returns:
             dict: Parsed AP data with COEX states and counters.
-                  Returns {} if no APs found (valid empty state).
         """
-        
+
         if output is None:
             output = self.device.execute(self.cli_command)
 
@@ -5760,6 +5759,7 @@ class ShowWirelessIotCoexistenceSummary(ShowWirelessIotCoexistenceSummarySchema)
         )
 
         # Pattern 3: Separator line (marks start of data section)
+        # Example: ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         p_separator = re.compile(r'^-{20,}')
 
         # State flag to track when we're past the header
@@ -5773,7 +5773,8 @@ class ShowWirelessIotCoexistenceSummary(ShowWirelessIotCoexistenceSummarySchema)
             if not line:
                 continue
 
-            # Detect separator line
+            # Separator line to detect start of data section
+            # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             if p_separator.match(line):
                 data_section_started = True
                 continue
@@ -5782,16 +5783,14 @@ class ShowWirelessIotCoexistenceSummary(ShowWirelessIotCoexistenceSummarySchema)
             if not data_section_started:
                 continue
 
-            # Try matching AP with counters first 
+            # Try matching AP with counters first
+            # APCC6E.2AFC.B310  c418.fcbe.41e0   Enabled      Enabled      11546    11490    0           386               386                38              19               14                11
             match = p_ap_with_counters.match(line)
             if match:
-                # Initialize ap_list if first AP found
-                if 'ap_list' not in show_wireless_iot_coexistence_summary_dict:
-                    show_wireless_iot_coexistence_summary_dict['ap_list'] = {}
-                
                 group = match.groupdict()
                 ap_name = group['ap_name']
-                show_wireless_iot_coexistence_summary_dict['ap_list'][ap_name] = {
+                ap_list = show_wireless_iot_coexistence_summary_dict.setdefault('ap_list', {})
+                ap_list[ap_name] = {
                     'radio_mac': group['radio_mac'],
                     'coex_admin_state': group['admin_state'],
                     'coex_oper_state': group['oper_state'],
@@ -5809,21 +5808,19 @@ class ShowWirelessIotCoexistenceSummary(ShowWirelessIotCoexistenceSummarySchema)
                 }
                 continue
 
-            # Try matching AP without counters 
+            # Try matching AP without counters
+            # AP3C57.31C5.983C  4ca6.4d23.0f60   Disabled     Disabled
+            # APCC9C.3EE7.4F50  00df.1d87.6d60   Enabled      Not Supported
             match = p_ap_without_counters.match(line)
             if match:
-                # Initialize ap_list if first AP found
-                if 'ap_list' not in show_wireless_iot_coexistence_summary_dict:
-                    show_wireless_iot_coexistence_summary_dict['ap_list'] = {}
-                
                 group = match.groupdict()
                 ap_name = group['ap_name']
-                show_wireless_iot_coexistence_summary_dict['ap_list'][ap_name] = {
+                ap_list = show_wireless_iot_coexistence_summary_dict.setdefault('ap_list', {})
+                ap_list[ap_name] = {
                     'radio_mac': group['radio_mac'],
                     'coex_admin_state': group['admin_state'],
                     'coex_oper_state': group['oper_state'].strip(),
                     'iot_counters': {}
                 }
 
-        # Return empty dict if no APs found, otherwise return parsed data
         return show_wireless_iot_coexistence_summary_dict
