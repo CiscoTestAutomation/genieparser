@@ -2006,7 +2006,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
         p2 = re.compile(r'^Switchport: +(?P<switchport_enable>\w+)$')
 
         # Administrative Mode: trunk
-        p3 = re.compile(r'^Administrative +Mode: +(?P<switchport_mode>[\w\s]+)$')
+        p3 = re.compile(r'^Administrative +Mode: +(?P<switchport_mode>[\w\s\-]+)$')
 
         # Operational Mode: trunk (member of bundle Po12)
         # Operational Mode: down (suspended member of bundle Po12)
