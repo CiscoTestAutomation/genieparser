@@ -1041,7 +1041,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Physical interface: ge-0/0/0, Enabled, Physical link is Up
         p1 = re.compile(r'^Physical +interface: +(?P<name>\S+), +'
-            r'(?P<admin_status>\S+), +Physical +link +is +(?P<oper_status>\S+)$')
+            r'(?P<admin_status>[\S ]+), +Physical +link +is +(?P<oper_status>\S+)$')
 
         # Interface index: 148, SNMP ifIndex: 526
         p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +'
@@ -1192,9 +1192,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
         # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
         # Flags: Hardware-Down Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
-        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down))'
-                         r'( +SNMP-Traps)?( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
-                         r' +Encapsulation: +(?P<encapsulation>\S+)$')
+        # Flags: Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.222 ]
+        # Flags: SNMP-Traps Encapsulation: Unspecified
+        p25 = re.compile(r'^Flags:+(?P<iff_up>( Hardware-Down Device-Down| Device-Down| Up))?'
+                         r'( +SNMP-Traps)?( +(?P<internal_flags>0x\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
+                         r'( +Encapsulation: +(?P<encapsulation>\S+)$)?')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -1219,7 +1221,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Flags: No-Redirects, Sendbcast-pkt-to-re
         # Flags: Is-Primary, User-MTU
-        # Flags: Up SNMP-Traps 0x4000 Encapsulation: ENET2
         p31 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)')
 
         # Addresses, Flags: Is-Preferred Is-Primary
@@ -1480,6 +1481,11 @@ class ShowInterfaces(ShowInterfacesSchema):
         lag_int_type = ''
         lacp_flag = ''
         if_dist_dict = {}
+        # p25 and p31 conflicts with each other as Flag: can be present multiple times
+        # with multiple meaning
+        # As p25 is always before p31, use a flag to disable p25 once it has been found
+        # for an interface (phys or log) to let p31 run properly
+        new_itf = False
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -1500,6 +1506,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 admin_status_dict = physical_interface_dict.setdefault('admin-status', {})
                 admin_status_dict.update({'@junos:format': admin_status})
                 physical_interface_list.append(physical_interface_dict)
+                new_itf = True
                 continue
 
             # Interface index: 148, SNMP ifIndex: 526
@@ -1898,18 +1905,21 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 logical_interface_list.append(logical_interface_dict)
                 found_flag = False
+                new_itf = True
                 continue
 
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
             m = p25.match(line)
-            if m:
+            if new_itf and m:
+                new_itf = False
                 group = m.groupdict()
                 if_config_flags_dict = logical_interface_dict.setdefault('if-config-flags', {})
                 if_config_flags_dict.update({'iff-up': True})
                 if_config_flags_dict.update({'iff-snmp-traps': True})
                 if group['internal_flags']:
                     if_config_flags_dict.update({'internal-flags': group['internal_flags']})
-                    logical_interface_dict.update({'encapsulation': group['encapsulation']})
+                    if group['encapsulation']:
+                        logical_interface_dict.update({'encapsulation': group['encapsulation']})
                 continue
 
             # Input packets : 133657033
@@ -1957,7 +1967,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Flags: No-Redirects, Sendbcast-pkt-to-re
             # Flags: Is-Primary, User-MTU
             m = p31.match(line)
-            if m:
+            if not new_itf and m:
                 group = m.groupdict()
                 address_family_flags_dict = address_family_dict.setdefault('address-family-flags', {})
                 for flag in group['flags'].split(','):
