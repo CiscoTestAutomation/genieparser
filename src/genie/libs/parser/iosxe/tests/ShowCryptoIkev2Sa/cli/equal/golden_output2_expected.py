@@ -1,14 +1,14 @@
 expected_output = {
     "ipv4": {},
     "ipv6": {
-        5: {
-            "tunnel_id": 5,
+        1: {
+            "tunnel_id": 1,
             "fvrf": "none",
             "ivrf": "none",
             "status": "READY",
-            "local_ip": "2001:DB8:1101::222",
+            "local_ip": "2001:DB8:1101::131",
             "local_port": 500,
-            "remote_ip": "2001:DB8:1201::222",
+            "remote_ip": "2001:DB8:1201::122",
             "remote_port": 500,
             "encryption": "AES-CBC",
             "keysize": 256,
@@ -17,24 +17,22 @@ expected_output = {
             "dh_group": 21,
             "auth_sign": "PSK",
             "auth_verify": "PSK",
-            "ake": {
-                "AKE1": "MLKEM1024"
-            },
+            "pqc": "ML-KEM-1024",
             "life_time": 86400,
-            "active_time": 21335,
+            "active_time": 218,
             "ce_id": 0,
-            "session_id": 17,
-            "local_spi": "20591BE104774B76",
-            "remote_spi": "7C67BCED5FFDB6D2"
+            "session_id": 3,
+            "local_spi": "4CF87E32B25302C0",
+            "remote_spi": "96254131FD306002"
         },
-        6: {
-            "tunnel_id": 6,
+        2: {
+            "tunnel_id": 2,
             "fvrf": "none",
             "ivrf": "none",
             "status": "READY",
-            "local_ip": "2001:DB8:1101::222",
+            "local_ip": "2001:DB8:1101::131",
             "local_port": 500,
-            "remote_ip": "2001:DB8:1202::222",
+            "remote_ip": "2001:DB8:1202::123",
             "remote_port": 500,
             "encryption": "AES-CBC",
             "keysize": 256,
@@ -43,15 +41,13 @@ expected_output = {
             "dh_group": 21,
             "auth_sign": "PSK",
             "auth_verify": "PSK",
-            "ake": {
-                "AKE1": "MLKEM1024"
-            },
+            "pqc": "ML-KEM-1024",
             "life_time": 86400,
-            "active_time": 21323,
+            "active_time": 207,
             "ce_id": 0,
-            "session_id": 18,
-            "local_spi": "E28C2A55E83B1F2A",
-            "remote_spi": "E2DA90DA2CBA3C76"
+            "session_id": 4,
+            "local_spi": "DE66CA8E9F3AB6BD",
+            "remote_spi": "DB3CED85555E739D"
         }
     }
 }

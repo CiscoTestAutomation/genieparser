@@ -1,0 +1,6 @@
+QFP classification class group SimpleCE
+
+class-group :
+ SIMPLE CE Key:
+        number of fields: 1,     cpp_idx: 0
+    key(0): mpls_exp        key pos: 0,  width: 4

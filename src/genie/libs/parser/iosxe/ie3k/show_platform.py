@@ -530,7 +530,7 @@ class ShowEnvironmentAllSchema(MetaParser):
     """Schema for show environment all"""
 
     schema = {
-        'alarms': {
+        Optional('alarms'): {
             Any(): {
                 'status': str,
                 'description': str,
@@ -538,20 +538,59 @@ class ShowEnvironmentAllSchema(MetaParser):
                 'trigger': str,
             }
         },
-        'temperatures': {
-            'supervisor_temp_value': str,
-            'supervisor_temp_state': str,
-            'system_temperature_thresholds': {
+        Optional('temperatures'): {
+            Optional('supervisor_temp_value'): str,
+            Optional('supervisor_temp_state'): str,
+            Optional('system_temperature_thresholds'): {
                 'minor_threshold': str,
                 'major_threshold': str,
                 'critical_threshold': str
             }
         },
-        'power_supplies': {
+        Optional('power_supplies'): {
             Any(): {
                 'type': str,
                 'status': str,
                 Optional('voltage'): str
+            }
+        },
+        Optional('switch'): {
+            Any(): {
+                Optional('alarms'): {
+                    Any(): {
+                        'status': str,
+                        'description': str,
+                        'severity': str,
+                        'trigger': str
+                    }
+                },
+                Optional('system_temperature'): str,
+                Optional('temperature_sensors'): {
+                    Any(): {
+                        'reading': {
+                            'value': str,
+                            'unit': str
+                        },
+                        'state': str,
+                        'yellow_threshold': str,
+                        'red_threshold': str
+                    }
+                },
+                Optional('power_supply'): {
+                    Any(): {
+                        'pid': str,
+                        Optional('serial'): str,
+                        'status': str,
+                        Optional('sys_pwr'): str,
+                        Optional('watts'): str
+                    }
+                },
+                Optional('sensors'): {
+                    Any(): {
+                        'status': str,
+                        'reading': str
+                    }
+                }
             }
         }
     }
@@ -566,6 +605,12 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             output = self.device.execute(self.cli_command)
 
         ret_dict = {}
+        current_switch = None
+        current_alarm = None
+        current_sensor = None
+
+        # Switch: 1
+        p0 = re.compile(r'^Switch:\s+(?P<switch>\d+)$')
 
         # ALARM CONTACT 1
         p1 = re.compile(r'^ALARM +CONTACT +(?P<contact>\d+)$')
@@ -581,21 +626,6 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         # Trigger:     closed   
         p5 = re.compile(r'^Trigger: +(?P<trigger>.+)$')
-
-        # ALARM CONTACT 2
-        p6 = re.compile(r'^ALARM +CONTACT +(?P<contact>\d+)$')
-
-        # Status:      not asserted
-        p7 = re.compile(r'^Status: +(?P<status>.+)$')
-
-        # Description: external alarm contact 2
-        p8 = re.compile(r'^Description: +(?P<description>.+)$')
-
-        # Severity:    minor
-        p9 = re.compile(r'^Severity: +(?P<severity>.+)$')
-
-        # Trigger:     closed
-        p10 = re.compile(r'^Trigger: +(?P<trigger>.+)$')
 
         # Supervisor Temperature Value: 48 C
         p11 = re.compile(r'^Supervisor +Temperature +Value: +(?P<supervisor_temp_value>.+)$')
@@ -613,138 +643,237 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p15 = re.compile(r'^Critical +Threshold +: +(?P<critical_threshold>.+)$')
 
         # POWER SUPPLY-A      DC      OK      24V
-        p16 = re.compile(r'^POWER +SUPPLY-A +(?P<type>\S+) +(?P<status>\S+) +(?P<voltage>\S+)$')
+        # POWER SUPPLY-A      DC      OK
+        p16 = re.compile(r'^POWER +SUPPLY-(?P<id>[AB]) +(?P<type>\S+) +(?P<status>\S+)(\s+(?P<voltage>\S+))?$')
 
-        # POWER SUPPLY-B      DC      OK      54V
-        p17 = re.compile(r'^POWER +SUPPLY-B +(?P<type>\S+) +(?P<status>\S+) +(?P<voltage>\S+)$')
+        # POWER SUPPLY        DC      OK
+        p16b = re.compile(r'^POWER +SUPPLY\s+(?P<type>\S+)\s+(?P<status>\S+)$')
+
+        # Switch 1: SYSTEM TEMPERATURE is OK
+        p17 = re.compile(r'^Switch\s+\d+:\s+SYSTEM\s+TEMPERATURE\s+is\s+(?P<status>\w+)$')
+
+        # Switch 1 - Inlet Temp Sensor 46 C
+        p18 = re.compile(r'^Switch\s+\d+\s+-\s+(?P<sensor_name>[\w\-]+\s+Temp\s+Sensor)\s+(?P<value>\d+)\s+(?P<unit>\w+)$')
+
+        # Yellow Threshold : 80 C
+        p19 = re.compile(r'^Yellow\s+Threshold\s*:\s+(?P<threshold>.+)$')
+
+        # Red Threshold    : 96 C
+        p20 = re.compile(r'^Red\s+Threshold\s*:\s+(?P<threshold>.+)$')
+
+        # POWER SUPPLY-1     Not Present
+        p21 = re.compile(r'^(?P<ps>POWER\s+SUPPLY-\d+)\s+(?P<status>Not\s+Present)$')
+
+        # POWER SUPPLY-2  PWR-RGD-AC-DC-250   DTH255202J5     OK               Good              250
+        p22 = re.compile(
+            r'^(?P<ps>POWER\s+SUPPLY-\d+)\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+(?P<status>\w+)'
+            r'\s+(?P<sys_pwr>\w+)\s+(?P<watts>\d+)'
+        )
+
+        # PS-1 Vout     Not Present     0mV
+        # PS-1 Hotspot  Not Present     0 C
+        p23 = re.compile(r'^(?P<sensor_name>PS-\d+\s+\w+)\s+(?P<status>Not\s+Present|Good)\s+(?P<reading>.+)$')
 
         for line in output.splitlines():
             line = line.strip()
+            if not line:
+                continue
+
+            # Skip header lines
+            if line.startswith('---') or line.startswith('==='):
+                continue
+            if 'Pwr Supply' in line and 'Type' in line:
+                continue
+            if 'Sensor Name' in line and 'Status' in line:
+                continue
+            if 'System Temperature thresholds' in line:
+                continue
+
+            # Switch: 1
+            m = p0.match(line)
+            if m:
+                current_switch = m.group("switch")
+                continue
 
             # ALARM CONTACT 1
             m = p1.match(line)
             if m:
-                group = m.groupdict()
-                contact = 'ALARM CONTACT ' + group['contact']
-                alarm_dict = ret_dict.setdefault('alarms', {}).setdefault(contact, {})
+                contact = f"ALARM CONTACT {m.group('contact')}"
+                current_alarm = contact
+                if current_switch:
+                    switch_dict = ret_dict.setdefault("switch", {}).setdefault(current_switch, {})
+                    switch_dict.setdefault("alarms", {}).setdefault(current_alarm, {})
+                else:
+                    alarm_dict = ret_dict.setdefault('alarms', {}).setdefault(contact, {})
                 continue
 
             #    Status:      not asserted
             m = p2.match(line)
             if m:
-                group = m.groupdict()
-                alarm_dict.update({'status': group['status']})
+                if current_switch and current_alarm:
+                    switch_dict = ret_dict["switch"][current_switch]
+                    switch_dict["alarms"][current_alarm]["status"] = m.group("status")
+                elif current_alarm:
+                    ret_dict['alarms'][current_alarm].update({'status': m.group('status')})
                 continue
 
             #    Description: external alarm contact 1
             m = p3.match(line)
             if m:
-                group = m.groupdict()
-                alarm_dict.update({'description': group['description']})
+                if current_switch and current_alarm:
+                    switch_dict = ret_dict["switch"][current_switch]
+                    switch_dict["alarms"][current_alarm]["description"] = m.group("description")
+                elif current_alarm:
+                    ret_dict['alarms'][current_alarm].update({'description': m.group('description')})
                 continue
 
             #    Severity:    minor
             m = p4.match(line)
             if m:
-                group = m.groupdict()
-                alarm_dict.update({'severity': group['severity']})
+                if current_switch and current_alarm:
+                    switch_dict = ret_dict["switch"][current_switch]
+                    switch_dict["alarms"][current_alarm]["severity"] = m.group("severity")
+                elif current_alarm:
+                    ret_dict['alarms'][current_alarm].update({'severity': m.group('severity')})
                 continue
 
             #    Trigger:     closed
             m = p5.match(line)
             if m:
-                group = m.groupdict()
-                alarm_dict.update({'trigger': group['trigger']})
-                continue
-
-            # ALARM CONTACT 2
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                contact = 'ALARM CONTACT ' + group['contact']
-                alarm_dict = ret_dict.setdefault('alarms', {}).setdefault(contact, {})
-                continue
-
-            #    Status:      not asserted
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                alarm_dict.update({'status': group['status']})
-                continue
-
-            #    Description: external alarm contact 2
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                alarm_dict.update({'description': group['description']})
-                continue
-
-            #    Severity:    minor
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                alarm_dict.update({'severity': group['severity']})
-                continue
-
-            #    Trigger:     closed
-            m = p10.match(line)
-            if m:
-                group = m.groupdict()
-                alarm_dict.update({'trigger': group['trigger']})
+                if current_switch and current_alarm:
+                    switch_dict = ret_dict["switch"][current_switch]
+                    switch_dict["alarms"][current_alarm]["trigger"] = m.group("trigger")
+                elif current_alarm:
+                    ret_dict['alarms'][current_alarm].update({'trigger': m.group('trigger')})
                 continue
 
             # Supervisor Temperature Value: 48 C
             m = p11.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.setdefault('temperatures', {}).update({'supervisor_temp_value': group['supervisor_temp_value']})
+                ret_dict.setdefault('temperatures', {}).update({'supervisor_temp_value': m.group('supervisor_temp_value')})
                 continue
 
             # Temperature State: GREEN
             m = p12.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.setdefault('temperatures', {}).update({'supervisor_temp_state': group['supervisor_temp_state']})
+                if current_switch and current_sensor:
+                    switch_dict = ret_dict["switch"][current_switch]
+                    switch_dict["temperature_sensors"][current_sensor]["state"] = m.group("supervisor_temp_state")
+                else:
+                    ret_dict.setdefault('temperatures', {}).update({'supervisor_temp_state': m.group('supervisor_temp_state')})
                 continue
 
             # Minor Threshold    : 80 C (Yellow)
             m = p13.match(line)
             if m:
-                group = m.groupdict()
                 ret_dict.setdefault('temperatures', {}).setdefault('system_temperature_thresholds', {}).update(
-                    {'minor_threshold': group['minor_threshold']})
+                    {'minor_threshold': m.group('minor_threshold')})
                 continue
 
             # Major Threshold    : 90 C (Red)
             m = p14.match(line)
             if m:
-                group = m.groupdict()
                 ret_dict.setdefault('temperatures', {}).setdefault('system_temperature_thresholds', {}).update(
-                    {'major_threshold': group['major_threshold']})
+                    {'major_threshold': m.group('major_threshold')})
                 continue
 
             # Critical Threshold : 96 C 
             m = p15.match(line)
             if m:
-                group = m.groupdict()
                 ret_dict.setdefault('temperatures', {}).setdefault('system_temperature_thresholds', {}).update(
-                    {'critical_threshold': group['critical_threshold']})
+                    {'critical_threshold': m.group('critical_threshold')})
+                continue
+
+            # Switch 1: SYSTEM TEMPERATURE is OK
+            m = p17.match(line)
+            if m and current_switch:
+                switch_dict = ret_dict.setdefault("switch", {}).setdefault(current_switch, {})
+                switch_dict["system_temperature"] = m.group("status")
+                continue
+
+            # Switch 1 - Inlet Temp Sensor 46 C
+            m = p18.match(line)
+            if m and current_switch:
+                sensor_name = m.group("sensor_name")
+                current_sensor = sensor_name
+                switch_dict = ret_dict.setdefault("switch", {}).setdefault(current_switch, {})
+                sensor_dict = switch_dict.setdefault("temperature_sensors", {}).setdefault(sensor_name, {})
+                sensor_dict["reading"] = {
+                    "value": m.group("value"),
+                    "unit": m.group("unit")
+                }
+                continue
+
+            # Yellow Threshold : 80 C
+            m = p19.match(line)
+            if m and current_switch and current_sensor:
+                switch_dict = ret_dict["switch"][current_switch]
+                switch_dict["temperature_sensors"][current_sensor]["yellow_threshold"] = m.group("threshold")
+                continue
+
+            # Red Threshold    : 96 C
+            m = p20.match(line)
+            if m and current_switch and current_sensor:
+                switch_dict = ret_dict["switch"][current_switch]
+                switch_dict["temperature_sensors"][current_sensor]["red_threshold"] = m.group("threshold")
+                continue
+
+            # POWER SUPPLY-1     Not Present
+            m = p21.match(line)
+            if m and current_switch:
+                ps = m.group("ps")
+                switch_dict = ret_dict.setdefault("switch", {}).setdefault(current_switch, {})
+                ps_dict = switch_dict.setdefault("power_supply", {}).setdefault(ps, {})
+                ps_dict["pid"] = "Not Present"
+                ps_dict["status"] = "Not Present"
+                continue
+
+            # POWER SUPPLY-2  PWR-RGD-AC-DC-250   DTH255202J5     OK               Good              250
+            m = p22.match(line)
+            if m and current_switch:
+                ps = m.group("ps")
+                switch_dict = ret_dict.setdefault("switch", {}).setdefault(current_switch, {})
+                ps_dict = switch_dict.setdefault("power_supply", {}).setdefault(ps, {})
+                ps_dict["pid"] = m.group("pid")
+                ps_dict["serial"] = m.group("serial")
+                ps_dict["status"] = m.group("status")
+                ps_dict["sys_pwr"] = m.group("sys_pwr")
+                ps_dict["watts"] = m.group("watts")
+                continue
+
+            # PS-1 Vout     Not Present     0mV
+            m = p23.match(line)
+            if m and current_switch:
+                sensor_name = m.group("sensor_name").strip()
+                switch_dict = ret_dict.setdefault("switch", {}).setdefault(current_switch, {})
+                sensor_dict = switch_dict.setdefault("sensors", {}).setdefault(sensor_name, {})
+                sensor_dict["status"] = m.group("status")
+                sensor_dict["reading"] = m.group("reading")
                 continue
 
             # POWER SUPPLY-A      DC      OK      24V
+            # POWER SUPPLY-A      DC      OK
             m = p16.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.setdefault('power_supplies', {}).setdefault('POWER SUPPLY-A', {}).update(
-                    {'type': group['type'], 'status': group['status'], 'voltage': group['voltage']})
+                ps_name = f"POWER SUPPLY-{m.group('id')}"
+                ps_dict = ret_dict.setdefault('power_supplies', {}).setdefault(ps_name, {})
+                ps_dict.update({
+                    'type': m.group('type'),
+                    'status': m.group('status')
+                })
+                if m.group('voltage'):
+                    ps_dict['voltage'] = m.group('voltage')
                 continue
 
-            # POWER SUPPLY-B      DC      OK      54V
-            m = p17.match(line)
+            # POWER SUPPLY        DC      OK
+            m = p16b.match(line)
             if m:
-                group = m.groupdict()
-                ret_dict.setdefault('power_supplies', {}).setdefault('POWER SUPPLY-B', {}).update(
-                    {'type': group['type'], 'status': group['status'], 'voltage': group['voltage']})
+                ps_name = "POWER SUPPLY"
+                ps_dict = ret_dict.setdefault('power_supplies', {}).setdefault(ps_name, {})
+                ps_dict.update({
+                    'type': m.group('type'),
+                    'status': m.group('status')
+                })
                 continue
 
         return ret_dict

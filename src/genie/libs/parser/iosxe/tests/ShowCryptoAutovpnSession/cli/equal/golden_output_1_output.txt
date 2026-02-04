@@ -1,0 +1,42 @@
+Local Information:
+  Device Number: 2102, ID: 21020000000000000000000000000000, Role: Spoke
+
+  Local-WAN info learnt from VPN Registries:
+   Local-WAN      Interface            Private-IP:Port         NAT-Type
+   -------------------------------------------------------------------------
+   WAN-1                   gi2           10.10.10.2:4500       Friendly
+   WAN-2                   gi4           11.11.11.2:4500       Friendly
+
+  VPN Registry-1     10.124.22.98:9350
+   Local-WAN        Status            Public-IP:Port
+   ---------------------------------------------------
+   WAN-1             Connected        10.74.9.190:5064
+   WAN-2             Connected        10.74.9.190:5065
+
+  VPN Registry-2     10.124.22.98:9351
+   Local-WAN        Status            Public-IP:Port
+   ---------------------------------------------------
+   WAN-1             Connected        10.74.9.190:5064
+   WAN-2             Connected        10.74.9.190:5065
+
+Peers learnt from VPN Registries:
+
+  Peer Number: 2103, ID: 21030000000000000000000000000000, Role:Hub
+  Peer-WAN  Priv-IP:port(From Reg1) Priv-IP:port(From Reg2) Pub-IP:port(From Reg1) Pub-IP:port(From Reg2)
+  -------------------------------------------------------------------------------------------------------
+  WAN-1        10.10.10.3:4500           10.10.10.3:4500       10.74.9.190:5062       10.74.9.190:5062
+  WAN-2        11.11.11.3:4500           11.11.11.3:4500       10.74.9.190:5063       10.74.9.190:5063
+
+  Peer Number: 2104, ID: 21040000000000000000000000000000, Role:Hub
+  Peer-WAN  Priv-IP:port(From Reg1) Priv-IP:port(From Reg2) Pub-IP:port(From Reg1) Pub-IP:port(From Reg2)
+  -------------------------------------------------------------------------------------------------------
+  WAN-1        10.10.10.3:4500           10.10.10.3:4500       10.74.9.190:5062       10.74.9.190:5062
+  WAN-2        11.11.11.3:4500           11.11.11.3:4500       10.74.9.190:5063       10.74.9.190:5063
+
+Session Details:
+  Peer-No    Local-IP:Port        Peer-IP:Port         Local-WAN# Peer-WAN#  Session-Type    State      Interface    Initiator
+  ----------------------------------------------------------------------------------------------------------------------------
+  2103       10.10.10.2:4500        10.10.10.3:4500        0         0       Private       Connectin       Vi1          Yes
+  2103       10.10.10.2:4500        11.11.11.3:4500        0         1       Private       Connectin       Vi2          Yes
+  2103       11.11.11.2:4500        10.10.10.3:4500        1         0       Private       Connectin       Vi3          Yes
+  2103       11.11.11.2:4500        11.11.11.3:4500        1         1       Private       Connectin       Vi4          Yes

@@ -1,0 +1,9 @@
+show platform software fed switch 2 security-fed ipv6sg if-id 0x49f
+IP                                         Prefix  Handle          ACTION      EC_STATE  vlan    Mac                  Handle
+================================================================================================================================
+::                                              0   1183 [0x49f]     Drop        None       0    00:00:00:00:00:00      1183 [0x49f]
+  Counter OID (0x8be     ) on ASIC (0         )  Position (50015     ) Hit-Counter (16382     )
+100:100:1:0:a100:505b:6613:2ed5               128   1183 [0x49f]     Permit      None       100    00:00:00:11:11:11      1183 [0x49f]
+  Counter OID (0xcfc     ) on ASIC (0         )  Position (20016     ) Hit-Counter (20        )
+fe80::200:ff:fe11:1111                        128   1183 [0x49f]     Permit      None       100    00:00:00:11:11:11      1183 [0x49f]
+  Counter OID (0x8c0     ) on ASIC (0         )  Position (20015     ) Hit-Counter (3         )

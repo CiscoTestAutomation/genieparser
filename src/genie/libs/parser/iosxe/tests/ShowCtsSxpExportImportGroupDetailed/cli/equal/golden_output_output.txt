@@ -1,0 +1,5 @@
+show cts sxp export-import-group listener detailed
+Export-import-group: Listener_GRP_DUT1
+    Import-list name: Import_List_DUT2
+      vrf VRF-GRP-1
+    peer 2001:1122:AABB:2:DDEE:77CC:4321:1111

@@ -9,9 +9,7 @@ expected_output = {
                 "DH_GROUP_2048_MODP/Group 14",
                 "DH_GROUP_521_ECP/Group 21"
             ],
-            "ake": {
-                "1": "MLKEM768"
-            }
+            "pqc": "ML-KEM-768 ML-KEM-1024 Optional"
         },
         "ikev2proposal": {
             "encryption": "AES-CBC-256",
@@ -20,9 +18,7 @@ expected_output = {
             "dh_group": [
                 "DH_GROUP_521_ECP/Group 21"
             ],
-            "ake": {
-                "1": "MLKEM1024"
-            }
+            "pqc": "ML-KEM-1024 Optional"
         }
     }
 }

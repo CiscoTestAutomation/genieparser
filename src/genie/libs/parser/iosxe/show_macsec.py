@@ -10,7 +10,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional, Any
+from genie.metaparser.util.schemaengine import Optional, Any, Or
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
@@ -651,7 +651,7 @@ class ShowMacsecStatusInterfaceSchema(MetaParser):
         },
         'receive_sa': {
             'next_pn': int,
-            'an': int,
+            'an': Or(int, list),
             'delay_protect_an_lpn': str,
         }
     }
@@ -720,8 +720,8 @@ class ShowMacsecStatusInterface(ShowMacsecStatusInterfaceSchema):
         # Receive SA:
         p14 = re.compile(r'^Receive\s+SA:$')
 
-        # AN:                       0
-        p15 = re.compile(r'^AN:\s+(?P<an>\d+)$')
+        # AN:                       0 1 2 3
+        p15 = re.compile(r'^AN:\s+(?P<an>[\d\s]+)$')
 
         # Delay Protect AN/LPN:     0/0
         p16 = re.compile(r'^Delay\s+Protect\s+AN/LPN:\s+(?P<delay_protect_an_lpn>[\w/]+)$')
@@ -843,11 +843,16 @@ class ShowMacsecStatusInterface(ShowMacsecStatusInterfaceSchema):
                 receive_sa = True
                 continue
 
-            #   AN:                       0
+            #   AN:                       0 1 2 3 (or just 0)
             m = p15.match(line)
             if m:
                 groups = m.groupdict()
-                receive_sa_dict['an'] = int(groups['an'])
+                an_values = groups['an'].strip().split()
+                # Return int for single value, list for multiple values (backward compatibility)
+                if len(an_values) == 1:
+                    receive_sa_dict['an'] = int(an_values[0])
+                else:
+                    receive_sa_dict['an'] = [int(val) for val in an_values]
                 continue
 
             #   Delay Protect AN/LPN:     0/0

@@ -1,0 +1,20 @@
+CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 2: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 3: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 4: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 5: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 14: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 15: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 16: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 17: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Service plane process utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+   Pid    PPid    5Sec    1Min    5Min  Status        Size  Name
+--------------------------------------------------------------------------------
+ 13168       1      0%      0%      0%  S             9728  libvirt_lxc
+ 13170   13168      0%      0%      0%  S              176  tini
+ 13197   13170      0%      0%      0%  S              176  runsvdir
+ 13857   13197      0%      0%      0%  S              176  runsv
+ 13858   13197      0%      0%      0%  S              176  runsv
+ 13859   13857      0%      0%      0%  S             1056  run
+ 13860   13858      0%      0%      0%  S            14212  te-agent
+ 13865   13859      0%      0%      0%  S              176  inotifywait

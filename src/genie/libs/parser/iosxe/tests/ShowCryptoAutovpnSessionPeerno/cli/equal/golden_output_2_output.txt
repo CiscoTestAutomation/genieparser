@@ -1,0 +1,2 @@
+  Peer-No    Local-IP:Port        Peer-IP:Port         Local-WAN# Peer-WAN#  Session-Type    State      Interface    Initiator
+  ----------------------------------------------------------------------------------------------------------------------------

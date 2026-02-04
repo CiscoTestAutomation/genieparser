@@ -619,9 +619,12 @@ class ShowPolicyMapTypeInspectZonePairSession(ShowPolicyMapTypeInspectZonePairSe
         #0 packets, 0 bytes
         p6 = re.compile(r'^(?P<packets>\d+) packets, +(?P<bytes>\d+) bytes$')
         # Session ID 0x00000000 (10.1.1.1:10001)=>(20.1.1.1:20001) udp SIS_OPEN
-        p7 = re.compile(
+        p7_a = re.compile(
             r'^Session ID (?P<session_id>\S+) +\((?P<initiator_ip>[\d\.]+):(?P<initiator_port>[\d\*]+)\)=\>'
             r'\((?P<responder_ip>[\d\.]+):(?P<responder_port>[\d\*]+)\) +(?P<protocol>\w+) +(?P<state>\S+)$'
+        )
+        p7_b = re.compile(
+            r'^Session ID\s+(?P<session_id>\S+)\s+[\[\(](?P<initiator_ip>[^\]\)]+)[\]\)]:(?P<initiator_port>[\d\*]+)[\)\]]?:?\d*=\>[\[\(](?P<responder_ip>[^\]\)]+)[\]\)]:(?P<responder_port>[\d\*]+)[\)\]]?:?\d*\s+(?P<protocol>\w+)\s+(?P<state>\S+)$'
         )
         #Created 00:00:22, Last heard 00:00:13
         p8 = re.compile(r'^Created +(?P<created>[\d\:]+), +Last heard +(?P<last_heard>[\d\:]+)$')
@@ -631,6 +634,8 @@ class ShowPolicyMapTypeInspectZonePairSession(ShowPolicyMapTypeInspectZonePairSe
         )
         #Established Sessions
         p10 = re.compile(r'^(?P<session_type>Established Sessions|Half-open Sessions|Terminating Sessions)$')
+
+
         # Context tracking variables
         zone_pair_dict = None
         service_policy_dict = None
@@ -689,7 +694,9 @@ class ShowPolicyMapTypeInspectZonePairSession(ShowPolicyMapTypeInspectZonePairSe
                 continue
                 
             # Session ID 0x00000000 (10.1.1.1:10001)=>(20.1.1.1:20001) udp SIS_OPEN
-            m7 = p7.match(line)
+            m7 = p7_a.match(line)
+            if not m7:
+                m7 = p7_b.match(line)
             if m7:
                 groups = m7.groupdict()
                 session_id = groups["session_id"]

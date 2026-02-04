@@ -1,0 +1,17 @@
+NAT64 Statistics
+
+Interface Statistics
+GigabitEthernet0/0/4 (IPv4 not configured, IPv6 configured):
+Packets translated (IPv4 -> IPv6)
+Stateless: 0
+Stateful: 0
+nat46: 0
+MAP-T: 0
+MAP-E: 0
+Packets translated (IPv6 -> IPv4)
+Stateless: 0
+Stateful: 0
+nat46: 0
+MAP-T: 0
+MAP-E: 0
+Packets dropped: 539

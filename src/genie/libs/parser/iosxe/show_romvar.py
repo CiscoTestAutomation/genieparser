@@ -40,7 +40,7 @@ class ShowRomvarSchema(MetaParser):
             Optional("rmi_remote_ip"): str,
             "bsi": int,
             Optional("ret_2_rcalts"): str,
-            "random_num": int,
+            Optional("random_num"): int,
             Optional("thrput"): str,
             Optional("config_file"): str,
             Optional("bootldr"): str,

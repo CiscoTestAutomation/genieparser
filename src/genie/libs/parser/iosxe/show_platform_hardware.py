@@ -39,10 +39,12 @@
     * 'show platform hardware qfp active feature ipsec state'
     * 'show platform hardware qfp active feature tcp stats detail'
     * 'show platform hardware qfp active classification class-group-manager class-group client cce all'
+    * 'show platform hardware qfp active classification feature class-group ce_data cce {cce_id} interface {interface} input brief'
     * 'show platform hardware qfp active datapath infrastructure sw-hqf'
     * 'show platform hardware qfp active datapath infrastructure time basic'
     * 'show platform hardware qfp active interface if-name Port-channel1'
     * 'show platform hardware qfp active feature nat datapath stats'
+    * 'show platform hardware cpp active feature nat datapath map'
     * 'show platform hardware qfp active feature bfd datapath session'
     * 'show platform hardware qfp active feature alg statistics sip l7data'
     * 'show platform hardware qfp active feature ipsec sa 3'
@@ -74,12 +76,16 @@
     * 'show platform hardware qfp active feature alg statistics sip'
     * 'show platform hardware qfp active feature td datapath statistics'
     * 'show platform hardware qfp active feature nat datapath time'
+    * 'show platform hardware cpp active feature nat datapath pool'
     * 'show platform hardware subslot <subslot> module host-if status'
     * 'show platform hardware qfp active feature alg statistics login clear'
     * 'show platform hardware qfp active feature firewall zonepair 1'
     * 'show platform hardware qfp active feature ess session'
     * 'show platform hardware qfp <instance> feature firewall ucode scb a a a a a a a detail'
     * 'show platform hardware qfp active infrastructure punt statistics type per-cause clear'
+    * 'show platform hardware cpp active feature nat datapath stats'
+    * 'show platform hardware cpp active feature nat datapath bind'
+    * 'show platform hardware qfp active feature nat datapath time'
 """
 import re
 import logging
@@ -1479,16 +1485,16 @@ class ShowPlatformHardwareModuleInterfaceStatusSchema(MetaParser):
     """Schema for show platform hardware subslot {id} module interface {intf} status"""
 
     schema = {
-        "mac_status": {
+        Optional("mac_status"): {
             "hw_port": int,
-            "speed": int,
+            "speed": Or(int, str),
             "duplex": str,
             "link": str,
             "link_en": str,
             "tx_pause": str,
             "rx_pause": str,
         },
-        "l3_network": {
+        Optional("l2_network"): {
             "link": str,
             "link_config": str,
             "speed": str,
@@ -1502,8 +1508,22 @@ class ShowPlatformHardwareModuleInterfaceStatusSchema(MetaParser):
             "tx_pause": str,
             "tx_pause_config": str,
         },
-        "mac_filtering": str,
-        "mac_addr": str,
+        Optional("l3_network"): {
+            "link": str,
+            "link_config": str,
+            "speed": str,
+            "speed_config": str,
+            "duplex": str,
+            "duplex_config": str,
+            "nego_config": str,
+            "mtu": int,
+            "rx_pause": str,
+            "rx_pause_config": str,
+            "tx_pause": str,
+            "tx_pause_config": str,
+        },
+        Optional("mac_filtering"): str,
+        Optional("mac_addr"): str,
         Optional("pve"): str,
         Optional("target_port"): int,
         Optional("nested_vlan"): str,
@@ -1530,6 +1550,7 @@ class ShowPlatformHardwareModuleInterfaceStatusSchema(MetaParser):
         Optional("plim_thres"): int,
         Optional("buffer_size"): int,
         Optional("xon_thres"): int,
+        Optional("fc_mode"): str,
         Optional("lp_q_cos"): int,
         Optional("lp_q_tc"): int,
         Optional("lp_weight"): int,
@@ -1547,6 +1568,8 @@ class ShowPlatformHardwareModuleInterfaceStatusSchema(MetaParser):
         Optional("q5_tx_buffer"): int,
         Optional("q6_tx_buffer"): int,
         Optional("q7_tx_buffer"): int,
+        Optional("vlan_mode"): str,
+        Optional("native_vlan"): int,
     }
 
 
@@ -1564,10 +1587,15 @@ class ShowPlatformHardwareModuleInterfaceStatus(
             output = self.device.execute(self.cli_command[0].format(id=id, intf=intf))
 
         # MAC Status: hw_port 0, speed 1000, duplex full, link Up, link_en Enable , tx_pause Enable, rx_pause Enable
+        # MAC Status: lport 0, speed unknown, duplex unknown ...
         p1 = re.compile(
-            r"^MAC Status: hw_port (?P<hw_port>\d+), +speed (?P<speed>\d+), +duplex (?P<duplex>\S+), link "
+            r"^MAC Status: (hw_port|lport) (?P<hw_port>\d+), +speed "
+            + r"(?P<speed>\d+|unknown), +duplex (?P<duplex>\S+), link "
             + r"(?P<link>\S+), link_en (?P<link_en>\S+) , tx_pause (?P<tx_pause>\S+), rx_pause (?P<rx_pause>\S+)$"
         )
+
+        # L2_NETWORK or L3_NETWORK
+        p1_5 = re.compile(r"^(?P<network_type>L2_NETWORK|L3_NETWORK)$")
 
         # link Up(config Enable), speed 1000(config 1000), duplex full(config full), config force_up, mtu 1526
         p2 = re.compile(
@@ -1632,9 +1660,11 @@ class ShowPlatformHardwareModuleInterfaceStatus(
         p14 = re.compile(r"^SP Tx Queue: +(?P<tx_queue>\d+).$")
 
         # TX_PAUSE: disabled XOFF_THRES: 1024(plim threshold 99%, Buff-size: 1024),   XON_THRES: 128
+        # TX_PAUSE: disabled XOFF_THRES: 1024(plim threshold 0%, Buff-size: 1024),   XON_THRES: 128, FC mode: 802.3X
         p15 = re.compile(
             r"^TX_PAUSE: +(?P<tx_pause_xoff>\S+) XOFF_THRES: +(?P<xoff_thres>\d+)\(plim threshold "
-            + r"(?P<plim_thres>\d+)%, Buff-size: +(?P<buffer_size>\d+)\), +XON_THRES: +(?P<xon_thres>\d+)$"
+            + r"(?P<plim_thres>\d+)%, Buff-size: +(?P<buffer_size>\d+)\), +XON_THRES: +(?P<xon_thres>\d+)"
+            + r"(, FC mode: +(?P<fc_mode>[\w\.]+))?$"
         )
 
         # LP Queue cos:0 tc:0, config weight: 20, sche Weight: 255
@@ -1676,7 +1706,12 @@ class ShowPlatformHardwareModuleInterfaceStatus(
         # Queue 7, tx buff 0
         p26 = re.compile(r"^Queue 7, tx buff +(?P<q7_tx_buffer>\d+)$")
 
+        # vlan mode tunnel, native vlan 2350
+        # Vlan cfg: tunnel mode, native vlan 2350 (cfg 1)
+        p27 = re.compile(r"[Vv]lan\s*(?:mode|cfg):?\s*(?P<mode>\w+)(?:\s+mode)?\s*,\s*native\s*vlan\s*(?P<vlan>\d+)")
+
         ret_dict = {}
+        network_key = "l3_network"  # default to l3_network
 
         for line in output.splitlines():
             line = line.strip()
@@ -1685,10 +1720,12 @@ class ShowPlatformHardwareModuleInterfaceStatus(
             if m:
                 groups = m.groupdict()
                 dir_dict = ret_dict.setdefault("mac_status", {})
+                speed_str = groups["speed"]
+                speed_val = int(speed_str) if speed_str.isdigit() else speed_str
                 dir_dict.update(
                     {
                         "hw_port": int(groups["hw_port"]),
-                        "speed": int(groups["speed"]),
+                        "speed": speed_val,
                         "duplex": groups["duplex"],
                         "link": groups["link"],
                         "link_en": groups["link_en"],
@@ -1698,11 +1735,22 @@ class ShowPlatformHardwareModuleInterfaceStatus(
                 )
                 continue
 
+            # L2_NETWORK or L3_NETWORK
+            m = p1_5.match(line)
+            if m:
+                groups = m.groupdict()
+                # Set the network key based on detected type
+                if groups["network_type"] == "L2_NETWORK":
+                    network_key = "l2_network"
+                else:
+                    network_key = "l3_network"
+                continue
+
             # link Up(config Enable), speed 1000(config 1000), duplex full(config full), config force_up, mtu 1526
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                dir_dict = ret_dict.setdefault("l3_network", {})
+                dir_dict = ret_dict.setdefault(network_key, {})
                 dir_dict.update(
                     {
                         "link": groups["link"],
@@ -1721,7 +1769,7 @@ class ShowPlatformHardwareModuleInterfaceStatus(
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                dir_dict = ret_dict.setdefault("l3_network", {})
+                dir_dict = ret_dict.setdefault(network_key, {})
                 dir_dict.update(
                     {
                         "rx_pause": groups["rx_pause"],
@@ -1854,18 +1902,20 @@ class ShowPlatformHardwareModuleInterfaceStatus(
                 continue
 
             # TX_PAUSE: disabled XOFF_THRES: 1024(plim threshold 99%, Buff-size: 1024),   XON_THRES: 128
+            # TX_PAUSE: disabled XOFF_THRES: 1024(plim threshold 0%, Buff-size: 1024),   XON_THRES: 128, FC mode: 802.3X
             m = p15.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict.update(
-                    {
-                        "tx_pause_xoff": groups["tx_pause_xoff"],
-                        "xoff_thres": int(groups["xoff_thres"]),
-                        "plim_thres": int(groups["plim_thres"]),
-                        "buffer_size": int(groups["buffer_size"]),
-                        "xon_thres": int(groups["xon_thres"]),
-                    }
-                )
+                update_dict = {
+                    "tx_pause_xoff": groups["tx_pause_xoff"],
+                    "xoff_thres": int(groups["xoff_thres"]),
+                    "plim_thres": int(groups["plim_thres"]),
+                    "buffer_size": int(groups["buffer_size"]),
+                    "xon_thres": int(groups["xon_thres"]),
+                }
+                if groups["fc_mode"]:
+                    update_dict["fc_mode"] = groups["fc_mode"]
+                ret_dict.update(update_dict)
                 continue
 
             # LP Queue cos:0 tc:0, config weight: 20, sche Weight: 255
@@ -1957,6 +2007,18 @@ class ShowPlatformHardwareModuleInterfaceStatus(
             if m:
                 groups = m.groupdict()
                 ret_dict.update({"q7_tx_buffer": int(groups["q7_tx_buffer"])})
+                continue
+
+            # vlan mode tunnel, native vlan 2350
+            m = p27.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict.update(
+                    {
+                        "vlan_mode": groups["mode"],
+                        "native_vlan": int(groups["vlan"]),
+                    }
+                )
                 continue
 
         return ret_dict
@@ -8262,7 +8324,83 @@ class ShowPlatformHardwareQfpActiveClassification(ShowPlatformHardwareQfpActiveC
 
         return parsed_dict
     
-    
+   
+
+class ShowPlatformHardwareQfpActiveClassificationCceInterfaceBriefSchema(MetaParser):
+    """Schema for show platform hardware qfp active classification feature class-group ce_data cce {cce_id} interface {interface} input brief"""
+
+    schema = {
+        'qfp_classification_class_group': str,
+        'class_group': {
+            Optional('simple_ce_key'): {
+                'number_of_fields': int,
+                'cpp_idx': int,
+                Optional('keys'): {
+                    int: {
+                        'name': str,
+                        'key_pos': int,
+                        'width': int,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveClassificationCceInterfaceBrief(ShowPlatformHardwareQfpActiveClassificationCceInterfaceBriefSchema):
+    """Parser for show platform hardware qfp active classification feature class-group ce_data cce {cce_id} interface {interface} input brief"""
+
+    cli_command = 'show platform hardware qfp active classification feature class-group ce_data cce {cce_id} interface {interface} input brief'
+
+    def cli(self, cce_id='', interface='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(cce_id=cce_id, interface=interface))
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # QFP classification class group SimpleCE
+        p1 = re.compile(r'^QFP classification class group\s+(?P<qfp_class_group>\S+)$')
+        
+        # number of fields: 1,     cpp_idx: 0
+        p2 = re.compile(r'^number of fields:\s+(?P<num_fields>\d+),\s+cpp_idx:\s+(?P<cpp_idx>\d+)$')
+        
+        # key(0): mpls_exp        key pos: 0,  width: 4
+        p3 = re.compile(r'^key\((?P<key_index>\d+)\):\s+(?P<key_name>\S+)\s+key pos:\s+(?P<key_pos>\d+),\s+width:\s+(?P<width>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # QFP classification class group SimpleCE
+            match = p1.match(line)
+            if match:
+                parsed_dict['qfp_classification_class_group'] = match.group('qfp_class_group')
+                continue
+
+            # number of fields: 1,     cpp_idx: 0
+            match = p2.match(line)
+            if match:
+                class_group_dict = parsed_dict.setdefault('class_group', {}).setdefault('simple_ce_key', {})
+                class_group_dict['number_of_fields'] = int(match.group(1))
+                class_group_dict['cpp_idx'] = int(match.group(2))
+                continue
+
+            # key(0): mpls_exp        key pos: 0,  width: 4
+            match = p3.match(line)
+            if match:
+                key_index = int(match.group(1))
+                class_group_dict = parsed_dict.setdefault('class_group', {}).setdefault('simple_ce_key', {})
+                keys_dict = class_group_dict.setdefault('keys', {})
+                keys_dict[key_index] = {
+                    'name': match.group(2),
+                    'key_pos': int(match.group(3)),
+                    'width': int(match.group(4)),
+                }
+                continue
+
+        return parsed_dict
+
+
 
 class ShowPlatformHardwareQfpActiveDatapathInfrastructureSwHqfSchema(MetaParser):
     """Schema for show platform hardware qfp active datapath infrastructure sw-hqf"""
@@ -9347,9 +9485,11 @@ class ShowPlatformHardwareQfpActiveInterfaceIfName(ShowPlatformHardwareQfpActive
         p7 = re.compile(r'^Channel: (?P<channel>\d+)$')
         #  1  GigabitEthernet0/0/1
         p8 = re.compile(r'^\s*(\d+)\s+(?P<member>\S+)$')
-        #  QoS (M)
-        p9 = re.compile(r'^\s*(?P<feature>[\w\s]+)\s+\(M\)?$')
-        # Protocol 1 - IPv4
+        #  QoS (M) or  IPV6_OUTPUT_VFR (features can have or not have (M) marker)
+        p9 = re.compile(r'^\s*(?P<feature>[A-Z0-9_]+)\s*(\(M\))?\s*$')
+        # Features Bound to Interface numbered features like: 47 icmp_svr  
+        p9a = re.compile(r'^\s*(?P<number>\d+)\s+(?P<feature>\S+)\s*$')
+        # Protocol 1 - IPv4 or Protocol 0 - ipv4_input
         p10 = re.compile(r'^Protocol (?P<proto_id>\d+) - (?P<proto_name>\S+)$')
         # FIA handle - CP:0x1a2b3c DP:0x4d5e6f
         p11 = re.compile(r'^FIA handle - CP:(?P<cp>0x[0-9a-f]+)\s+DP:(?P<dp>0x[0-9a-f]+)$')
@@ -9437,6 +9577,14 @@ class ShowPlatformHardwareQfpActiveInterfaceIfName(ShowPlatformHardwareQfpActive
                 members.append(m8.group("member"))
                 continue
 
+ 
+            # Features Bound to Interface: numbered features like 47 icmp_svr
+            m8a = p9a.match(line)
+            if m8a:
+                members = interface_dict.setdefault("members", [])
+                members.append(m8a.group("feature"))
+                continue
+
             # Protocol 1 - IPv4
             m9 = p10.match(line)
             if m9:
@@ -9451,7 +9599,7 @@ class ShowPlatformHardwareQfpActiveInterfaceIfName(ShowPlatformHardwareQfpActive
                 proto_dict["dp_handle"] = m10.group("dp")
                 continue
 
-            # QoS (M)
+            # Features under protocols: IPV6_OUTPUT_VFR or QoS (M)
             m11 = p9.match(line)
             if m11 and protocol_name:
                 feature_list = proto_dict.setdefault("features", [])
@@ -12793,13 +12941,20 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
 
         # Regex patterns
         # Session ID:0x00000001 10.1.1.2 10001 20.1.1.2 20001 proto 17 (-global-:0:-global-:0) (0x2:udp)	[sc]
-        p1 = re.compile(r'^Session ID:(?P<session_id>0x[0-9a-fA-F]+)\s+(?P<src_ip>\S+)\s+(?P<src_port>\d+)\s+(?P<dst_ip>\S+)\s+(?P<dst_port>\d+)\s+proto\s+(?P<protocol>\d+)\s+\((?P<vrf_src>[^:]+):(?P<vrf_src_id>\d+):(?P<vrf_dst>[^:]+):(?P<vrf_dst_id>\d+)\)\s+\((?P<protocol_hex>0x[0-9a-fA-F]+):(?P<protocol_name>[^)]+)\)\s+\[(?P<flags>[^\]]+)\]$')
+        # Session ID:0x0000001D 2001:1::1 128 2001:2::2 1428 proto 58 (0:0) (0x3:icmp)	[sd] 1879183652
+        p1 = re.compile(r'^Session ID:(?P<session_id>0x[0-9a-fA-F]+)\s+(?P<src_ip>\S+)\s+(?P<src_port>\d+)\s+(?P<dst_ip>\S+)\s+(?P<dst_port>\d+)\s+proto\s+(?P<protocol>\d+)\s+\((?P<vrf_info>[^)]+)\)\s+\((?P<protocol_hex>0x[0-9a-fA-F]+):(?P<protocol_name>[^)]+)\)\s+\[(?P<flags>[^\]]+)\](?:\s+(?P<extra>\d+))?$')
 
         # pscb : 0x9d00320,  key1_flags: 0x00000000
         p2 = re.compile(r'^\s*pscb\s*:\s*(?P<pscb>0x[0-9a-fA-F]+),\s*key1_flags:\s*(?P<key1_flags>0x[0-9a-fA-F]+)$')
 
         # bucket : 35444, prev 0x0, next 0x0    fw_flags: 0x00000004 0x2041b841,
         p3 = re.compile(r'^\s*bucket\s*:\s*(?P<bucket>\d+),\s*prev\s+(?P<prev>0x[0-9a-fA-F]+),\s*next\s+(?P<next>0x[0-9a-fA-F]+)\s*fw_flags:\s*(?P<fw_flags>.+),$')
+
+        # bucket : 42876, prev 0x0, next 0x0 (alternative format without fw_flags)
+        p3a = re.compile(r'^\s*bucket\s*:\s*(?P<bucket>\d+),\s*prev\s+(?P<prev>0x[0-9a-fA-F]+),\s*next\s+(?P<next>0x[0-9a-fA-F]+)$')
+
+        # fw_flags: 0x00000004 0x2041b861, (standalone fw_flags line)
+        p3b = re.compile(r'^\s*fw_flags:\s*(?P<fw_flags>.+),$')
 
         # VRF1-rsrc-limit
         p4 = re.compile(r'^\s*(?P<vrf_flags>VRF\d+-[^,\s]+(?:\s+[^,\s]+)*)$')
@@ -12813,6 +12968,9 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
         # scb state: active, nxt_timeout: 6000, refcnt: 1 NBAR verdict count 0
         p7 = re.compile(r'^\s*scb state:\s+(?P<scb_state>\S+),\s*nxt_timeout:\s+(?P<nxt_timeout>\d+),\s*refcnt:\s+(?P<refcnt>\d+)\s+NBAR verdict count\s+(?P<nbar_verdict_count>\d+)$')
 
+        # scb state: active, nxt_timeout: 6000, refcnt: 1 (alternative format without NBAR verdict count)
+        p7a = re.compile(r'^\s*scb state:\s+(?P<scb_state>\S+),\s*nxt_timeout:\s+(?P<nxt_timeout>\d+),\s*refcnt:\s+(?P<refcnt>\d+)$')
+
         # ha nak cnt: 0, rg: 0
         p8 = re.compile(r'^\s*ha nak cnt:\s+(?P<ha_nak_cnt>\d+),\s*rg:\s+(?P<rg>\d+)$')
 
@@ -12824,6 +12982,12 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
 
         # cl6 word 1:    0x00000000 proto: 0002: l7 ooo drop 0x010 l7_prot 0x2 - udp
         p11 = re.compile(r'^\s*cl6 word 1:\s+(?P<cl6_word>0x[0-9a-fA-F]+)\s+proto:\s+(?P<proto>\d+):\s+l7 ooo drop\s+(?P<l7_ooo_drop>0x[0-9a-fA-F]+)\s+l7_prot\s+(?P<l7_prot>0x[0-9a-fA-F]+)\s+-\s+(?P<l7_proto>\S+)$')
+
+        # icmp seq:     17721047137 proto: 0003: l7 ooo drop 0x010 l7_prot 0x3 - icmp
+        p11a = re.compile(r'^\s*icmp seq:\s+\d+\s+proto:\s+(?P<proto>\d+):\s+l7 ooo drop\s+(?P<l7_ooo_drop>0x[0-9a-fA-F]+)\s+l7_prot\s+(?P<l7_prot>0x[0-9a-fA-F]+)\s+-\s+(?P<l7_proto>\S+)$')
+
+        # icmp seq:     17721047137 proto: 0003: l7 ooo drop 0x010 (without l7_prot)
+        p11b = re.compile(r'^\s*icmp seq:\s+\d+\s+proto:\s+(?P<proto>\d+):\s+l7 ooo drop\s+(?P<l7_ooo_drop>0x[0-9a-fA-F]+)$')
 
         # root scb: 0x0 act_blk: 0xb2bf400
         p12 = re.compile(r'^\s*root scb:\s+(?P<root_scb>0x[0-9a-fA-F]+)\s+act_blk:\s+(?P<act_blk>0x[0-9a-fA-F]+)$')
@@ -12858,6 +13022,9 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
         # domain_ab1 0x8468d470 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
         p22 = re.compile(r'^\s*domain_ab1\s+(?P<domain_ab1>0x[0-9a-fA-F]+)\s+l4 per filter stats\s+(?P<l4_per_filter_stats>0x[0-9a-fA-F]+)\s+avc class id\s+(?P<avc_class_id>0x[0-9a-fA-F]+)\s+SGT:\s+(?P<sgt>\d+)\s+DGT:\s+(?P<dgt>\d+)$')
 
+        # domain_ab1 0x7045ab10 l4 per filter stats 0x0 avc class id 0 SGT: 0 DGT: 0 (alternative format with integer avc class id)
+        p22a = re.compile(r'^\s*domain_ab1\s+(?P<domain_ab1>0x[0-9a-fA-F]+)\s+l4 per filter stats\s+(?P<l4_per_filter_stats>0x[0-9a-fA-F]+)\s+avc class id\s+(?P<avc_class_id>\d+)\s+SGT:\s+(?P<sgt>\d+)\s+DGT:\s+(?P<dgt>\d+)$')
+
         # NAT handles 0x00000000 0x00000000
         p23 = re.compile(r'^\s*NAT handles\s+(?P<nat_handles>.+)$')
 
@@ -12866,6 +13033,12 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
 
         # icmp_err_time 0 utd_context_id 0, classification epoch scb: 0x1 actblk :0x1 avc class stats 0x0
         p25 = re.compile(r'^\s*icmp_err_time\s+(?P<icmp_err_time>\d+)\s+utd_context_id\s+(?P<utd_context_id>\d+),\s+classification epoch scb:\s+(?P<classification_epoch_scb>0x[0-9a-fA-F]+)\s+actblk\s+:(?P<classification_epoch_actblk>0x[0-9a-fA-F]+)\s+avc class stats\s+(?P<avc_class_stats>0x[0-9a-fA-F]+)$')
+
+        # icmp_err_time 0 utd_context_id 0, action block epoch 0x1 avc class stats 0x0, VPN id src 65535, dst 65535
+        p25a = re.compile(r'^\s*icmp_err_time\s+(?P<icmp_err_time>\d+)\s+utd_context_id\s+(?P<utd_context_id>\d+),\s+action block epoch\s+(?P<classification_epoch_scb>0x[0-9a-fA-F]+)\s+avc class stats\s+(?P<avc_class_stats>0x[0-9a-fA-F]+),\s+VPN id src\s+(?P<vpn_id_src>\d+),\s+dst\s+(?P<vpn_id_dst>\d+)$')
+
+        # icmp_err_time 0 utd_context_id 0, action block epoch 0x1 avc class stats 0x0 (without VPN)
+        p25b = re.compile(r'^\s*icmp_err_time\s+(?P<icmp_err_time>\d+)\s+utd_context_id\s+(?P<utd_context_id>\d+),\s+action block epoch\s+(?P<classification_epoch_scb>0x[0-9a-fA-F]+)\s+avc class stats\s+(?P<avc_class_stats>0x[0-9a-fA-F]+)$')
 
         # VPN id src 65535, dst 65535
         p26 = re.compile(r'^\s*VPN id src\s+(?P<vpn_id_src>\d+),\s+dst\s+(?P<vpn_id_dst>\d+)$')
@@ -12894,11 +13067,24 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
 
             # Parse session header
             # Session ID:0x00000001 10.1.1.2 10001 20.1.1.2 20001 proto 17 (-global-:0:-global-:0) (0x2:udp)	[sc]
+            # Session ID:0x0000001D 2001:1::1 128 2001:2::2 1428 proto 58 (0:0) (0x3:icmp)	[sd] 1879183652
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 session_key = group['session_id']
                 current_session = session_key
+
+                # Parse VRF info - handle both formats
+                vrf_info = group['vrf_info']
+                if ':' in vrf_info and vrf_info.count(':') >= 3:
+                    # Format: -global-:0:-global-:0
+                    vrf_parts = vrf_info.split(':')
+                    vrf_src = vrf_parts[0]
+                    vrf_dst = vrf_parts[2] if len(vrf_parts) > 2 else vrf_parts[0]
+                else:
+                    # Format: 0:0 or similar
+                    vrf_src = vrf_info.split(':')[0] if ':' in vrf_info else vrf_info
+                    vrf_dst = vrf_info.split(':')[1] if ':' in vrf_info else vrf_info
 
                 parsed.setdefault('sessions', {})[session_key] = {
                     'session_id': group['session_id'],
@@ -12907,8 +13093,8 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                     'dst_ip': group['dst_ip'],
                     'dst_port': int(group['dst_port']),
                     'protocol': int(group['protocol']),
-                    'vrf_src': group['vrf_src'],
-                    'vrf_dst': group['vrf_dst'],
+                    'vrf_src': vrf_src,
+                    'vrf_dst': vrf_dst,
                     'protocol_name': group['protocol_name'],
                     'flags': group['flags']
                 }
@@ -12932,6 +13118,22 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                 parsed['sessions'][current_session]['bucket'] = int(m.group('bucket'))
                 parsed['sessions'][current_session]['prev'] = m.group('prev')
                 parsed['sessions'][current_session]['next'] = m.group('next')
+                parsed['sessions'][current_session]['fw_flags'] = m.group('fw_flags').split()
+                continue
+
+            # Parse alternative bucket format without fw_flags
+            # bucket : 42876, prev 0x0, next 0x0
+            m = p3a.match(line)
+            if m:
+                parsed['sessions'][current_session]['bucket'] = int(m.group('bucket'))
+                parsed['sessions'][current_session]['prev'] = m.group('prev')
+                parsed['sessions'][current_session]['next'] = m.group('next')
+                continue
+
+            # Parse standalone fw_flags line
+            # fw_flags: 0x00000004 0x2041b861,
+            m = p3b.match(line)
+            if m:
                 parsed['sessions'][current_session]['fw_flags'] = m.group('fw_flags').split()
                 continue
 
@@ -12965,6 +13167,16 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                 parsed['sessions'][current_session]['nxt_timeout'] = int(m.group('nxt_timeout'))
                 parsed['sessions'][current_session]['refcnt'] = int(m.group('refcnt'))
                 parsed['sessions'][current_session]['nbar_verdict_count'] = int(m.group('nbar_verdict_count'))
+                continue
+
+            # Parse alternative SCB state without NBAR verdict count
+            # scb state: active, nxt_timeout: 6000, refcnt: 1
+            m = p7a.match(line)
+            if m:
+                parsed['sessions'][current_session]['scb_state'] = m.group('scb_state')
+                parsed['sessions'][current_session]['nxt_timeout'] = int(m.group('nxt_timeout'))
+                parsed['sessions'][current_session]['refcnt'] = int(m.group('refcnt'))
+                parsed['sessions'][current_session]['nbar_verdict_count'] = 0  # Default value
                 continue
 
             # Parse HA NAK
@@ -13002,6 +13214,34 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                 parsed['sessions'][current_session]['cl6_word'] = m.group('cl6_word')
                 parsed['sessions'][current_session]['l7_ooo_drop'] = m.group('l7_ooo_drop')
                 parsed['sessions'][current_session]['l7_proto'] = m.group('l7_proto')
+                continue
+
+            # Parse icmp seq (alternative format)
+            # icmp seq:     17721047137 proto: 0003: l7 ooo drop 0x010 l7_prot 0x3 - icmp
+            m = p11a.match(line)
+            if m:
+                # Set cl6_word to a default value for ICMP sessions without explicit cl6_word
+                parsed['sessions'][current_session]['cl6_word'] = '0x00000000'
+                parsed['sessions'][current_session]['l7_ooo_drop'] = m.group('l7_ooo_drop')
+                parsed['sessions'][current_session]['l7_proto'] = m.group('l7_proto')
+                continue
+
+            # Parse icmp seq without l7_prot
+            # icmp seq:     17721047137 proto: 0003: l7 ooo drop 0x010
+            m = p11b.match(line)
+            if m:
+                parsed['sessions'][current_session]['cl6_word'] = '0x00000000'
+                parsed['sessions'][current_session]['l7_ooo_drop'] = m.group('l7_ooo_drop')
+                # Derive l7_proto from protocol number
+                proto = int(m.group('proto'))
+                if proto == 3:
+                    parsed['sessions'][current_session]['l7_proto'] = 'icmp'
+                elif proto == 2:
+                    parsed['sessions'][current_session]['l7_proto'] = 'udp'
+                elif proto == 1:
+                    parsed['sessions'][current_session]['l7_proto'] = 'tcp'
+                else:
+                    parsed['sessions'][current_session]['l7_proto'] = f'proto_{proto}'
                 continue
 
             # Parse root scb
@@ -13100,6 +13340,17 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                 parsed['sessions'][current_session]['dgt'] = int(m.group('dgt'))
                 continue
 
+            # Parse alternative domain_ab1 format with integer avc class id
+            # domain_ab1 0x7045ab10 l4 per filter stats 0x0 avc class id 0 SGT: 0 DGT: 0
+            m = p22a.match(line)
+            if m:
+                parsed['sessions'][current_session]['domain_ab1'] = m.group('domain_ab1')
+                parsed['sessions'][current_session]['l4_per_filter_stats'] = m.group('l4_per_filter_stats')
+                parsed['sessions'][current_session]['avc_class_id'] = m.group('avc_class_id')
+                parsed['sessions'][current_session]['sgt'] = int(m.group('sgt'))
+                parsed['sessions'][current_session]['dgt'] = int(m.group('dgt'))
+                continue
+
             # Parse NAT handles
             # NAT handles 0x00000000 0x00000000
             m = p23.match(line)
@@ -13126,6 +13377,30 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                 parsed['sessions'][current_session]['utd_context_id'] = int(m.group('utd_context_id'))
                 parsed['sessions'][current_session]['classification_epoch_scb'] = m.group('classification_epoch_scb')
                 parsed['sessions'][current_session]['classification_epoch_actblk'] = m.group('classification_epoch_actblk')
+                parsed['sessions'][current_session]['avc_class_stats'] = m.group('avc_class_stats')
+                continue
+
+            # Parse alternative classification with VPN info
+            # icmp_err_time 0 utd_context_id 0, action block epoch 0x1 avc class stats 0x0, VPN id src 65535, dst 65535
+            m = p25a.match(line)
+            if m:
+                parsed['sessions'][current_session]['icmp_err_time'] = int(m.group('icmp_err_time'))
+                parsed['sessions'][current_session]['utd_context_id'] = int(m.group('utd_context_id'))
+                parsed['sessions'][current_session]['classification_epoch_scb'] = m.group('classification_epoch_scb')
+                parsed['sessions'][current_session]['classification_epoch_actblk'] = '0x0'  # Default
+                parsed['sessions'][current_session]['avc_class_stats'] = m.group('avc_class_stats')
+                parsed['sessions'][current_session]['vpn_id_src'] = int(m.group('vpn_id_src'))
+                parsed['sessions'][current_session]['vpn_id_dst'] = int(m.group('vpn_id_dst'))
+                continue
+
+            # Parse alternative classification without VPN info
+            # icmp_err_time 0 utd_context_id 0, action block epoch 0x1 avc class stats 0x0
+            m = p25b.match(line)
+            if m:
+                parsed['sessions'][current_session]['icmp_err_time'] = int(m.group('icmp_err_time'))
+                parsed['sessions'][current_session]['utd_context_id'] = int(m.group('utd_context_id'))
+                parsed['sessions'][current_session]['classification_epoch_scb'] = m.group('classification_epoch_scb')
+                parsed['sessions'][current_session]['classification_epoch_actblk'] = '0x0'  # Default
                 parsed['sessions'][current_session]['avc_class_stats'] = m.group('avc_class_stats')
                 continue
 
@@ -13178,6 +13453,20 @@ class ShowPlatformHardwareQfpActiveFeatureFirewallDatapathScbDetail(ShowPlatform
                     timer_info['flag'] = m.group('flag')
                     timer_info['ticks'] = int(m.group('ticks'))
                 continue
+
+        # Add default values for any missing required fields
+        for session_id, session_data in parsed.get('sessions', {}).items():
+            # Set default values for missing fields
+            if 'zone_pair' not in session_data:
+                session_data['zone_pair'] = 'unknown'
+            if 'zone_class' not in session_data:
+                session_data['zone_class'] = 'unknown'
+            if 'vpn_id_src' not in session_data:
+                session_data['vpn_id_src'] = 65535
+            if 'vpn_id_dst' not in session_data:
+                session_data['vpn_id_dst'] = 65535
+            if 'classification_epoch_actblk' not in session_data:
+                session_data['classification_epoch_actblk'] = '0x0'
 
         return parsed
 
@@ -17753,5 +18042,752 @@ class ShowPlatformHardwareQfpActiveInfrastructurePuntStatisticsTypePerCauseClear
                         'packets_transmitted': int(groups['packets_transmitted'])
                     }
                     continue
+
+        return parsed_dict
+
+# ===============================================================
+# ===============================================================
+class ShowPlatformHardwareCppActiveFeatureNatDatapathTimeSchema(MetaParser):
+    """Schema for show platform hardware cpp active feature nat datapath time"""
+
+    schema = {
+        'timeouts': {
+            'default': int,
+            'tcp': int,
+            'tcp_pptp': int,
+            'udp': int,
+            'finrst': int,
+            'syn': int,
+            'dns': int,
+            'icmp': int,
+            'skinny': int,
+            'icmp_error': int,
+            'esp': int,
+            'rmap_entry': int,
+            'nonpat_bind': int,
+        },
+        'counters': {
+            'sage_bck': int,
+            'bage_bck': int,
+            'sysup': int,
+            'dtl_pend': int,
+        }
+    }
+
+# ===============================================================
+# Parser for 'show platform hardware cpp active feature nat datapath time'
+# ===============================================================
+class ShowPlatformHardwareCppActiveFeatureNatDatapathTime(ShowPlatformHardwareCppActiveFeatureNatDatapathTimeSchema):
+    """Parser for show platform hardware cpp active feature nat datapath time"""
+
+    cli_command = 'show platform hardware cpp active feature nat datapath time'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize return dictionary
+        ret_dict = {}
+
+        # Timeouts: default 86400; TCP 86400; TCP PPTP 86400; UDP 300; FINRST 60; SYN 60; DNS 60; ICMP 60; Skinny 60; ICMP error 60; ESP 300; rmap entry 3600; nonpat bind 1200
+        p1 = re.compile(r'^Timeouts:\s+default\s+(?P<default>\d+);\s+TCP\s+(?P<tcp>\d+);\s+TCP\s+PPTP\s+(?P<tcp_pptp>\d+);\s+UDP\s+(?P<udp>\d+);\s+FINRST\s+(?P<finrst>\d+);\s+SYN\s+(?P<syn>\d+);\s+DNS\s+(?P<dns>\d+);\s+ICMP\s+(?P<icmp>\d+);\s+Skinny\s+(?P<skinny>\d+);\s+ICMP\s+error\s+(?P<icmp_error>\d+);\s+ESP\s+(?P<esp>\d+);\s+rmap\s+entry\s+(?P<rmap_entry>\d+);\s+nonpat\s+bind\s+(?P<nonpat_bind>\d+)$')
+
+        # sage_bck 29514720 bage_bck 933496 sysup 3334980
+        p2 = re.compile(r'^sage_bck\s+(?P<sage_bck>\d+)\s+bage_bck\s+(?P<bage_bck>\d+)\s+sysup\s+(?P<sysup>\d+)$')
+
+        # dtl_pend 0
+        p3 = re.compile(r'^dtl_pend\s+(?P<dtl_pend>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Timeouts: default 86400; TCP 86400; TCP PPTP 86400; UDP 300; FINRST 60; SYN 60; DNS 60; ICMP 60; Skinny 60; ICMP error 60; ESP 300; rmap entry 3600; nonpat bind 1200
+            m = p1.match(line)
+            if m:
+                timeouts = ret_dict.setdefault('timeouts', {})
+                timeouts['default'] = int(m.groupdict()['default'])
+                timeouts['tcp'] = int(m.groupdict()['tcp'])
+                timeouts['tcp_pptp'] = int(m.groupdict()['tcp_pptp'])
+                timeouts['udp'] = int(m.groupdict()['udp'])
+                timeouts['finrst'] = int(m.groupdict()['finrst'])
+                timeouts['syn'] = int(m.groupdict()['syn'])
+                timeouts['dns'] = int(m.groupdict()['dns'])
+                timeouts['icmp'] = int(m.groupdict()['icmp'])
+                timeouts['skinny'] = int(m.groupdict()['skinny'])
+                timeouts['icmp_error'] = int(m.groupdict()['icmp_error'])
+                timeouts['esp'] = int(m.groupdict()['esp'])
+                timeouts['rmap_entry'] = int(m.groupdict()['rmap_entry'])
+                timeouts['nonpat_bind'] = int(m.groupdict()['nonpat_bind'])
+                continue
+
+            # sage_bck 29514720 bage_bck 933496 sysup 3334980
+            m = p2.match(line)
+            if m:
+                counters = ret_dict.setdefault('counters', {})
+                counters['sage_bck'] = int(m.groupdict()['sage_bck'])
+                counters['bage_bck'] = int(m.groupdict()['bage_bck'])
+                counters['sysup'] = int(m.groupdict()['sysup'])
+                continue
+
+            # dtl_pend 0
+            m = p3.match(line)
+            if m:
+                counters = ret_dict.setdefault('counters', {})
+                counters['dtl_pend'] = int(m.groupdict()['dtl_pend'])
+                continue
+
+        return ret_dict
+
+# =======================================================================
+# Schema for 'show platform hardware cpp active feature nat datapath bind'
+# =======================================================================
+class ShowPlatformHardwareCppActiveFeatureNatDatapathBindSchema(MetaParser):
+    """Schema for show platform hardware cpp active feature nat datapath bind"""
+
+    schema = {
+        "bind_longest_chain": int,
+        "avg_non_zero_bucket_len": int,
+        "non_zero_bkts": int
+    }
+
+
+# =======================================================================
+# Parser for 'show platform hardware cpp active feature nat datapath bind'
+# =======================================================================
+class ShowPlatformHardwareCppActiveFeatureNatDatapathBind(ShowPlatformHardwareCppActiveFeatureNatDatapathBindSchema):
+    """Parser for show platform hardware cpp active feature nat datapath bind"""
+
+    cli_command = "show platform hardware cpp active feature nat datapath bind"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Bind longest chain 0 avg non-zero bucket len 0 non-zero bkts 0
+        p1 = re.compile(
+            r"^Bind\s+longest\s+chain\s+(?P<longest_chain>\d+)\s+"
+            r"avg\s+non-zero\s+bucket\s+len\s+(?P<avg_len>\d+)\s+"
+            r"non-zero\s+bkts\s+(?P<non_zero_bkts>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Bind longest chain 0 avg non-zero bucket len 0 non-zero bkts 0
+            m = p1.match(line)
+            if m:
+                parsed_dict['bind_longest_chain'] = int(m.group('longest_chain'))
+                parsed_dict['avg_non_zero_bucket_len'] = int(m.group('avg_len'))
+                parsed_dict['non_zero_bkts'] = int(m.group('non_zero_bkts'))
+                break
+
+        return parsed_dict
+
+class ShowPlatformHardwareCppActiveFeatureNatDatapathPoolSchema(MetaParser):
+    """Schema for show platform hardware cpp active feature nat datapath pool"""
+    schema = {
+        'pools': {
+            Any(): {  # pool_id as key
+                'pool_id': int,
+                'type': int,
+                'addroute': int,
+                'mask': str,
+                'allocated': int,
+                'misses': int,
+                'rotary_idx': str,
+                'ahash_sz': int,
+                'size': int,
+                'max_pat_hash_size': int,
+                'next': str,
+                'hash_index': str,
+                'hilo_ports': str,
+                'pool_mem': str,
+                'flags': str,
+                'pool_name': str,
+                'pat_wl': int,
+                'no_ports_wl': int,
+                'num_maps': int,
+                'num_overload_maps': int,
+                'vrf': str,
+                'port_used': {
+                    'tcp': int,
+                    'udp': int
+                },
+                'conf_block_info': {
+                    'start': str,
+                    'end': str,
+                    'flags': str,
+                    'next': str,
+                    'prev': str
+                },
+                Optional('tcp_pat_block_info'): {
+                    'start': str,
+                    'end': str,
+                    'flags': str,
+                    'next': str,
+                    'prev': str
+                },
+                Optional('udp_pat_block_info'): {
+                    'start': str,
+                    'end': str,
+                    'flags': str,
+                    'next': str,
+                    'prev': str
+                },
+                Optional('icmp_pat_block_info'): {
+                    'start': str,
+                    'end': str,
+                    'flags': str,
+                    'next': str,
+                    'prev': str
+                },
+                Optional('gre_pat_block_info'): {
+                    'start': str,
+                    'end': str,
+                    'flags': str,
+                    'next': str,
+                    'prev': str
+                },
+                'alloced_addr_info': {
+                    'addr': str,
+                    'secondary_addr': str,
+                    'refcnt': int,
+                    'flags': str,
+                    'vrfid': int,
+                    'next': str,
+                    'pat_index': int
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareCppActiveFeatureNatDatapathPool(ShowPlatformHardwareCppActiveFeatureNatDatapathPoolSchema):
+    """Parser for show platform hardware cpp active feature nat datapath pool"""
+    cli_command = 'show platform hardware cpp active feature nat datapath pool'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # pool_id 6 type 1 addroute 0 mask 0xffffff00 allocated 1 misses 0 rotary idx 0x0 ahash sz 24 size 24  max_pat_hash_size 1 next 0x0 hash_index 0x36, hilo ports 0x0  pool mem 0x36cb5c30 flags 0x0 pool_name: 120-pool pat_wl 0 no_ports_wl 0 num_maps 1 num_overload_maps 1 vrf 0x0 port_used tcp 0 udp 0
+        p1 = re.compile(r'^pool_id\s+(?P<pool_id>\d+)\s+type\s+(?P<type>\d+)\s+addroute\s+(?P<addroute>\d+)\s+'
+                        r'mask\s+(?P<mask>0x[0-9a-fA-F]+)\s+allocated\s+(?P<allocated>\d+)\s+misses\s+(?P<misses>\d+)\s+'
+                        r'rotary\s+idx\s+(?P<rotary_idx>0x[0-9a-fA-F]+)\s+ahash\s+sz\s+(?P<ahash_sz>\d+)\s+size\s+(?P<size>\d+)\s+'
+                        r'max_pat_hash_size\s+(?P<max_pat_hash_size>\d+)\s+next\s+(?P<next>0x[0-9a-fA-F]+)\s+'
+                        r'hash_index\s+(?P<hash_index>0x[0-9a-fA-F]+),\s+hilo\s+ports\s+(?P<hilo_ports>0x[0-9a-fA-F]+)\s+'
+                        r'pool\s+mem\s+(?P<pool_mem>0x[0-9a-fA-F]+)\s+flags\s+(?P<flags>0x[0-9a-fA-F]+)\s+pool_name:\s+(?P<pool_name>[\w-]+)\s+'
+                        r'pat_wl\s+(?P<pat_wl>\d+)\s+no_ports_wl\s+(?P<no_ports_wl>\d+)\s+num_maps\s+(?P<num_maps>\d+)\s+'
+                        r'num_overload_maps\s+(?P<num_overload_maps>\d+)\s+vrf\s+(?P<vrf>0x[0-9a-fA-F]+)\s+'
+                        r'port_used\s+tcp\s+(?P<tcp>\d+)\s+udp\s+(?P<udp>\d+)$')
+
+        # Conf block info
+        p2 = re.compile(r'^Conf\s+block\s+info$')
+
+        # TCP PAT block info
+        p3 = re.compile(r'^\s*TCP\s+PAT\s+block\s+info$')
+
+        # UDP PAT block info
+        p4 = re.compile(r'^\s*UDP\s+PAT\s+block\s+info$')
+
+        # ICMP PAT block info
+        p5 = re.compile(r'^\s*ICMP\s+PAT\s+block\s+info$')
+
+        # GRE PAT block info
+        p6 = re.compile(r'^\s*GRE\s+PAT\s+block\s+info$')
+
+        # start 120.100.1.1 end 120.100.1.24 flags 0x0 next 0x0 prev 0x0
+        p7 = re.compile(r'^start\s+(?P<start>[\d\.]+)\s+end\s+(?P<end>[\d\.]+)\s+flags\s+(?P<flags>0x[0-9a-fA-F]+)\s+'
+                        r'next\s+(?P<next>0x[0-9a-fA-F]+)\s+prev\s+(?P<prev>0x[0-9a-fA-F]+)$')
+
+        # Alloced addr info
+        p8 = re.compile(r'^Alloced\s+addr\s+info$')
+
+        # addr 120.100.1.1 0.0.0.0 refcnt 5 flags 0x1 vrfid 0 next 0x0 pat_index 0
+        p9 = re.compile(r'^addr\s+(?P<addr>[\d\.]+)\s+(?P<secondary_addr>[\d\.]+)\s+refcnt\s+(?P<refcnt>\d+)\s+'
+                        r'flags\s+(?P<flags>0x[0-9a-fA-F]+)\s+vrfid\s+(?P<vrfid>\d+)\s+next\s+(?P<next>0x[0-9a-fA-F]+)\s+'
+                        r'pat_index\s+(?P<pat_index>\d+)$')
+
+        current_pool_id = None
+        current_block_type = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # pool_id 6 type 1 addroute 0 mask 0xffffff00 allocated 1 misses 0 rotary idx 0x0 ahash sz 24 size 24  max_pat_hash_size 1 next 0x0 hash_index 0x36, hilo ports 0x0  pool mem 0x36cb5c30 flags 0x0 pool_name: 120-pool pat_wl 0 no_ports_wl 0 num_maps 1 num_overload_maps 1 vrf 0x0 port_used tcp 0 udp 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                pool_id = group['pool_id']
+                current_pool_id = pool_id
+
+                # Initialize pools dictionary if not exists
+                if 'pools' not in ret_dict:
+                    ret_dict['pools'] = {}
+
+                pool_info = ret_dict['pools'].setdefault(pool_id, {})
+
+                # Integer fields - values that should be converted to integers
+                integer_fields = [
+                    'pool_id', 'type', 'addroute', 'allocated', 'misses', 'ahash_sz', 
+                    'size', 'max_pat_hash_size', 'pat_wl', 'no_ports_wl', 'num_maps', 
+                    'num_overload_maps', 'tcp', 'udp'
+                ]
+
+                # String fields - values that should remain as strings
+                string_fields = [
+                    'mask', 'rotary_idx', 'hash_index', 'hilo_ports', 'pool_mem', 
+                    'flags', 'pool_name', 'vrf', 'next'
+                ]
+
+                # Add integer fields to pool_info
+                for field in integer_fields:
+                    if field in group and field not in ['tcp', 'udp']:  # tcp/udp handled separately
+                        pool_info[field] = int(group[field])
+
+                # Add string fields to pool_info
+                for field in string_fields:
+                    if field in group:
+                        pool_info[field] = group[field]
+
+                # Add tcp and udp as part of port_used structure
+                pool_info['port_used'] = {
+                    'tcp': int(group['tcp']),
+                    'udp': int(group['udp'])
+                }
+                continue
+
+            # Conf block info
+            m = p2.match(line)
+            if m:
+                current_block_type = 'conf_block_info'
+                continue
+
+            # TCP PAT block info
+            m = p3.match(line)
+            if m:
+                current_block_type = 'tcp_pat_block_info'
+                continue
+
+            # UDP PAT block info
+            m = p4.match(line)
+            if m:
+                current_block_type = 'udp_pat_block_info'
+                continue
+
+            # ICMP PAT block info
+            m = p5.match(line)
+            if m:
+                current_block_type = 'icmp_pat_block_info'
+                continue
+
+            # GRE PAT block info
+            m = p6.match(line)
+            if m:
+                current_block_type = 'gre_pat_block_info'
+                continue
+
+            # start 120.100.1.1 end 120.100.1.24 flags 0x0 next 0x0 prev 0x0
+            m = p7.match(line)
+            if m and current_pool_id and current_block_type:
+                group = m.groupdict()
+                if 'pools' in ret_dict and current_pool_id in ret_dict['pools']:
+                    ret_dict['pools'][current_pool_id][current_block_type] = {
+                        'start': group['start'],
+                        'end': group['end'],
+                        'flags': group['flags'],
+                        'next': group['next'],
+                        'prev': group['prev']
+                    }
+                continue
+
+            # Alloced addr info
+            m = p8.match(line)
+            if m:
+                current_block_type = 'alloced_addr_info'
+                continue
+
+            # addr 120.100.1.1 0.0.0.0 refcnt 5 flags 0x1 vrfid 0 next 0x0 pat_index 0
+            m = p9.match(line)
+            if m and current_pool_id:
+                group = m.groupdict()
+                if 'pools' in ret_dict and current_pool_id in ret_dict['pools']:
+                    ret_dict['pools'][current_pool_id]['alloced_addr_info'] = {
+                        'addr': group['addr'],
+                        'secondary_addr': group['secondary_addr'],
+                        'refcnt': int(group['refcnt']),
+                        'flags': group['flags'],
+                        'vrfid': int(group['vrfid']),
+                        'next': group['next'],
+                        'pat_index': int(group['pat_index'])
+                    }
+                continue
+
+        return ret_dict
+
+# Schema for 'show platform hardware cpp active feature nat datapath map'
+class ShowPlatformHardwareCppActiveFeatureNatDatapathMapSchema(MetaParser):
+    """Schema for show platform hardware cpp active feature nat datapath map"""
+
+    schema = {
+        'interface_map_table': {
+            'start': str,
+            'end': str,
+        },
+        'edm_maps': int,
+        'mappings': {
+            Any(): {
+                'mapping_id': int,
+                'pool_id': int,
+                'if_handle': str,
+                'match_type': int,
+                'source_type': int,
+                'domain': int,
+                'proto': int,
+                'local_ip': str,
+                'local_port': int,
+                'global_ip': str,
+                'global_port': int,
+                'flags': str,
+                'refcount': int,
+                'cp_mapping_id': int,
+                'next': str,
+                'hashidx': int,
+                'vrfid': int,
+                'vrf_tableid': str,
+                'rg': int,
+                'pap_enabled': int,
+                'egress_ifh': str,
+            }
+        }
+    }
+
+
+# Parser for 'show platform hardware cpp active feature nat datapath map'
+class ShowPlatformHardwareCppActiveFeatureNatDatapathMap(ShowPlatformHardwareCppActiveFeatureNatDatapathMapSchema):
+    """Parser for show platform hardware cpp active feature nat datapath map"""
+
+    cli_command = "show platform hardware cpp active feature nat datapath map"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the dictionary to store parsed data
+        ret_dict = {}
+
+        # I/f Map Table
+        p1 = re.compile(r'^I/f Map Table$')
+
+        # I/f Map Table End
+        p2 = re.compile(r'^I/f Map Table End$')
+
+        # edm maps 0
+        p3 = re.compile(r'^edm maps (?P<count>\d+)$')
+
+        # mapping id 1 pool_id 5 if_handle 0x0 match_type 0 source_type 0 domain 0 proto 0 Local IP 0.0.0.0, Local Port 0 Global IP 0.0.0.0 Global Port 0 Flags 0x100 refcount 3 cp_mapping_id 5 next 0x0 hashidx 50 vrfid 0 vrf_tableid 0x0 rg 0 pap_enabled 0 egress_ifh 0x0
+        p4 = re.compile(r'^mapping id (?P<mapping_id>\d+) pool_id (?P<pool_id>\d+) if_handle (?P<if_handle>\S+) match_type (?P<match_type>\d+) source_type (?P<source_type>\d+) domain (?P<domain>\d+) proto (?P<proto>\d+) Local IP (?P<local_ip>\S+), Local Port (?P<local_port>\d+) Global IP (?P<global_ip>\S+) Global Port (?P<global_port>\d+) Flags (?P<flags>\S+) refcount (?P<refcount>\d+) cp_mapping_id (?P<cp_mapping_id>\d+) next (?P<next>\S+) hashidx (?P<hashidx>\d+) vrfid (?P<vrfid>\d+) vrf_tableid (?P<vrf_tableid>\S+) rg (?P<rg>\d+) pap_enabled (?P<pap_enabled>\d+) egress_ifh (?P<egress_ifh>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # I/f Map Table
+            m = p1.match(line)
+            if m:
+                ret_dict.setdefault('interface_map_table', {})['start'] = 'I/f Map Table'
+                continue
+
+            # I/f Map Table End
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault('interface_map_table', {})['end'] = 'I/f Map Table End'
+                continue
+
+            # edm maps 0
+            m = p3.match(line)
+            if m:
+                ret_dict['edm_maps'] = int(m.groupdict()['count'])
+                continue
+
+            # mapping id 1 pool_id 5 if_handle 0x0 match_type 0 source_type 0 domain 0 proto 0 Local IP 0.0.0.0, Local Port 0 Global IP 0.0.0.0 Global Port 0 Flags 0x100 refcount 3 cp_mapping_id 5 next 0x0 hashidx 50 vrfid 0 vrf_tableid 0x0 rg 0 pap_enabled 0 egress_ifh 0x0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                mapping_id = groups['mapping_id']
+
+                mappings_dict = ret_dict.setdefault('mappings', {})
+                mapping_dict = mappings_dict.setdefault(mapping_id, {})
+
+                mapping_dict['mapping_id'] = int(groups['mapping_id'])
+                mapping_dict['pool_id'] = int(groups['pool_id'])
+                mapping_dict['if_handle'] = groups['if_handle']
+                mapping_dict['match_type'] = int(groups['match_type'])
+                mapping_dict['source_type'] = int(groups['source_type'])
+                mapping_dict['domain'] = int(groups['domain'])
+                mapping_dict['proto'] = int(groups['proto'])
+                mapping_dict['local_ip'] = groups['local_ip']
+                mapping_dict['local_port'] = int(groups['local_port'])
+                mapping_dict['global_ip'] = groups['global_ip']
+                mapping_dict['global_port'] = int(groups['global_port'])
+                mapping_dict['flags'] = groups['flags']
+                mapping_dict['refcount'] = int(groups['refcount'])
+                mapping_dict['cp_mapping_id'] = int(groups['cp_mapping_id'])
+                mapping_dict['next'] = groups['next']
+                mapping_dict['hashidx'] = int(groups['hashidx'])
+                mapping_dict['vrfid'] = int(groups['vrfid'])
+                mapping_dict['vrf_tableid'] = groups['vrf_tableid']
+                mapping_dict['rg'] = int(groups['rg'])
+                mapping_dict['pap_enabled'] = int(groups['pap_enabled'])
+                mapping_dict['egress_ifh'] = groups['egress_ifh']
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareCppActiveFeatureNatDatapathStatsSchema(MetaParser):
+    """Schema for show platform hardware cpp active feature nat datapath stats"""
+
+    schema = {
+        'nat_stats': {
+            'non_extended': int,
+            'entry_timeouts': int,
+            'statics': int,
+            'static_net': int,
+            'hits': int,
+            'flowdb_hits': int,
+            'misses': int,
+            'nat_rx_pkts': int,
+            'nat_tx_pkts': int,
+            'nat_unmarked_pkts': int,
+            'nat_stick_rx_pkts': int,
+            'nat_stick_i2o_pkts': int,
+            'nat_stick_o2i_pkts': int,
+            'nat_res_port_in2out': int,
+            'nat_res_port_out2in': int,
+            'non_natted_in2out': int,
+            'nat_bypass': int,
+            'non_natted_out2in': int,
+            'ipv4_nat_stick_forus_hits_pkts': int,
+            'ipv4_nat_stick_hit_sb': int,
+            'ipv4_nat_stick_ha_ar_pkts': int,
+            'ipv4_nat_stick_ha_tcp_fin': int,
+            'ipv4_nat_stick_failed_ha_pkts': int,
+            'ipv4_nat_alg_bind_pkts': int,
+            'cgn_dest_log_timeouts': int,
+            'ipv4_nat_alg_sd_not_found': int,
+            'ipv4_nat_alg_sd_tail_not_found': int,
+        },
+        'proxy_stats': {
+            'ipc_retry_fail': int,
+            'cfg_rcvd': int,
+            'cfg_rsp': int,
+        },
+        'session_summary': {
+            'total_sessions': int,
+            'udp_sessions': int,
+            'tcp_sessions': int,
+            'icmp_sessions': int,
+        }
+    }
+
+
+class ShowPlatformHardwareCppActiveFeatureNatDatapathStats(ShowPlatformHardwareCppActiveFeatureNatDatapathStatsSchema):
+    """Parser for show platform hardware cpp active feature nat datapath stats"""
+
+    cli_command = 'show platform hardware cpp active feature nat datapath stats'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # Regular expressions for parsing the output
+        # non_extended 0 entry_timeouts 0 statics 0 static net 0 hits 0 flowdb_hits 0 misses 0
+        p1 = re.compile(r'^non_extended (?P<non_extended>\d+) entry_timeouts (?P<entry_timeouts>\d+) statics (?P<statics>\d+) static net (?P<static_net>\d+) hits (?P<hits>\d+) flowdb_hits (?P<flowdb_hits>\d+) misses (?P<misses>\d+)$')
+
+        # nat_rx_pkts 306 nat_tx_pkts 324 nat_unmarked_pkts 0
+        p2 = re.compile(r'^nat_rx_pkts (?P<nat_rx_pkts>\d+) nat_tx_pkts (?P<nat_tx_pkts>\d+) nat_unmarked_pkts (?P<nat_unmarked_pkts>\d+)$')
+
+        # nat_stick_rx_pkts 0 nat_stick_i2o_pkts 0 nat_stick_o2i_pkts 0
+        p3 = re.compile(r'^nat_stick_rx_pkts (?P<nat_stick_rx_pkts>\d+) nat_stick_i2o_pkts (?P<nat_stick_i2o_pkts>\d+) nat_stick_o2i_pkts (?P<nat_stick_o2i_pkts>\d+)$')
+
+        # nat_res_port_in2out 0 nat_res_port_out2in 0
+        p4 = re.compile(r'^nat_res_port_in2out (?P<nat_res_port_in2out>\d+) nat_res_port_out2in (?P<nat_res_port_out2in>\d+)$')
+
+        # non_natted_in2out 0 nat_bypass 0 non_natted_out2in 0
+        p5 = re.compile(r'^non_natted_in2out (?P<non_natted_in2out>\d+) nat_bypass (?P<nat_bypass>\d+) non_natted_out2in (?P<non_natted_out2in>\d+)$')
+
+        # ipv4_nat_stick_forus_hits_pkts 0 ipv4_nat_stick_hit_sb 0
+        p6 = re.compile(r'^ipv4_nat_stick_forus_hits_pkts (?P<ipv4_nat_stick_forus_hits_pkts>\d+) ipv4_nat_stick_hit_sb (?P<ipv4_nat_stick_hit_sb>\d+)$')
+
+        # ipv4_nat_stick_ha_ar_pkts 0 ipv4_nat_stick_ha_tcp_fin 0 ipv4_nat_stick_failed_ha_pkts 0
+        p7 = re.compile(r'^ipv4_nat_stick_ha_ar_pkts (?P<ipv4_nat_stick_ha_ar_pkts>\d+) ipv4_nat_stick_ha_tcp_fin (?P<ipv4_nat_stick_ha_tcp_fin>\d+) ipv4_nat_stick_failed_ha_pkts (?P<ipv4_nat_stick_failed_ha_pkts>\d+)$')
+
+        # ipv4_nat_alg_bind_pkts 0  cgn_dest_log_timeouts 0
+        p8 = re.compile(r'^ipv4_nat_alg_bind_pkts (?P<ipv4_nat_alg_bind_pkts>\d+)\s+cgn_dest_log_timeouts (?P<cgn_dest_log_timeouts>\d+)$')
+
+        # ipv4_nat_alg_sd_not_found 0 ipv4_nat_alg_sd_tail_not_found 0
+        p9 = re.compile(r'^ipv4_nat_alg_sd_not_found (?P<ipv4_nat_alg_sd_not_found>\d+) ipv4_nat_alg_sd_tail_not_found (?P<ipv4_nat_alg_sd_tail_not_found>\d+)$')
+
+        # ipc_retry_fail 0 cfg_rcvd 52 cfg_rsp 56
+        p10 = re.compile(r'^\s*ipc_retry_fail (?P<ipc_retry_fail>\d+) cfg_rcvd (?P<cfg_rcvd>\d+) cfg_rsp (?P<cfg_rsp>\d+)$')
+
+        # Number of sess 8 udp 6 tcp 1 icmp 1
+        p11 = re.compile(r'^Number of sess (?P<total_sessions>\d+) udp (?P<udp_sessions>\d+) tcp (?P<tcp_sessions>\d+) icmp (?P<icmp_sessions>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines and header lines
+            if not line or line.startswith('Proxy stats:'):
+                continue
+
+            # non_extended 0 entry_timeouts 0 statics 0 static net 0 hits 0 flowdb_hits 0 misses 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict.setdefault('nat_stats', {})
+                parsed_dict['nat_stats'].update({
+                    'non_extended': int(group['non_extended']),
+                    'entry_timeouts': int(group['entry_timeouts']),
+                    'statics': int(group['statics']),
+                    'static_net': int(group['static_net']),
+                    'hits': int(group['hits']),
+                    'flowdb_hits': int(group['flowdb_hits']),
+                    'misses': int(group['misses'])
+                })
+                continue
+
+            # nat_rx_pkts 306 nat_tx_pkts 324 nat_unmarked_pkts 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'nat_rx_pkts': int(group['nat_rx_pkts']),
+                    'nat_tx_pkts': int(group['nat_tx_pkts']),
+                    'nat_unmarked_pkts': int(group['nat_unmarked_pkts'])
+                })
+                continue
+
+            # nat_stick_rx_pkts 0 nat_stick_i2o_pkts 0 nat_stick_o2i_pkts 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'nat_stick_rx_pkts': int(group['nat_stick_rx_pkts']),
+                    'nat_stick_i2o_pkts': int(group['nat_stick_i2o_pkts']),
+                    'nat_stick_o2i_pkts': int(group['nat_stick_o2i_pkts'])
+                })
+                continue
+
+            # nat_res_port_in2out 0 nat_res_port_out2in 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'nat_res_port_in2out': int(group['nat_res_port_in2out']),
+                    'nat_res_port_out2in': int(group['nat_res_port_out2in'])
+                })
+                continue
+
+            # non_natted_in2out 0 nat_bypass 0 non_natted_out2in 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'non_natted_in2out': int(group['non_natted_in2out']),
+                    'nat_bypass': int(group['nat_bypass']),
+                    'non_natted_out2in': int(group['non_natted_out2in'])
+                })
+                continue
+
+            # ipv4_nat_stick_forus_hits_pkts 0 ipv4_nat_stick_hit_sb 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'ipv4_nat_stick_forus_hits_pkts': int(group['ipv4_nat_stick_forus_hits_pkts']),
+                    'ipv4_nat_stick_hit_sb': int(group['ipv4_nat_stick_hit_sb'])
+                })
+                continue
+
+            # ipv4_nat_stick_ha_ar_pkts 0 ipv4_nat_stick_ha_tcp_fin 0 ipv4_nat_stick_failed_ha_pkts 0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'ipv4_nat_stick_ha_ar_pkts': int(group['ipv4_nat_stick_ha_ar_pkts']),
+                    'ipv4_nat_stick_ha_tcp_fin': int(group['ipv4_nat_stick_ha_tcp_fin']),
+                    'ipv4_nat_stick_failed_ha_pkts': int(group['ipv4_nat_stick_failed_ha_pkts'])
+                })
+                continue
+
+            # ipv4_nat_alg_bind_pkts 0  cgn_dest_log_timeouts 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'ipv4_nat_alg_bind_pkts': int(group['ipv4_nat_alg_bind_pkts']),
+                    'cgn_dest_log_timeouts': int(group['cgn_dest_log_timeouts'])
+                })
+                continue
+
+            # ipv4_nat_alg_sd_not_found 0 ipv4_nat_alg_sd_tail_not_found 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if 'nat_stats' not in parsed_dict:
+                    parsed_dict['nat_stats'] = {}
+                parsed_dict['nat_stats'].update({
+                    'ipv4_nat_alg_sd_not_found': int(group['ipv4_nat_alg_sd_not_found']),
+                    'ipv4_nat_alg_sd_tail_not_found': int(group['ipv4_nat_alg_sd_tail_not_found'])
+                })
+                continue
+
+            # ipc_retry_fail 0 cfg_rcvd 52 cfg_rsp 56
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['proxy_stats'] = {
+                    'ipc_retry_fail': int(group['ipc_retry_fail']),
+                    'cfg_rcvd': int(group['cfg_rcvd']),
+                    'cfg_rsp': int(group['cfg_rsp'])
+                }
+                continue
+
+            # Number of sess 8 udp 6 tcp 1 icmp 1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                parsed_dict['session_summary'] = {
+                    'total_sessions': int(group['total_sessions']),
+                    'udp_sessions': int(group['udp_sessions']),
+                    'tcp_sessions': int(group['tcp_sessions']),
+                    'icmp_sessions': int(group['icmp_sessions'])
+                }
+                continue
 
         return parsed_dict

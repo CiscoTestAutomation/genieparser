@@ -1,0 +1,6 @@
+  Peer-No    Local-IP:Port        Peer-IP:Port         Local-WAN# Peer-WAN#  Session-Type    State      Interface    Initiator
+  ----------------------------------------------------------------------------------------------------------------------------
+  2103       10.10.10.2:4500        10.10.10.3:4500        0         0       Private       Connectin       Vi1          Yes
+  2103       10.10.10.2:4500        11.11.11.3:4500        0         1       Private       Connectin       Vi2          Yes
+  2103       11.11.11.2:4500        10.10.10.3:4500        1         0       Private       Connectin       Vi3          Yes
+  2103       11.11.11.2:4500        11.11.11.3:4500        1         1       Private       Connectin       Vi4          Yes

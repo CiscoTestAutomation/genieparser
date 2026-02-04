@@ -2731,6 +2731,7 @@ class ShowCtsSxpConnectionsSchema(MetaParser):
         'default_key_chain_name': str,
         'default_pwd': str,
         'default_source_ip': str,
+        Optional('default_source_ipv6'): str,
         'export_traverse_limit': str,
         'highest_version': int,
         'import_traverse_limit': str,
@@ -2748,7 +2749,8 @@ class ShowCtsSxpConnectionsSchema(MetaParser):
             'conn_version': int,
             'duration': str,
             'local_mode': str,
-            'peer_ip': str,
+            Optional('peer_ip'): str,
+            Optional('peer_ipv6'): str,
             'source_ip': str,
             'tcp_conn_fd': str,
             'tcp_conn_pwd': str
@@ -2774,7 +2776,6 @@ class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
 
         # initial return dictionary
         result_dict = {}
-
         #  SXP              : Enabled
         p1 = re.compile(r"^SXP\s+:\s+(?P<sxp_status>(Disabled|Enabled))$")
         #  Highest Version Supported: 4
@@ -2787,6 +2788,8 @@ class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
         p5 = re.compile(r"^Default\s+Key-Chain\s+Name:\s+(?P<default_key_chain_name>(Not\s+Applicable|\S+))$")
         #  Default Source IP: 192.168.2.24
         p6 = re.compile(r"^Default\s+Source\s+IP:\s+(?P<default_source_ip>(Not\s+Set|[\d+\.]+))$")
+        # Default Source IPv6: Not Set
+        p6_1 = re.compile(r"^Default\s+Source\s+IPv6:\s+(?P<default_source_ipv6>(Not\s+Set|[\d+\.]+))$")
         # Connection retry open period: 120 secs
         p7 = re.compile(r"^Connection\s+retry\s+open\s+period:\s+(?P<retry_period>\d+)\s+secs$")
         # Reconcile period: 120 secs
@@ -2799,8 +2802,11 @@ class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
         p11 = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+import:\s+(?P<import_traverse_limit>(Not\s+Set|\S+))$")
         # Peer IP          : 10.1.1.2
         p12 = re.compile(r"^Peer\s+IP\s+:\s+(?P<peer_ip>[\d\.]+)$")
+        # Peer IP : 1133:1:1::2
+        p12_1 = re.compile(r'^Peer IP\s*:\s*(?P<peer_ipv6>[\da-fA-F:.]+)$')
         # Source IP        : 10.1.1.1
-        p13 = re.compile(r"^Source\s+IP\s+:\s+(?P<source_ip>[\d\.]+)$")
+        # Source IP : 1133:1:1::1
+        p13 = re.compile(r"^Source\s+IP\s*:\s*(?P<source_ip>[\d\.]+|[\da-fA-F:]+)$")
         # Conn status      : On
         p14 = re.compile(r"^Conn\s+status\s+:\s+(?P<conn_status>.*$)$")
         # Conn version     : 5
@@ -2875,7 +2881,14 @@ class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
                 group = m6.groupdict()
                 result_dict.update(group)
                 continue
-
+            
+            # Default Source IPv6: Not Set
+            m6_1 = p6_1.match(line)
+            if m6_1:
+                group = m6_1.groupdict()
+                result_dict.update(group)
+                continue
+            
             # Connection retry open period: 120 secs
             m7 = p7.match(line)
             if m7:
@@ -2914,19 +2927,28 @@ class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
                 continue
 
             # Peer IP          : 10.1.1.2
-            m12 = p12.match(line)
+            # Peer IP : 1133:1:1::2
+            m12 = p12.match(line) or p12_1.match(line)
             if m12:
                 group = m12.groupdict()
-                peer_dict = result_dict.setdefault(group['peer_ip'], group)
+                peer_ip = group.get('peer_ip') or group.get('peer_ipv6')
+                peer_dict = result_dict.setdefault(peer_ip, {})
+                if ':' in peer_ip:
+                    peer_dict['peer_ipv6'] = peer_ip
+                else:
+                    peer_dict['peer_ip'] = peer_ip
                 continue
-
+            
             # Source IP        : 10.1.1.1
+            # Source IP : 1133:1:1::1
             m13 = p13.match(line)
-            if m13:
+            if m13 and peer_dict is not None:
                 group = m13.groupdict()
-                peer_dict.update(group)
+                peer_dict['source_ip'] = group['source_ip']
                 continue
 
+            #Source IP : 1133:1:1::1
+            
             # Conn status      : On
             # Conn status      : On (Speaker) :: On (Listener)
             m14 = p14.match(line)
@@ -3022,8 +3044,8 @@ class ShowCtsSxpConnections(ShowCtsSxpConnectionsSchema):
                 peer_dict.update(group)
                 continue
 
-        return result_dict
-
+        return result_dict  
+        
 
 class ShowCtsSxpSgtMapBriefSchema(MetaParser):
     """
@@ -4475,3 +4497,84 @@ class ShowCtsSxpSgtMap(ShowCtsSxpSgtMapSchema):
             ret_dict['ip_sgt_mappings'] = ip_sgt_mappings
 
         return ret_dict
+
+
+class ShowCtsSxpExportImportGroupDetailedSchema(MetaParser):
+    """Schema for show cts sxp export-import-group {role} detailed"""
+    
+    schema = {
+        "export_import_group_name": str,
+        Optional("export_list_name"): str,
+        Optional("import_list_name"): str,
+        Optional("vrf"): str,
+        Optional("peers"): ListOf(str)
+    }
+
+class ShowCtsSxpExportImportGroupDetailed(ShowCtsSxpExportImportGroupDetailedSchema):
+    """Parser for show cts sxp export-import-group {role} detailed"""
+    
+    cli_command = "show cts sxp export-import-group {role} detailed"
+    
+    def cli(self, role='', output=None):
+        if output is None:
+            cmd = self.cli_command.format(role=role)
+            output = self.device.execute(cmd)
+        
+        ret_dict = {}
+        peers = []
+
+        # Export-import-group line
+        p0 = re.compile(r"Export-import-group:\s*(?P<export_import_group_name>\S+)")
+        
+        # Export-list name line
+        p1 = re.compile(r"Export-list name:\s*(?P<export_list_name>\S+)")
+        
+        # Import-list name line
+        p2 = re.compile(r"Import-list name:\s*(?P<import_list_name>\S+)")
+        
+        # vrf line
+        p3 = re.compile(r"vrf\s+(?P<vrf>\S+)")
+        
+        # peer line
+        p4 = re.compile(r"peer\s+(?P<peer_ip>[0-9a-fA-F:.]+)")
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Export-import-group line
+            m = p0.match(line)
+            if m:
+                ret_dict['export_import_group_name'] = m.group('export_import_group_name')
+                continue
+            
+            # Export-list name line
+            m = p1.match(line)
+            if m:
+                ret_dict['export_list_name'] = m.group('export_list_name')
+                continue
+            
+            # Import-list name line
+            m = p2.match(line)
+            if m:
+                ret_dict['import_list_name'] = m.group('import_list_name')
+                continue
+            
+            # vrf line
+            m = p3.match(line)
+            if m:
+                ret_dict['vrf'] = m.group('vrf')
+                continue
+
+            # peer line
+            m = p4.match(line)
+            if m:
+                peers.append(m.group('peer_ip'))
+                continue
+
+        if peers:
+            ret_dict['peers'] = peers
+
+        return ret_dict
+

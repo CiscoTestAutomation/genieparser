@@ -2,32 +2,32 @@ expected_output={
     "interface": {
         "Tunnel1": {
             "crypto_map_tag": "Tunnel1-head-0",
-            "local_addr": "100.0.10.2",
+            "local_addr": "11.0.10.131",
             "ident": {
                 1: {
                     "protected_vrf": "(none)",
                     "local_ident": {
-                        "addr": "100.0.10.2",
+                        "addr": "11.0.10.131",
                         "mask": "255.255.255.255",
                         "prot": "47",
                         "port": "0"
                     },
                     "remote_ident": {
-                        "addr": "51.51.51.2",
+                        "addr": "22.51.51.123",
                         "mask": "255.255.255.255",
                         "prot": "47",
                         "port": "0"
                     },
-                    "peer_ip": "51.51.51.2",
+                    "peer_ip": "22.51.51.123",
                     "port": 500,
                     "action": "PERMIT",
                     "acl": "origin_is_acl,",
-                    "pkts_encaps": 185,
-                    "pkts_encrypt": 185,
-                    "pkts_digest": 185,
-                    "pkts_decaps": 185,
-                    "pkts_decrypt": 185,
-                    "pkts_verify": 185,
+                    "pkts_encaps": 410,
+                    "pkts_encrypt": 410,
+                    "pkts_digest": 410,
+                    "pkts_decaps": 349,
+                    "pkts_decrypt": 349,
+                    "pkts_verify": 349,
                     "pkts_compressed": 0,
                     "pkts_decompressed": 0,
                     "pkts_not_compressed": 0,
@@ -48,24 +48,23 @@ expected_output={
                     "pkts_not_untagged_rcv": 0,
                     "pkts_internal_err_send": 0,
                     "pkts_internal_err_recv": 0,
-                    "local_crypto_endpt": "100.0.10.2",
-                    "remote_crypto_endpt": "51.51.51.2",
+                    "local_crypto_endpt": "11.0.10.131",
+                    "remote_crypto_endpt": "22.51.51.123",
                     "plaintext_mtu": 1458,
                     "path_mtu": 1500,
                     "ip_mtu": 1500,
-                    "ip_mtu_idb": "GigabitEthernet2",
-                    "current_outbound_spi": "0xF2FAF9F4(4076534260)",
+                    "ip_mtu_idb": "TenGigabitEthernet0/0/1",
+                    "current_outbound_spi": "0x746D481C(1953318940)",
                     "pfs": "Y",
-                    "dh_group": "group14",
-                    "ake": {
-                        "AKE1": "MLKEM1024"
-                    },
+                    "dh_group": "none",
+                    "pqc": "ML-KEM-1024",
                     "inbound_esp_sas": {
                         "spi": {
-                            "0x25AD4F0C(632114956)": {
+                            "0xAF2C1743(2938902339)": {
                                 "transform": "esp-256-aes esp-sha256-hmac",
                                 "in_use_settings": "Transport, ",
-                                "remaining_key_lifetime": "(4607999/101)",
+                                "remaining_key_lifetime": "94",
+                                "kilobyte_volume_rekey": "disabled",
                                 "iv_size": "16 bytes",
                                 "replay_detection_support": "Y",
                                 "status": "ACTIVE(ACTIVE)"
@@ -76,10 +75,11 @@ expected_output={
                     "inbound_pcp_sas": {},
                     "outbound_esp_sas": {
                         "spi": {
-                            "0xF2FAF9F4(4076534260)": {
+                            "0x746D481C(1953318940)": {
                                 "transform": "esp-256-aes esp-sha256-hmac",
                                 "in_use_settings": "Transport, ",
-                                "remaining_key_lifetime": "(4607999/101)",
+                                "remaining_key_lifetime": "94",
+                                "kilobyte_volume_rekey": "disabled",
                                 "iv_size": "16 bytes",
                                 "replay_detection_support": "Y",
                                 "status": "ACTIVE(ACTIVE)"
@@ -92,27 +92,27 @@ expected_output={
                 2: {
                     "protected_vrf": "(none)",
                     "local_ident": {
-                        "addr": "100.0.10.2",
+                        "addr": "11.0.10.131",
                         "mask": "255.255.255.255",
                         "prot": "47",
                         "port": "0"
                     },
                     "remote_ident": {
-                        "addr": "50.50.50.2",
+                        "addr": "21.50.50.122",
                         "mask": "255.255.255.255",
                         "prot": "47",
                         "port": "0"
                     },
-                    "peer_ip": "50.50.50.2",
+                    "peer_ip": "21.50.50.122",
                     "port": 500,
                     "action": "PERMIT",
                     "acl": "origin_is_acl,",
-                    "pkts_encaps": 194056,
-                    "pkts_encrypt": 194056,
-                    "pkts_digest": 194056,
-                    "pkts_decaps": 371974,
-                    "pkts_decrypt": 371974,
-                    "pkts_verify": 371974,
+                    "pkts_encaps": 39798,
+                    "pkts_encrypt": 39798,
+                    "pkts_digest": 39798,
+                    "pkts_decaps": 76359,
+                    "pkts_decrypt": 76359,
+                    "pkts_verify": 76359,
                     "pkts_compressed": 0,
                     "pkts_decompressed": 0,
                     "pkts_not_compressed": 0,
@@ -133,24 +133,23 @@ expected_output={
                     "pkts_not_untagged_rcv": 0,
                     "pkts_internal_err_send": 0,
                     "pkts_internal_err_recv": 0,
-                    "local_crypto_endpt": "100.0.10.2",
-                    "remote_crypto_endpt": "50.50.50.2",
+                    "local_crypto_endpt": "11.0.10.131",
+                    "remote_crypto_endpt": "21.50.50.122",
                     "plaintext_mtu": 1458,
                     "path_mtu": 1500,
                     "ip_mtu": 1500,
-                    "ip_mtu_idb": "GigabitEthernet2",
-                    "current_outbound_spi": "0xF03F6B9(251918009)",
+                    "ip_mtu_idb": "TenGigabitEthernet0/0/1",
+                    "current_outbound_spi": "0x31CA189(52208009)",
                     "pfs": "Y",
-                    "dh_group": "group14",
-                    "ake": {
-                        "AKE1": "MLKEM1024"
-                    },
+                    "dh_group": "none",
+                    "pqc": "ML-KEM-1024",
                     "inbound_esp_sas": {
                         "spi": {
-                            "0x3556D99C(894884252)": {
+                            "0xD3345E5F(3543424607)": {
                                 "transform": "esp-256-aes esp-sha256-hmac",
                                 "in_use_settings": "Transport, ",
-                                "remaining_key_lifetime": "(4607999/98)",
+                                "remaining_key_lifetime": "100",
+                                "kilobyte_volume_rekey": "disabled",
                                 "iv_size": "16 bytes",
                                 "replay_detection_support": "Y",
                                 "status": "ACTIVE(ACTIVE)"
@@ -161,10 +160,11 @@ expected_output={
                     "inbound_pcp_sas": {},
                     "outbound_esp_sas": {
                         "spi": {
-                            "0xF03F6B9(251918009)": {
+                            "0x31CA189(52208009)": {
                                 "transform": "esp-256-aes esp-sha256-hmac",
                                 "in_use_settings": "Transport, ",
-                                "remaining_key_lifetime": "(4607999/98)",
+                                "remaining_key_lifetime": "100",
+                                "kilobyte_volume_rekey": "disabled",
                                 "iv_size": "16 bytes",
                                 "replay_detection_support": "Y",
                                 "status": "ACTIVE(ACTIVE)"

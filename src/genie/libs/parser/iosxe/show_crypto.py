@@ -41,6 +41,8 @@ IOSXE parsers for the following show commands:
    * show crypto datapath ipv4 snapshot non-zero
    * show crypto eli
    * show crypto ikev2 count
+   * show crypto autovpn session
+   * show crypto autovpn session peerno {peerno}
 """
 
 # Python
@@ -1441,7 +1443,8 @@ class ShowCryptoIkev2SaDetailSchema(MetaParser):
                     Optional("remote_subnets"): list,
                     Optional("quantum_resistance"): str,
                     Optional("quantum_encry_type"): str,
-                    Optional("ake"): dict
+                    Optional("pqc"): str,
+                    Optional("quantum_safe_pqc"): str
                 }
             }
         }
@@ -1475,10 +1478,13 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
         r2 = r"^Encr: +(?P<encryption>[\d\w\-]+), keysize: +(?P<keysize>[\d]+), PRF: +(?P<prf>[\w]+), +Hash: +(?P<hash>[\w]+), +DH Grp:+(?P<dh_grp>[\w\d]+), +Auth sign: +(?P<auth_sign>[\w]+), +Auth verify: +(?P<auth_verify>[\w]+)(,\s+(?P<qr>[\w]+))?$"
         p2 = re.compile(r2)
 
-        # Additional Key Exchange Group: AKE1: ML-KEM-1024
-        # AKE group: AKE1: MLKEM1024
-        r2_1 = r'^AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+)$'
+        # PQC Key Exchange: ML-KEM-1024
+        r2_1 = r'^PQC Key Exchange:\s*(?P<pqc_value>.*)$'
         p2_1 = re.compile(r2_1)
+
+        # Quantum-safe Encryption using PQC: ML-KEM-1024
+        r2_2 = r'^Quantum-safe Encryption using PQC:\s*(?P<quantum_safe_pqc>.*)$'
+        p2_2 = re.compile(r2_2)
 
 
         # Life/Active Time: 86400/12689 sec
@@ -1621,13 +1627,23 @@ class ShowCryptoIkev2SaDetail(ShowCryptoIkev2SaDetailSchema):
                 group['keysize'] = int(group['keysize'])
                 master_dict.update(group)
                 continue
-            # Additional Key Exchange Group: AKE1: ML-KEM-1024
-            # AKE group: AKE1: MLKEM1024
+            
+            # PQC Key Exchange: ML-KEM-1024
             m = p2_1.match(line)
             if m:
                 group = m.groupdict()
-                ake = {group['ake_group']: group['ake_algo']}
-                master_dict.update({"ake":ake})
+                pqc_value = group['pqc_value'].strip()
+                master_dict['pqc'] = pqc_value
+                continue
+            
+            # Quantum-safe Encryption using PQC: ML-KEM-1024
+            m = p2_2.match(line)
+            if m:
+                group = m.groupdict()
+                quantum_safe_pqc = group['quantum_safe_pqc'].strip()
+                master_dict['quantum_safe_pqc'] = quantum_safe_pqc
+                continue
+            
             # Life/Active Time: 86400/12689 sec
             m = p3.match(line)
             if m:
@@ -2417,82 +2433,94 @@ class ShowCryptoPkiServerRequests(ShowCryptoPkiServerRequestsSchema):
 # ==============================
 class ShowCryptoSessionRemoteSchema(MetaParser):
     """
-    Schema for
+    Schema for:
         * 'show crypto session remote {remote_ip}'
         * 'show crypto session remote {remote_ip} detail'
     """
-    
+
     schema = {
         'interfaces': {
-                Any():{
-                    Optional('profile'): str,
-                    Optional('uptime'): str,
-                    'session_status': str,
-                    'peer_ip': str,
-                    Optional('peer_port'): int,
-                    Optional('fvrf'): str,
-                    Optional('ivrf'): str,
-                    Optional('phase_id'): str,
-                    Optional('session_id'):int,
-                    Any():{
-                        Optional('local_ip'):str,
-                        Optional('local_port'):int,
-                        Optional('remote_ip'):str,
-                        Optional('remote_port'):int,
-                        Optional('capabilities'):str,
-                        Optional('connid'):int,
-                        Optional('lifetime'):str
-                    },
-                    Optional('ipsec_flow'):{
-                        Any():{
-                            Optional('flow'):str,
-                            Optional('active_sa'):int,
-                            Optional('origin'):str,
-                            Optional('inbound'):{
-                                Optional('decrypted'):int,
-                                Optional('dropped'):int,
-                                Optional('life_in_kb'):int,
-                                Optional('life_in_sec'):int
-                            },
-                            Optional('outbound'):{
-                                Optional('encrypted'):int,
-                                Optional('dropped'):int,
-                                Optional('life_in_kb'):int,
-                                Optional('life_in_sec'):int
-                            },
+            Any(): {
+                Optional('profile'): str,
+                Optional('uptime'): str,
+                'session_status': str,
+                'peer_ip': str,
+                Optional('peer_port'): int,
+                Optional('fvrf'): str,
+                Optional('ivrf'): str,
+                Optional('phase_id'): str,
+                Optional('session_id'): int,
+                Any(): {
+                    Optional('local_ip'): str,
+                    Optional('local_port'): int,
+                    Optional('remote_ip'): str,
+                    Optional('remote_port'): int,
+                    Optional('capabilities'): str,
+                    Optional('connid'): int,
+                    Optional('lifetime'): str
+                },
+                Optional('ipsec_flow'): {
+                    Any(): {
+                        Optional('flow'): str,
+                        Optional('active_sa'): int,
+                        Optional('origin'): str,
+                        Optional('inbound'): {
+                            Optional('decrypted'): int,
+                            Optional('dropped'): int,
+                            Optional('life_in_kb'): Or(int, str),
+                            Optional('life_in_sec'): Or(int, str),
+                        },
+                        Optional('outbound'): {
+                            Optional('encrypted'): int,
+                            Optional('dropped'): int,
+                            Optional('life_in_kb'): Or(int, str),
+                            Optional('life_in_sec'): Or(int, str),
                         },
                     },
                 },
             },
-        }
-    
+        },
+    }
+
 
 class ShowCryptoSessionRemoteSuper(ShowCryptoSessionRemoteSchema):
     """
-    Parser for
+    Parser for:
         * 'show crypto session remote {remote_ip}'
         * 'show crypto session remote {remote_ip} detail'
     """
-    
-    # Defines a function to run the cli_command
+
     def cli(self, remote_ip=None, output=None):
-        # initial return dictionary
         ret_dict = {}
+
+        def _maybe_int(val):
+            """Return int if purely digits; otherwise return stripped string (reverse compatible)."""
+            if val is None:
+                return val
+            v = val.strip()
+            return int(v) if v.isdigit() else v
 
         # Interface: Virtual-Access1325
         p1 = re.compile(r'^Interface:\s+(?P<interface>\S+)$')
-    
+
         # Profile: IKEV2_PROFILE
         p2 = re.compile(r'^Profile:\s+(?P<profile>\S+)$')
 
         # Uptime: 13:17:14
         p3 = re.compile(r'^Uptime:\s+(?P<up>\S+)$')
-        
-        # Session status: UP-ACTIVE 
+
+        # Session status: UP-ACTIVE
         p4 = re.compile(r'^Session status:\s+(?P<session_stats>\S+)$')
 
         # Peer: 17.27.1.11 port 38452 fvrf: (none) ivrf: 10
-        p5 = re.compile(r'^Peer:\s+(?P<peer>\S+)\s+port\s+(?P<port>\d+)(\s+fvrf:\s+\(?(?P<f_vrf>(\w+|\d+))\)?\s+ivrf:\s+\(?(?P<i_vrf>(\w+|\d+))\)?)?$')
+        # Peer: 11.0.1.2 port 500 fvrf: (none) ivrf: (none)
+        # Peer: 2001:DB8:ACAD:1::2 port 500
+        #
+        # Make this robust across IPv4/IPv6 and optional fvrf/ivrf.
+        p5 = re.compile(
+            r'^Peer:\s+(?P<peer>\S+)\s+port\s+(?P<port>\d+)'
+            r'(?:\s+fvrf:\s+\(?(?P<f_vrf>[^)]+)\)?\s+ivrf:\s+\(?(?P<i_vrf>[^)]+)\)?)?$'
+        )
 
         # Phase1_id: scale
         p6 = re.compile(r'^Phase1_id:\s+(?P<phase_name>\S+)$')
@@ -2501,99 +2529,156 @@ class ShowCryptoSessionRemoteSuper(ShowCryptoSessionRemoteSchema):
         p7 = re.compile(r'^Session\s+ID:\s+(?P<session_num>\S+)$')
 
         # IKEv2 SA: local 1.1.1.1/4500 remote 17.27.1.11/38452 Active
-        p8 = re.compile(r'^(?P<version>\w+)\s+SA:\s+local\s+(?P<localip>\S+)\/(?P<localport>\d+)\s+remote\s+(?P<remoteip>\S+)\/(?P<remoteport>\d+)\s+\S+$')
+        # IKE SA: local 10.0.0.1/500 remote 10.0.0.2/500 Active
+        #
+        # Legacy single-line form (older images)
+        p8_full = re.compile(
+            r'^(?P<version>\S+)\s+SA:\s+local\s+(?P<localip>\S+)\/(?P<localport>\d+)'
+            r'\s+remote\s+(?P<remoteip>\S+)\/(?P<remoteport>\d+)\s+\S+$'
+        )
+
+        # IKEv2 SA: local 2001:DB8:ACAD:1::1/500
+        # Newer images may split remote to the next line
+        p8_local_only = re.compile(
+            r'^(?P<version>\S+)\s+SA:\s+local\s+(?P<localip>\S+)\/(?P<localport>\d+)\s*$'
+        )
+
+        #   remote 2001:DB8:ACAD:1::2/500 Active
+        # remote 17.27.1.11/38452 Active
+        p14_remote_only = re.compile(
+            r'^\s*remote\s+(?P<remoteip>\S+)\/(?P<remoteport>\d+)\s+(?P<conn_status>\w+)\s*$'
+        )
 
         # Capabilities:DN connid:323 lifetime:10:43:07
-        p9 = re.compile(r'^Capabilities:(?P<caps>\S+)\s+connid:(?P<conn>\d+)\s+lifetime:(?P<life>\S+)$')
+        #  Capabilities:(none) connid:1025 lifetime:03:04:13
+        #  Capabilities: (none) connid:1025 lifetime:03:04:13
+        p9 = re.compile(
+            r'^\s*Capabilities:\s*\(?(?P<caps>[^) ]+)\)?\s+connid:(?P<conn>\d+)\s+lifetime:(?P<life>\S+)$'
+        )
 
-        # IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88 
+        # IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88
         p10 = re.compile(r'^IPSEC\s+FLOW:\s+(?P<TS>[\S\s]+)$')
 
         # Active SAs: 2, origin: crypto map
         p11 = re.compile(r'^Active\s+SAs:\s+(?P<sa_count>\d+)\,\s+origin:\s+(?P<origin_type>[\S\s]+)$')
 
         # Inbound:  #pkts dec'ed 47668 drop 0 life (KB/Sec) 4607746/1687
-        p12 = re.compile(r'^Inbound:\s+#pkts\s+dec\'ed\s+(?P<decrypt_count>\d+)\s+drop\s+(?P<in_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<in_life_kb>\d+)\/(?P<in_life_sec>\d+)$')
+        # Inbound:  #pkts dec'ed 4172534851 drop 0 life (KB/Sec) KB Vol Rekey Disabled/2576
+        p12 = re.compile(
+            r'^\s*Inbound:\s+\#pkts\s+dec\'ed\s+(?P<decrypt_count>\d+)\s+drop\s+(?P<in_drop>\d+)'
+            r'\s+life\s+\(KB\/Sec\)\s+(?P<in_life_kb>[^\/]+)\/(?P<in_life_sec>.+)$'
+        )
 
         # Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874
-        p13 = re.compile(r'^Outbound:\s+#pkts\s+enc\'ed\s+(?P<encrypt_count>\d+)\s+drop\s+(?P<out_drop>\d+)\s+life\s+\(KB\/Sec\)\s+(?P<out_life_kb>\d+)\/(?P<out_life_sec>\d+)$')
+        # Outbound: #pkts enc'ed 4146702954 drop 0 life (KB/Sec) KB Vol Rekey Disabled/2576
+        p13 = re.compile(
+            r'^\s*Outbound:\s+\#pkts\s+enc\'ed\s+(?P<encrypt_count>\d+)\s+drop\s+(?P<out_drop>\d+)'
+            r'\s+life\s+\(KB\/Sec\)\s+(?P<out_life_kb>[^\/]+)\/(?P<out_life_sec>.+)$'
+        )
 
-        
         count = 0
+        ser_dict = None
+        ike_dict = None
 
         for line in output.splitlines():
             line = line.strip()
+
             # Interface: Virtual-Access1325
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']
                 ser_dict = ret_dict.setdefault('interfaces', {}).setdefault(intf, {})
+                ike_dict = None
+                count = 0
                 continue
 
             # Profile: IKEV2_PROFILE
             m = p2.match(line)
-            if m:
+            if m and ser_dict is not None:
                 ser_dict['profile'] = m.groupdict()['profile']
                 continue
-             
+
             # Uptime: 13:17:14
             m = p3.match(line)
-            if m:
+            if m and ser_dict is not None:
                 ser_dict['uptime'] = m.groupdict()['up']
                 continue
 
-            # Session status: UP-ACTIVE 
+            # Session status: UP-ACTIVE
             m = p4.match(line)
-            if m:
+            if m and ser_dict is not None:
                 ser_dict['session_status'] = m.groupdict()['session_stats']
                 continue
-     
+
             # Peer: 17.27.1.11 port 38452 fvrf: (none) ivrf: 10
             m = p5.match(line)
-            if m:
+            if m and ser_dict is not None:
                 ser_dict['peer_ip'] = m.groupdict()['peer']
                 ser_dict['peer_port'] = int(m.groupdict()['port'])
-                if m.groupdict()['f_vrf'] is not None:
-                    ser_dict['fvrf'] = m.groupdict()['f_vrf']
-                if m.groupdict()['i_vrf'] is not None:
-                    ser_dict['ivrf'] = m.groupdict()['i_vrf']
+
+                fvrf = m.groupdict().get('f_vrf')
+                ivrf = m.groupdict().get('i_vrf')
+
+                if fvrf is not None:
+                    ser_dict['fvrf'] = fvrf.strip()
+                if ivrf is not None:
+                    ser_dict['ivrf'] = ivrf.strip()
                 continue
 
             # Phase1_id: scale
             m = p6.match(line)
-            if m:
+            if m and ser_dict is not None:
                 ser_dict['phase_id'] = m.groupdict()['phase_name']
                 continue
- 
+
             # Session ID: 22062
             m = p7.match(line)
-            if m:
+            if m and ser_dict is not None:
                 ser_dict['session_id'] = int(m.groupdict()['session_num'])
                 continue
-            
-            # IKEv2 SA: local 1.1.1.1/4500 remote 17.27.1.11/38452 Active
-            m = p8.match(line)
-            if m:
+
+            # IKEv2 SA: local 1.1.1.1/4500 remote 17.27.1.11/38452 Active  (legacy single-line)
+            m = p8_full.match(line)
+            if m and ser_dict is not None:
                 count = 0
                 ike_version = m.groupdict()['version']
-                ikev2_dict = ser_dict.setdefault(ike_version, {})
-                ikev2_dict['local_ip'] = m.groupdict()['localip']
-                ikev2_dict['local_port'] = int(m.groupdict()['localport'])
-                ikev2_dict['remote_ip'] = m.groupdict()['remoteip']
-                ikev2_dict['remote_port'] = int(m.groupdict()['remoteport'])
+                ike_dict = ser_dict.setdefault(ike_version, {})
+                ike_dict['local_ip'] = m.groupdict()['localip']
+                ike_dict['local_port'] = int(m.groupdict()['localport'])
+                ike_dict['remote_ip'] = m.groupdict()['remoteip']
+                ike_dict['remote_port'] = int(m.groupdict()['remoteport'])
+                continue
+
+            # IKEv2 SA: local 2001:DB8:ACAD:1::1/500  (newer split-line)
+            m = p8_local_only.match(line)
+            if m and ser_dict is not None:
+                count = 0
+                ike_version = m.groupdict()['version']
+                ike_dict = ser_dict.setdefault(ike_version, {})
+                ike_dict['local_ip'] = m.groupdict()['localip']
+                ike_dict['local_port'] = int(m.groupdict()['localport'])
+                # remote parsed in p14_remote_only
+                continue
+
+            # remote 2001:DB8:ACAD:1::2/500 Active  (paired with p8_local_only)
+            m = p14_remote_only.match(line)
+            if m and ike_dict is not None:
+                ike_dict['remote_ip'] = m.groupdict()['remoteip']
+                ike_dict['remote_port'] = int(m.groupdict()['remoteport'])
                 continue
 
             # Capabilities:DN connid:323 lifetime:10:43:07
+            # Capabilities:(none) connid:1025 lifetime:03:04:13
             m = p9.match(line)
-            if m:
-                ikev2_dict['capabilities'] = m.groupdict()['caps']
-                ikev2_dict['connid'] = int(m.groupdict()['conn'])
-                ikev2_dict['lifetime'] = m.groupdict()['life']
+            if m and ike_dict is not None:
+                ike_dict['capabilities'] = m.groupdict()['caps']
+                ike_dict['connid'] = int(m.groupdict()['conn'])
+                ike_dict['lifetime'] = m.groupdict()['life']
                 continue
-            
-            # IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88 
+
+            # IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 7.1.2.88
             m = p10.match(line)
-            if m:
+            if m and ser_dict is not None:
                 count += 1
                 ipsec_dict = ser_dict.setdefault('ipsec_flow', {}).setdefault(count, {})
                 ipsec_dict['flow'] = m.groupdict()['TS']
@@ -2601,30 +2686,32 @@ class ShowCryptoSessionRemoteSuper(ShowCryptoSessionRemoteSchema):
 
             # Active SAs: 2, origin: crypto map
             m = p11.match(line)
-            if m:
+            if m and ser_dict is not None:
+                # last created ipsec_dict is the one we want
                 ipsec_dict['active_sa'] = int(m.groupdict()['sa_count'])
                 ipsec_dict['origin'] = m.groupdict()['origin_type']
                 continue
 
-
             # Inbound:  #pkts dec'ed 47668 drop 0 life (KB/Sec) 4607746/1687
+            # Inbound:  #pkts dec'ed ... life (KB/Sec) KB Vol Rekey Disabled/2576
             m = p12.match(line)
-            if m:
+            if m and ser_dict is not None:
                 inbound_dict = ipsec_dict.setdefault('inbound', {})
                 inbound_dict['decrypted'] = int(m.groupdict()['decrypt_count'])
                 inbound_dict['dropped'] = int(m.groupdict()['in_drop'])
-                inbound_dict['life_in_kb'] = int(m.groupdict()['in_life_kb'])
-                inbound_dict['life_in_sec'] = int(m.groupdict()['in_life_sec'])
+                inbound_dict['life_in_kb'] = _maybe_int(m.groupdict()['in_life_kb'])
+                inbound_dict['life_in_sec'] = _maybe_int(m.groupdict()['in_life_sec'])
                 continue
-            
+
             # Outbound: #pkts enc'ed 47672 drop 0 life (KB/Sec) 4607812/1874
+            # Outbound: #pkts enc'ed ... life (KB/Sec) KB Vol Rekey Disabled/2576
             m = p13.match(line)
-            if m:
+            if m and ser_dict is not None:
                 outbound_dict = ipsec_dict.setdefault('outbound', {})
                 outbound_dict['encrypted'] = int(m.groupdict()['encrypt_count'])
                 outbound_dict['dropped'] = int(m.groupdict()['out_drop'])
-                outbound_dict['life_in_kb'] = int(m.groupdict()['out_life_kb'])
-                outbound_dict['life_in_sec'] = int(m.groupdict()['out_life_sec'])
+                outbound_dict['life_in_kb'] = _maybe_int(m.groupdict()['out_life_kb'])
+                outbound_dict['life_in_sec'] = _maybe_int(m.groupdict()['out_life_sec'])
                 continue
 
         return ret_dict
@@ -4212,7 +4299,7 @@ class ShowCryptoIkev2SessionSchema(MetaParser):
                     Optional('dh_group'): int,
                     Optional('auth_sign'): str,
                     Optional('auth_verify'): str,
-                    Optional('ake'): dict,
+                    Optional('pqc'): str,
                     Optional('lifetime'): int,
                     Optional('activetime'): int,
                     Optional('ce_id'): int,
@@ -4302,8 +4389,8 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                         r'PRF:\s+(?P<random>\S+),\s+Hash:\s+(?P<hash>\S+),\s+DH Grp:(?P<dh>\d+),\s+'
                         r'Auth sign:\s+(?P<auth>\S+),\s+Auth verify:\s+(?P<auth_ver>\S+)$')
  
-        # AKE group: AKE1: ML-KEM-1024
-        p4_1 = re.compile(r'^AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+)$')
+        # PQC Key Exchange: ML-KEM-1024
+        p4_1 = re.compile(r'^PQC Key Exchange:\s*(?P<pqc_value>.*)$')
         
 
         # Life/Active Time: 86400/38157 sec
@@ -4483,12 +4570,12 @@ class ShowCryptoIkev2Session(ShowCryptoIkev2SessionSchema):
                 ikev2_dict['auth_verify'] = group['auth_ver']
                 continue
 
-            # AKE group: AKE1: ML-KEM-1024
+            # PQC Key Exchange: ML-KEM-1024
             m = p4_1.match(line)
             if m:
                 group = m.groupdict()
-                ikev2_dict.setdefault('ake', {})
-                ikev2_dict['ake'][group['ake_group']] = group['ake_algo']
+                pqc_value = group['pqc_value'].strip()
+                ikev2_dict['pqc'] = pqc_value
                 continue
 
             # Life/Active Time: 86400/38157 sec
@@ -4778,7 +4865,7 @@ class ShowCryptoIpsecSaDetailSchema(MetaParser):
                             Optional('pkts_verify_failed'): int,
                             Optional('recv_errors'): int,
                             Optional('send_errors'): int,
-                            Optional('ake'): dict,
+                            Optional('pqc'): str,
                             'path_mtu': int,
                             'ip_mtu':int,
                             'pfs': str,
@@ -4904,8 +4991,8 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
         p24 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
 
         # PFS (Y/N): Y, DH group: none
-        # PFS (Y/N): Y, DH group: none, AKE group: AKE1: MLKEM1024
-        p25 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+), +DH group: +(?P<dh_group>\w+)(?:, +AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+))?,?$')
+        # PFS (Y/N): Y, DH group: group21, PQC Key Exchange: ML-KEM-1024
+        p25 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+), +DH group: +(?P<dh_group>\w+)(?:, +PQC Key Exchange:\s*(?P<pqc_value>.*))?$')
         
         # inbound esp sas: 
         p26 = re.compile(r'^inbound esp sas:$')
@@ -5142,15 +5229,16 @@ class ShowCryptoIpsecSaDetail(ShowCryptoIpsecSaDetailSchema):
                 ident_dict.update(m.groupdict())
                 continue
 
-            # PFS (Y/N): N, DH group: none
+            # PFS (Y/N): Y, DH group: none
+            # PFS (Y/N): Y, DH group: group21, PQC Key Exchange: ML-KEM-1024
             m = p25.match(line)
             if m:
                 group = m.groupdict()
                 ident_dict['pfs'] = group['pfs']
                 ident_dict['dh_group'] = group['dh_group']
-                if "ake_group" in m.groupdict() and group['ake_group'] is not None:
-                    ident_dict.setdefault('ake', {})
-                    ident_dict['ake'][group['ake_group']] = group['ake_algo']
+                if group['pqc_value'] is not None:
+                    pqc_value = group['pqc_value'].strip()
+                    ident_dict['pqc'] = pqc_value
                 continue
 
             # inbound esp sas:
@@ -5969,7 +6057,9 @@ class ShowCryptoIpsecProfileSchema(MetaParser):
                     'security_association_lifetime': str,
                     'responder_only': str,
                     'psf': str,
-                    Optional('ml-kem_only'): str,
+                    Optional('pfs_inherit'): str,
+                    Optional('dh_group'): str,
+                    Optional('pqc'): str,
                     'mixed_mode': str,
                     'tranform_sets': {
                         Any(): {
@@ -6012,9 +6102,14 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
         # PFS (Y/N): N
         p5 = re.compile(r'^PFS \(Y/N\):\s*(?P<psf>(Y|N))$')
 
+        # Inherit (Y/N): N
+        p5_1 = re.compile(r'^Inherit \(Y/N\):\s*(?P<pfs_inherit>(Y|N))$')
 
-        # ML-KEM ONLY (Y/N): Y
-        p5_1 = re.compile(r'^ML-KEM ONLY \(Y/N\):\s*(?P<mlkm>(Y|N))$')
+        # DH group: group21
+        p5_2 = re.compile(r'^DH group:\s*(?P<dh_group>[\w\d]+)$')
+
+        # PQC Key Exchange: ML-KEM-512
+        p5_3 = re.compile(r'^PQC Key Exchange:\s*(?P<pqc_value>.*)$')
 
         # Mixed-mode : Disabled
         p6 = re.compile(r'^Mixed-mode\s*:\s*(?P<mixed_mode>\w+)$')
@@ -6068,7 +6163,20 @@ class ShowCryptoIpsecProfile(ShowCryptoIpsecProfileSchema):
             m = p5_1.match(line)
             if m:
                 groups = m.groupdict()
-                profile_name_dict['ml-kem_only'] = groups['mlkm']
+                profile_name_dict['pfs_inherit'] = groups['pfs_inherit']
+                continue
+
+            m = p5_2.match(line)
+            if m:
+                groups = m.groupdict()
+                profile_name_dict['dh_group'] = groups['dh_group']
+                continue
+
+            m = p5_3.match(line)
+            if m:
+                groups = m.groupdict()
+                pqc_value = groups['pqc_value'].strip()
+                profile_name_dict['pqc'] = pqc_value
                 continue
 
             m = p6.match(line)
@@ -6109,7 +6217,7 @@ class ShowCryptoIkev2ProposalSchema(MetaParser):
                     'integrity': str,
                     'prf': str,
                     'dh_group': list,
-                    Optional('ake'): Or(None, {Optional(str): str})
+                    Optional('pqc'): str
                 }
         },
     }
@@ -6144,11 +6252,8 @@ class ShowCryptoIkev2Proposal(ShowCryptoIkev2ProposalSchema):
         # DH Group   : DH_GROUP_256_ECP/Group 19 DH_GROUP_2048_MODP/Group 14 DH_GROUP_521_ECP/Group 21 DH_GROUP_1536_MODP/Group 5
         p5 = re.compile(r'^DH Group\s*:\s*(?P<dh_group>.*)$')
 
-        # AKE field
-        p6 = re.compile(r'^AKE group\s*:\s*(?P<ake_none>none)?\s*$')
-
-        # Nested AKE values
-        p7 = re.compile(r'^\s*(?P<number>\d+):\s*(?P<ake_values>.*)$')
+        # PQC Key Exchange field
+        p6 = re.compile(r'^PQC Key Exchange\s*:\s*(?P<pqc_value>.*)$')
         
         ret_dict = {}
         for line in output.splitlines():
@@ -6204,31 +6309,13 @@ class ShowCryptoIkev2Proposal(ShowCryptoIkev2ProposalSchema):
                 proposal_name_dict['dh_group'] = dh_group_list
                 continue
             
-            # Match AKE field
-            ake_dict = None
+            # Match PQC Key Exchange field
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                ake_value = line.split(':')[1].strip()
-                if ake_value.lower() == 'none':
-                    proposal_name_dict['ake'] = None  # Handle 'none' case explicitly
-                else:
-                    proposal_name_dict.setdefault('ake', {})
+                pqc_value = groups['pqc_value'].strip()
+                proposal_name_dict['pqc'] = pqc_value
                 continue
-
-            # Nested AKE values only if AKE is detected
-
-
-            m = p7.match(line)
-            if m : 
-                if 'ake' in proposal_name_dict:
-                    ake_dict = {}
-                    groups = m.groupdict()
-                    number = groups['number']
-                    ake_values = groups['ake_values'].split()
-                    ake_dict[number] = groups['ake_values']
-                    proposal_name_dict['ake'] = ake_dict
-                    continue
 
         return ret_dict
 
@@ -6343,7 +6430,7 @@ class ShowCryptoIkev2SaSchema(MetaParser):
                     Optional('session_id'): int,
                     Optional('local_spi'): str,
                     Optional('remote_spi'): str,
-                    Optional('ake'): dict,
+                    Optional('pqc'): str,
                     }
                 },
         'ipv6': {
@@ -6369,7 +6456,7 @@ class ShowCryptoIkev2SaSchema(MetaParser):
                     Optional('session_id'): int,
                     Optional('local_spi'): str,
                     Optional('remote_spi'): str,
-                    Optional('ake'): dict,
+                    Optional('pqc'): str,
                     }
             }
     }
@@ -6410,8 +6497,8 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         # Encr: AES-CBC, keysize: 128, PRF: SHA1, Hash: SHA96, DH Grp:16, Auth sign: PSK, Auth verify: PSK
         p4 = re.compile(r'^Encr:\s*(?P<encryption>[\w-]+),\s*keysize:\s*(?P<keysize>\d+),\s*PRF:\s*(?P<prf>\w+),\s*Hash:\s*(?P<hash>\w+),\s*DH Grp:(?P<dh_group>\d+),\s*Auth sign:\s*(?P<auth_sign>\w+),\s*Auth verify:\s*(?P<auth_verify>\w+)')
 
-        # AKE group: AKE1: ML-KEM-1024
-        p4_1 = re.compile(r'^AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+)$')
+        # PQC Key Exchange: ML-KEM-1024
+        p4_1 = re.compile(r'^PQC Key Exchange:\s*(?P<pqc_value>.*)$')
 
         # Life/Active Time: 86400/735 sec
         p5 = re.compile(r'^Life/Active Time:\s*(?P<life_time>\d+)/(?P<active_time>\d+)\s*sec$')
@@ -6509,12 +6596,12 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 tunnel_dict['auth_sign'] = auth_sign
                 tunnel_dict['auth_verify'] = auth_verify
 
-            # AKE group: AKE1: ML-KEM-1024
+            # PQC Key Exchange: ML-KEM-1024
             m = p4_1.match(line)
             if m:
                 groups = m.groupdict()
-                tunnel_dict.setdefault('ake',{})
-                tunnel_dict['ake']={groups['ake_group']: groups['ake_algo']}
+                pqc_value = groups['pqc_value'].strip()
+                tunnel_dict['pqc'] = pqc_value
 
             # Life/Active Time: 86400/735 sec
             m = p5.match(line)
@@ -10971,7 +11058,7 @@ class ShowCryptoIpsecSaIpv6DetailedSchema(MetaParser):
                                 'current_outbound_spi': str,
                                 'pfs': str,
                                 'dh_group': str,
-                                Optional('ake'): dict,
+                                Optional('pqc'): str,
                                 'inbound_esp_sas': {
                                     'spi': str,
                                     'transform': str,
@@ -11064,8 +11151,8 @@ class ShowCryptoIpsecSaIpv6Detailed(ShowCryptoIpsecSaIpv6DetailedSchema):
         p13 = re.compile(r'^current outbound spi: +(?P<current_outbound_spi>\S+)$')
 
         # PFS (Y/N): Y, DH group: none
-        # PFS (Y/N): Y, DH group: none, AKE group: AKE1: MLKEM1024
-        p14 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+), +DH group: +(?P<dh_group>\w+)(?:, +AKE group:\s*(?P<ake_group>\w+):\s*(?P<ake_algo>[\S]+))?,?$')
+        # PFS (Y/N): Y, DH group: none, PQC Key Exchange: ML-KEM-1024
+        p14 = re.compile(r'^PFS.*: +(?P<pfs>[Y|N]+), +DH group: +(?P<dh_group>\w+)(?:, +PQC Key Exchange:\s*(?P<pqc_value>.*))?$')
 
         # spi: [Not Available]
         # spi: 0x658F7C11(1703902225) 
@@ -11198,11 +11285,12 @@ class ShowCryptoIpsecSaIpv6Detailed(ShowCryptoIpsecSaIpv6DetailedSchema):
             # PFS (Y/N): N, DH group: none
             m = p14.match(line)
             if m:
-                current_remote_ident['pfs'] = m.group('pfs')
-                current_remote_ident['dh_group'] = m.group('dh_group')
-                if "ake_group" in m.groupdict() and m.group('ake_group') is not None:
-                    current_remote_ident.setdefault('ake', {})
-                    current_remote_ident['ake'][m.group('ake_group')] = m.group('ake_algo')
+                group = m.groupdict()
+                current_remote_ident['pfs'] = group['pfs']
+                current_remote_ident['dh_group'] = group['dh_group']
+                if group['pqc_value'] is not None:
+                    pqc_value = group['pqc_value'].strip()
+                    current_remote_ident['pqc'] = pqc_value
                 continue
 
             # Match inbound esp sas
@@ -12338,3 +12426,273 @@ class ShowCryptoPkiServerCrl(ShowCryptoPkiServerCrlSchema):
         ret_dict['crl'] = crl_dict
         return ret_dict
 
+
+# =================================================
+#  Schema for 'show crypto autovpn session'
+# =================================================
+
+class ShowCryptoAutovpnSessionSchema(MetaParser):
+    """Schema for `show crypto autovpn session`"""
+
+    schema = {
+        Optional('local'):
+            {'device_number': str,
+             'device_id': str,
+             'role': str,
+             'local_wan': {Optional('wan_1'): {'interface': str,
+                                               'nat_type': str,
+                                               'private_port': str,
+                                               'private_ip': str},
+                           Optional('wan_2'): {'interface': str,
+                                               'nat_type': str,
+                                               'private_port': str,
+                                               'private_ip': str}},
+             'registry_1': {'ip': str,
+                            'port': str,
+                            Optional('wan_1'): {'ip': str,
+                                                'port': str,
+                                                'status': str},
+                            Optional('wan_2'): {'ip': str,
+                                                'port': str,
+                                                'status': str}},
+             'registry_2': {'ip': str,
+                            'port': str,
+                            Optional('wan_1'): {'ip': str,
+                                                'port': str,
+                                                'status': str},
+                            Optional('wan_2'): {'ip': str,
+                                                'port': str,
+                                                'status': str}}},
+        Optional('peer'): Any(),
+        Optional('session'): Any(),
+    }
+
+
+# =================================================
+#  Parser for 'show crypto autovpn session'
+# =================================================
+
+class ShowCryptoAutovpnSession(ShowCryptoAutovpnSessionSchema):
+    """Parser for `show crypto autovpn session`"""
+
+    cli_command = 'show crypto autovpn session'
+
+    def cli(self, peerno='', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+ 
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+        parsed_dict['local'] = {}
+        parsed_dict['local']['local_wan'] = {}
+        parsed_dict['local']['registry_1'] = {}
+        parsed_dict['local']['registry_2'] = {}
+        parsed_dict['session'] = {}
+
+        # Device Number: 2102, ID: 21020000000000000000000000000000, Role: Spoke
+        p1 = re.compile(r'^Device\s+Number:\s+(?P<device_number>\d+),\s+ID:\s+(?P<id>\d+)\,\s+Role:\s+(?P<role>\w+)$')
+        
+        # WAN-1                   gi2           10.10.10.2:4500       Friendly
+        p2 = re.compile(r'^(?P<wan>WAN-\d+)\s+(?P<interface>[\w\/\.\-\:]+\d)\s+(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port>\d+)\s+(?P<nat_type>\w+)$')
+
+        # VPN Registry-1     10.124.22.98:9350
+        p3 = re.compile(r'^VPN\s+Registry-\d+\s+(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port>\d+)$')
+
+        # WAN-1             Connected        10.74.9.190:5064
+        p4 = re.compile(r'^(?P<wan>WAN-\d+)\s+(?P<status>\w+)\s+(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port>\d+)$')
+
+        # Peer Number: 2103, ID: 21030000000000000000000000000000, Role:Hub
+        p5 = re.compile(r'^Peer\s+Number:\s+(?P<peer_number>\d+),\s+ID:\s+(?P<id>\d+)\,\s+Role:\s*(?P<role>\w+)$')
+
+        # WAN-1        10.10.10.3:4500           10.10.10.3:4500       10.74.9.190:5062       10.74.9.190:5062
+        p6 = re.compile(r'^(?P<wan>WAN-\d+)\s+(?P<ip1>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port1>\d+)\s+(?P<ip2>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port2>\d+)\s+(?P<ip3>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port3>\d+)\s+(?P<ip4>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port4>\d+)$')
+
+        # 2103       10.10.10.2:4500        10.10.10.3:4500        0         0       Private       Connectin       Vi1 
+        p7 = re.compile(r'^(?P<peer_nu>\d+)\s+(?P<ip1>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port1>\d+)\s+(?P<ip2>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port2>\d+)\s+(?P<local_wan>\d+)\s+(?P<peer_wan>\d+)\s+(?P<session_type>\w+)\s+(?P<status>\w+)\s+(?P<interface>\w+)\s+(?P<initiator>\w+)$')
+
+        peer_index = -1
+        session_index = 0
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if 'Local Information:' in line:
+                section = 'local'
+                continue
+            elif 'Local-WAN info learnt from VPN Registries:' in line:
+                section = 'local_wan'
+                continue
+            elif 'VPN Registry-1' in line:
+                section = 'registry_1'
+            elif 'VPN Registry-2' in line:
+                section = 'registry_2'
+            elif 'Peers learnt from VPN Registries:' in line:
+                section = 'peer'
+                parsed_dict['peer'] = {}
+                continue
+            elif 'Session Details:' in line:
+                section = 'session'
+                continue
+            
+            # Local Information:
+            if section == 'local':
+                # Device Number: 2102, ID: 21020000000000000000000000000000, Role: Spoke
+                m = p1.match(line)
+                if m:
+                    parsed_dict['local']['device_number'] = m.group('device_number')
+                    parsed_dict['local']['device_id'] = m.group('id')
+                    parsed_dict['local']['role'] = m.group('role')
+                    continue
+            # local-WAN info learnt from VPN Registries:
+            elif section == 'local_wan':
+                # WAN-1                   gi2           10.10.10.2:4500      Friendly
+                m = p2.match(line)
+                if m:
+                    wan_dict = {
+                        'interface': m.group('interface'),
+                        'private_ip': m.group('ip'),
+                        'private_port': m.group('port'),
+                        'nat_type': m.group('nat_type')
+                    }
+                    wan = m.group('wan').replace('-', '_').lower()
+                    parsed_dict['local']['local_wan'][wan] = wan_dict
+                    continue
+            # VPN Registry-1     10.124.22.98:9350
+            # VPN Registry-2     10.124.22.98:9351
+            elif section == 'registry_1' or section == 'registry_2':
+                m = p3.match(line)
+                if m:
+                    parsed_dict['local'][section]['ip'] = m.group('ip')
+                    parsed_dict['local'][section]['port'] = m.group('port')
+                    continue
+                # WAN-1             Connected        10.74.9.190:5064
+                m = p4.match(line)
+                if m:
+                    wan_dict = {
+                        'status': m.group('status'),
+                        'ip': m.group('ip'),
+                        'port': m.group('port')
+                    }
+                    wan = m.group('wan').replace('-', '_').lower()
+                    parsed_dict['local'][section][wan] = wan_dict
+                    continue
+            # Peers learnt from VPN Registries:
+            elif section == 'peer':
+                # Peer Number: 2103, ID: 21030000000000000000000000000000, Role:Hub
+                m = p5.match(line)
+                if m:
+                    peer_dict = {}
+                    peer_dict = {
+                        'peer_number': m.group('peer_number'),
+                        'peer_id': m.group('id'),
+                        'role': m.group('role')
+                    }
+                    peer_index += 1
+                    continue
+                # WAN-1        10.10.10.3:4500           10.10.10.3:4500       10.74.9.190:5062       10.74.9.190:5062
+                m = p6.match(line)
+                if m:
+                    wan_dict = {
+                        'registry_1': {
+                            'private_ip': m.group('ip1'),
+                            'private_port': m.group('port1'),
+                            'public_ip': m.group('ip3'),
+                            'public_port': m.group('port3')
+                        },
+                        'registry_2': {
+                            'private_ip': m.group('ip2'),
+                            'private_port': m.group('port2'),
+                            'public_ip': m.group('ip4'),
+                            'public_port': m.group('port4')
+                        }
+                    }
+                    wan = m.group('wan').replace('-', '_').lower()
+                    peer_dict[wan] = wan_dict
+                    parsed_dict['peer'][peer_index] = peer_dict
+                    continue
+            # Session Details:
+            elif section == 'session':
+            # 2103       10.10.10.2:4500        10.10.10.3:4500        0         0       Private       Connectin       Vi1
+                m = p7.match(line)
+                if m:
+                    session_dict = {
+                        'peer_number': m.group('peer_nu'),
+                        'local_ip': m.group('ip1'),
+                        'local_port': m.group('port1'),
+                        'peer_ip': m.group('ip2'),
+                        'peer_port': m.group('port2'),
+                        'local_wan': int(m.group('local_wan')),
+                        'peer_wan': int(m.group('peer_wan')),
+                        'session_type': m.group('session_type'),
+                        'status': m.group('status'),
+                        'interface': m.group('interface'),
+                        'initiator': m.group('initiator')
+                    }
+                    parsed_dict['session'][session_index] = session_dict
+                    session_index += 1
+                    continue
+        return parsed_dict
+
+
+# =============================================================
+#  Schema for 'show crypto autovpn session peerno {peerno}'
+# =============================================================
+
+class ShowCryptoAutovpnSessionPeernoSchema(MetaParser):
+    """Schema for `show crypto autovpn session peerno {peerno}`"""
+
+    schema = {
+        Any(): Any(),
+    }
+
+
+# =================================================
+#  Parser for 'show crypto autovpn session peerno {peernumber}'
+# =================================================
+
+class ShowCryptoAutovpnSessionPeerno(ShowCryptoAutovpnSessionPeernoSchema):
+    """Parser for `show crypto autovpn session peerno {peerno}`"""
+
+    cli_command = 'show crypto autovpn session peerno {peerno}'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+ 
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+
+        # 2103       10.10.10.2:4500        10.10.10.3:4500        0         0       Private       Connectin       Vi1 
+        p1 = re.compile(r'^(?P<peer_nu>\d+)\s+(?P<ip1>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port1>\d+)\s+(?P<ip2>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(?P<port2>\d+)\s+(?P<local_wan>\d+)\s+(?P<peer_wan>\d+)\s+(?P<session_type>\w+)\s+(?P<status>\w+)\s+(?P<interface>\w+)\s+(?P<initiator>\w+)$')
+
+        session_index = 0
+        peer_flag = False
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # 2103       10.10.10.2:4500        10.10.10.3:4500        0         0       Private       Connectin       Vi1
+            m = p1.match(line)
+            if m:
+                peer_flag = True
+                session_dict = {
+                    'peer_number': m.group('peer_nu'),
+                    'local_ip': m.group('ip1'),
+                    'local_port': m.group('port1'),
+                    'peer_ip': m.group('ip2'),
+                    'peer_port': m.group('port2'),
+                    'local_wan': int(m.group('local_wan')),
+                    'peer_wan': int(m.group('peer_wan')),
+                    'session_type': m.group('session_type'),
+                    'status': m.group('status'),
+                    'interface': m.group('interface'),
+                    'initiator': m.group('initiator')
+                }
+                parsed_dict[session_index] = session_dict
+                session_index += 1
+        if peer_flag is True:
+            return parsed_dict
+        else:
+            return {'0': ''}
+        

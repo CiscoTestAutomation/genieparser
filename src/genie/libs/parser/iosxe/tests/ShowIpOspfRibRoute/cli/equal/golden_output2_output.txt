@@ -1,0 +1,29 @@
+show ip ospf rib 13.0.0.2
+
+            OSPF Router with ID (40.0.0.1) (Process ID 100)
+
+
+		Base Topology (MTID 0)
+
+OSPF local RIB
+Codes: * - Best, > - Installed in global RIB
+LSA: type/LSID/originator
+
+*>  13.0.0.0/16, Ext2, cost 20, fwd cost 1, tag 0
+     SPF Instance 37, age 00:06:32
+      contributing LSA: 5/13.0.0.0/40.0.0.2
+     Flags: RIB, PartialSPF
+      via 100.5.0.2, FiveGigabitEthernet0/0/2, label 1048578, strict label 1048578
+       Flags: RIB
+       LSA: 5/13.0.0.0/40.0.0.2
+       Source: 40.0.0.2 (area 0)
+      repair path via 100.6.0.2, FiveGigabitEthernet0/0/3, label 1048578, strict label 1048578, cost 1
+       Flags: RIB, Repair, IntfDj, BcastDj, PrimPath, Downstr
+       LSA: 5/13.0.0.0/40.0.0.2
+      via 100.6.0.2, FiveGigabitEthernet0/0/3, label 1048578, strict label 1048578
+       Flags: RIB
+       LSA: 5/13.0.0.0/40.0.0.2
+       Source: 40.0.0.2 (area 0)
+      repair path via 100.5.0.2, FiveGigabitEthernet0/0/2, label 1048578, strict label 1048578, cost 1
+       Flags: RIB, Repair, IntfDj, BcastDj, PrimPath, Downstr
+       LSA: 5/13.0.0.0/40.0.0.2

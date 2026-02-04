@@ -1,0 +1,163 @@
+show access-list fqdn client
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN *.atoz.msn.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   4
+    Position:              destination
+    Next resolved ACE seq: 40000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   4
+    Position:              destination
+    Next resolved ACE seq: 40000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   4
+    Position:              destination
+    Next resolved ACE seq: 40000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN *.cisco.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   2
+    Position:              destination
+    Next resolved ACE seq: 20000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   2
+    Position:              destination
+    Next resolved ACE seq: 20000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   2
+    Position:              destination
+    Next resolved ACE seq: 20000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN *.csc.net, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   6
+    Position:              destination
+    Next resolved ACE seq: 60000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   6
+    Position:              destination
+    Next resolved ACE seq: 60000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   6
+    Position:              destination
+    Next resolved ACE seq: 60000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN *.demo1.msft.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   3
+    Position:              destination
+    Next resolved ACE seq: 30000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   3
+    Position:              destination
+    Next resolved ACE seq: 30000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   3
+    Position:              destination
+    Next resolved ACE seq: 30000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN www.ab.*.*.*.test.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   5
+    Position:              destination
+    Next resolved ACE seq: 50000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   5
+    Position:              destination
+    Next resolved ACE seq: 50000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   5
+    Position:              destination
+    Next resolved ACE seq: 50000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN www.msft10.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   7
+    Position:              destination
+    Next resolved ACE seq: 70000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   7
+    Position:              destination
+    Next resolved ACE seq: 70000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   7
+    Position:              destination
+    Next resolved ACE seq: 70000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN www.msft11.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   8
+    Position:              destination
+    Next resolved ACE seq: 80000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   8
+    Position:              destination
+    Next resolved ACE seq: 80000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   8
+    Position:              destination
+    Next resolved ACE seq: 80000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN www.msft12.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   9
+    Position:              destination
+    Next resolved ACE seq: 90000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   9
+    Position:              destination
+    Next resolved ACE seq: 90000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   9
+    Position:              destination
+    Next resolved ACE seq: 90000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FQDN www.msft13.com, 3 ACL client(s)
+    ACL:                   Gi1/0/23#v4-redirect#1a6cb697
+    ACE:                   10
+    Position:              destination
+    Next resolved ACE seq: 100000
+
+    ACL:                   Gi2/0/23#v4-redirect#1630a389
+    ACE:                   10
+    Position:              destination
+    Next resolved ACE seq: 100000
+
+    ACL:                   Gi7/0/23#v4-redirect#11d307cf
+    ACE:                   10
+    Position:              destination
+    Next resolved ACE seq: 100000
+
+------------------------------------------------------

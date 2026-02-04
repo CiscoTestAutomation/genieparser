@@ -1,0 +1,52 @@
+show cts sxp connections
+ SXP              : Enabled
+ Highest Version Supported: 5
+ Default Password : Set
+ Default Key-Chain: Not Set
+ Default Key-Chain Name: Not Applicable
+ Default Source IP: Not Set
+ Default Source IPv6: 2200:1:1::1
+Connection retry open period: 10 secs
+Reconcile period: 30 secs
+Retry open timer is not running
+Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for import: Not Set
+
+=== IPv4 SXP Connections ===
+----------------------------------------------
+Peer IP          : 33.1.1.1
+Source IP        : 33.1.1.2
+Conn status      : On (Speaker) :: On (Listener)
+Conn version     : 5
+Conn capability  : IPv4-IPv6-Subnet
+Speaker Conn hold time   : 120 seconds
+Listener Conn hold time   : 120 seconds
+Local mode       : Both
+Connection inst# : 1
+TCP conn fd      : 4(Speaker) 2(Listener)
+TCP conn password: default SXP password
+Keepalive timer is running
+Duration since last state change: 0:00:00:02 (dd:hr:mm:sec) :: 0:00:01:41 (dd:hr:mm:sec)
+
+
+Total num of SXP IPv4 Connections = 1
+
+
+=== IPv6 SXP Connections ===
+----------------------------------------------
+Peer IP          : 1133:1:1::1
+Source IP        : 1133:1:1::2
+Conn status      : On (Speaker) :: On (Listener)
+Conn version     : 5
+Conn capability  : IPv4-IPv6-Subnet
+Speaker Conn hold time   : 120 seconds
+Listener Conn hold time   : 120 seconds
+Local mode       : Both
+Connection inst# : 1
+TCP conn fd      : 5(Speaker) 3(Listener)
+TCP conn password: default SXP password
+Keepalive timer is running
+Duration since last state change: 0:00:00:02 (dd:hr:mm:sec) :: 0:00:01:43 (dd:hr:mm:sec)
+
+
+Total num of SXP IPv6 Connections = 1

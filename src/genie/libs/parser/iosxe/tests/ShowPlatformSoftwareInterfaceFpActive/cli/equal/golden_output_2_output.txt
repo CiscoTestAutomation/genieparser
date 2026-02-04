@@ -1,0 +1,24 @@
+show platform software interface fp active name NVI0
+
+Name: NVI0, ID: 39, QFP ID: 31, Schedules: 0
+Type: NVI, State: enabled, SNMP ID: 31, MTU: 9216
+IP Address: 0.0.0.0
+IPV6 Address: fe80::16a2:a0ff:fe09:f6a8
+VFR EGRESS:
+VFR enabled: 1, Max reassemblies: 1024, Max fragments: 32
+VFR timeout: 3, Drop Fragments: 0
+Dscp bitmap: 0x0000000000000000, Percentage: 0
+IPv6 VFR EGRESS:
+VFR enabled: 1, Max reassemblies: 1024, Max fragments: 16
+VFR timeout: 3, Drop Fragments: 0
+Dscp bitmap: 0x0000000000000000, Percentage: 0
+Flags: ipv4
+ICMP Flags: unreachables, redirects, no-info-reply, no-mask-reply
+ICMP6 Flags: unreachables, redirects
+SMI enabled on protocol(s): UNKNOWN
+Authenticated-user:
+FRR linkdown ID: 65535
+vNet Name: , vNet Tag: 0, vNet Extra Information: 0
+Dirty: unknown
+AOM dependency sanity check: PASS
+AOM Obj ID: 220

@@ -3770,11 +3770,11 @@ class ShowIsisRib(ShowIsisRibSchema):
         # repair path: 5.5.5.5 (MPLS-SR-Tunnel4) metric: 65 (DS,SR)
         # repair path: 199.1.2.2(Tunnel4002) metric:50 (PP,LC,DS,NP,SR) LSP[115]
         p8 = re.compile(
-            r"^repair path(?P<stale>\(\?\))?:\s+"
-            r"(?P<repair_path>\d+.\d+.\d+.\d+)\s*"
+            r"^\s*repair path(?P<stale>\(\?\))?:\s+"
+            r"(?P<repair_path>\d+\.\d+\.\d+\.\d+)\s*"
             r"\((?P<interface>\S+)\)"
             r"\s+metric:\s*(?P<metric>\d+)\s+"
-            r"\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS),)?"
+            r"\(((?P<pp>PP),)?((?P<lc>LC),)?((?P<ds>DS)(,)?)?"
             r"((?P<np>NP),)?((?P<sr>SR))?\)"
             r"(\s+LSP\[(?P<rtp_lsp_index>\d+)\])?$"
         )

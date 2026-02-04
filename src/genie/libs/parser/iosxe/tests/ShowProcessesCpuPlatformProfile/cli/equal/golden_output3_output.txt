@@ -1,0 +1,9 @@
+CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 2: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 3: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 4: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 5: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 14: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 15: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 16: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 17: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%

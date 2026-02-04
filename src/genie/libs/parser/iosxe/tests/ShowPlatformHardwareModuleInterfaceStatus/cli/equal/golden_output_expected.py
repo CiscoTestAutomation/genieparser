@@ -21,6 +21,8 @@ expected_output={
         'tx_pause': 'Off',
         'tx_pause_config': 'Off'
         },
+    'vlan_mode': 'tunnel',
+    'native_vlan': 2356,
     'mac_filtering': 'Enable',
     'mac_addr': '6879.09ac.5b81',
     'pve': 'enable',

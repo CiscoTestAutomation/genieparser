@@ -1,0 +1,90 @@
+show platform hardware qfp active feature firewall datapath scb any any any any any all any detail
+[s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+Session ID:0x0000001C 150.1.1.1 8 160.2.2.2 115 proto 1 (-global-:0:-global-:0) (0x3:icmp)	[sc]
+ pscb : 0x8ff1380,  key1_flags: 0x00000000
+	bucket : 56999, prev 0x0, next 0x0    fw_flags: 0x00000004 0x2041b861,
+	 VRF1-rsrc-limit
+	 Root Protocol-ICMP Alert Proto-State:Established No-halfopen-list Active-cnt Session-db Max-session
+    icmp_error count 0 ureachable arrived: no
+    scb state: active, nxt_timeout: 6000, refcnt: 1 NBAR verdict count 0
+    ha nak cnt: 0, rg: 0
+    hostdb: 0x0, L7: 0x0, stats: 0x4bd080c0, child: 0x0
+    octets:     360    packets:         5    octets:     360   packets:     5
+   icmp seq:     17721047137 proto: 0003: l7 ooo drop 0x010 l7_prot 0x3 - icmp
+    root scb: 0x0 act_blk: 0x4bd00000
+    ingress/egress intf: GigabitEthernet0/0/2 (1021), GigabitEthernet0/0/5 (262133)
+    current time 3718080657274 create tstamp: 3715623542283 last access: 3715623794038 now 3718080662502 csec left
+    nat_out_local_addr:port: 0.0.0.0:0
+    nat_in_global_addr:port: 0.0.0.0:0
+    ip6: addr1 C addr2 C
+    key ip4: addr1 8.255.20.96:150934640 addr2 150.1.1.1:8
+    syncookie fixup: 0x0,  halfopen linkage: 0x0 0x0
+    cxsc_cft_fid: 0x00000000
+    tw timer: 0x00000000 0x00000000 0x00000000 0x03862121
+    domain_ab1 0x7045bb20 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
+    NAT handles 0x00000000 0x00000000
+    FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+    icmp_err_time 0 utd_context_id 0, classification epoch scb: 0x1 actblk :0x10000 avc class stats 0x0
+    VPN id src 65535, dst 65535
+    zone pair z1-z2 class cmap
+
+Session ID:0x0000001E 150.1.1.1 8 160.2.2.2 116 proto 1 (-global-:0:-global-:0) (0x3:icmp)	[sc]
+ pscb : 0x8ff1640,  key1_flags: 0x00000000
+	bucket : 162301, prev 0x0, next 0x0    fw_flags: 0x00000004 0x2041b861,
+	 VRF1-rsrc-limit
+	 Root Protocol-ICMP Alert Proto-State:Established No-halfopen-list Active-cnt Session-db Max-session
+    icmp_error count 0 ureachable arrived: no
+    scb state: active, nxt_timeout: 6000, refcnt: 1 NBAR verdict count 0
+    ha nak cnt: 0, rg: 0
+    hostdb: 0x0, L7: 0x0, stats: 0x4bd080c0, child: 0x0
+    octets:     360    packets:         5    octets:     360   packets:     5
+   icmp seq:     17721047137 proto: 0003: l7 ooo drop 0x010 l7_prot 0x3 - icmp
+    root scb: 0x0 act_blk: 0x4bd00000
+    ingress/egress intf: GigabitEthernet0/0/2 (1021), GigabitEthernet0/0/5 (262133)
+    current time 3718081429469 create tstamp: 3717992219379 last access: 3717992439413 now 3718081434454 csec left
+    nat_out_local_addr:port: 0.0.0.0:0
+    nat_in_global_addr:port: 0.0.0.0:0
+    ip6: addr1 C addr2 C
+    key ip4: addr1 8.255.23.32:150935344 addr2 150.1.1.1:8
+    syncookie fixup: 0x0,  halfopen linkage: 0x0 0x0
+    cxsc_cft_fid: 0x00000000
+    tw timer: 0x00000000 0x00000000 0x00000000 0x04217131
+    domain_ab1 0x7045bb20 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
+
+    bucket 16919 flags 0x00000001 func 1 idx 6 wheel 0x4e59c940
+        Timer within range
+        num buckets 131072 cur 10884 mask 0x1ffff gran 160 flag 0x0 ticks 0
+    domain_ab1 0x7045bb20 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
+    NAT handles 0x00000000 0x00000000
+    FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+    icmp_err_time 0 utd_context_id 0, classification epoch scb: 0x1 actblk :0x10000 avc class stats 0x0
+    VPN id src 65535, dst 65535
+    zone pair z1-z2 class cmap
+
+Session ID:0x0000001D 2001:1::1 128 2001:2::2 1428 proto 58 (0:0) (0x3:icmp)	[sd] 1879183652
+ pscb : 0x8ff14e0,  key1_flags: 0x00000030
+	bucket : 202937, prev 0x0, next 0x0    fw_flags: 0x00000004 0x2041b861,
+	 VRF1-rsrc-limit
+	 Root Protocol-ICMP Alert Proto-State:Established No-halfopen-list Active-cnt Session-db Max-session
+    icmp_error count 0 ureachable arrived: no
+    scb state: active, nxt_timeout: 6000, refcnt: 1 NBAR verdict count 0
+    ha nak cnt: 0, rg: 0
+    hostdb: 0x0, L7: 0x0, stats: 0x4bd080c0, child: 0x0
+    octets:     208    packets:         4    octets:     208   packets:     4
+   icmp seq:     17179869184 proto: 0003: l7 ooo drop 0x010 l7_prot 0x3 - icmp
+    root scb: 0x0 act_blk: 0x4bd00000
+    ingress/egress intf: GigabitEthernet0/0/2 (1021), GigabitEthernet0/0/5 (262133)
+    current time 3718081813884 create tstamp: 3715691803294 last access: 3715691974696 now 3718081819210 csec left
+    nat_out_local_addr:port: 0.0.0.0:0
+    nat_in_global_addr:port: 0.0.0.0:0
+    ip6: addr1 C addr2 C
+    key ip4: addr1 8.255.21.192:150934992 addr2 0.0.0.0:128
+    syncookie fixup: 0x0,  halfopen linkage: 0x0 0x0
+    cxsc_cft_fid: 0x00000000
+    tw timer: 0x00000000 0x00000000 0x00000000 0x03895129
+    domain_ab1 0x7045bb20 l4 per filter stats 0x0 avc class id 0x0  SGT: 0 DGT: 0
+    NAT handles 0x00000000 0x00000000
+    FlowDB in2out 0x00000000 alloc_epoch 0 out2in 0x00000000 alloc_epoch 0 ppe tid 0
+    icmp_err_time 0 utd_context_id 0, classification epoch scb: 0x1 actblk :0x10000 avc class stats 0x0
+    VPN id src 65535, dst 65535
+    zone pair z1-z2 class cmap

@@ -1,0 +1,68 @@
+Switch: 1                                                                                                                                                                       
+ALARM CONTACT 1                                                                                                                                                                 
+   Status:      not asserted                                                                                                                                                    
+   Description: external alarm contact 1                                                                                                                                        
+   Severity:    minor                                                                                                                                                           
+   Trigger:     closed                                                                                                                                                          
+                                                                                                                                                                                
+ALARM CONTACT 2                                                                                                                                                                 
+   Status:      not asserted                                                                                                                                                    
+   Description: external alarm contact 2                                                                                                                                        
+   Severity:    minor                                                                                                                                                           
+   Trigger:     closed                                                                                                                                                          
+                                                                                                                                                                                
+ALARM CONTACT 3                                                                                                                                                                 
+   Status:      not asserted                                                                                                                                                    
+   Description: external alarm contact 3                                                                                                                                        
+   Severity:    minor                                                                                                                                                           
+   Trigger:     closed                                                                                                                                                          
+                                                                                                                                                                                
+ALARM CONTACT 4                                                                                                                                                                 
+   Status:      not asserted                                                                                                                                                    
+   Description: external alarm contact 4                                                                                                                                        
+   Severity:    minor                                                                                                                                                           
+   Trigger:     closed
+
+Switch 1: SYSTEM TEMPERATURE is OK
+Switch 1 - Inlet Temp Sensor 46 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - Outlet Temp Sensor 40 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - External-1 Temp Sensor 32 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - External-2 Temp Sensor 33 C
+Temperature State: GREEN
+Yellow Threshold : 80 C
+Red Threshold    : 96 C
+
+Switch 1 - HotSpot Temp Sensor 37 C
+Temperature State: GREEN
+Yellow Threshold : 105 C
+Red Threshold    : 125 C
+
+
+  Pwr Supply          PID           Serial#          Status         Sys Pwr        Watts
+--------------  ------------------  -------------  ---------------  -----------    ----------  
+Switch:1
+POWER SUPPLY-1     Not Present
+
+POWER SUPPLY-2  PWR-RGD-AC-DC-250   DTH255202J5     OK               Good              250       
+
+Sensor Name     Status      Reading
+PS-1 Vout     Not Present     0mV
+PS-1 Curout   Not Present     0mA
+PS-1 Powout   Not Present     0mW
+PS-1 Hotspot  Not Present     0 C
+PS-2 Vout     Good          55000mV
+PS-2 Curout   Good          500mA
+PS-2 Powout   Good          27500mW
+PS-2 Hotspot  Good          49 C

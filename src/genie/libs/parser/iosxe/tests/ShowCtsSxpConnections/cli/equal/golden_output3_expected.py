@@ -1,0 +1,41 @@
+expected_output={
+  'sxp_status': 'Enabled',
+  'highest_version': 5,
+  'default_pwd': 'Set',
+  'default_key_chain': 'Not Set',
+  'default_key_chain_name': 'Not Applicable',
+  'default_source_ip': 'Not Set',
+  'retry_period': 10,
+  'reconcile_period': 30,
+  'retry_timer': 'not running',
+  'export_traverse_limit': 'Not Set',
+  'import_traverse_limit': 'Not Set',
+  '33.1.1.1': {
+    'peer_ip': '33.1.1.1',
+    'source_ip': '33.1.1.2',
+    'conn_status': 'On (Speaker) :: On (Listener)',
+    'conn_version': 5,
+    'conn_capability': 'IPv4-IPv6-Subnet',
+    'speaker_conn_hold_time': 120,
+    'listener_conn_hold_time': 120,
+    'local_mode': 'Both',
+    'conn_inst': 1,
+    'tcp_conn_fd': '4(Speaker) 2(Listener)',
+    'tcp_conn_pwd': 'default SXP password',
+    'duration': '0:00:00:02 (dd:hr:mm:sec) :: 0:00:01:41 (dd:hr:mm:sec)'
+  },
+  '1133:1:1::1': {
+    'peer_ipv6': '1133:1:1::1',
+    'source_ip': '1133:1:1::2',
+    'conn_status': 'On (Speaker) :: On (Listener)',
+    'conn_version': 5,
+    'conn_capability': 'IPv4-IPv6-Subnet',
+    'speaker_conn_hold_time': 120,
+    'listener_conn_hold_time': 120,
+    'local_mode': 'Both',
+    'conn_inst': 1,
+    'tcp_conn_fd': '5(Speaker) 3(Listener)',
+    'tcp_conn_pwd': 'default SXP password',
+    'duration': '0:00:00:02 (dd:hr:mm:sec) :: 0:00:01:43 (dd:hr:mm:sec)'
+  }
+}

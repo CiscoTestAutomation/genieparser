@@ -1,0 +1,6 @@
+show platform software ip FP active cef summary
+Forwarding Table Summary
+
+Name             VRF id  Table id    Protocol         Prefixes    State
+------------------------------------------------------------------------------------------------
+Default          0       0           IPv4             2528        hw: 0x55d505991190 (created)

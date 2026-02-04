@@ -1,0 +1,17 @@
+show policy-map type inspect zone-pair zone1-zone2 session
+  Zone-pair: zone1-zone2
+  Service-policy inspect : pm
+
+    Class-map: cm (match-any)
+      Match: protocol icmp
+      Inspect
+        Established Sessions
+         Session ID 0x000000EC [2002::1]:128=>[3002::1]:4033 icmp SIS_OPEN
+          Created 00, Last heard 00
+          Bytes sent (initiator:responder) [1520:1520]
+
+
+    Class-map: class-default (match-any)
+      Match: any
+      Drop (default action)
+        0 packets, 0 bytes

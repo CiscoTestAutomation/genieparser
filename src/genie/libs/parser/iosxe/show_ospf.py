@@ -8963,6 +8963,8 @@ class ShowIpOspfRibRouteSchema(MetaParser):
                             'cost': int,
                             'area': str,
                             'total_paths': int,
+                            Optional('fwd_cost'): int,
+                            Optional('tag'): int,
                             'nexthop_ip':
                                 {Any():
                                     {'interface':
@@ -9018,7 +9020,10 @@ class ShowIpOspfRibRoute(ShowIpOspfRibRouteSchema):
   
         # 20.20.20.0/24, Intra, cost 10, area 0
         p1 = re.compile(r'^\*\>?\s+(?P<network>\S+),\s+(?P<route_type>\S+),\s+cost\s+(?P<cost>\d+),\s+area\s+(?P<area>\d+)*$')
-        
+        # 13.0.0.0/16, Ext2, cost 20, fwd cost 1, tag 0
+        # Also matches lines without leading * or >
+        p1_ext = re.compile(r'^\s*\*?\>?\s*(?P<network>\S+),\s+(?P<route_type>Ext\d+|NSSA),\s+cost\s+(?P<cost>\d+),\s+fwd\s+cost\s+(?P<fwd_cost>\d+),\s+tag\s+(?P<tag>\d+)$')
+
         # via 40.60.1.40, Ethernet0/2
         # via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001
         # via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001, cost 100
@@ -9067,6 +9072,27 @@ class ShowIpOspfRibRoute(ShowIpOspfRibRouteSchema):
                 network_dict['area'] = group['area']
                 network_dict.update(total_paths = 0)
                 continue
+
+            # 13.0.0.0/16, Ext2, cost 20, fwd cost 1, tag 0
+            m = p1_ext.match(line)
+            if m:
+                group = m.groupdict()
+                network = group['network']
+                route_type = group['route_type']
+                cost = group['cost']
+                fwd_cost = group.get('fwd_cost')
+                tag = group.get('tag')
+                network_dict = ospf_dict.setdefault('network', {}).setdefault(network, {})
+                network_dict['route_type'] = group['route_type']
+                network_dict['cost'] = int(group['cost'])
+                if fwd_cost:
+                    network_dict['fwd_cost'] = int(fwd_cost)
+                if tag:
+                    network_dict['tag'] = int(tag)
+                network_dict['area'] = 'N/A'  # External routes don't have area
+                network_dict.update(total_paths = 0)
+                continue
+
             #  via 40.60.1.40, Ethernet0/2, label 16001, strict label 17001, cost 100
             m = p2.match(line)
             if m:
@@ -9267,6 +9293,213 @@ class ShowIpv6OspfNeighborSummary(ShowIpv6OspfNeighborSummarySchema):
             if m2:
                 ret_dict['total_count'] = int(m2.group('total'))
                 ret_dict['undergoing_gr'] = int(m2.group('undergoing_gr'))
+                continue
+
+        return ret_dict
+
+class ShowIpOspfFastReroutePrefixSummarySchema(MetaParser):
+    schema = {
+        "process_id": str,
+        "router_id": str,
+        "topology": {
+            "mtid": str,
+            "areas": {
+                Any(): {
+                    "interfaces": {
+                        Any(): {
+                            "protected": bool,
+                            "primary_paths": {
+                                "all": int,
+                                "high": int,
+                                "low": int
+                            },
+                            "protected_paths": {
+                                "all": int,
+                                "high": int,
+                                "low": int
+                            },
+                            "percent_protected": {
+                                "all": str,
+                                "high": str,
+                                "low": str
+                            }
+                        }
+                    },
+                    "area_total": {
+                        "primary_paths": {
+                            "all": int,
+                            "high": int,
+                            "low": int
+                        },
+                        "protected_paths": {
+                            "all": int,
+                            "high": int,
+                            "low": int
+                        },
+                        "percent_protected": {
+                            "all": str,
+                            "high": str,
+                            "low": str
+                        }
+                    }
+                }
+            },
+            "process_total": {
+                "primary_paths": {
+                    "all": int,
+                    "high": int,
+                    "low": int
+                },
+                "protected_paths": {
+                    "all": int,
+                    "high": int,
+                    "low": int
+                },
+                "percent_protected": {
+                    "all": str,
+                    "high": str,
+                    "low": str
+                }
+            }
+        }
+    }
+
+class ShowIpOspfFastReroutePrefixSummary(ShowIpOspfFastReroutePrefixSummarySchema):
+    cli_command = "show ip ospf fast-reroute prefix-summary"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+
+        #     OSPF Router with ID (40.0.0.1) (Process ID 100)
+        p1 = re.compile(r'^\s*OSPF +Router +with +ID +\((?P<router_id>\S+)\) +\(Process +ID +(?P<process_id>\d+)\)$')
+        #         Base Topology (MTID 0)
+        p2 = re.compile(r'^\s*Base +Topology +\(MTID +(?P<mtid>\d+)\)$')
+        # Area 0:
+        p3 = re.compile(r'^Area +(?P<area>\d+):$')
+        # Gi0/0/6                Yes     2     1     1     2     1     1   100% 100% 100%
+        p4 = re.compile(
+            r'^(?P<intf>\S+)\s+(?P<protected>(Yes|No))\s+'
+            r'(?P<pri_all>\d+)\s+(?P<pri_high>\d+)\s+(?P<pri_low>\d+)\s+'
+            r'(?P<prot_all>\d+)\s+(?P<prot_high>\d+)\s+(?P<prot_low>\d+)\s+'
+            r'(?P<pp_all>\d+%)\s+(?P<pp_high>\d+%)\s+(?P<pp_low>\d+%)$'
+        )
+        # Area total:                    4     2     2     4     2     2   100% 100% 100%
+        p5 = re.compile(
+            r'^Area total:\s+'
+            r'(?P<pri_all>\d+)\s+(?P<pri_high>\d+)\s+(?P<pri_low>\d+)\s+'
+            r'(?P<prot_all>\d+)\s+(?P<prot_high>\d+)\s+(?P<prot_low>\d+)\s+'
+            r'(?P<pp_all>\d+%)\s+(?P<pp_high>\d+%)\s+(?P<pp_low>\d+%)$'
+        )
+        # Process total:                 4     2     2     4     2     2   100% 100% 100%
+        p6 = re.compile(
+            r'^Process total:\s+'
+            r'(?P<pri_all>\d+)\s+(?P<pri_high>\d+)\s+(?P<pri_low>\d+)\s+'
+            r'(?P<prot_all>\d+)\s+(?P<prot_high>\d+)\s+(?P<prot_low>\d+)\s+'
+            r'(?P<pp_all>\d+%)\s+(?P<pp_high>\d+%)\s+(?P<pp_low>\d+%)$'
+        )
+
+        current_area = None
+        in_area_section = False
+
+        for line in output.splitlines():
+            if not line.strip():
+                continue
+
+            #     OSPF Router with ID (40.0.0.1) (Process ID 100)
+            m = p1.match(line)
+            if m:
+                ret_dict["process_id"] = m.group("process_id")
+                ret_dict["router_id"] = m.group("router_id")
+                continue
+
+            #         Base Topology (MTID 0)
+            m = p2.match(line)
+            if m:
+                topology = ret_dict.setdefault("topology", {})
+                topology["mtid"] = m.group("mtid")
+                topology.setdefault("areas", {})
+                continue
+
+            # Area 0:
+            m = p3.match(line)
+            if m:
+                current_area = m.group("area")
+                in_area_section = True
+                topology.setdefault("areas", {})
+                topology["areas"].setdefault(current_area, {})
+                topology["areas"][current_area].setdefault("interfaces", {})
+                continue
+
+            # Gi0/0/6                Yes     2     1     1     2     1     1   100% 100% 100%
+            m = p4.match(line)
+            if m and current_area is not None:
+                intf = m.group("intf")
+                interfaces = topology["areas"][current_area]["interfaces"]
+                interfaces.setdefault(intf, {})
+                interfaces[intf]["protected"] = True if m.group("protected") == "Yes" else False
+                interfaces[intf]["primary_paths"] = {
+                    "all": int(m.group("pri_all")),
+                    "high": int(m.group("pri_high")),
+                    "low": int(m.group("pri_low")),
+                }
+                interfaces[intf]["protected_paths"] = {
+                    "all": int(m.group("prot_all")),
+                    "high": int(m.group("prot_high")),
+                    "low": int(m.group("prot_low")),
+                }
+                interfaces[intf]["percent_protected"] = {
+                    "all": m.group("pp_all"),
+                    "high": m.group("pp_high"),
+                    "low": m.group("pp_low"),
+                }
+                continue
+
+            # Area total:                    4     2     2     4     2     2   100% 100% 100%
+            m = p5.match(line)
+            if m and current_area is not None:
+                area_total = {
+                    "primary_paths": {
+                        "all": int(m.group("pri_all")),
+                        "high": int(m.group("pri_high")),
+                        "low": int(m.group("pri_low"))
+                    },
+                    "protected_paths": {
+                        "all": int(m.group("prot_all")),
+                        "high": int(m.group("prot_high")),
+                        "low": int(m.group("prot_low"))
+                    },
+                    "percent_protected": {
+                        "all": m.group("pp_all"),
+                        "high": m.group("pp_high"),
+                        "low": m.group("pp_low")
+                    }
+                }
+                topology["areas"][current_area]["area_total"] = area_total
+                continue
+
+            # Process total:                 4     2     2     4     2     2   100% 100% 100%
+            m = p6.match(line)
+            if m:
+                process_total = {
+                    "primary_paths": {
+                        "all": int(m.group("pri_all")),
+                        "high": int(m.group("pri_high")),
+                        "low": int(m.group("pri_low"))
+                    },
+                    "protected_paths": {
+                        "all": int(m.group("prot_all")),
+                        "high": int(m.group("prot_high")),
+                        "low": int(m.group("prot_low"))
+                    },
+                    "percent_protected": {
+                        "all": m.group("pp_all"),
+                        "high": m.group("pp_high"),
+                        "low": m.group("pp_low")
+                    }
+                }
+                topology["process_total"] = process_total
                 continue
 
         return ret_dict

@@ -710,8 +710,8 @@ class ShowLoggingOnboardRpActiveUptime(ShowLoggingOnboardRpActiveUptimeSchema):
         #Current slot            : 1
         p8=re.compile(r'^Current slot\s+: (?P<current_slot>\d+)$')
 
-        #Chassis type            : 80
-        p9=re.compile(r'^Chassis type\s+: (?P<chassis_type>\w+)$')
+        #Chassis type            : C9500X-60L4D
+        p9=re.compile(r'^Chassis type\s+: (?P<chassis_type>\S+)$')
 
         #Current uptime          :  0  years  1  weeks  1  days  0  hours  0  minutes
         p10=re.compile(r'^Current uptime\s+:\s+(?P<years>\d+)\s+\w+\s+(?P<weeks>\d+)\s+\w+\s+(?P<days>\d+)\s+\w+\s+(?P<hours>\d+)\s+\w+\s+(?P<minutes>\d+)\s+\w+$')
@@ -2087,3 +2087,65 @@ class ShowLoggingProcessIosModulePkiLevelNotice(ShowLoggingProcessIosModulePkiLe
 
         # DEVAT-compliant single return
         return parsed_dict
+
+class ShowLoggingProcessFedInternalStartLastClearSwitchActiveSchema(MetaParser):
+    """show logging process fed internal start last clear switch active"""
+
+    schema = {
+        'date_time': str,
+        'hostname': str,
+        'model': str,
+        'version': str,
+        'sn' : str,
+        'md_sn': str,
+        Optional("time_period"): str
+    }
+    
+##################################
+# Parser for show logging process fed internal start last clear switch active
+##################################
+class ShowLoggingProcessFedInternalStartLastClearSwitchActive(ShowLoggingProcessFedInternalStartLastClearSwitchActiveSchema):
+    """show logging process fed internal start last clear switch active """
+
+    cli_command = 'show logging process fed internal start last clear switch active'
+    def cli(self, output=None):
+        if output is None:
+                output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        #Logging display requested on 2024/08/22 04:14:42 (PDT) for Hostname: [hendrix], Model: [C9350-48HX], Version: [17.16.01], SN: [FOC27361DWU], MD_SN: [FOC2743Y44V]
+        p1 = re.compile(r'^Logging +display +requested +on +'
+                        r'(?P<date_time>\d+\/\d+\/\d+ +\d+\:\d+\:\d+ +\(\w+\)) +for +'
+                        r'Hostname\: +\[(?P<hostname>\w+)\]\, +'
+                        r'Model\: +\[(?P<model>\S+)\]\, +'
+                        r'Version\: +\[(?P<version>\d+\.\d+\.\d+)\]\, +'
+                        r'SN\: +\[(?P<sn>\S+)\]\, +MD_SN\: +\[(?P<md_sn>\S+)\]$')
+
+        #Displaying logs from the last 2 days, 1 hours, 54 minutes, 14 seconds
+        p2 = re.compile(r'^Displaying +logs +from +the +last +(?P<time_period>.*)$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Logging display requested on 2024/08/22 04:14:42 (PDT) for Hostname: [hendrix], Model: [C9350-48HX], Version: [17.16.01], SN: [FOC27361DWU], MD_SN: [FOC2743Y44V]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['date_time'] = group['date_time']
+                ret_dict['hostname'] = group['hostname']
+                ret_dict['model'] = group['model']
+                ret_dict['version'] = group['version']
+                ret_dict['sn'] =  group['sn']
+                ret_dict['md_sn'] =  group['md_sn']
+                continue
+
+            # Displaying logs from the last 2 days, 1 hours, 54 minutes, 14 seconds
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['time_period'] =  group['time_period']
+                continue
+
+        return ret_dict

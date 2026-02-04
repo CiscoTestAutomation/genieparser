@@ -1178,3 +1178,109 @@ class ShowPlatformSoftwareFedSwitchAcl(ShowPlatformSoftwareFedSwitchAclSchema):
                 continue
 
         return ret_dict
+
+class ShowAccessListFqdnClientSchema(MetaParser):
+    """Schema for show access-list fqdn client"""
+    schema = {
+        'fqdn': {
+            Any(): {
+                Optional('ip_version'): str,
+                'acl_clients': int,
+                'clients': {
+                    Any(): {
+                        'acl': str,
+                        'ace': int,
+                        'position': str,
+                        'next_resolved_ace_seq': int,
+                    }
+                }
+            }
+        }
+    }
+
+class ShowAccessListFqdnClient(ShowAccessListFqdnClientSchema):
+    """Parser for show access-list fqdn client"""
+
+    cli_command = 'show access-list fqdn client'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # FQDN www.msft10.com, 2 ACL client(s)
+        p1 = re.compile(r'^FQDN\s+(?P<fqdn>\S+),\s+(?P<acl_clients>\d+)\s+ACL\s+client\(s\)$')
+
+        # ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+        p2 = re.compile(r'^ACL:\s+(?P<acl>\S+)$')
+
+        # ACE:                   20
+        p3 = re.compile(r'^ACE:\s+(?P<ace>\d+)$')
+
+        # Position:              destination
+        p4 = re.compile(r'^Position:\s+(?P<position>\S+)$')
+
+        # Next resolved ACE seq: 200000
+        p5 = re.compile(r'^Next\s+resolved\s+ACE\s+seq:\s+(?P<next_resolved_ace_seq>\d+)$')
+
+        # IPv4:*.atoz.msn.com - 1 ACL client(s)
+        # IPv6:www.ab.*.*.*.test.com - 1 ACL client(s)
+        p6 = re.compile(r'^(?P<ip_version>IPv4|IPv6):(?P<fqdn>\S+)\s+-\s+(?P<acl_clients>\d+)\s+ACL\s+client\(s\)$')
+
+        client_index = 0
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # FQDN www.msft10.com, 2 ACL client(s)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                fqdn_dict = ret_dict.setdefault('fqdn', {}).setdefault(group['fqdn'], {})
+                fqdn_dict['acl_clients'] = int(group['acl_clients'])
+                client_index = 0
+                continue
+
+            # ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                client_index += 1
+                client_dict = fqdn_dict.setdefault('clients', {}).setdefault(client_index, {})
+                client_dict['acl'] = group['acl']
+                continue
+
+            # ACE:                   20
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                client_dict['ace'] = int(group['ace'])
+                continue
+
+            # Position:              destination
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                client_dict['position'] = group['position']
+                continue
+
+            # Next resolved ACE seq: 200000
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                client_dict['next_resolved_ace_seq'] = int(group['next_resolved_ace_seq'])
+                continue
+
+            # IPv4:*.atoz.msn.com - 1 ACL client(s)
+            # IPv6:www.ab.*.*.*.test.com - 1 ACL client(s)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                fqdn_dict = ret_dict.setdefault('fqdn', {}).setdefault(group['fqdn'], {})
+                fqdn_dict['ip_version'] = group['ip_version']
+                fqdn_dict['acl_clients'] = int(group['acl_clients'])
+                client_index = 0
+                continue
+            
+        return ret_dict

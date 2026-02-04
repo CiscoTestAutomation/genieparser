@@ -1,0 +1,9 @@
+GE3: iid 0
+mac status: lport 4, speed 10, duplex half, link down, forcedlink disabled, forcedfc disabled
+L3_NETWORK
+link down(config disabled), speed 1000(config auto), duplex full(config auto), config autoneg, mtu 1526
+rx_pause off(config off), tx_pause off(config off)
+vlan mode tunnel, native vlan 2351
+qos mode override, default priority 6
+mac learning disable learning, protected port disabled
+mac_filtering: Enable, mac: 8061.3295.1bea

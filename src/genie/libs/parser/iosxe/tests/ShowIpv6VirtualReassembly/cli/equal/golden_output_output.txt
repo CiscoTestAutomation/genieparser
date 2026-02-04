@@ -1,0 +1,13 @@
+show ipv6 virtual-reassembly
+ All enabled IPv6 interfaces...
+NVI0:
+   IPv6 Virtual Fragment Reassembly (IPV6VFR) is ENABLED [out]
+   IPv6 configured concurrent reassemblies (max-reassemblies): 1024
+   IPv6 configured fragments per reassembly (max-fragments): 16
+   IPv6 configured reassembly timeout (timeout): 3 seconds
+   IPv6 configured drop fragments: OFF
+
+   IPv6 current reassembly count:0
+   IPv6 current fragment count:0
+   IPv6 total reassembly count:0
+   IPv6 total reassembly timeout count:0

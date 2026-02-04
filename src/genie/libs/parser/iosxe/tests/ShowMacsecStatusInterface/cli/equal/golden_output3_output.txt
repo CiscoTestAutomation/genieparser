@@ -1,0 +1,24 @@
+show macsec status interface GigabitEthernet0/0/2
+ Capabilities:
+  Ciphers Supported:        GCM-AES-128 GCM-AES-256
+  Cipher:                   GCM-AES-128
+  Confidentiality Offset:   0
+  Replay Window:            64
+  Delay Protect Enable:     FALSE
+  Access Control:           must-secure
+  Include-SCI:              TRUE
+
+ Transmit SC:
+  SCI:                      687909AC5482000A
+  Transmitting:             TRUE
+ Transmit SA:
+  Next PN:                  10
+  Delay Protect AN/nextPN:  NA/0
+
+ Receive SC:
+  SCI:                      8C94616AFB02000A
+  Receiving:                TRUE
+ Receive SA:
+  Next PN:                  11
+  AN:                       0 1 2 3
+  Delay Protect AN/LPN:     0/0

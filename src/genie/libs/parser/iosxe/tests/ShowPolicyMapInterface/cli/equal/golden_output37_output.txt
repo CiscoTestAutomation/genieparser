@@ -1,0 +1,11 @@
+ GigabitEthernet5
+
+  Service-policy input: check_exp
+
+    Class-map: check_exp (match-all)
+      792268 packets, 87149480 bytes
+      5 minute offered rate 2298000 bps, drop rate 0000 bps
+      Match: ip precedence 2
+      QoS Set
+        mpls experimental imposition 1
+          Packets marked 792268

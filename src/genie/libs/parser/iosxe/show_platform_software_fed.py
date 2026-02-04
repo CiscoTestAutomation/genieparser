@@ -7630,10 +7630,13 @@ class ShowPlatformSoftwareFedSwitchActiveStpVlanSchema(MetaParser):
             Any(): {
                 "pvlan_mode": str,
                 "stp_state": str,
+                Optional("stp_state_hw"): str,
                 "vtp_pruned": str,
                 "untagged": str,
                 "ingress": str,
                 "egress": str,
+                Optional("gid"): int,
+                Optional("mac_learn"): str,
             }
         },
     }
@@ -7667,7 +7670,8 @@ class ShowPlatformSoftwareFedSwitchActiveStpVlan(
         p1 = re.compile(
             r"^(?P<interface>\S+) +(?P<pvlan_mode>\S+) +(?P<stp_state>\S+) +(?P<vtp_pruned>\S+) +(?P<untagged>\w+) +(?P<ingress>\w+) +(?P<egress>\w+)$"
         )
-
+        # FiftyGigE1/0/11         none    disabled         Blocking          No         Yes         Blocking         Blocking         850        Enable
+        p1_1 = re.compile(r"^(?P<interface>\S+) +(?P<pvlan_mode>\S+) +(?P<stp_state>\S+) +(?P<stp_state_hw>\S+) +(?P<vtp_pruned>\S+) +(?P<untagged>\w+) +(?P<ingress>\w+) +(?P<egress>\w+) +(?P<gid>\d+) +(?P<mac_learn>\S+)$")
         # HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1
         p2 = re.compile(r"^HW flood list\:\s+:(?P<hw_flood_list>[\w\s\,/\.]*)$")
 
@@ -7690,7 +7694,27 @@ class ShowPlatformSoftwareFedSwitchActiveStpVlan(
                 key_chain_dict["ingress"] = dict_val["ingress"]
                 key_chain_dict["egress"] = dict_val["egress"]
                 continue
-
+                
+                
+            # FiftyGigE1/0/11         none    disabled         Blocking          No         Yes         Blocking         Blocking         850        Enable
+            m = p1_1.match(line)
+            if m:
+                dict_val = m.groupdict()
+                key_chain_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(dict_val["interface"]), {}
+                )
+                key_chain_dict["pvlan_mode"] = dict_val["pvlan_mode"]
+                key_chain_dict["stp_state"] = dict_val["stp_state"]
+                key_chain_dict["stp_state_hw"] = dict_val["stp_state_hw"]
+                key_chain_dict["vtp_pruned"] = dict_val["vtp_pruned"]
+                key_chain_dict["untagged"] = dict_val["untagged"]
+                key_chain_dict["ingress"] = dict_val["ingress"]
+                key_chain_dict["egress"] = dict_val["egress"]
+                key_chain_dict["gid"] = int(dict_val["gid"])
+                key_chain_dict["mac_learn"] = dict_val["mac_learn"]
+                continue
+                
+                
             # HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1
             m = p2.match(line)
             if m:
@@ -18766,6 +18790,225 @@ class ShowPlatformSoftwareFedSwitchSwcStatistics(ShowPlatformSoftwareFedSwitchSw
             m = p18.match(line)
             if m:
                 ret_dict.setdefault("swc_flags", {})["certificate_validation"] = m.group("certificate_validation")
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpv6sgClearSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_var} security-fed ipv6sg clear"""
+    schema = {
+        'status': str
+    }
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpv6sgClear(ShowPlatformSoftwareFedSwitchSecurityFedIpv6sgClearSchema):
+    """Parser for show platform software fed switch {switch_var} security-fed ipv6sg clear"""
+
+    cli_command = ['show platform software fed {switch} {switch_var} security-fed ipv6sg clear',
+                   'show platform software fed {switch_var} security-fed ipv6sg clear']
+
+    def cli(self, switch_var, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_var=switch_var))
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_var=switch_var))
+        
+        ret_dict = {}
+
+        # Successfully cleared counter value
+        p1 = re.compile(r'^Successfully cleared counter value$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Successfully cleared counter value
+            m = p1.match(line)
+            if m:
+                ret_dict['status'] = 'Successfully cleared counter value'
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpsgClearSchema(MetaParser):
+    """Schema for show platform software fed switch {switch_var} security-fed ipsg clear"""
+    schema = {
+        'status': str
+    }
+    
+class ShowPlatformSoftwareFedSwitchSecurityFedIpsgClear(ShowPlatformSoftwareFedSwitchSecurityFedIpsgClearSchema):
+    """Parser for show platform software fed switch {switch_var} security-fed ipsg clear"""
+
+    cli_command = ['show platform software fed {switch} {switch_var} security-fed ipsg clear',
+                   'show platform software fed {switch_var} security-fed ipsg clear']
+
+    def cli(self, switch_var, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_var=switch_var))
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_var=switch_var))
+        
+        ret_dict = {}
+
+        # Successfully cleared counter value
+        p1 = re.compile(r'^Successfully cleared counter value$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Successfully cleared counter value
+            m = p1.match(line)
+            if m:
+                ret_dict['status'] = 'Successfully cleared counter value'
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpv6sgIfIdSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch} security-fed ipv6sg if-id {if-id}'"""
+    schema = {
+        'ipsg_entries': {
+            Any(): {
+                'ip': str,
+                'prefix': int,
+                'handle': str,
+                'action': str,
+                Optional('ec_state'): str,
+                'vlan': int,
+                'mac': str,
+                'mac_handle': str,
+                'counter_oid': str,
+                'asic': int,
+                'position': int,
+                'hit_counter': int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpv6sgIfId(ShowPlatformSoftwareFedSwitchSecurityFedIpv6sgIfIdSchema):
+    """Parser for 'show platform software fed switch {switch} security-fed ipv6sg if-id {if-id}'"""
+
+    cli_command = ['show platform software fed {switch} {switch_var} security-fed ipv6sg if-id {if_id}',
+                   'show platform software fed {switch_var} security-fed ipv6sg if-id {if_id}']
+
+    def cli(self, switch_var, if_id, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_var=switch_var, if_id=if_id))
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_var=switch_var, if_id=if_id))
+        
+        ret_dict = {}
+
+        # fe80::200:ff:fe22:2222                        128   1259 [0x4eb]     Permit      None       200    00:00:00:22:22:22      1259 [0x4eb]
+        p1 = re.compile(r'^(?P<ip>[\da-fA-F:.]+)\s+(?P<prefix>\d+)\s+(?P<handle>\d+ \[\S+\])\s+(?P<action>\w+)\s+(?P<ec_state>\w+)\s+(?P<vlan>\d+)\s+(?P<mac>[\da-fA-F:]+)\s+(?P<mac_handle>\d+ \[\S+\])$')
+    
+        # Counter OID (0xcfd     ) on ASIC (0         )  Position (40015     ) Hit-Counter (16327     )
+        p2 = re.compile(r'^Counter\s+OID\s+\(+(?P<counter_oid>\w+)\s+\)\s+on\s+ASIC\s+\((?P<asic>\d+)\s+\)\s+Position\s+\((?P<position>\d+)\s+\)\s+Hit-Counter\s+\((?P<hit_counter>\d+)\s+\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # fe80::200:ff:fe22:2222                        128   1259 [0x4eb]     Permit      None       200    00:00:00:22:22:22      1259 [0x4eb]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ipsg_dict=ret_dict.setdefault("ipsg_entries", {}).setdefault(group['ip'], {})
+                ipsg_dict['ip'] = group['ip']
+                ipsg_dict['prefix'] = int(group['prefix'])
+                ipsg_dict['handle'] = group['handle']
+                ipsg_dict['action'] = group['action']
+                if group['ec_state']!='None':
+                    ipsg_dict['ec_state'] = group['ec_state']
+                ipsg_dict['vlan'] = int(group['vlan'])
+                ipsg_dict['mac'] = group['mac']
+                ipsg_dict['mac_handle'] = group['mac_handle']
+                continue
+
+            # Counter OID (0xcfd     ) on ASIC (0         )  Position (40015     ) Hit-Counter (16327     )
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ipsg_dict['counter_oid'] = group['counter_oid']
+                ipsg_dict['asic'] = int(group['asic'])
+                ipsg_dict['position'] = int(group['position'])
+                ipsg_dict['hit_counter'] = int(group['hit_counter'])
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpsgIfIdDetailSchema(MetaParser):
+    """Schema for 'show platform software fed switch {switch} security-fed ipsg if-id {if-id} detail'"""
+    schema = {
+        'ipsg_entries': {
+            Any(): {  
+                'ip': str,
+                'handle': str,
+                'type': str,
+                'action': str,
+                Optional('ec_state'): str,
+                'vlan': int,
+                Optional('mac'): str,
+                Optional('mac_handle'): str,
+                'counter_oid': str,
+                'asic': int,
+                'position': int,
+                'hit_counter': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchSecurityFedIpsgIfIdDetail(ShowPlatformSoftwareFedSwitchSecurityFedIpsgIfIdDetailSchema):
+    """Parser for 'show platform software fed switch {switch} security-fed ipsg if-id {if-id} detail'"""
+
+    cli_command = ['show platform software fed {switch} {switch_var} security-fed ipsg if-id {if_id} detail',
+                   'show platform software fed {switch_var} security-fed ipsg if-id {if_id} detail']
+
+    def cli(self, switch_var, if_id, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.device.execute(self.cli_command[0].format(switch=switch, switch_var=switch_var, if_id=if_id))
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_var=switch_var, if_id=if_id))
+        
+        ret_dict = {}
+
+        # 0.0.0.0            1259 [0x4eb]     Mac IP      Drop             None                0
+        # 100.200.0.4        1259 [0x4eb]     Mac IP      Permit             None                200    00:00:00:22:22:22      1259 [0x4eb]
+        p1 = re.compile(r'^(?P<ip>[\d\.]+)\s+(?P<handle>\d+ \[\S+\])\s+(?P<type>[\w ]+)\s+(?P<action>\w+)\s+(?P<ec_state>\w+)\s+(?P<vlan>\d+)(\s+(?P<mac>[\da-fA-F:]+)\s+(?P<mac_handle>\d+ \[\S+\]))?$')
+
+        # Counter OID (0xc58     ) on ASIC (0         )  Position (40015     ) Hit-Counter (16337     )
+        p2 = re.compile(r'^Counter\s+OID\s+\(+(?P<counter_oid>\w+)\s+\)\s+on\s+ASIC\s+\((?P<asic>\d+)\s+\)\s+Position\s+\((?P<position>\d+)\s+\)\s+Hit-Counter\s+\((?P<hit_counter>\d+)\s+\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0.0.0.0            1259 [0x4eb]     Mac IP      Drop             None                0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ipsg_dict=ret_dict.setdefault("ipsg_entries", {}).setdefault(group['ip'], {})
+                ipsg_dict['ip'] = group['ip']
+                ipsg_dict['handle'] = group['handle']
+                ipsg_dict['type'] = group['type'].strip()
+                ipsg_dict['action'] = group['action']
+                if group['ec_state']!='None':
+                    ipsg_dict['ec_state'] = group['ec_state']
+                ipsg_dict['vlan'] = int(group['vlan'])
+                if group.get('mac'):
+                    ipsg_dict['mac'] = group['mac']
+                if group.get('mac_handle'):
+                    ipsg_dict['mac_handle'] = group['mac_handle']
+                continue
+
+            # Counter OID (0xc58     ) on ASIC (0         )  Position (40015     ) Hit-Counter (16337     )
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ipsg_dict['counter_oid'] = group['counter_oid']
+                ipsg_dict['asic'] = int(group['asic'])
+                ipsg_dict['position'] = int(group['position'])
+                ipsg_dict['hit_counter'] = int(group['hit_counter'])
                 continue
 
         return ret_dict

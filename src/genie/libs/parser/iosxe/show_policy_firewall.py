@@ -3,6 +3,7 @@
 IOSXE parsers for the following show commands:
     * show policy-firewall stats vrf {vrf}
     * show policy-firewall stats zone {zone}
+    * show policy-firewall sessions platform destination-port {port}
     * show policy-firewall stats global
 """
 
@@ -289,6 +290,120 @@ class ShowPolicyFirewallStatsZone(ShowPolicyFirewallStatsZoneSchema):
 
         return ret_dict
 
+# ===================================================
+# Schema for 'show policy-firewall sessions platform v6-source-address'
+# ===================================================
+
+class ShowPolicyFirewallSessionsPlatformV6SourceAddressSchema(MetaParser):
+    """Schema for 'show policy-firewall sessions platform v6-source-address'"""
+    
+    schema = {
+        Optional('platform_command'): str,
+        Optional('session_legend'): {
+            's': str,
+            'i': str,
+            'c': str,
+            'd': str,
+            'u': str,
+            'A/D': str
+        },
+        Optional('sessions'): {
+            Any(): {
+                'session_id': str,
+                'source_address': str,
+                'source_port': str,
+                'destination_address': str,
+                'destination_port': str,
+                'protocol': str,
+                'protocol_info': str,
+                'protocol_detail': str,
+                'channels': str,
+                'session_value': str
+            }
+        }
+    }
+
+# ===================================================
+# Parser for 'show policy-firewall sessions platform v6-source-address'
+# ===================================================
+
+class ShowPolicyFirewallSessionsPlatformV6SourceAddress(ShowPolicyFirewallSessionsPlatformV6SourceAddressSchema):
+    """Parser for 'show policy-firewall sessions platform v6-source-address'"""
+    
+    cli_command = 'show policy-firewall sessions platform v6-source-address {address}'
+    
+    def cli(self, address='', output=None):
+        if output is None:
+            if address:
+                output = self.device.execute(self.cli_command.format(address=address))
+        else:
+            output = output
+            
+        # Initialize parsed dictionary
+        parsed_dict = {}
+        
+        # Parse platform command line
+        # --show platform hardware qfp active feature firewall datapath scb ipv6 2001:1:0:0:0:0:0:1 --
+        p1 = re.compile(r'^--(?P<command>show platform hardware qfp active feature firewall datapath scb ipv6 [\d:]+)\s*--$')
+        
+        # Parse session legend line
+        # [s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+        p2 = re.compile(r'^\[s=(?P<s>.*?)\s+i=(?P<i>.*?)\s+c=(?P<c>.*?)\s+d=(?P<d>.*?)\s+u=(?P<u>.*?)\s+A/D=(?P<ad>.*?)\]$')
+ 
+        # Parse session data line
+        # Session ID:0x00000002 2001:1::1 128 2001:2::2 7993 proto 58 (0:0) (0x3:icmp)	[sd] 3046618007
+        p3 = re.compile(r'^Session ID:(?P<session_id>\w+)\s+(?P<src_addr>[\da-fA-F:]+)\s+(?P<src_port>\d+)\s+(?P<dst_addr>[\da-fA-F:]+)\s+(?P<dst_port>\d+)\s+proto\s+(?P<protocol>\d+)\s+(?P<proto_info>\([^)]+\))\s+(?P<proto_detail>\([^)]+\))\s+(?P<channels>\[[^\]]+\])\s+(?P<session_value>\d+)$')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Match platform command
+            # --show platform hardware qfp active feature firewall datapath scb ipv6 2001:1:0:0:0:0:0:1 --
+            m = p1.match(line)
+            if m:
+                parsed_dict['platform_command'] = m.groupdict()['command']
+                continue
+                
+            # Match session legend
+            # [s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                parsed_dict['session_legend'] = {
+                    's': groups['s'].strip(),
+                    'i': groups['i'].strip(),
+                    'c': groups['c'].strip(), 
+                    'd': groups['d'].strip(),
+                    'u': groups['u'].strip(),
+                    'A/D': groups['ad'].strip()
+                }
+                continue
+                
+            # Match session data
+            # Session ID:0x00000002 2001:1::1 128 2001:2::2 7993 proto 58 (0:0) (0x3:icmp)	[sd] 3046618007
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                session_id = groups['session_id']
+                
+                if 'sessions' not in parsed_dict:
+                    parsed_dict['sessions'] = {}
+                    
+                parsed_dict['sessions'][session_id] = {
+                    'session_id': session_id,
+                    'source_address': groups['src_addr'],
+                    'source_port': groups['src_port'],
+                    'destination_address': groups['dst_addr'],
+                    'destination_port': groups['dst_port'],
+                    'protocol': groups['protocol'],
+                    'protocol_info': groups['proto_info'],
+                    'protocol_detail': groups['proto_detail'],
+                    'channels': groups['channels'],
+                    'session_value': groups['session_value']
+                }
+                continue
+        
+        return parsed_dict
 
 # ======================================================
 # Schema for 'show policy-firewall stats global'
@@ -389,5 +504,68 @@ class ShowPolicyFirewallStatsGlobal(ShowPolicyFirewallStatsGlobalSchema):
                 half_open_dict['half_open_aggressive_aging_period'] = m.group('half_open_aging_period')
                 half_open_dict['half_open_event_count'] = int(m.group('half_open_event_count'))
                 continue
+
+        return ret_dict
+
+class ShowPolicyFirewallSessionsPlatformDestinationPortSchema(MetaParser):
+   """Schema for show policy-firewall sessions platform destination-port <port>"""
+
+   schema = {
+        'platform_command': str,  # The actual platform command executed
+        Optional('legend'): {
+            'session': str,     # session description
+            'imprecise': str,     # imprecise channel description
+            'control': str,     # control channel description
+            'data': str,     # data channel description
+            'utd': str,     # utd inspect description
+            'appfw': str    # appfw action allow/deny description (note: A_D not A/D)
+        }
+    }
+
+class ShowPolicyFirewallSessionsPlatformDestinationPort(ShowPolicyFirewallSessionsPlatformDestinationPortSchema):
+    """Parser for show policy-firewall sessions platform destination-port <port>"""
+
+    cli_command = ['show policy-firewall sessions platform destination-port {port}']
+    
+    def cli(self, port="", output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(port=port)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        # --show platform hardware qfp active feature firewall datapath scb any any any 0 any all any --
+        p1 = re.compile(r"^--(?P<command>show platform hardware qfp active feature firewall datapath scb any any any 0 any all any)\s*--$")
+
+        # Parse session legend line
+        # [s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+        p2 = re.compile(r'^\[s=(?P<s>.*?)\s+i=(?P<i>.*?)\s+c=(?P<c>.*?)\s+d=(?P<d>.*?)\s+u=(?P<u>.*?)\s+A/D=(?P<ad>.*?)\]$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+            # Match platform command line
+            # --show platform hardware qfp active feature firewall datapath scb any any any 0 any all any --
+            m = p1.match(line)
+            if m:
+                ret_dict['platform_command'] = m.groupdict()['command']
+                continue
+
+            # Match legend line
+            # [s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict['legend'] = {
+                    'session': groups['s'].strip(),
+                    'imprecise': groups['i'].strip(),
+                    'control': groups['c'].strip(), 
+                    'data': groups['d'].strip(),
+                    'utd': groups['u'].strip(),
+                    'appfw': groups['ad'].strip()
+            }
 
         return ret_dict

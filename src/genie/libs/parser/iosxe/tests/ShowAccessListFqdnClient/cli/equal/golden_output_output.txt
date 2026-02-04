@@ -1,0 +1,81 @@
+show access-list fqdn client
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv4:*.atoz.msn.com - 1 ACL client(s)
+    ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+    ACE:                   40
+    Position:              destination
+    Next resolved ACE seq: 400000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv4:*.cisco.com - 1 ACL client(s)
+    ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+    ACE:                   20
+    Position:              destination
+    Next resolved ACE seq: 200000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv4:*.csc.net - 1 ACL client(s)
+    ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+    ACE:                   60
+    Position:              destination
+    Next resolved ACE seq: 600000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv4:*.demo1.msft.com - 1 ACL client(s)
+    ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+    ACE:                   30
+    Position:              destination
+    Next resolved ACE seq: 300000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv4:www.ab.*.*.*.test.com - 1 ACL client(s)
+    ACL:                   FQDN_ACL_WEBAUTH_REDIRECT
+    ACE:                   50
+    Position:              destination
+    Next resolved ACE seq: 500000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv6:*.atoz.msn.com - 1 ACL client(s)
+    ACL:                   FQDN_v6ACL_WEBAUTH_REDIRECT
+    ACE:                   4
+    Position:              destination
+    Next resolved ACE seq: 40000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv6:*.cisco.com - 1 ACL client(s)
+    ACL:                   FQDN_v6ACL_WEBAUTH_REDIRECT
+    ACE:                   2
+    Position:              destination
+    Next resolved ACE seq: 20000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv6:*.csc.net - 1 ACL client(s)
+    ACL:                   FQDN_v6ACL_WEBAUTH_REDIRECT
+    ACE:                   6
+    Position:              destination
+    Next resolved ACE seq: 60000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv6:*.demo1.msft.com - 1 ACL client(s)
+    ACL:                   FQDN_v6ACL_WEBAUTH_REDIRECT
+    ACE:                   3
+    Position:              destination
+    Next resolved ACE seq: 30000
+
+------------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+IPv6:www.ab.*.*.*.test.com - 1 ACL client(s)
+    ACL:                   FQDN_v6ACL_WEBAUTH_REDIRECT
+    ACE:                   5
+    Position:              destination
+    Next resolved ACE seq: 50000
+
+------------------------------------------------------

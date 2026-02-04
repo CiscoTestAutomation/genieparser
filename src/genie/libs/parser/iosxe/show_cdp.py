@@ -937,7 +937,8 @@ class ShowCdp(ShowCdpSchema):
         p2 = re.compile(r'^Sending a holdtime value of (?P<holdtime>\d+) seconds$')
 
         # Sending CDPv2 advertisements is  enabled
-        p3 = re.compile(r'^Sending CDPv2 advertisements is\s+(?P<cdpv2>\w+)$')
+        # Sending CDPv2 advertisements is not enabled
+        p3 = re.compile(r'^Sending CDPv2 advertisements is\s+(?P<cdpv2>[\w\s]+)$')
 
         ret_dict = dict()
 
@@ -957,6 +958,7 @@ class ShowCdp(ShowCdpSchema):
                 continue
             
             # Sending CDPv2 advertisements is  enabled
+            # Sending CDPv2 advertisements is not enabled
             m = p3.match(line)
             if m:
                 ret_dict.setdefault('cdpv2', m.groupdict()['cdpv2'])
