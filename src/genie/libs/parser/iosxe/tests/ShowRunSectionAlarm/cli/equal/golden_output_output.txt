@@ -1,0 +1,31 @@
+show running-config all | section alarm
+alarm-profile defaultPort
+ alarm not-operating 
+ syslog not-operating 
+ notifies not-operating 
+no alarm facility hsr enable
+no alarm facility hsr relay major
+no alarm facility hsr syslog
+no alarm facility hsr notifies
+no alarm facility power-supply syslog
+no alarm facility temperature primary relay major
+no alarm facility temperature primary syslog
+no alarm facility temperature primary notifies
+alarm facility temperature primary low 0
+alarm facility temperature primary high 80
+alarm facility temperature secondary low 0
+alarm facility temperature secondary high 80
+no alarm facility input-alarm 1 notifies
+alarm facility input-alarm 1 syslog
+no alarm facility input-alarm 1 relay major
+no alarm facility input-alarm 2 notifies
+alarm facility input-alarm 2 syslog
+no alarm facility input-alarm 2 relay major
+no alarm facility input-alarm 3 notifies
+alarm facility input-alarm 3 syslog
+no alarm facility input-alarm 3 relay major
+no alarm facility input-alarm 4 notifies
+alarm facility input-alarm 4 syslog
+no alarm facility input-alarm 4 relay major
+no logging alarm
+snmp mib flowmon alarmhistorysize 500

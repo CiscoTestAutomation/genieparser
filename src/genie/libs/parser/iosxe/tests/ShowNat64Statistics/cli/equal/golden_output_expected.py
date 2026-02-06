@@ -71,6 +71,8 @@ expected_output = {
         },
         'interface_statistics': {
             'TenGigabitEthernet5/0/12': {
+                'ipv4': 'not configured',
+                'ipv6': 'not configured',
                 'stateful_prefix': {
                     '2010:1::/96': {
                         'packets_dropped': 0,
@@ -78,9 +80,7 @@ expected_output = {
                             'v4_to_v6': 20,
                             'v6_to_v4': 1
                         }
-                    },
-                'ipv4': 'not configured',
-                'ipv6': 'not configured'
+                    }
                 }
             }
         },

@@ -3,12 +3,10 @@
      Integrity  : SHA512 SHA384
      PRF        : SHA512 SHA384
      DH Group   : DH_GROUP_256_ECP/Group 19 DH_GROUP_2048_MODP/Group 14 DH_GROUP_521_ECP/Group 21
-     AKE group  :
-                  1: MLKEM768
- IKEv2 proposal: ikev2proposal 
+     PQC Key Exchange: ML-KEM-768 ML-KEM-1024 Optional
+ IKEv2 proposal: ikev2proposal
      Encryption : AES-CBC-256
      Integrity  : SHA512
      PRF        : SHA512
      DH Group   : DH_GROUP_521_ECP/Group 21
-     AKE group  :
-                  1: MLKEM1024
+     PQC Key Exchange: ML-KEM-1024 Optional

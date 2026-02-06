@@ -1,0 +1,7 @@
+show platform software fed switch 3 security-fed ipsg if-id 0x4eb detail
+IP                 Handle           TYPE          ACTION           EC_STATE           vlan    Mac                  Handle
+==============================================================================================================================
+0.0.0.0            1259 [0x4eb]     Mac IP      Drop             None                0
+  Counter OID (0xc58     ) on ASIC (0         )  Position (40015     ) Hit-Counter (16337     )
+100.200.0.4        1259 [0x4eb]     Mac IP      Permit             None                200    00:00:00:22:22:22      1259 [0x4eb]
+  Counter OID (0xc59     ) on ASIC (0         )  Position (15        ) Hit-Counter (15        )

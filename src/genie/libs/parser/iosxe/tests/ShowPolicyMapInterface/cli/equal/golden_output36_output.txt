@@ -1,0 +1,10 @@
+GigabitEthernet5
+
+  Service-policy input: check_exp
+
+    Class-map: check_exp (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: mpls experimental topmost 0
+        0 packets, 0 bytes
+        5 minute rate 0 bps

@@ -1,0 +1,15 @@
+show ip ospf fast-reroute prefix-summary
+
+            OSPF Router with ID (40.0.0.1) (Process ID 100)
+                    Base Topology (MTID 0)
+
+Area 0:
+
+Interface        Protected    Primary paths    Protected paths Percent protected
+                             All  High   Low   All  High   Low    All High  Low
+Gi0/0/6                Yes     2     1     1     2     1     1   100% 100% 100%
+Gi0/0/7                Yes     2     1     1     2     1     1   100% 100% 100%
+
+Area total:                    4     2     2     4     2     2   100% 100% 100%
+
+Process total:                 4     2     2     4     2     2   100% 100% 100%

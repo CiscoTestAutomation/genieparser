@@ -4,23 +4,23 @@
 
 Tunnel-id    fvrf/ivrf              Status
 1          none/none             READY
-Local  2001:DB8:1101::222/500
-Remote  2001:DB8:1201::222/500
+Local  2001:DB8:1101::131/500
+Remote  2001:DB8:1201::122/500
       Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:21, Auth sign: PSK, Auth verify: PSK
-      AKE group: AKE1: MLKEM1024
-      Life/Active Time: 86400/56 sec
-      CE id: 0, Session-id: 1
-      Local spi: 76CA165325616F2A       Remote spi: F8564E3FE3EA475B
+      PQC Key Exchange: ML-KEM-1024
+      Life/Active Time: 86400/219 sec
+      CE id: 0, Session-id: 3
+      Local spi: 4CF87E32B25302C0       Remote spi: 96254131FD306002
       Status Description: Negotiation done
-      Local id: 2001:DB8:1101::222
-      Remote id: 2001:DB8:1201::222
+      Local id: 2001:DB8:1101::131
+      Remote id: 2001:DB8:1201::122
       Local req msg id:  0              Remote req msg id:  3
       Local next msg id: 0              Remote next msg id: 3
       Local req queued:  0              Remote req queued:  3
       Local window:      20             Remote window:      20
       DPD configured for 0 seconds, retry 0
       Fragmentation not  configured.
-      Quantum-safe Encryption using PQC: MLKEM1024
+      Quantum-safe Encryption using PQC: ML-KEM-1024
       Dynamic Route Update: enabled
       Extended Authentication not configured.
       NAT-T is not detected
@@ -30,23 +30,23 @@ Remote  2001:DB8:1201::222/500
 
 Tunnel-id    fvrf/ivrf              Status
 2          none/none             READY
-Local  2001:DB8:1101::222/500
-Remote  2001:DB8:1202::222/500
+Local  2001:DB8:1101::131/500
+Remote  2001:DB8:1202::123/500
       Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:21, Auth sign: PSK, Auth verify: PSK
-      AKE group: AKE1: MLKEM1024
-      Life/Active Time: 86400/48 sec
-      CE id: 0, Session-id: 2
-      Local spi: C43DEBB37E77992B       Remote spi: A48393A1EB310E5E
+      PQC Key Exchange: ML-KEM-1024
+      Life/Active Time: 86400/208 sec
+      CE id: 0, Session-id: 4
+      Local spi: DE66CA8E9F3AB6BD       Remote spi: DB3CED85555E739D
       Status Description: Negotiation done
-      Local id: 2001:DB8:1101::222
-      Remote id: 2001:DB8:1202::222
+      Local id: 2001:DB8:1101::131
+      Remote id: 2001:DB8:1202::123
       Local req msg id:  0              Remote req msg id:  3
       Local next msg id: 0              Remote next msg id: 3
       Local req queued:  0              Remote req queued:  3
       Local window:      20             Remote window:      20
       DPD configured for 0 seconds, retry 0
       Fragmentation not  configured.
-      Quantum-safe Encryption using PQC: MLKEM1024
+      Quantum-safe Encryption using PQC: ML-KEM-1024
       Dynamic Route Update: enabled
       Extended Authentication not configured.
       NAT-T is not detected

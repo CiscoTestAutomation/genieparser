@@ -774,16 +774,33 @@ class ShowEnvironmentFan(ShowEnvironmentFanSchema):
     
         return ret_dict
 
+
 class ShowEnvironmentPowerAllSchema(MetaParser):
     schema = {
         "switch": {
             Any(): {
-                "pid": str,
+                Optional("pid"): str,
                 Optional("serial"): str,
                 Optional("status"): str,
                 Optional("sys_pwr"): str,
                 Optional("poe_pwr"): str,
                 Optional("watts"): int,
+                Optional("power_supplies"): {
+                    Any(): {  # e.g. "POWER SUPPLY-1"
+                        Optional("pid"): str,
+                        Optional("serial"): str,
+                        Optional("status"): str,
+                        Optional("sys_pwr"): str,
+                        Optional("poe_pwr"): str,
+                        Optional("watts"): int,
+                    }
+                },                
+                Optional("sensors"): {
+                    Any(): {
+                        "status": str,
+                        "reading": str,
+                    },
+                },
             }
         }
     }
@@ -796,27 +813,51 @@ class ShowEnvironmentPowerAll(ShowEnvironmentPowerAllSchema):
     """
     cli_command = ['show environment power all', 'show environment power switch {switch_num}']
     
-    def cli(self, switch_num="", output=None): 
+    def cli(self, switch_num="", output=None):
 
         if output is None:
-            # Build the command
             if switch_num:
                 output = self.device.execute(self.cli_command[1].format(switch_num=switch_num))
             else:
                 output = self.device.execute(self.cli_command[0])
 
+        switch = None
         ret_dict = {}
+
+        # Switch:1
+        p0 = re.compile(r'^Switch:(?P<sw>\d+)$')
+
+        # 1A  PWR-C1-1100WAC  FDO2134L0LB  OK      Yes     0       1100
+        p1 = re.compile(
+            r'^(?P<sw>\d\S+)\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+(?P<status>\S+)\s+'
+            r'(?P<sys_pwr>\w+)\s+(?P<poe_pwr>\S+)\s+(?P<watts>\d+)$'
+        )
+
+        # 1A  Not Present
+        p2 = re.compile(r'^(?P<sw>\d\S+)\s+(?P<pid>Not Present)$')
+
+        # POWER SUPPLY-1 PWR-C1-1100WAC FDO2134L0LB OK Yes 1100 1100
+        p3 = re.compile(
+            r'^(?P<power_supply>POWER SUPPLY-\d+)\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+'
+            r'(?P<status>\S+)\s+(?P<sys_pwr>\w+)\s+(?P<watts>\d+)$'
+        )
+
+        # PS-1 Vout OK 56
+        p4 = re.compile(r'^(?P<sensor_name>\S+\s+\S+)\s+(?P<status>\S+)\s+(?P<reading>\S+)$')
+
         for line in output.splitlines():
             line = line.strip()
+            if not line:
+                continue
 
-            # 1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
-            p1 = re.compile(r'^(?P<sw>\d\S+)\s+(?P<pid>\S+)\s+(?P<serial>\S+)\s+(?P<status>\S+)\s+(?P<sys_pwr>\w+)\s+(?P<poe_pwr>\S+)\s+(?P<watts>\d+)$')
-       
-            # 1A  Not Present
-            p2 = re.compile(r'^(?P<sw>\d\S+)\s+(?P<pid>Not Present)$')
+            # Switch:1
+            m = p0.match(line)
+            if m:
+                switch = m.group('sw')
+                ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                continue
 
-            # Matching pattern
-            # 1A  PWR-C1-1100WAC      DTN2129V1AG  OK              Good     Good     1100
+            # 1A  PWR-C1-1100WAC ...
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -837,6 +878,34 @@ class ShowEnvironmentPowerAll(ShowEnvironmentPowerAllSchema):
                 switch = group['sw']
                 sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
                 sub_dict['pid'] = group['pid']
+                continue
+
+            # POWER SUPPLY-1 PWR-C1-1100WAC FDO2134L0LB OK Yes 1100 1100
+            m = p3.match(line)
+            if m:
+                if not switch:
+                    # no switch context; skip or raise
+                    continue
+                group = m.groupdict()
+                sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                ps_dict = sub_dict.setdefault('power_supplies', {}).setdefault(group['power_supply'], {})
+                ps_dict['pid'] = group['pid']
+                ps_dict['serial'] = group['serial']
+                ps_dict['status'] = group['status']
+                ps_dict['sys_pwr'] = group['sys_pwr']
+                ps_dict['watts'] = int(group['watts'])
+                continue
+
+            # PS-1 Vout OK 56
+            m = p4.match(line)
+            if m:
+                if not switch:
+                    continue
+                group = m.groupdict()
+                sub_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                sensors_dict = sub_dict.setdefault('sensors', {}).setdefault(group['sensor_name'], {})
+                sensors_dict['status'] = group['status']
+                sensors_dict['reading'] = group['reading']
                 continue
 
         return ret_dict

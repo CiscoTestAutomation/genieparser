@@ -1,0 +1,22 @@
+show fqdn database fqdn host1.cisco.com
+IP Address          		Type       TTL          matched FQDN
+1.1.1.23                      IPv4       897/900      host1.cisco.com
+1.1.2.23                      IPv4       897/900      host1.cisco.com
+1.1.3.23                      IPv4       897/900      host1.cisco.com
+1.1.4.23                      IPv4       897/900      host1.cisco.com
+1.1.5.23                      IPv4       897/900      host1.cisco.com
+1.1.6.23                      IPv4       897/900      host1.cisco.com
+1.1.7.23                      IPv4       897/900      host1.cisco.com
+1.1.8.23                      IPv4       897/900      host1.cisco.com
+1.1.9.23                      IPv4       897/900      host1.cisco.com
+1.1.10.23                     IPv4       897/900      host1.cisco.com
+1:1:1::23                     IPv6       897/900      host1.cisco.com
+1:1:2::23                     IPv6       897/900      host1.cisco.com
+1:1:3::23                     IPv6       897/900      host1.cisco.com
+1:1:4::23                     IPv6       897/900      host1.cisco.com
+1:1:5::23                     IPv6       897/900      host1.cisco.com
+1:1:6::23                     IPv6       897/900      host1.cisco.com
+1:1:7::23                     IPv6       897/900      host1.cisco.com
+1:1:8::23                     IPv6       897/900      host1.cisco.com
+1:1:9::23                     IPv6       897/900      host1.cisco.com
+1:1:10::23                    IPv6       897/900      host1.cisco.co

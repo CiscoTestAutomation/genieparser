@@ -62,6 +62,8 @@
     * 'show platform software audit monitor status'
     * 'show platform software audit ruleset'
     * show platform software firewall qfp active runtime
+    * show platform software ip FP active cef summary
+    * show platform software adjacency nexthop-ipfrr
 """
 
 # Python
@@ -10934,24 +10936,42 @@ class ShowPlatformSoftwareInterfaceFpActiveSchema(MetaParser):
         'mtu': int,
         Optional('ip_address'): str,
         Optional('ipv6_address'): str,
+        Optional('vfr_egress'): {
+            'vfr_enabled': int,
+            'max_reassemblies': int,
+            'max_fragments': int,
+            'vfr_timeout': int,
+            'drop_fragments': int,
+            'dscp_bitmap': str,
+            'percentage': int
+        },
+        Optional('ipv6_vfr_egress'): {
+            'vfr_enabled': int,
+            'max_reassemblies': int,
+            'max_fragments': int,
+            'vfr_timeout': int,
+            'drop_fragments': int,
+            'dscp_bitmap': str,
+            'percentage': int
+        },
         'flags': ListOf(str),
         'icmp_flags': ListOf(str),
         'icmp6_flags': ListOf(str),
         'smi_protocols': ListOf(str),
         Optional('authenticated_user'): str,
         'frr_linkdown_id': int,
-        'vnet_name': str,
+        Optional('vnet_name'): str,
         'vnet_tag': int,
         'vnet_extra_info': int,
         'dirty': str,
         'aom_dependency_sanity_check': str,
         'aom_obj_id': int,
-        'ether_channel_id': int,
-        'load_balancing_method': str,
-        'number_of_member_links': int,
-        'members': ListOf(str),
-        'number_of_buckets': int,
-        'buckets': ListOf({
+        Optional('ether_channel_id'): int,
+        Optional('load_balancing_method'): str,
+        Optional('number_of_member_links'): int,
+        Optional('members'): ListOf(str),
+        Optional('number_of_buckets'): int,
+        Optional('buckets'): ListOf({
             'id': int,
             'link': str
         })
@@ -10986,11 +11006,26 @@ class ShowPlatformSoftwareInterfaceFpActive(ShowPlatformSoftwareInterfaceFpActiv
         # ICMP6 Flags: Disabled
         p7 = re.compile(r'^ICMP6 Flags: +(?P<icmp6_flags>[\S\s]+)$')
 
+        # VFR EGRESS:
+        p20 = re.compile(r'^VFR EGRESS:$')
+
+        # IPv6 VFR EGRESS:
+        p21 = re.compile(r'^IPv6 VFR EGRESS:$')
+
+        # VFR enabled: 1, Max reassemblies: 1024, Max fragments: 32
+        p22 = re.compile(r'^VFR enabled: +(?P<vfr_enabled>\d+), +Max reassemblies: +(?P<max_reassemblies>\d+), +Max fragments: +(?P<max_fragments>\d+)$')
+
+        # VFR timeout: 3, Drop Fragments: 0
+        p23 = re.compile(r'^VFR timeout: +(?P<vfr_timeout>\d+), +Drop Fragments: +(?P<drop_fragments>\d+)$')
+
+        # Dscp bitmap: 0x0000000000000000, Percentage: 0
+        p24 = re.compile(r'^Dscp bitmap: +(?P<dscp_bitmap>0x[0-9a-fA-F]+), +Percentage: +(?P<percentage>\d+)$')
+
         # SMI enabled on protocol(s): ARP, IP, MPLS
         p8 = re.compile(r'^SMI enabled on protocol\(s\): +(?P<smi_protocols>[\S\s]+)$')
 
         # Authenticated-user: admin
-        p9 = re.compile(r'^Authenticated-user: +(?P<authenticated_user>.*)$')
+        p9 = re.compile(r'^Authenticated-user: *(?P<authenticated_user>.*)$')
 
         # FRR linkdown ID: 300
         p10 = re.compile(r'^FRR linkdown ID: +(?P<frr_linkdown_id>\d+)$')
@@ -11024,8 +11059,21 @@ class ShowPlatformSoftwareInterfaceFpActive(ShowPlatformSoftwareInterfaceFpActiv
 
 
         # Parse each line of the output
+        current_vfr_section = None  # Track which VFR section we're in
+        
         for line in output.splitlines():
             line = line.strip()
+
+            # Check for VFR section headers
+            m = p20.match(line)
+            if m:
+                current_vfr_section = 'vfr_egress'
+                continue
+
+            m = p21.match(line)
+            if m:
+                current_vfr_section = 'ipv6_vfr_egress'
+                continue
 
             # Name: Te0/0/0, ID: 5, QFP ID: 1, Schedules: 2
             m = p1.match(line)
@@ -11059,34 +11107,79 @@ class ShowPlatformSoftwareInterfaceFpActive(ShowPlatformSoftwareInterfaceFpActiv
                 parsed_dict['ipv6_address'] = m.group('ipv6_address')
                 continue
 
+            # VFR enabled: 1, Max reassemblies: 1024, Max fragments: 32
+            m = p22.match(line)
+            if m and current_vfr_section:
+                group = m.groupdict()
+                parsed_dict.setdefault(current_vfr_section, {})
+                parsed_dict[current_vfr_section]['vfr_enabled'] = int(group['vfr_enabled'])
+                parsed_dict[current_vfr_section]['max_reassemblies'] = int(group['max_reassemblies'])
+                parsed_dict[current_vfr_section]['max_fragments'] = int(group['max_fragments'])
+                continue
+
+            # VFR timeout: 3, Drop Fragments: 0
+            m = p23.match(line)
+            if m and current_vfr_section:
+                group = m.groupdict()
+                parsed_dict[current_vfr_section]['vfr_timeout'] = int(group['vfr_timeout'])
+                parsed_dict[current_vfr_section]['drop_fragments'] = int(group['drop_fragments'])
+                continue
+
+            # Dscp bitmap: 0x0000000000000000, Percentage: 0
+            m = p24.match(line)
+            if m and current_vfr_section:
+                group = m.groupdict()
+                parsed_dict[current_vfr_section]['dscp_bitmap'] = group['dscp_bitmap']
+                parsed_dict[current_vfr_section]['percentage'] = int(group['percentage'])
+                current_vfr_section = None  # Reset after completing a VFR section
+                continue
+
             # Flags: Up Broadcast Runnings
             m = p5.match(line)
             if m:
-                parsed_dict['flags'] = m.group('flags').split(', ')
+                flags_text = m.group('flags').strip()
+                if ', ' in flags_text:
+                    parsed_dict['flags'] = flags_text.split(', ')
+                else:
+                    parsed_dict['flags'] = flags_text.split()
                 continue
 
             # ICMP Flags: Enabled
             m = p6.match(line)
             if m:
-                parsed_dict['icmp_flags'] = m.group('icmp_flags').split(', ')
+                icmp_flags_text = m.group('icmp_flags').strip()
+                if ', ' in icmp_flags_text:
+                    parsed_dict['icmp_flags'] = icmp_flags_text.split(', ')
+                else:
+                    parsed_dict['icmp_flags'] = icmp_flags_text.split()
                 continue
 
             # ICMP6 Flags: Disabled
             m = p7.match(line)
             if m:
-                parsed_dict['icmp6_flags'] = m.group('icmp6_flags').split(', ')
+                icmp6_flags_text = m.group('icmp6_flags').strip()
+                if ', ' in icmp6_flags_text:
+                    parsed_dict['icmp6_flags'] = icmp6_flags_text.split(', ')
+                else:
+                    parsed_dict['icmp6_flags'] = icmp6_flags_text.split()
                 continue
 
             # SMI enabled on protocol(s): ARP, IP, MPLS
             m = p8.match(line)
             if m:
-                parsed_dict['smi_protocols'] = m.group('smi_protocols').split(', ')
+                smi_protocols_text = m.group('smi_protocols').strip()
+                if ', ' in smi_protocols_text:
+                    parsed_dict['smi_protocols'] = smi_protocols_text.split(', ')
+                else:
+                    parsed_dict['smi_protocols'] = smi_protocols_text.split()
                 continue
 
             # Authenticated-user: admin
             m = p9.match(line)
             if m:
-                parsed_dict['authenticated_user'] = m.group('authenticated_user').strip()
+                auth_user = m.group('authenticated_user').strip()
+                if auth_user:  # Only include if not empty
+                    parsed_dict['authenticated_user'] = auth_user
                 continue
 
             # FRR linkdown ID: 300
@@ -11099,7 +11192,9 @@ class ShowPlatformSoftwareInterfaceFpActive(ShowPlatformSoftwareInterfaceFpActiv
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                parsed_dict['vnet_name'] = group['vnet_name'].strip()
+                vnet_name = group['vnet_name'].strip()
+                if vnet_name:  # Only include if not empty
+                    parsed_dict['vnet_name'] = vnet_name
                 parsed_dict['vnet_tag'] = int(group['vnet_tag'])
                 parsed_dict['vnet_extra_info'] = int(group['vnet_extra_info'])
                 continue
@@ -11139,7 +11234,11 @@ class ShowPlatformSoftwareInterfaceFpActive(ShowPlatformSoftwareInterfaceFpActiv
             # Members: Te0/0/0, Te0/0/1
             m = p17.match(line)
             if m:
-                parsed_dict['members'] = m.group('members').split(', ')
+                members_text = m.group('members').strip()
+                if ', ' in members_text:
+                    parsed_dict['members'] = members_text.split(', ')
+                else:
+                    parsed_dict['members'] = members_text.split()
                 continue
 
             # Number of buckets: 256
@@ -13358,6 +13457,96 @@ class ShowPlatformSoftwareNatFpActiveCppStats(ShowPlatformSoftwareNatFpActiveCpp
                 continue
 
         return parsed_dict
+
+# =======================================================
+# Schema for 'show platform software nat fp active translation'
+# =======================================================
+class ShowPlatformSoftwareNatFpActiveTranslationSchema(MetaParser):
+    """Schema for show platform software nat fp active translation"""
+    schema = {
+        Optional('translations'): {
+            Any(): {  # protocol (udp, tcp, icmp)
+                'inside_global': str,
+                'inside_local': str,
+                'outside_local': str,
+                'outside_global': str,
+            }
+        },
+        'total_number_of_translations': int,
+    }
+
+# =======================================================
+# Parser for 'show platform software nat fp active translation'
+# =======================================================
+class ShowPlatformSoftwareNatFpActiveTranslation(ShowPlatformSoftwareNatFpActiveTranslationSchema):
+    """Parser for show platform software nat fp active translation"""
+
+    cli_command = 'show platform software nat fp active translation'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initial return dictionary
+        ret_dict = {}
+
+        # Pro  Inside global         Inside local          Outside local         Outside global
+        # udp  110.100.1.1:49186     5.0.0.2:49186         110.1.1.1:33438       110.1.1.1:33438
+        # tcp  120.100.1.1:60371     5.0.0.2:60371         120.1.1.1:23          120.1.1.1:23
+        # icmp 120.100.1.1:8         5.0.0.2:8             120.1.1.1:8           120.1.1.8
+        p1 = re.compile(r'^(?P<protocol>\w+)\s+(?P<inside_global>\S+)\s+(?P<inside_local>\S+)\s+(?P<outside_local>\S+)\s+(?P<outside_global>\S+)$')
+
+        # Total number of translations: 8
+        p2 = re.compile(r'^Total\s+number\s+of\s+translations:\s+(?P<total>\d+)$')
+
+        translation_count = 1
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines
+            if not line:
+                continue
+
+            # Pro  Inside global         Inside local          Outside local         Outside global
+            if line.startswith('Pro') and 'Inside global' in line:
+                continue
+
+            # Total number of translations: 8
+            match = p2.match(line)
+            if match:
+                total_translations = int(match.group('total'))
+                ret_dict['total_number_of_translations'] = total_translations
+                continue
+
+            # udp  110.100.1.1:49186     5.0.0.2:49186         110.1.1.1:33438       110.1.1.1:33438
+            # tcp  120.100.1.1:60371     5.0.0.2:60371         120.1.1.1:23          120.1.1.1:23
+            # icmp 120.100.1.1:8         5.0.0.2:8             120.1.1.1:8           120.1.1.8
+            # Only match lines that don't start with "Total"
+            if not line.startswith('Total'):
+                match = p1.match(line)
+                if match:
+                    protocol = match.group('protocol')
+                    inside_global = match.group('inside_global')
+                    inside_local = match.group('inside_local')
+                    outside_local = match.group('outside_local')
+                    outside_global = match.group('outside_global')
+
+                    # Create a unique key for each translation entry
+                    translation_key = f"{protocol}_{translation_count}"
+                    
+                    translation_dict = ret_dict.setdefault('translations', {})
+                    translation_dict[translation_key] = {
+                        'inside_global': inside_global,
+                        'inside_local': inside_local,
+                        'outside_local': outside_local,
+                        'outside_global': outside_global,
+                    }
+                    
+                    translation_count += 1
+                    continue
+
+        return ret_dict
 
 # =======================================================
 # Schema for 'show platform software firewall RP active parameter-maps'
@@ -16074,5 +16263,242 @@ class ShowPlatformSoftwareFirewallQfpActiveRuntime(ShowPlatformSoftwareFirewallQ
             ret_dict["vrf_id_name_table"] = vrf_id_name_list
         if vpn_to_zone_list:
             ret_dict["vpn_to_zone_mappings"] = vpn_to_zone_list
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareIpFpActiveCefSummarySchema(MetaParser):
+    """Schema for show platform software ip FP active cef summary"""
+
+    schema = {
+        "forwarding_table_summary": {
+            "entries": ListOf(
+                {
+                    "name": str,
+                    "vrf_id": int,
+                    "table_id": int,
+                    "protocol": str,
+                    "prefixes": int,
+                    "state": str,
+                }
+            )
+        }
+    }
+
+
+class ShowPlatformSoftwareIpFpActiveCefSummary(ShowPlatformSoftwareIpFpActiveCefSummarySchema):
+    """Parser for show platform software ip FP active cef summary"""
+
+    cli_command = "show platform software ip FP active cef summary"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        entries = []
+        # Name             VRF id  Table id    Protocol         Prefixes    State
+        p1 = re.compile(
+            r"^(?P<name>\S+)\s+(?P<vrf_id>\d+)\s+(?P<table_id>\d+)\s+(?P<protocol>\S+)\s+(?P<prefixes>\d+)\s+(?P<state>.+)$"
+        )
+
+        parsing_entries = False
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # Default          0       0           IPv4             2528        hw: 0x55d505991190 (created)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = {
+                    "name": group["name"],
+                    "vrf_id": int(group["vrf_id"]),
+                    "table_id": int(group["table_id"]),
+                    "protocol": group["protocol"],
+                    "prefixes": int(group["prefixes"]),
+                    "state": group["state"].strip(),
+                }
+                entries.append(entry)
+                continue
+
+        if entries:
+            ret_dict.setdefault("forwarding_table_summary", {})["entries"] = entries
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareAdjacencyNexthopIpfrrSchema(MetaParser):
+    """Schema for show platform software adjacency nexthop-ipfrr"""
+    schema = {
+        "static_nexthop_ip_fastreroute": {
+            "flags": {
+                "primary": str,
+                "no_adjacency": str,
+                "incomplete_adjacency": str,
+                "adjacency": str,
+                "adjacency_downloaded": str,
+                "adjacency_resolution": str,
+                "ipfrr_adjacency_index": str,
+            },
+            "nexthops": ListOf(
+                {
+                    "protocol": str,
+                    "primary": bool,
+                    "adj_id": Or(int, str),
+                    "ifnum": int,
+                    "address": str,
+                    "idx": int,
+                    "dl": int,
+                    "res": int,
+                    "interface": str,
+                }
+            ),
+            "static_nexthop_resolution_timer_sec": int,
+            "total_nexthop_adjacency_triggered": int,
+        }
+    }
+
+
+class ShowPlatformSoftwareAdjacencyNexthopIpfrr(ShowPlatformSoftwareAdjacencyNexthopIpfrrSchema):
+    """Parser for show platform software adjacency nexthop-ipfrr"""
+
+    cli_command = "show platform software adjacency nexthop-ipfrr"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        static_section_found = False
+
+        #  Static Nexthop IP Fast ReRoute:
+        p1 = re.compile(r"^\s*Static Nexthop IP Fast ReRoute:$")
+
+        #  Flags: * Primary, - No Adjacency, = Incomplete Adjacency
+        p2 = re.compile(
+            r"^\s*Flags:\s*(?P<primary>[\*\-=\+A-Za-z]+)\s+Primary,\s*(?P<no_adjacency>[\*\-=\+A-Za-z]+)\s+No Adjacency,\s*(?P<incomplete_adjacency>[\*\-=\+A-Za-z]+)\s+Incomplete Adjacency$"
+        )
+
+        #         + Adjacency, DL: Adjacency Downloaded
+        p3 = re.compile(
+            r"^\s*(?P<adjacency>[\*\-=\+A-Za-z]+)\s+Adjacency,\s*DL:\s+Adjacency Downloaded$"
+        )
+
+        #         Res: Adjacency Resolution, Idx: IPFRR Adjacency Index
+        p4 = re.compile(
+            r"^\s*Res:\s+Adjacency Resolution,\s*Idx:\s+IPFRR Adjacency Index$"
+        )
+
+        # Protocol   Adj-ID  Ifnum               Address  Idx    DL  Res  Interface
+        p5 = re.compile(
+            r"^\s*Protocol\s+Adj-ID\s+Ifnum\s+Address\s+Idx\s+DL\s+Res\s+Interface$"
+        )
+
+        # *IP           23     20             100.5.0.2+   1     3    0  Gi0/0/6
+        #  IP           85     21             100.6.0.2+   1     3    2  Gi0/0/7
+        # *IPv6         56     20 2FF:100::2+   2     3    0  Gi0/0/6
+        #  IPv6         82     21 3FF:100::2+   2     3    2  Gi0/0/7
+        p6 = re.compile(
+            r"^\s*(?P<primary>\*?)\s*(?P<protocol>IP|IPv6)\s+"
+            r"(?P<adj_id>[0-9A-Fa-f]+)\s+"
+            r"(?P<ifnum>\d+)\s+"
+            r"(?P<address>(?:[0-9\.]+|[0-9A-Fa-f:]+)\+)\s+"
+            r"(?P<idx>\d+)\s+"
+            r"(?P<dl>\d+)\s+"
+            r"(?P<res>\d+)\s+"
+            r"(?P<interface>\S+)$"
+        )
+
+        #  Static nexthop resolution will be triggered in 255 sec
+        p7 = re.compile(
+            r"^\s*Static nexthop resolution will be triggered in\s+(?P<timer>\d+)\s+sec$"
+        )
+
+        #  Total nexthop adjacency triggered 8
+        p8 = re.compile(
+            r"^\s*Total nexthop adjacency triggered\s+(?P<total>\d+)$"
+        )
+
+        for line in out.splitlines():
+            #  Static Nexthop IP Fast ReRoute:
+            m = p1.match(line)
+            if m:
+                static_section_found = True
+                static_dict = ret_dict.setdefault("static_nexthop_ip_fastreroute", {})
+                continue
+
+            if not static_section_found:
+                continue
+
+            #  Flags: * Primary, - No Adjacency, = Incomplete Adjacency
+            m = p2.match(line)
+            if m:
+                flags_dict = static_dict.setdefault("flags", {})
+                flags_dict["primary"] = m.group("primary")
+                flags_dict["no_adjacency"] = m.group("no_adjacency")
+                flags_dict["incomplete_adjacency"] = m.group("incomplete_adjacency")
+                continue
+
+            #         + Adjacency, DL: Adjacency Downloaded
+            m = p3.match(line)
+            if m:
+                flags_dict = static_dict.setdefault("flags", {})
+                flags_dict["adjacency"] = m.group("adjacency")
+                flags_dict["adjacency_downloaded"] = "DL"
+                continue
+
+            #         Res: Adjacency Resolution, Idx: IPFRR Adjacency Index
+            m = p4.match(line)
+            if m:
+                flags_dict = static_dict.setdefault("flags", {})
+                flags_dict["adjacency_resolution"] = "Res"
+                flags_dict["ipfrr_adjacency_index"] = "Idx"
+                continue
+
+            # Protocol   Adj-ID  Ifnum               Address  Idx    DL  Res  Interface
+            m = p5.match(line)
+            if m:
+                continue  # header, skip
+
+            # *IP           23     20             100.5.0.2+   1     3    0  Gi0/0/6
+            #  IP           85     21             100.6.0.2+   1     3    2  Gi0/0/7
+            # *IPv6         56     20 2FF:100::2+   2     3    0  Gi0/0/6
+            #  IPv6         82     21 3FF:100::2+   2     3    2  Gi0/0/7
+            m = p6.match(line)
+            if m:
+                nexthop = {
+                    "protocol": m.group("protocol"),
+                    "primary": True if m.group("primary") == "*" else False,
+                    "adj_id": int(m.group("adj_id")) if m.group("adj_id").isnumeric() else m.group("adj_id"),
+                    "ifnum": int(m.group("ifnum")),
+                    "address": m.group("address"),
+                    "idx": int(m.group("idx")),
+                    "dl": int(m.group("dl")),
+                    "res": int(m.group("res")),
+                    "interface": m.group("interface"),
+                }
+                static_dict.setdefault("nexthops", []).append(nexthop)
+                continue
+
+            #  Static nexthop resolution will be triggered in 255 sec
+            m = p7.match(line)
+            if m:
+                static_dict["static_nexthop_resolution_timer_sec"] = int(m.group("timer"))
+                continue
+
+            #  Total nexthop adjacency triggered 8
+            m = p8.match(line)
+            if m:
+                static_dict["total_nexthop_adjacency_triggered"] = int(m.group("total"))
+                continue
 
         return ret_dict

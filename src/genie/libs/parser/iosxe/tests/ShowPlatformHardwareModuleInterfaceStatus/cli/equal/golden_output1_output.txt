@@ -1,0 +1,28 @@
+GE0: 
+MAC Status: hw_port 44, speed 1000, duplex full, link Up, link_en Enable , tx_pause Disable, rx_pause Disable
+fec_mode no-fec
+IPG 12
+L2_NETWORK 
+link Up(config Enable), speed 1000(config auto), duplex full(config auto), config autoneg, mtu 1526
+rx_pause Off(config Off), tx_pause Off(config Off) 
+In-Band Auto-Negotiation: Disable
+Vlan cfg: access mode, native vlan 1 (cfg 1) 
+protected port cfg: disable 
+qos cfg: trust mode, default priority 0 
+mac learning: auto learning, learn Enabled, cmd: FRWRD NaToCpu:TRUE
+storm-ctrl: bcast(off), mcast(off), ucast(off), uucast(off) 
+
+tail-drop profile 0, sche_profile 0
+default priority 0, UP override False
+L2 Trust mode
+Exp False
+TX_PAUSE: disabled XOFF_THRES: 1024(plim threshold 0%, Buff-size: 1024),   XON_THRES: 128, FC mode: 802.3X
+Port Tx buff: 0
+Queue 0, tx buff 0
+Queue 1, tx buff 0
+Queue 2, tx buff 0
+Queue 3, tx buff 0
+Queue 4, tx buff 0
+Queue 5, tx buff 0
+Queue 6, tx buff 0
+Queue 7, tx buff 0

@@ -1,0 +1,34 @@
+Logging display requested on 2025/12/24 06:10:36 (UTC) for Hostname: [NGSVL], Model: [C9500X-28C8D], Version: [17.18.02], SN: [FDO24460AF2], MD_SN: [FDO2446000J]
+
+executing cmd on chassis: 1; rp slot: 0;  location: local ...
+Unified Decoder Library Init .. DONE
+Found 1 UTF Streams
+===========================================================
+======= Unified Trace Decoder Information/Statistics ======
+===========================================================
+----------------- Decoder Input Information ---------------
+===========================================================
+ Num of Unique Streams .. 1
+ Total UTF To Process ... 2
+ Total UTM To Process ... 194446
+ UTM Process Filter ..... fed
+ MRST Filter Rules ...... 1
+===========================================================
+----------------- Decoder Output Information --------------
+===========================================================
+ First UTM TimeStamp ............... 2025/12/24 06:04:58.686264592
+ Last UTM TimeStamp ................ 2025/12/24 06:10:35.397489960
+ UTM [Skipped / Rendered / Total] .. 194230 / 216 / 194446
+ UTM [ENCODED] ..................... 216
+ UTM [PLAIN TEXT] .................. 0
+ UTM [DYN LIB] ..................... 0
+ UTM [MODULE ID] ................... 0
+ UTM [TDL TAN] ..................... 4
+ UTM [APP CONTEXT] ................. 0
+ UTM [MARKER] ...................... 0
+ UTM [PCAP] ........................ 0
+ UTM [LUID NOT FOUND] .............. 0
+ UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 0
+ UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 216 / 0 / 0 / 0
+ UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+===========================================================

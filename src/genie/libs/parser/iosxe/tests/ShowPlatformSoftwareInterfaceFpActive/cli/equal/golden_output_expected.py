@@ -46,6 +46,5 @@ expected_output = {
     'state': 'enabled',
     'type': 'EC',
     'vnet_extra_info': 0,
-    'vnet_name': '',
     'vnet_tag': 0
 }

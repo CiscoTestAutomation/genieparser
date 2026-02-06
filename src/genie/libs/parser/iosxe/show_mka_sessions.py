@@ -2254,7 +2254,7 @@ class ShowMkaSessionDetailSchema(MetaParser):
         'old_sak_ki_kn': str,
         'old_sak_ki_number': int,
         'sak_transmit_wait_time': str,
-        'sak_transmit_wait_description': str,
+        Optional('sak_transmit_wait_description'): str,
         'sak_retire_time': str,
         'sak_retire_description': str,
         'sak_rekey_time': str,
@@ -2368,7 +2368,8 @@ class ShowMkaSessionDetail(ShowMkaSessionDetailSchema):
         p18 = re.compile(r'^Old SAK KI \(KN\)\.+\s+(?P<old_sak_ki_kn>\S+)\s+\((?P<old_sak_ki_number>\d+)\)$')
 
         # SAK Transmit Wait Time... 0s (Not waiting for any peers to respond)
-        p19 = re.compile(r'^SAK Transmit Wait Time\.+\s+(?P<sak_transmit_wait_time>\S+)\s+\((?P<sak_transmit_wait_description>[^)]+)\)$')
+        # SAK Transmit Wait Time... 0s
+        p19 = re.compile(r'^SAK Transmit Wait Time\.+\s+(?P<sak_transmit_wait_time>\S+)(?:\s+\((?P<sak_transmit_wait_description>[^)]+)\))?$')
 
         # SAK Retire Time.......... 0s (No Old SAK to retire)
         p20 = re.compile(r'^SAK Retire Time\.+\s+(?P<sak_retire_time>\S+)\s+\((?P<sak_retire_description>[^)]+)\)$')
@@ -2578,10 +2579,13 @@ class ShowMkaSessionDetail(ShowMkaSessionDetailSchema):
 
             # Parse SAK Transmit Wait Time
 	    # SAK Transmit Wait Time... 0s (Not waiting for any peers to respond)
+	    # SAK Transmit Wait Time... 0s
             m = p19.match(line)
             if m:
                 ret_dict['sak_transmit_wait_time'] = m.group('sak_transmit_wait_time')
-                ret_dict['sak_transmit_wait_description'] = m.group('sak_transmit_wait_description')
+                description = m.group('sak_transmit_wait_description')
+                if description:
+                    ret_dict['sak_transmit_wait_description'] = description
                 continue
 
             # Parse SAK Retire Time

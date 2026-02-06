@@ -1,0 +1,40 @@
+expected_output = {
+    'name': 'NVI0',
+    'id': 39,
+    'qfp_id': 31,
+    'schedules': 0,
+    'type': 'NVI',
+    'state': 'enabled',
+    'snmp_id': 31,
+    'mtu': 9216,
+    'ip_address': '0.0.0.0',
+    'ipv6_address': 'fe80::16a2:a0ff:fe09:f6a8',
+    'vfr_egress': {
+        'vfr_enabled': 1,
+        'max_reassemblies': 1024,
+        'max_fragments': 32,
+        'vfr_timeout': 3,
+        'drop_fragments': 0,
+        'dscp_bitmap': '0x0000000000000000',
+        'percentage': 0
+    },
+    'ipv6_vfr_egress': {
+        'vfr_enabled': 1,
+        'max_reassemblies': 1024,
+        'max_fragments': 16,
+        'vfr_timeout': 3,
+        'drop_fragments': 0,
+        'dscp_bitmap': '0x0000000000000000',
+        'percentage': 0
+    },
+    'flags': ['ipv4'],
+    'icmp_flags': ['unreachables', 'redirects', 'no-info-reply', 'no-mask-reply'],
+    'icmp6_flags': ['unreachables', 'redirects'],
+    'smi_protocols': ['UNKNOWN'],
+    'frr_linkdown_id': 65535,
+    'vnet_tag': 0,
+    'vnet_extra_info': 0,
+    'dirty': 'unknown',
+    'aom_dependency_sanity_check': 'PASS',
+    'aom_obj_id': 220
+}

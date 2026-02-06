@@ -1,0 +1,14 @@
+show platform software adjacency nexthop-ipfrr
+ Static Nexthop IP Fast ReRoute:
+ Flags: * Primary, - No Adjacency, = Incomplete Adjacency
+        + Adjacency, DL: Adjacency Downloaded
+        Res: Adjacency Resolution, Idx: IPFRR Adjacency Index
+
+Protocol   Adj-ID  Ifnum               Address  Idx    DL  Res  Interface
+ *IP           23     20             100.5.0.2+   1     3    0  Gi0/0/6
+  IP           85     21             100.6.0.2+   1     3    2  Gi0/0/7
+ *IPv6         56     20 2FF:100::2+   2     3    0  Gi0/0/6
+  IPv6         82     21 3FF:100::2+   2     3    2  Gi0/0/7
+
+ Static nexthop resolution will be triggered in 255 sec
+ Total nexthop adjacency triggered 8

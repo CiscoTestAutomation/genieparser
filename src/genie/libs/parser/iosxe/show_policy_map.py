@@ -25,7 +25,7 @@ from netaddr import IPAddress, IPNetwork
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -67,7 +67,17 @@ class ShowPolicyMapTypeSchema(MetaParser):
                             Optional('class_map'): {
                                 Any(): {
                                     'match_evaluation': str,
-                                    'match': list,
+                                    'match': ListOf(str),
+                                    Optional('match_stats'): {
+                                        Any(): {
+                                            Optional('packets'): int,
+                                            Optional('bytes'): int,
+                                            Optional('rate'): {
+                                                'interval': int,
+                                                'offered_rate_bps': int
+                                            }
+                                        }
+                                    },
                                     Optional('packets'): int,
                                     Optional('packet_output'): int,
                                     Optional('packet_drop'): int,
@@ -217,7 +227,17 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             Optional('class_map'): {
                                                 Any():{
                                                     'match_evaluation': str,
-                                                    'match': list,
+                                                    Optional('match'): ListOf(str),
+                                                    Optional('match_stats'): {
+                                                        Any(): {
+                                                            Optional('packets'): int,
+                                                            Optional('bytes'): int,
+                                                            Optional('rate'): {
+                                                                'interval': int,
+                                                                'offered_rate_bps': int
+                                                            }
+                                                        }
+                                                    },
                                                     Optional('packets'): int,
                                                     Optional('packet_output'): int,
                                                     Optional('packet_drop'): int,
@@ -367,7 +387,17 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                                             Optional('class_map'): {
                                                                 Any():{
                                                                     'match_evaluation': str,
-                                                                    'match': list,
+                                                                    Optional('match'): ListOf(str),
+                                                                    Optional('match_stats'): {
+                                                                        Any(): {
+                                                                            Optional('packets'): int,
+                                                                            Optional('bytes'): int,
+                                                                            Optional('rate'): {
+                                                                                'interval': int,
+                                                                                'offered_rate_bps': int
+                                                                            }
+                                                                        }
+                                                                    },
                                                                     Optional('packets'): int,
                                                                     Optional('packet_output'): int,
                                                                     Optional('packet_drop'): int,
@@ -920,6 +950,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # -1 depth since the top policy-map is a child element, but has depth 0
         dict_stack = [(-1, ret_dict)]
+        
+        # Initialize match tracking variables
+        current_match = None
+        current_match_indent = None
 
         for line in out.splitlines():
 
@@ -1012,7 +1046,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 queue_stats = 0
                 class_map = m.groupdict()['class_map']
                 class_match = m.groupdict()['match_all'].replace('(', '').replace(')', '')
-
+                
+                # Clear match tracking when entering new class-map
+                current_match = None
+                current_match_indent = None
 
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
@@ -1051,11 +1088,19 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # 8 packets, 800 bytes
             m = p4.match(line)
             if m:
-
-                pkts = m.groupdict()['packets']
-                byte = m.groupdict()['bytes']
-                class_dict.setdefault('packets', int(pkts))
-                class_dict.setdefault('bytes', int(byte))
+                # Check if we're in match statistics context (more indented than match line)
+                if current_match is not None and current_match_indent is not None and len_white > current_match_indent:
+                    # This is match-level statistics
+                    match_stats_dict = class_dict.setdefault('match_stats', {})
+                    match_stat = match_stats_dict.setdefault(current_match, {})
+                    match_stat['packets'] = int(m.groupdict()['packets'])
+                    match_stat['bytes'] = int(m.groupdict()['bytes'])
+                else:
+                    # This is class-level statistics
+                    pkts = m.groupdict()['packets']
+                    byte = m.groupdict()['bytes']
+                    class_dict.setdefault('packets', int(pkts))
+                    class_dict.setdefault('bytes', int(byte))
                 continue
 
             # 8 packets
@@ -1081,9 +1126,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # 5 minute offered rate 0000 bps
             m = p5_1.match(line)
             if m:
-
-                rate_dict = class_dict.setdefault('rate', {})
-                dict_stack.append((len_white, rate_dict,))
+                # Check if we're in match statistics context (more indented than match line)
+                if current_match is not None and current_match_indent is not None and len_white > current_match_indent:
+                    # This is match-level statistics (5 minute rate)
+                    match_stats_dict = class_dict.setdefault('match_stats', {})
+                    match_stat = match_stats_dict.setdefault(current_match, {})
+                    rate_dict = match_stat.setdefault('rate', {})
+                else:
+                    # This is class-level statistics
+                    rate_dict = class_dict.setdefault('rate', {})
+                    dict_stack.append((len_white, rate_dict,))
+                    
                 rate_dict['interval'] = int(m.groupdict()['interval']) * 60
                 rate_dict['offered_rate_bps'] = int(m.groupdict()['offered_rate'])
                 continue
@@ -1109,8 +1162,15 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 while dict_stack[-1][0] >= len_white:
                     dict_stack.pop()
 
-                match_list.append(m.groupdict()['match'])
-                class_dict.setdefault('match', match_list)
+                match_criteria = m.groupdict()['match']
+
+                # Add to match list
+                match_list = class_dict.setdefault('match', [])
+                match_list.append(match_criteria)
+
+                # Store current match for statistics and its indentation
+                current_match = match_criteria
+                current_match_indent = len_white
                 continue
 
             # police:
@@ -1342,19 +1402,39 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             # Marker statistics: Disabled
             m = p14_2.match(line)
             if m:
-                qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
+                try:
+                    qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
+                except (NameError, UnboundLocalError):
+                    # If qos_dict_map doesn't exist and we have mpls_exp_value, create the structure
+                    try:
+                        if 'mpls_exp_value' in locals() and mpls_exp_value:
+                            qos_dict_map = qos_dict.setdefault('mpls experimental imposition ' + mpls_exp_value, {}).setdefault('stats', {})
+                            qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
+                    except:
+                        pass
                 continue
 
             # Packets marked 500
             m = p14_3.match(line)
             if m:
-                qos_dict_map['packets_marked'] = int(m.groupdict()['packets_marked'])
+                try:
+                    qos_dict_map['packets_marked'] = int(m.groupdict()['packets_marked'])
+                except (NameError, UnboundLocalError):
+                    # If qos_dict_map doesn't exist and we have mpls_exp_value, create the structure
+                    try:
+                        if 'mpls_exp_value' in locals() and mpls_exp_value:
+                            qos_dict_map = qos_dict.setdefault('mpls experimental imposition ' + mpls_exp_value, {}).setdefault('stats', {})
+                            qos_dict_map['packets_marked'] = int(m.groupdict()['packets_marked'])
+                    except:
+                        pass
                 continue
 
             # mpls experimental imposition 1
             m = p14_4.match(line)
             if m:
-                qos_dict['mpls_experimental_imposition'] = int(m.groupdict()['value'])
+                mpls_exp_value = m.groupdict()['value']
+                qos_dict['mpls_experimental_imposition'] = int(mpls_exp_value)
+                # Don't create qos_dict_map here - only create it if there's actual data (p14_2/p14_3)
                 continue
 
             # drop
@@ -2271,7 +2351,10 @@ class ShowPolicyMapControlPlaneClassMap(ShowPolicyMapControlPlaneClassMapSchema)
             # Marker statistics: Disabled
             m = p11_2.match(line)
             if m:
-                qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
+                try:
+                    qos_dict_map['marker_statistics'] = m.groupdict()['marker_statistics']
+                except (NameError, UnboundLocalError):
+                    pass
                 continue
 
             # drop

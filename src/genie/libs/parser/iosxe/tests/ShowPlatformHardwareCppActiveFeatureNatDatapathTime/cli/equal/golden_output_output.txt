@@ -1,0 +1,3 @@
+Timeouts: default 86400; TCP 86400; TCP PPTP 86400; UDP 300; FINRST 60; SYN 60; DNS 60; ICMP 60; Skinny 60; ICMP error 60; ESP 300; rmap entry 3600; nonpat bind 1200
+sage_bck 29514720 bage_bck 933496 sysup 3334980
+dtl_pend 0

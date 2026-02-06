@@ -10,6 +10,7 @@ IOSXE parsers for the following show commands:
     * 'show running-config | section bgp'
     * 'show running-config all | section class {class_map}'
     * 'show running-config vrf'
+    * 'show running-config all | section alarm'
 '''
 
 # Python
@@ -5342,3 +5343,150 @@ class ShowRunningConfigVrf(ShowRunningConfigVrfSchema):
                 continue
 
         return ret_dict
+
+
+# =================================================
+# Schema for:
+#   * 'show running-config all | section alarm'
+# ==================================================
+
+import re
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any, Optional
+
+class ShowRunSectionAlarmSchema(MetaParser):
+    """Schema for show running-config all | section alarm"""
+
+    schema = {
+        'alarm_profile': {
+            'name': str,
+            Optional('alarm'): str,
+            Optional('syslog'): str,
+            Optional('notifies'): str,
+        },
+        Optional('alarm_facility'): {
+            # Key will be "facility" or "facility selector" (e.g., "hsr" or "input-alarm 1")
+            Any(): {
+                Optional('actions'): {
+                    Any(): {
+                        'enabled': bool,                            
+                    }
+                },
+                Optional('thresholds'): {
+                    Optional('low'): int,
+                    Optional('high'): int,
+                }
+            },
+        },
+        Optional('logging'): {
+            Optional('alarm'): bool,
+        },
+        Optional('snmp'): {
+            Optional('mib'): {
+                Optional('flowmon'): {
+                    Optional('alarmhistorysize'): int,
+                }
+            }
+        }
+    }
+
+
+class ShowRunSectionAlarm(ShowRunSectionAlarmSchema):
+    """Parser for show running-config all | section alarm"""
+
+    cli_command = 'show running-config all | section alarm'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        profile_dict = None
+
+        # alarm-profile defaultPort
+        p0 = re.compile(r'^alarm-profile +(?P<name>\S+)$')
+
+        # alarm not-operating / syslog not-operating / notifies not-operating
+        p1 = re.compile(r'^(?P<key>alarm|syslog|notifies) +(?P<val>\S+)$')
+
+        # thresholds: alarm facility temperature primary low 0
+        p2 = re.compile(r'^alarm +facility +(?P<facility>\S+) +(?P<selector>\S+) +(?P<which>low|high) +(?P<value>\d+)$')
+
+        # actions: no alarm facility hsr enable / alarm facility input-alarm 1 syslog
+        p3 = re.compile(
+            r'^(?P<no>no +)?alarm +facility +(?P<facility>\S+)'
+            r'(?: +(?P<selector>\S+))? +(?P<setting>enable|syslog|notifies|relay +major)$'
+        )
+
+        # no logging alarm
+        p4 = re.compile(r'^no +logging +alarm$')
+
+        # snmp mib flowmon alarmhistorysize 500
+        p5 = re.compile(r'^snmp +mib +flowmon +alarmhistorysize +(?P<size>\d+)$')        
+
+        def _ensure_facility(facility, selector):
+            # Combine facility and selector into a single string key to flatten the level
+            full_key = f"{facility} {selector}" if selector else facility
+            return ret_dict.setdefault('alarm_facility', {}).setdefault(full_key, {})
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line or line.startswith('----') or line.startswith('show '):
+                continue
+
+            # alarm-profile
+            m = p0.match(line)
+            if m:
+                ret_dict['alarm_profile'] = {'name': m.group('name')}
+                profile_dict = ret_dict['alarm_profile']
+                continue
+
+            # profile settings
+            m = p1.match(line)
+            if m and profile_dict is not None:
+                profile_dict[m.group('key')] = m.group('val')
+                continue
+
+            # thresholds
+            m = p2.match(line)
+            if m:
+                facility = m.group('facility')
+                selector = m.group('selector')
+                which = m.group('which')
+                value = int(m.group('value'))
+
+                fdict = _ensure_facility(facility, selector)
+                fdict.setdefault('thresholds', {})[which] = value
+                continue
+
+            # actions
+            m = p3.match(line)
+            if m:
+                enabled = False if m.group('no') else True
+                facility = m.group('facility')
+                selector = m.group('selector')
+                setting = m.group('setting')
+                
+                action_key = setting.replace(' ', '_')
+
+                fdict = _ensure_facility(facility, selector)
+                actions = fdict.setdefault('actions', {})
+                actions[action_key] = {'enabled': enabled}
+                continue
+
+            # logging
+            if p4.match(line):
+                ret_dict.setdefault('logging', {})['alarm'] = False
+                continue
+
+            # snmp
+            m = p5.match(line)
+            if m:
+                ret_dict.setdefault('snmp', {}).setdefault('mib', {}).setdefault('flowmon', {})[
+                    'alarmhistorysize'
+                ] = int(m.group('size'))
+                continue
+
+        return ret_dict          
+    
+                        

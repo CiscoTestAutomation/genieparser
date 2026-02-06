@@ -11194,3 +11194,106 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2SwitchAttachmentCircuit(ShowP
                 continue
 
         return parsed_data
+
+class ShowPlatformHardwareFedSwitchFwdAsicAbstractionPrintResourceHandleSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch} fwd-asic abstraction print-resource-handle {handle} {value}"""
+
+    schema = {
+        'handle': str,
+        'res_type': str,
+        'res_switch_num': int,
+        'asic_num': int,
+        'feature_id': str,
+        'lkp_ftr_id': str,
+        'ref_count': int,
+        Optional('priv_ri_priv_si_handle'): str,
+        Optional('hardware_indices'): {
+            Optional('index3'): str,
+            Optional('mtu_index_l3u_ri_index3'): str,
+            Optional('sm_handle_asic'): str,
+        },
+        'asic_instance': int,
+        'resource_info': {
+            Any(): {
+                'value': int,
+                'status': str,
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicAbstractionPrintResourceHandle(
+    ShowPlatformHardwareFedSwitchFwdAsicAbstractionPrintResourceHandleSchema
+):
+    """Parser for show platform hardware fed switch {switch} fwd-asic abstraction print-resource-handle {handle} {value}"""
+
+    cli_command = [
+        'show platform hardware fed {switch} {switch_var} fwd-asic abstraction print-resource-handle {handle} {value}',
+        'show platform hardware fed {switch_var} fwd-asic abstraction print-resource-handle {handle} {value}'
+    ]
+
+    def cli(self, switch='', switch_var='', handle='', value='', output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var, handle=handle, value=value)
+            else:
+                cmd = self.cli_command[1].format(switch_var=switch_var, handle=handle, value=value)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Handle:0x7cfe2c851628 Res-Type:ASIC_RSC_PORT_LE Res-Switch-Num:0 Asic-Num:3 Feature-ID:AL_FID_IFM Lkp-ftr-id:LKP_FEAT_INGRESS_PRECLASS1_IPV4 ref_count:1
+        p1 = re.compile(r'^Handle:(?P<handle>\S+)\s+Res-Type:(?P<res_type>\S+)\s+Res-Switch-Num:(?P<res_switch_num>\d+)\s+Asic-Num:(?P<asic_num>\d+)\s+Feature-ID:(?P<feature_id>\S+)\s+Lkp-ftr-id:(?P<lkp_ftr_id>\S+)\s+ref_count:(?P<ref_count>\d+)$')
+
+        # priv_ri/priv_si Handle: (nil)Hardware Indices/Handles: index3:0x1  mtu_index/l3u_ri_index3:0x2  sm handle [ASIC 3]: 0x7cfe2c85d5e8
+        p2 = re.compile(r'^priv_ri/priv_si Handle:\s+(?P<priv_handle>\S+)Hardware Indices/Handles:\s+index3:(?P<index3>\S+)\s+mtu_index/l3u_ri_index3:(?P<mtu_index>\S+)\s+sm handle \[ASIC \d+\]:\s+(?P<sm_handle>\S+)$')
+
+        # Brief Resource Information (ASIC_INSTANCE# 3)
+        p3 = re.compile(r'^Brief Resource Information \(ASIC_INSTANCE#\s+(?P<asic_instance>\d+)\)$')
+
+        # LEAD_PORT_ALLOW_BROADCAST value 1 Pass
+        p4 = re.compile(r'^(?P<key>\S+)\s+value\s+(?P<value>\d+)\s+(?P<status>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Handle:0x7cfe2c851628 Res-Type:ASIC_RSC_PORT_LE Res-Switch-Num:0 Asic-Num:3 Feature-ID:AL_FID_IFM Lkp-ftr-id:LKP_FEAT_INGRESS_PRECLASS1_IPV4 ref_count:1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['handle'] = group['handle']
+                ret_dict['res_type'] = group['res_type']
+                ret_dict['res_switch_num'] = int(group['res_switch_num'])
+                ret_dict['asic_num'] = int(group['asic_num'])
+                ret_dict['feature_id'] = group['feature_id']
+                ret_dict['lkp_ftr_id'] = group['lkp_ftr_id']
+                ret_dict['ref_count'] = int(group['ref_count'])
+                continue
+
+            # priv_ri/priv_si Handle: (nil)Hardware Indices/Handles: index3:0x1  mtu_index/l3u_ri_index3:0x2  sm handle [ASIC 3]: 0x7cfe2c85d5e8
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['priv_ri_priv_si_handle'] = group['priv_handle']
+                hardware_dict = ret_dict.setdefault('hardware_indices', {})
+                hardware_dict['index3'] = group['index3']
+                hardware_dict['mtu_index_l3u_ri_index3'] = group['mtu_index']
+                hardware_dict['sm_handle_asic'] = group['sm_handle']
+                continue
+
+            # Brief Resource Information (ASIC_INSTANCE# 3)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['asic_instance'] = int(group['asic_instance'])
+                continue
+
+            # LEAD_PORT_ALLOW_BROADCAST value 1 Pass
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                resource_dict = ret_dict.setdefault('resource_info', {}).setdefault(group['key'], {})
+                resource_dict['status'] = group['status']
+                resource_dict['value'] = int(group['value'])
+                continue
+
+        return ret_dict

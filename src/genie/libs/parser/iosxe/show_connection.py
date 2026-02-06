@@ -103,3 +103,76 @@ class ShowConnection(ShowConnectionSchema):
                 connection_dict['internal_switching_elements'] = group['internal_switching_elements']
 
         return parsed
+
+
+class ShowConnectionNameSchema(MetaParser):
+    '''Schema for show connection name {name}'''
+    schema = {
+        'connection': str,
+        Optional('description'): str,
+        'current_state': str,
+        'segments': {
+            int: {
+                'interface': str,
+                'state': str,
+            }
+        }
+    }
+
+
+class ShowConnectionName(ShowConnectionNameSchema):
+    '''Parser for show connection name {name}'''
+    cli_command = 'show connection name {name}'
+
+    def cli(self, name='', output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(name=name))
+        else:
+            out = output
+
+        # Initialize the return dictionary
+        parsed = {}
+
+        # Connection: 2 - p2p
+        p1 = re.compile(r'^Connection:\s+(?P<connection>.+)$')
+        # Description: none
+        p2 = re.compile(r'^\s*Description:\s+(?P<description>.+)$')
+        # Current State: UP
+        p3 = re.compile(r'^\s*Current State:\s+(?P<current_state>\S+)$')
+        # Segment 1: GigabitEthernet2 up
+        p4 = re.compile(r'^\s*Segment\s+(?P<segment>\d+):\s+(?P<interface>\S+)\s+(?P<state>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Connection: 2 - p2p
+            m = p1.match(line)
+            if m:
+                parsed['connection'] = m.group('connection')
+                continue
+
+            # Description: none
+            m = p2.match(line)
+            if m:
+                parsed['description'] = m.group('description')
+                continue
+
+            # Current State: UP
+            m = p3.match(line)
+            if m:
+                parsed['current_state'] = m.group('current_state')
+                continue
+
+            # Segment 1: GigabitEthernet2 up
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                segment_num = int(group['segment'])
+                segments_dict = parsed.setdefault('segments', {})
+                segments_dict[segment_num] = {
+                    'interface': group['interface'],
+                    'state': group['state']
+                }
+                continue
+
+        return parsed

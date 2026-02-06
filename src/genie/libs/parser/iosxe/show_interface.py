@@ -36,6 +36,7 @@
     * show interfaces {interface} human-readable
     * show interfaces transceiver properties
     * show interfaces transceiver module {mod}
+    * show interfaces {interface} trunk
 """
 
 import os
@@ -3647,17 +3648,21 @@ class ShowInterfacesTrunkSchema(MetaParser):
 
 class ShowInterfacesTrunk(ShowInterfacesTrunkSchema):
     """parser for show interfaces trunk"""
-    cli_command = 'show interfaces trunk'
+    cli_command = ['show interfaces trunk', 'show interfaces {interface} trunk']
 
-    def cli(self,output=None):
+    def cli(self, interface='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
         else:
             out = output
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<name>[\w\-\/\.]+) +(?P<mode>\w+) +(?P<encapsulation>\S+) +'
-                         r'(?P<status>\w+) +(?P<native_vlan>\d+)$')
+                         r'(?P<status>[\w\-]+) +(?P<native_vlan>\d+)$')
         p2 = re.compile(r'^Port +Vlans +allowed +on +trunk$')
         p3 = re.compile(r'^Port +Vlans +allowed +and +active +in +management +domain$')
         p4 = re.compile(r'^Port +Vlans +in +spanning +tree +forwarding +state +and +not +pruned$')

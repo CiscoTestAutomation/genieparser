@@ -1,27 +1,27 @@
 IPSEC profile default
-        Security association lifetime: 4608000 kilobytes/3600 seconds
-        Dualstack (Y/N): N
+	Kilobyte Volume Rekey has been disabled.
+	Security association lifetime:3600 seconds
+	Dualstack (Y/N): N
 
-        Responder-Only (Y/N): N
-        PFS (Y/N): N
-        ML-KEM ONLY (Y/N): N
-        DH ONLY (Y/N): N
-        Mixed-mode : Disabled
-        Transform sets={ 
-                default:  { esp-aes esp-sha-hmac  } , 
-        }
+	Responder-Only (Y/N): N
+	PFS (Y/N): N
+	Mixed-mode : Disabled
+	Transform sets={
+		default:  { esp-aes esp-sha-hmac  } ,
+	}
 
 IPSEC profile dmvpn-hub
-        IKEv2 Profile: ikev2profile
-        Security association lifetime: 4608000 kilobytes/3600 seconds
-        Dualstack (Y/N): N
+	IKEv2 Profile: ikev2profile
+	Kilobyte Volume Rekey has been disabled.
+	Security association lifetime:3600 seconds
+	Dualstack (Y/N): N
 
-        Responder-Only (Y/N): N
-        PFS (Y/N): Y
-        ML-KEM ONLY (Y/N): N
-        DH ONLY (Y/N): N
-        DH group:  group14
-        Mixed-mode : Disabled
-        Transform sets={ 
-                tset1:  { esp-256-aes esp-sha256-hmac  } , 
-        }
+	Responder-Only (Y/N): N
+	PFS (Y/N): Y
+		Inherit (Y/N): N
+		DH group: group21
+		PQC Key Exchange: ML-KEM-1024
+	Mixed-mode : Disabled
+	Transform sets={
+		tset1:  { esp-256-aes esp-sha256-hmac  } ,
+	}

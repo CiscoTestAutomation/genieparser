@@ -13348,3 +13348,122 @@ class ShowPlatformSoftwareInfrastructureThreadFastpath(ShowPlatformSoftwareInfra
                 continue
 
         return result
+
+
+class ShowPlatformHardwareCppActiveFeatureNatDatapathSessDumpSchema(MetaParser):
+    '''Schema for show platform hardware cpp active feature nat datapath sess-dump'''
+    schema = {
+        'nat_sessions': {
+            Any(): {  # Session ID as key (e.g., '0x38c82d90')
+                'id': str,
+                'inside_original_ip': str,
+                'outside_original_ip': str,
+                'inside_original_port': int,
+                'outside_original_port': int,
+                'inside_translated_ip': str,
+                'outside_translated_ip': str,
+                'inside_translated_port': int,
+                'outside_translated_port': int,
+                'protocol': int,
+                'vrf': int,
+                'table_id': int,
+                'bucket': int,
+                'inside_interface': int,
+                'outside_interface': int,
+                'ext_flags': str,
+                'in_packets': int,
+                'in_bytes': int,
+                'out_packets': int,
+                'out_bytes': int,
+                'flowdb_in2out_fh': str,
+                'flowdb_out2in_fh': str,
+            }
+        }
+    }
+
+class ShowPlatformHardwareCppActiveFeatureNatDatapathSessDump(ShowPlatformHardwareCppActiveFeatureNatDatapathSessDumpSchema):
+    '''Parser for show platform hardware cpp active feature nat datapath sess-dump'''
+    
+    cli_command = 'show platform hardware cpp active feature nat datapath sess-dump'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+
+        if output:
+            # id 0x38c82d90 io 5.0.0.2 oo 110.1.1.1 io 49186 oo 33438 it 110.100.1.1 ot 110.1.1.1 it 49186 ot 33438 pro 17 vrf 0 tableid 0 bck 3804 in_if 10 out_if 8 ext_flags 0x0 in_pkts 1 in_bytes 8 out_pkts 0 out_bytes 0 flowdb in2out fh 0x0 flowdb out2in fh 0x0
+            p0 = re.compile(r'^id\s+(?P<id>0x[0-9a-fA-F]+)\s+'
+                           r'io\s+(?P<io_ip>\d+\.\d+\.\d+\.\d+)\s+'
+                           r'oo\s+(?P<oo_ip>\d+\.\d+\.\d+\.\d+)\s+'
+                           r'io\s+(?P<io_port>\d+)\s+'
+                           r'oo\s+(?P<oo_port>\d+)\s+'
+                           r'it\s+(?P<it_ip>\d+\.\d+\.\d+\.\d+)\s+'
+                           r'ot\s+(?P<ot_ip>\d+\.\d+\.\d+\.\d+)\s+'
+                           r'it\s+(?P<it_port>\d+)\s+'
+                           r'ot\s+(?P<ot_port>\d+)\s+'
+                           r'pro\s+(?P<protocol>\d+)\s+'
+                           r'vrf\s+(?P<vrf>\d+)\s+'
+                           r'tableid\s+(?P<tableid>\d+)\s+'
+                           r'bck\s+(?P<bucket>\d+)\s+'
+                           r'in_if\s+(?P<in_if>\d+)\s+'
+                           r'out_if\s+(?P<out_if>\d+)\s+'
+                           r'ext_flags\s+(?P<ext_flags>0x[0-9a-fA-F]+)\s+'
+                           r'in_pkts\s+(?P<in_pkts>\d+)\s+'
+                           r'in_bytes\s+(?P<in_bytes>\d+)\s+'
+                           r'out_pkts\s+(?P<out_pkts>\d+)\s+'
+                           r'out_bytes\s+(?P<out_bytes>\d+)\s+'
+                           r'flowdb\s+in2out\s+fh\s+(?P<in2out_fh>0x[0-9a-fA-F]+)\s+'
+                           r'flowdb\s+out2in\s+fh\s+(?P<out2in_fh>0x[0-9a-fA-F]+)')
+
+            # Process each line
+            for line in output.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+
+                # Since the output has duplicated entries on the same line,
+                # we need to split the line and process each part
+                # Look for patterns that start with 'id 0x'
+                parts = re.split(r'(?=id\s+0x)', line)
+                
+                for part in parts:
+                    part = part.strip()
+                    if not part:
+                        continue
+                    # id 0x38c82d90 io 5.0.0.2 oo 110.1.1.1 io 49186 oo 33438 it 110.100.1.1 ot 110.1.1.1 it 49186 ot 33438 pro 17 vrf 0 tableid 0 bck 3804 in_if 10 out_if 8 ext_flags 0x0 in_pkts 1 in_bytes 8 out_pkts 0 out_bytes 0 flowdb in2out fh 0x0 flowdb out2in fh 0x0
+                    m0 = p0.match(part)
+                    if m0:
+                        session_id = m0.group('id')
+                        
+                        # Initialize sessions dict if not exists
+                        if 'nat_sessions' not in result:
+                            result['nat_sessions'] = {}
+
+                        result['nat_sessions'][session_id] = {
+                            'id': session_id,
+                            'inside_original_ip': m0.group('io_ip'),
+                            'outside_original_ip': m0.group('oo_ip'),
+                            'inside_original_port': int(m0.group('io_port')),
+                            'outside_original_port': int(m0.group('oo_port')),
+                            'inside_translated_ip': m0.group('it_ip'),
+                            'outside_translated_ip': m0.group('ot_ip'),
+                            'inside_translated_port': int(m0.group('it_port')),
+                            'outside_translated_port': int(m0.group('ot_port')),
+                            'protocol': int(m0.group('protocol')),
+                            'vrf': int(m0.group('vrf')),
+                            'table_id': int(m0.group('tableid')),
+                            'bucket': int(m0.group('bucket')),
+                            'inside_interface': int(m0.group('in_if')),
+                            'outside_interface': int(m0.group('out_if')),
+                            'ext_flags': m0.group('ext_flags'),
+                            'in_packets': int(m0.group('in_pkts')),
+                            'in_bytes': int(m0.group('in_bytes')),
+                            'out_packets': int(m0.group('out_pkts')),
+                            'out_bytes': int(m0.group('out_bytes')),
+                            'flowdb_in2out_fh': m0.group('in2out_fh'),
+                            'flowdb_out2in_fh': m0.group('out2in_fh'),
+                        }
+
+        return result

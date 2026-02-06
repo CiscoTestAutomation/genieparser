@@ -1,0 +1,8 @@
+                   Interface   pvlan_mode   stp_state    stp_state(HW)  vtp pruned    Untagged      Ingress(HW)       Egress(HW)         GID     Mac learn
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+             FiftyGigE1/0/16        trunk  forwarding       Forwarding          No          No       Forwarding       Forwarding      122897        Enable
+             FiftyGigE1/0/14        trunk  forwarding       Forwarding          No          No       Forwarding       Forwarding      122895        Enable
+             FiftyGigE1/0/11         none  forwarding       Forwarding          No         Yes       Forwarding       Forwarding      122883        Enable
+              FiftyGigE1/0/1         none  forwarding       Forwarding          No         Yes       Forwarding       Forwarding      122880        Enable
+
+HW flood list: : FiftyGigE1/0/14, FiftyGigE1/0/16, FiftyGigE1/0/11, FiftyGigE1/0/1 

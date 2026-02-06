@@ -1,0 +1,23 @@
+show isis rib
+
+
+IPv4 local RIB for IS-IS process ipfrr
+
+IPV4 unicast topology base (TID 0, TOPOID 0x0) =================
+Repair path attributes:
+    DS - Downstream, LC - Linecard-Disjoint, NP - Node-Protecting
+    PP - Primary-Path, SR - SRLG-Disjoint
+
+
+40.0.0.2/32
+  [115/L1/20] via 100.5.0.2(TenGigabitEthernet0/0/8), from 40.0.0.2, tag 0
+              (installed)
+     repair path: 100.6.0.2(TenGigabitEthernet0/0/9) metric:25 (DS)
+       local LFA
+       repair source: R2
+
+100.5.0.0/16
+  [115/L1/20] via 100.5.0.2(TenGigabitEthernet0/0/8), from 40.0.0.2, tag 0
+
+100.6.0.0/16
+  [115/L1/20] via 100.5.0.2(TenGigabitEthernet0/0/8), from 40.0.0.2, tag 0

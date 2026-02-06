@@ -1,0 +1,69 @@
+show platform hardware qfp active interface if-name NVI0
+General interface information
+  Interface Name: NVI0
+  Interface state: VALID
+  Platform interface handle: 39
+  QFP interface handle: 31
+  Rx uidb: 262139
+  Tx uidb: 262113
+  Channel: 0
+Interface Relationships
+
+BGPPA/QPPB interface configuration information
+  Ingress: BGPPA/QPPB not configured. flags: 0000
+  Egress : BGPPA not configured. flags: 0000
+
+ipv4_input enabled. 
+ipv4_output enabled. 
+ipv6_input enabled. 
+ipv6_output enabled. 
+
+Features Bound to Interface:
+ 2 GIC FIA state
+71 PUNT INJECT DB
+47 icmp_svr
+49 ipfrag_svr
+50 ipreass_svr
+51 ipv6reass_svr
+48 icmp6_svr
+20 nat64_svr
+52 ipvfr_svr
+53 ipv6vfr_svr
+Protocol 0 - ipv4_input
+FIA handle - CP:0x5e6f36267508  DP:0x39fda280
+  IPV4_INPUT_DST_LOOKUP_ISSUE (M)
+  IPV4_INPUT_ARL_SANITY (M)
+  IPV4_INPUT_DST_LOOKUP_CONSUME (M)
+  IPV4_INPUT_FOR_US_MARTIAN (M)
+  IPV4_INPUT_LOOKUP_PROCESS (M)
+  IPV4_INPUT_IPOPTIONS_PROCESS (M)
+  IPV4_INPUT_GOTO_OUTPUT_FEATURE (M)
+Protocol 1 - ipv4_output
+FIA handle - CP:0x5e6f36267198  DP:0x39fe0000
+  IPV4_OUTPUT_VFR
+  NAT64_XLATE_V4V6
+  IPV4_VFR_REFRAG (M)
+  IPV4_OUTPUT_L2_REWRITE (M)
+  IPV4_OUTPUT_FRAG (M)
+  IPV4_OUTPUT_DROP_POLICY (M)
+  DEF_IF_DROP_FIA (M)
+Protocol 6 - ipv6_input
+FIA handle - CP:0x5e6f36267418  DP:0x39fdbc00
+  IPV6_INPUT_SANITY_CHECK (M)
+  IPV6_INPUT_DST_LOOKUP_ISSUE (M)
+  IPV6_INPUT_ARL (M)
+  IPV6_INPUT_DST_LOOKUP_CONT (M)
+  IPV6_INPUT_DST_LOOKUP_CONSUME (M)
+  IPV6_INPUT_FOR_US (M)
+  IPV6_INPUT_LOOKUP_PROCESS (M)
+  IPV6_INPUT_LINK_LOCAL_CHECK (M)
+  IPV6_INPUT_GOTO_OUTPUT_FEATURE (M)
+Protocol 7 - ipv6_output
+FIA handle - CP:0x5e6f362671e8  DP:0x39fdf780
+  IPV6_OUTPUT_VFR
+  NAT64_XLATE_V6V4
+  IPV6_VFR_REFRAG (M)
+  IPV6_OUTPUT_L2_REWRITE (M)
+  IPV6_OUTPUT_FRAG (M)
+  IPV6_OUTPUT_DROP_POLICY (M)
+  DEF_IF_DROP_FIA (M)

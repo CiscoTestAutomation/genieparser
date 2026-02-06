@@ -1,0 +1,3 @@
+--show platform hardware qfp active feature firewall datapath scb ipv6 2001:1:0:0:0:0:0:1 --
+[s=session  i=imprecise channel c=control channel  d=data channel u=utd inspect A/D=appfw action allow/deny]
+Session ID:0x00000002 2001:1::1 128 2001:2::2 7993 proto 58 (0:0) (0x3:icmp)	[sd] 3046618007

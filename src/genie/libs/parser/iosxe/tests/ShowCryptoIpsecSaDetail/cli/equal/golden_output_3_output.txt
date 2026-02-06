@@ -1,13 +1,13 @@
 interface: Tunnel1
-    Crypto map tag: Tunnel1-head-0, local addr 100.0.10.2
+    Crypto map tag: Tunnel1-head-0, local addr 11.0.10.131
 
    protected vrf: (none)
-   local  ident (addr/mask/prot/port): (100.0.10.2/255.255.255.255/47/0)
-   remote ident (addr/mask/prot/port): (51.51.51.2/255.255.255.255/47/0)
-   current_peer 51.51.51.2 port 500
+   local  ident (addr/mask/prot/port): (11.0.10.131/255.255.255.255/47/0)
+   remote ident (addr/mask/prot/port): (22.51.51.123/255.255.255.255/47/0)
+   current_peer 22.51.51.123 port 500
      PERMIT, flags={origin_is_acl,}
-    #pkts encaps: 185, #pkts encrypt: 185, #pkts digest: 185
-    #pkts decaps: 185, #pkts decrypt: 185, #pkts verify: 185
+    #pkts encaps: 410, #pkts encrypt: 410, #pkts digest: 410
+    #pkts decaps: 349, #pkts decrypt: 349, #pkts verify: 349
     #pkts compressed: 0, #pkts decompressed: 0
     #pkts not compressed: 0, #pkts compr. failed: 0
     #pkts not decompressed: 0, #pkts decompress failed: 0
@@ -21,17 +21,18 @@ interface: Tunnel1
     #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
     #pkts internal err (send): 0, #pkts internal err (recv) 0
 
-     local crypto endpt.: 100.0.10.2, remote crypto endpt.: 51.51.51.2
-     plaintext mtu 1458, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet2
-     current outbound spi: 0xF2FAF9F4(4076534260)
-     PFS (Y/N): Y, DH group: group14, AKE group: AKE1: MLKEM1024
+     local crypto endpt.: 11.0.10.131, remote crypto endpt.: 22.51.51.123
+     plaintext mtu 1458, path mtu 1500, ip mtu 1500, ip mtu idb TenGigabitEthernet0/0/1
+     current outbound spi: 0x746D481C(1953318940)
+     PFS (Y/N): Y, DH group: none, PQC Key Exchange: ML-KEM-1024
 
      inbound esp sas:
-      spi: 0x25AD4F0C(632114956)
+      spi: 0xAF2C1743(2938902339)
         transform: esp-256-aes esp-sha256-hmac ,
         in use settings ={Transport, }
-        conn id: 2040, flow_id: CSR:40, sibling_flags FFFFFFFF80004008, crypto map: Tunnel1-head-0, initiator : True
-         sa timing: remaining key lifetime (k/sec): (4607999/101)
+        conn id: 2049, flow_id: HW:49, sibling_flags FFFFFFFF80000008, crypto map: Tunnel1-head-0, initiator : False
+        sa timing: remaining key lifetime (sec): 94
+        Kilobyte Volume Rekey has been disabled
         IV size: 16 bytes
         replay detection support: Y
         Status: ACTIVE(ACTIVE)
@@ -41,11 +42,12 @@ interface: Tunnel1
      inbound pcp sas:
 
      outbound esp sas:
-      spi: 0xF2FAF9F4(4076534260)
+      spi: 0x746D481C(1953318940)
         transform: esp-256-aes esp-sha256-hmac ,
         in use settings ={Transport, }
-        conn id: 2039, flow_id: CSR:39, sibling_flags FFFFFFFF80004008, crypto map: Tunnel1-head-0, initiator : True
-         sa timing: remaining key lifetime (k/sec): (4607999/101)
+        conn id: 2050, flow_id: HW:50, sibling_flags FFFFFFFF80000008, crypto map: Tunnel1-head-0, initiator : False
+        sa timing: remaining key lifetime (sec): 94
+        Kilobyte Volume Rekey has been disabled
         IV size: 16 bytes
         replay detection support: Y
         Status: ACTIVE(ACTIVE)
@@ -55,12 +57,12 @@ interface: Tunnel1
      outbound pcp sas:
 
    protected vrf: (none)
-   local  ident (addr/mask/prot/port): (100.0.10.2/255.255.255.255/47/0)
-   remote ident (addr/mask/prot/port): (50.50.50.2/255.255.255.255/47/0)
-   current_peer 50.50.50.2 port 500
+   local  ident (addr/mask/prot/port): (11.0.10.131/255.255.255.255/47/0)
+   remote ident (addr/mask/prot/port): (21.50.50.122/255.255.255.255/47/0)
+   current_peer 21.50.50.122 port 500
      PERMIT, flags={origin_is_acl,}
-    #pkts encaps: 194056, #pkts encrypt: 194056, #pkts digest: 194056
-    #pkts decaps: 371974, #pkts decrypt: 371974, #pkts verify: 371974
+    #pkts encaps: 39798, #pkts encrypt: 39798, #pkts digest: 39798
+    #pkts decaps: 76359, #pkts decrypt: 76359, #pkts verify: 76359
     #pkts compressed: 0, #pkts decompressed: 0
     #pkts not compressed: 0, #pkts compr. failed: 0
     #pkts not decompressed: 0, #pkts decompress failed: 0
@@ -74,17 +76,18 @@ interface: Tunnel1
     #pkts not tagged (send): 0, #pkts not untagged (rcv): 0
     #pkts internal err (send): 0, #pkts internal err (recv) 0
 
-     local crypto endpt.: 100.0.10.2, remote crypto endpt.: 50.50.50.2
-     plaintext mtu 1458, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet2
-     current outbound spi: 0xF03F6B9(251918009)
-     PFS (Y/N): Y, DH group: group14, AKE group: AKE1: MLKEM1024
+     local crypto endpt.: 11.0.10.131, remote crypto endpt.: 21.50.50.122
+     plaintext mtu 1458, path mtu 1500, ip mtu 1500, ip mtu idb TenGigabitEthernet0/0/1
+     current outbound spi: 0x31CA189(52208009)
+     PFS (Y/N): Y, DH group: none, PQC Key Exchange: ML-KEM-1024
 
      inbound esp sas:
-      spi: 0x3556D99C(894884252)
+      spi: 0xD3345E5F(3543424607)
         transform: esp-256-aes esp-sha256-hmac ,
         in use settings ={Transport, }
-        conn id: 2038, flow_id: CSR:38, sibling_flags FFFFFFFF80004008, crypto map: Tunnel1-head-0, initiator : True
-         sa timing: remaining key lifetime (k/sec): (4607999/98)
+        conn id: 2051, flow_id: HW:51, sibling_flags FFFFFFFF80000008, crypto map: Tunnel1-head-0, initiator : False
+        sa timing: remaining key lifetime (sec): 100
+        Kilobyte Volume Rekey has been disabled
         IV size: 16 bytes
         replay detection support: Y
         Status: ACTIVE(ACTIVE)
@@ -94,11 +97,12 @@ interface: Tunnel1
      inbound pcp sas:
 
      outbound esp sas:
-      spi: 0xF03F6B9(251918009)
+      spi: 0x31CA189(52208009)
         transform: esp-256-aes esp-sha256-hmac ,
         in use settings ={Transport, }
-        conn id: 2037, flow_id: CSR:37, sibling_flags FFFFFFFF80004008, crypto map: Tunnel1-head-0, initiator : True
-         sa timing: remaining key lifetime (k/sec): (4607999/98)
+        conn id: 2052, flow_id: HW:52, sibling_flags FFFFFFFF80000008, crypto map: Tunnel1-head-0, initiator : False
+        sa timing: remaining key lifetime (sec): 100
+        Kilobyte Volume Rekey has been disabled
         IV size: 16 bytes
         replay detection support: Y
         Status: ACTIVE(ACTIVE)

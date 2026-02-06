@@ -161,61 +161,107 @@ class ShowCableDiagnosticsTdrInt(ShowCableDiagnosticsTdrIntSchema):
         # TDR test last run on: January 09 16:19:29
         p1 = re.compile(r'^TDR +test +last +run +on: +(?P<date>\w+ \d+) +(?P<time>\d+:\d+:\d+)$')
 
-        # Gi1/0/1   auto  Pair A     0    +/- 1  meters N/A         Open
-        # Gi2/7 0Mbps 1-2 46 +/-1m Unknown Open
         # Gi1/0/1     1000M Pair A     N/A                N/A         Not Completed
-        p2 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<speed>\d+(auto|Mbps|M))((\s+)|(\s+\w+\s+))'
-                        r'(?P<local_pair>([\d\-]+)|A)\s+(?P<length>\d+|N/A)((\s+\+\/\-|\s)(?P<tolerance>\w+|))'
-                        r'\s+(?P<remote_pair>N/A|\w+)\s+(?P<status>.*$)')
+        # Gi1/0/18    auto  Pair A     5    +/- 5  meters Pair A      Normal
+        p2 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<speed>\w+)\s+Pair\s+(?P<local_pair>[A-D])\s+'
+                        r'(?P<length>\d+|N/A)\s*(?:\+\/\-\s*(?P<tolerance>\d+)\s*meters?)?\s*'
+                        r'(?P<remote_pair>(?:Pair\s+[A-D]|N/A|\w+))\s+(?P<status>.+)$')
 
-        #   Pair B     N/A                N/A         Not Completed      
-        #   Pair C     N/A                N/A         Not Completed      
-        #   Pair D     N/A                N/A         Not Completed 
-        # 3-6 45 +/-1m Unknown Open 
-        p3 = re.compile(r'((\w+\s+)|)(?P<local_pair>((\w)|(\d\-\d)))\s+(?P<length>\d+|N/A)((\s+\+\/\-|\s)(?P<tolerance>\w+|))'
-            r'\s+(?P<remote_pair>N/A|\w+)\s+(?P<status>.*$)')
+        # Gi2/7 0Mbps 1-2 46 +/-1m Unknown Open
+        p3 = re.compile(r'^(?P<interface>[\w\/]+)\s+(?P<speed>\d+\w+)\s+(?P<local_pair>[\d\-]+)\s+'
+                        r'(?P<length>\d+|N/A)\s*(?:\+\/\-(?P<tolerance>\w+))?\s*'
+                        r'(?P<remote_pair>\w+)\s+(?P<status>.+)$')
+
+        # Pair B     N/A                N/A         Not Completed      
+        # Pair B     5    +/- 5  meters Pair B      Normal
+        p4 = re.compile(r'^\s*Pair\s+(?P<local_pair>[A-D])\s+(?P<length>\d+|N/A)\s*'
+                        r'(?:\+\/\-\s*(?P<tolerance>\d+)\s*meters?)?\s*'
+                        r'(?P<remote_pair>(?:Pair\s+[A-D]|N/A|\w+))\s+(?P<status>.+)$')
+
+        # 3-6 45 +/-1m Unknown Open
+        p5 = re.compile(r'^\s*(?P<local_pair>[\d\-]+)\s+(?P<length>\d+|N/A)\s*'
+                        r'(?:\+\/\-(?P<tolerance>\w+))?\s*'
+                        r'(?P<remote_pair>\w+)\s+(?P<status>.+)$')
 
         # initial return dictionary
         ret_dict = {}
+        current_interface = None
+        date_time_info = {}
 
-        # Added flag to check wheather p1 pattern is executing or not. If p1 regex. match any line flag will change to True.
-        flag = False
         for line in output.splitlines():
             line = line.strip()
+            
+            # Skip header lines
+            if line.startswith('Interface') or line.startswith('---------'):
+                continue
 
             # TDR test last run on: January 09 16:19:29
             m = p1.match(line)
             if m:
-                # If condition satisfied flag will True.
-                flag = True
-                group = m.groupdict()
+                date_time_info = m.groupdict()
                 continue
 
-            # Gi1/0/1   auto  Pair A     0    +/- 1  meters N/A         Open
+            # Gi1/0/1     1000M Pair A     N/A                N/A         Not Completed
             m = p2.match(line)
             if m:
-                output = m.groupdict()
-                int_dict = ret_dict.setdefault('interface', {}).setdefault(output['interface'], {})
-                int_dict['speed'] = output['speed']
-                # If flag True then it will add date and time in int_dict.
-                if flag:
-                    int_dict['date'] = group['date']
-                    int_dict['time'] = group['time']
+                group = m.groupdict()
+                current_interface = group['interface']
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                int_dict['speed'] = group['speed']
+                
+                # Add date and time if available
+                if date_time_info:
+                    int_dict['date'] = date_time_info['date']
+                    int_dict['time'] = date_time_info['time']
+                
                 pairs = int_dict.setdefault('pairs', {})
-                pair_dict = pairs.setdefault(output['local_pair'], {})
-                pair_dict['length'] = output['length']
-                pair_dict['tolerance'] = output['tolerance']
-                pair_dict['remote_pair'] = output['remote_pair']
-                pair_dict['status'] = output['status']
+                pair_dict = pairs.setdefault(group['local_pair'], {})
+                pair_dict['length'] = group['length']
+                pair_dict['tolerance'] = group['tolerance'] if group['tolerance'] else ''
+                pair_dict['remote_pair'] = group['remote_pair']
+                pair_dict['status'] = group['status'].strip()
                 continue
 
-            #   Pair D     N/A                N/A         Not Completed  
+            # Gi2/7 0Mbps 1-2 46 +/-1m Unknown Open
             m = p3.match(line)
             if m:
-                output = m.groupdict()
-                local_pair = output['local_pair']
-                del output['local_pair']
-                pairs.setdefault(local_pair, output)
+                group = m.groupdict()
+                current_interface = group['interface']
+                int_dict = ret_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                int_dict['speed'] = group['speed']
+                
+                pairs = int_dict.setdefault('pairs', {})
+                pair_dict = pairs.setdefault(group['local_pair'], {})
+                pair_dict['length'] = group['length']
+                pair_dict['tolerance'] = group['tolerance'] if group['tolerance'] else ''
+                pair_dict['remote_pair'] = group['remote_pair']
+                pair_dict['status'] = group['status'].strip()
+                continue
+
+            # Pair B     N/A                N/A         Not Completed
+            m = p4.match(line)
+            if m and current_interface:
+                group = m.groupdict()
+                int_dict = ret_dict['interface'][current_interface]
+                pairs = int_dict['pairs']
+                pair_dict = pairs.setdefault(group['local_pair'], {})
+                pair_dict['length'] = group['length']
+                pair_dict['tolerance'] = group['tolerance'] if group['tolerance'] else ''
+                pair_dict['remote_pair'] = group['remote_pair']
+                pair_dict['status'] = group['status'].strip()
+                continue
+
+            # 3-6 45 +/-1m Unknown Open
+            m = p5.match(line)
+            if m and current_interface:
+                group = m.groupdict()
+                int_dict = ret_dict['interface'][current_interface]
+                pairs = int_dict['pairs']
+                pair_dict = pairs.setdefault(group['local_pair'], {})
+                pair_dict['length'] = group['length']
+                pair_dict['tolerance'] = group['tolerance'] if group['tolerance'] else ''
+                pair_dict['remote_pair'] = group['remote_pair']
+                pair_dict['status'] = group['status'].strip()
                 continue
 
         return ret_dict

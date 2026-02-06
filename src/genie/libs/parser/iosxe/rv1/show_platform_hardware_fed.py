@@ -642,3 +642,214 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightAclTableDef(ShowPlatformHardwar
                 del acl_data['acl_commands']
 
         return result_dict 
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAclSchema(MetaParser):
+    """Schema for 'show platform hardware fed switch {switch} fwd-asic insight ip_source_guard_acl'"""
+    schema = {
+        'acl_entries': {
+            'priority': {
+                Any(): {
+                    Optional('ssp'): int,
+                    Optional('ipv4_sip'): str,
+                    Optional('ipv6_sip'): str,
+                    Optional('source_mac'): str,
+                    Optional('vlan'): int,
+                    Optional('protocol'): int,
+                    Optional('dport'): int,
+                    Optional('sport'): int,
+                    Optional('drop'): str,
+                    Optional('icmp_v6_type'): int,
+                    Optional('hit_count'): int,
+                    Optional('counter_oid'): int,
+                    Optional('ipv4_sip_mask'): str,
+                    Optional('ipv6_sip_mask'): str,
+                    Optional('source_mac_mask'): str
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAclSchema):
+    """Parser for 'show platform hardware fed switch {switch} fwd-asic insight ip_source_guard_acl'"""
+
+    cli_command = [
+        'show platform hardware fed switch {switch} fwd-asic insight ip_source_guard_acl',
+        'show platform hardware fed switch {switch} fwd-asic insight ip_source_guard_acl({devid})'
+    ]
+
+    def cli(self, switch, devid=None, output=None):
+        if output is None:
+            if devid:
+                output = self.device.execute(self.cli_command[1].format(devid=devid, switch=switch))
+            else:
+                output = self.device.execute(self.cli_command[0].format(switch=switch))
+
+        # Initialize the parsed dictionary
+        ret_dict = {}
+
+        # +----------+-----+----------+------------------------------------------------+--------------------------+------+----------+-------+-------+------+-------------+-----------+-------------+
+        # | Priority | SSP | IPV4 SIP | IPV6 SIP                                       | Source mac               | Vlan | Protocol | DPort | SPort | Drop | ICMPV6 Type | Hit count | Counter oid |
+        # +----------+-----+----------+------------------------------------------------+--------------------------+------+----------+-------+-------+------+-------------+-----------+-------------+
+        # | 0        |     |          |                                                |                          |      | 17       | 67    | 68    |      |           | 4         | 1486        |
+        p1 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<protocol>\d+)\s+\|\s+(?P<dport>\d+)\s+\|\s+(?P<sport>\d+)\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # | 20015    | 309 |          | IP   : fe80::200:ff:fe11:1111                  | Mac  : 00:00:00:11:11:11 | 100  |          |       |       |      |             | 0         | 3770        |
+        p2 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+\|\s+IP\s*:\s*(?P<ipv6_sip>[a-fA-F0-9\:]+)\s+\|\s+Mac\s*:\s*(?P<source_mac>[\w:]+)\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # |          |     |          | Mask : ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
+        p3 = re.compile(r'^\|\s+\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv6_sip_mask>[a-fA-F0-9\:]+)\s+\|\s+Mask\s*:\s*(?P<source_mac_mask>[\w:]+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
+
+        # | 7        |     |          |                                                |                          |      |          |       |       |      | 134         | 0         | 1493        |
+        p4 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<icmp_v6_type>\d+)\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # | 50015    | 309 |          |                                                |                          |      |          |       |       | true |             | 16363     | 3467        |
+        p5 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<drop>\S*)\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+        
+        # | 15       | 565 | IP   : 100.200.0.4     |                                                | Mac  : 00:00:00:22:22:22 | 200  |          |       |       |      |             | 15        | 3161        |
+        p6 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+IP\s*:\s*(?P<ipv4_sip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+Mac\s*:\s*(?P<source_mac>[\w:]+)\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # |          |     | Mask : 255.255.255.255 |                                                | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
+        p7 = re.compile(r'^\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv4_sip_mask>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+Mask\s*:\s*(?P<source_mac_mask>[\w:]+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
+
+        # | 0        |     |          |            |      | 17       | 67    | 68    |      | 0         | 1374        |
+        p8 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<protocol>\d+)\s+\|\s+(?P<dport>\d+)\s+\|\s+(?P<sport>\d+)\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # | 65533    |     |          |            |      |          |       |       | true | 0         | 1377        |
+        p9 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<drop>\S*)\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # | 3        | 60  | IP   : 30.0.0.2        | Mac  : 00:12:01:00:00:01 | 30   |          |       |       |      | 0         | 2479        |
+        p10 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+IP\s*:\s*(?P<ipv4_sip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+Mac\s*:\s*(?P<source_mac>[\w:]+)\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
+        # |          |     | Mask : 255.255.255.255 | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |         |             |
+        p11 = re.compile(r'^\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv4_sip_mask>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+Mask\s*:\s*(?P<source_mac_mask>[\w:]+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # | 0        |     |          |                                                |                          |      | 17       | 67    | 68    |      |           | 4         | 1486        |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['protocol'] = int(group['protocol'])
+                result_dict['dport'] = int(group['dport'])
+                result_dict['sport'] = int(group['sport'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # | 20015    | 309 |          | IP   : fe80::200:ff:fe11:1111                  | Mac  : 00:00:00:11:11:11 | 100  |          |       |       |      |             | 0         | 3770        |
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['ssp'] = int(group['ssp'])
+                result_dict['ipv6_sip'] = group['ipv6_sip'] 
+                result_dict['source_mac'] = group['source_mac']
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # |          |     |          | Mask : ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict['ipv6_sip_mask'] = group['ipv6_sip_mask']
+                result_dict['source_mac_mask'] = group['source_mac_mask']
+                continue
+
+            # | 7        |     |          |                                                |                          |      |          |       |       |      | 134         | 0         | 1493        |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['icmp_v6_type'] = int(group['icmp_v6_type'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # | 50015    | 309 |          |                                                |                          |      |          |       |       | true |             | 16363     | 3467        |
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['ssp'] = int(group['ssp'])
+                result_dict['drop'] = group['drop']
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # | 15       | 565 | IP   : 100.200.0.4     |                                                | Mac  : 00:00:00:22:22:22 | 200  |          |       |       |      |             | 15        | 3161        |
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['ssp'] = int(group['ssp'])
+                result_dict['ipv4_sip'] = group['ipv4_sip']
+                result_dict['source_mac'] = group['source_mac']
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # |          |     | Mask : 255.255.255.255 |                                                | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict['ipv4_sip_mask'] = group['ipv4_sip_mask']   
+                result_dict['source_mac_mask'] = group['source_mac_mask']
+                continue
+
+            # | 0        |     |          |            |      | 17       | 67    | 68    |      | 0         | 1374        |
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['protocol'] = int(group['protocol'])
+                result_dict['dport'] = int(group['dport'])
+                result_dict['sport'] = int(group['sport'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # | 65533    |     |          |            |      |          |       |       | true | 0         | 1377        |
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['drop'] = group['drop']
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # | 3        | 60  | IP   : 30.0.0.2        | Mac  : 00:12:01:00:00:01 | 30   |          |       |       |      | 0         | 2479        |
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = ret_dict.setdefault("acl_entries", {}).setdefault("priority", {}).setdefault(current_priority, {})
+                result_dict['ssp'] = int(group['ssp'])
+                result_dict['ipv4_sip'] = group['ipv4_sip']
+                result_dict['source_mac'] = group['source_mac']
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
+            # |          |     | Mask : 255.255.255.255 | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |         |             |
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict['ipv4_sip_mask'] = group['ipv4_sip_mask']   
+                result_dict['source_mac_mask'] = group['source_mac_mask']
+                continue
+
+        return ret_dict

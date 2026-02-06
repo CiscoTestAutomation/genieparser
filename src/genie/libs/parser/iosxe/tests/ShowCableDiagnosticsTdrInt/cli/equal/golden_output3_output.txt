@@ -1,0 +1,8 @@
+TDR test last run on: July 02 02:00:06
+
+Interface   Speed Local pair Pair length        Remote pair Pair status
+---------   ----- ---------- ------------------ ----------- --------------------
+Gi1/0/18    auto  Pair A     5    +/- 5  meters Pair A      Normal              
+                  Pair B     5    +/- 5  meters Pair B      Normal              
+                  Pair C     10   +/- 5  meters Pair C      Open                
+                  Pair D     0    +/- 5  meters Pair D      Open   

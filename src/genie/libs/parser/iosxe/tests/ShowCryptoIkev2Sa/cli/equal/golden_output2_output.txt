@@ -1,23 +1,23 @@
- IPv4 Crypto IKEv2  SA 
+ IPv4 Crypto IKEv2  SA
 
- IPv6 Crypto IKEv2  SA 
+ IPv6 Crypto IKEv2  SA
 
-Tunnel-id    fvrf/ivrf              Status 
-5          none/none             READY  
-Local  2001:DB8:1101::222/500                            
-Remote  2001:DB8:1201::222/500                            
+Tunnel-id    fvrf/ivrf              Status
+1          none/none             READY
+Local  2001:DB8:1101::131/500
+Remote  2001:DB8:1201::122/500
       Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:21, Auth sign: PSK, Auth verify: PSK
-      AKE group: AKE1: MLKEM1024
-      Life/Active Time: 86400/21335 sec
-      CE id: 0, Session-id: 17
-      Local spi: 20591BE104774B76       Remote spi: 7C67BCED5FFDB6D2
+      PQC Key Exchange: ML-KEM-1024
+      Life/Active Time: 86400/218 sec
+      CE id: 0, Session-id: 3
+      Local spi: 4CF87E32B25302C0       Remote spi: 96254131FD306002
 
-Tunnel-id    fvrf/ivrf              Status 
-6          none/none             READY  
-Local  2001:DB8:1101::222/500                            
-Remote  2001:DB8:1202::222/500                            
+Tunnel-id    fvrf/ivrf              Status
+2          none/none             READY
+Local  2001:DB8:1101::131/500
+Remote  2001:DB8:1202::123/500
       Encr: AES-CBC, keysize: 256, PRF: SHA512, Hash: SHA512, DH Grp:21, Auth sign: PSK, Auth verify: PSK
-      AKE group: AKE1: MLKEM1024
-      Life/Active Time: 86400/21323 sec
-      CE id: 0, Session-id: 18
-      Local spi: E28C2A55E83B1F2A       Remote spi: E2DA90DA2CBA3C76
+      PQC Key Exchange: ML-KEM-1024
+      Life/Active Time: 86400/207 sec
+      CE id: 0, Session-id: 4
+      Local spi: DE66CA8E9F3AB6BD       Remote spi: DB3CED85555E739D

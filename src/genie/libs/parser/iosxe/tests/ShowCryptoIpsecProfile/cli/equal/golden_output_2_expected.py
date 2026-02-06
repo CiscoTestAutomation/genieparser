@@ -1,10 +1,9 @@
 expected_output = {
     "ipsec_profile_name": {
         "default": {
-            "security_association_lifetime": "4608000 kilobytes/3600 seconds",
+            "security_association_lifetime": "3600 seconds",
             "responder_only": "N",
             "psf": "N",
-            "ml-kem_only": "N",
             "mixed_mode": "Disabled",
             "tranform_sets": {
                 "default": {
@@ -15,10 +14,12 @@ expected_output = {
         },
         "dmvpn-hub": {
             "ikev2_profile_name": "ikev2profile",
-            "security_association_lifetime": "4608000 kilobytes/3600 seconds",
+            "security_association_lifetime": "3600 seconds",
             "responder_only": "N",
             "psf": "Y",
-            "ml-kem_only": "N",
+            "pfs_inherit": "N",
+            "dh_group": "group21",
+            "pqc": "ML-KEM-1024",
             "mixed_mode": "Disabled",
             "tranform_sets": {
                 "tset1": {

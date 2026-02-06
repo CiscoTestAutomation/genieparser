@@ -9,7 +9,7 @@ expected_output = {
                 'ess_ac_input': {
                     'cp_handle': '0x621c7d7ec998',
                     'dp_handle': '0x40e1bb00',
-                    'features': ['DEF_IF_DROP_FIA'],
+                    'features': ['PPPOE_GET_SESSION', 'ESS_ENTER_SWITCHING', 'PPPOE_HANDLE_UNCLASSIFIED_SESSION', 'DEF_IF_DROP_FIA'],
                 },
                 'layer2_input': {
                     'cp_handle': '0x621c7d7ed9d8',
@@ -19,7 +19,7 @@ expected_output = {
                 'layer2_output': {
                     'cp_handle': '0x621c7d7ec858',
                     'dp_handle': '0x40e1dd00',
-                    'features': ['LAYER2_OUTPUT_DROP_POLICY', 'DEF_IF_DROP_FIA'],
+                    'features': ['OUTPUT_ETHER_CHNL_L2_BUNDLE_PRE_ENQ', 'LAYER2_OUTPUT_DROP_POLICY', 'LAYER2_OUTPUT_ETHER_CHANNEL_BUNDLE_ENQ', 'DEF_IF_DROP_FIA'],
                 },
             },
             'qfp_interface_handle': 73,

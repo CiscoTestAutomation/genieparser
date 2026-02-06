@@ -1,0 +1,5 @@
+Connection: 2 - p2p
+ Description: none
+ Current State: UP
+ Segment 1: GigabitEthernet2 up
+ Segment 2: GigabitEthernet3 up
