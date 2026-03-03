@@ -1,0 +1,5 @@
+Active FPGA profile       : hsr-quadbox
+Active feature set        : HSR-HSR quadbox
+
+FPGA profile upon reload  : hsr-quadbox
+Feature set upon reload   : HSR-HSR quadbox

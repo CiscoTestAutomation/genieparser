@@ -1,0 +1,300 @@
+########################################################
+#########                             ##################
+########      Printing Policy Infos    #################
+#########                             ##################
+########################################################
+
+INTERFACE: TenGigabitEthernet1/0/1
+MAC 0000.0000.0000
+########################################################
+    intfinfo: 0x764e8c04fb38
+    Interface handle: 0x980000e9
+    Interface Type: Port
+    if-id: 0x0000000000000008
+------------
+Direction:  Input
+Protocol Type:MAC
+    Policy Intface Handle: 0xee0000b5
+    Policy Handle: 0x8c0000ad
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0x8c0000ad
+Policy name         : pacl1
+ID                  : 60
+Protocol            : [1] MAC
+Feature             : [1] AAL_FEATURE_PACL
+Number of ACLs      : 1
+
+########################################################
+## Complete policy ACL information
+########################################################
+Acl number    : 1
+=====================================
+Acl handle      : 0x500000f0
+Acl flags       : 0x00000001
+Number of ACEs  : 5
+  Ace handle [1] : 0xb4000185
+  Ace handle [2] : 0x87000186
+  Ace handle [3] : 0x70000187
+  Ace handle [4] : 0x61000188
+  Ace handle [5] : 0xfd000189
+
+Interface(s):
+        TenGigabitEthernet1/0/1
+########################################################
+#########                             ##################
+########  Policy instance information  #################
+#########                             ##################
+########################################################
+Policy intf handle    : 0xee0000b5
+Policy handle         : 0x8c0000ad
+ID                    : 60
+Protocol              : [1] MAC
+Feature               : [1] AAL_FEATURE_PACL
+Direction             : [1] Ingress
+Number of ACLs        : 1
+Number of VMRs        : 4------------
+Direction:  Input
+Protocol Type:IPv6
+    Policy Intface Handle: 0xe50000b9
+    Policy Handle: 0xab0000b1
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0xab0000b1
+Policy name         : pacl5
+ID                  : 64
+Protocol            : [4] IPV6
+Feature             : [1] AAL_FEATURE_PACL
+Number of ACLs      : 1
+
+########################################################
+## Complete policy ACL information
+########################################################
+Acl number    : 1
+=====================================
+Acl handle      : 0xa80000f4
+Acl flags       : 0x00000001
+Number of ACEs  : 7
+  Ace handle [1] : 0x1e000199
+  Ace handle [2] : 0xaa00019a
+  Ace handle [3] : 0xcd00019b
+  Ace handle [4] : 0xfb00019c
+  Ace handle [5] : 0xae00019d
+  Ace handle [6] : 0xa200019e
+  Ace handle [7] : 0x6e00019f
+
+Interface(s):
+        TenGigabitEthernet1/0/1
+########################################################
+#########                             ##################
+########  Policy instance information  #################
+#########                             ##################
+########################################################
+Policy intf handle    : 0xe50000b9
+Policy handle         : 0xab0000b1
+ID                    : 64
+Protocol              : [4] IPV6
+Feature               : [1] AAL_FEATURE_PACL
+Direction             : [1] Ingress
+Number of ACLs        : 1
+Number of VMRs        : 8------------
+Direction:  Input
+Protocol Type:IPv4
+    Policy Intface Handle: 0xf40000b7
+    Policy Handle: 0xdb0000af
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0xdb0000af
+Policy name         : pacl3
+ID                  : 62
+Protocol            : [3] IPV4
+Feature             : [1] AAL_FEATURE_PACL
+Number of ACLs      : 1
+
+########################################################
+## Complete policy ACL information
+########################################################
+Acl number    : 1
+=====================================
+Acl handle      : 0x800000f2
+Acl flags       : 0x00000001
+Number of ACEs  : 5
+  Ace handle [1] : 0xe900018f
+  Ace handle [2] : 0xec000190
+  Ace handle [3] : 0x74000191
+  Ace handle [4] : 0x06000192
+  Ace handle [5] : 0xee000193
+
+Interface(s):
+        TenGigabitEthernet1/0/1
+########################################################
+#########                             ##################
+########  Policy instance information  #################
+#########                             ##################
+########################################################
+Policy intf handle    : 0xf40000b7
+Policy handle         : 0xdb0000af
+ID                    : 62
+Protocol              : [3] IPV4
+Feature               : [1] AAL_FEATURE_PACL
+Direction             : [1] Ingress
+Number of ACLs        : 1
+Number of VMRs        : 4------------
+Direction:  Output
+Protocol Type:IPv6
+    Policy Intface Handle: 0xcd0000ba
+    Policy Handle: 0x4f0000b2
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0x4f0000b2
+Policy name         : pacl6
+ID                  : 65
+Protocol            : [4] IPV6
+Feature             : [1] AAL_FEATURE_PACL
+Number of ACLs      : 1
+
+########################################################
+## Complete policy ACL information
+########################################################
+Acl number    : 1
+=====================================
+Acl handle      : 0x800000f5
+Acl flags       : 0x00000001
+Number of ACEs  : 7
+  Ace handle [1] : 0x6e0001a0
+  Ace handle [2] : 0x620001a1
+  Ace handle [3] : 0xe90001a2
+  Ace handle [4] : 0x850001a3
+  Ace handle [5] : 0x2f0001a4
+  Ace handle [6] : 0x890001a5
+  Ace handle [7] : 0xf40001a6
+
+Interface(s):
+        TenGigabitEthernet1/0/1
+########################################################
+#########                             ##################
+########  Policy instance information  #################
+#########                             ##################
+########################################################
+Policy intf handle    : 0xcd0000ba
+Policy handle         : 0x4f0000b2
+ID                    : 65
+Protocol              : [4] IPV6
+Feature               : [1] AAL_FEATURE_PACL
+Direction             : [2] Egress
+Number of ACLs        : 1
+Number of VMRs        : 8------------
+Direction:  Output
+Protocol Type:MAC
+    Policy Intface Handle: 0x220000b6
+    Policy Handle: 0x640000ae
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0x640000ae
+Policy name         : pacl2
+ID                  : 61
+Protocol            : [1] MAC
+Feature             : [1] AAL_FEATURE_PACL
+Number of ACLs      : 1
+
+########################################################
+## Complete policy ACL information
+########################################################
+Acl number    : 1
+=====================================
+Acl handle      : 0x590000f1
+Acl flags       : 0x00000001
+Number of ACEs  : 5
+  Ace handle [1] : 0xe300018a
+  Ace handle [2] : 0xf700018b
+  Ace handle [3] : 0xe800018c
+  Ace handle [4] : 0xc300018d
+  Ace handle [5] : 0x4200018e
+
+Interface(s):
+        TenGigabitEthernet1/0/1
+########################################################
+#########                             ##################
+########  Policy instance information  #################
+#########                             ##################
+########################################################
+Policy intf handle    : 0x220000b6
+Policy handle         : 0x640000ae
+ID                    : 61
+Protocol              : [1] MAC
+Feature               : [1] AAL_FEATURE_PACL
+Direction             : [2] Egress
+Number of ACLs        : 1
+Number of VMRs        : 4------------
+Direction:  Output
+Protocol Type:IPv4
+    Policy Intface Handle: 0x910000b8
+    Policy Handle: 0xd60000b0
+
+
+########################################################
+#########                             ##################
+########       Policy information      #################
+#########                             ##################
+########################################################
+Policy handle       : 0xd60000b0
+Policy name         : pacl4
+ID                  : 63
+Protocol            : [3] IPV4
+Feature             : [1] AAL_FEATURE_PACL
+Number of ACLs      : 1
+
+########################################################
+## Complete policy ACL information
+########################################################
+Acl number    : 1
+=====================================
+Acl handle      : 0xe60000f3
+Acl flags       : 0x00000001
+Number of ACEs  : 5
+  Ace handle [1] : 0xd7000194
+  Ace handle [2] : 0xd5000195
+  Ace handle [3] : 0x13000196
+  Ace handle [4] : 0x6f000197
+  Ace handle [5] : 0xce000198
+
+Interface(s):
+        TenGigabitEthernet1/0/1
+########################################################
+#########                             ##################
+########  Policy instance information  #################
+#########                             ##################
+########################################################
+Policy intf handle    : 0x910000b8
+Policy handle         : 0xd60000b0
+ID                    : 63
+Protocol              : [3] IPV4
+Feature               : [1] AAL_FEATURE_PACL
+Direction             : [2] Egress
+Number of ACLs        : 1
+Number of VMRs        : 4------------

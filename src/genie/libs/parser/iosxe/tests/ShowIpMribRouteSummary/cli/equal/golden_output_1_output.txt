@@ -1,0 +1,7 @@
+show ip mrib route summary
+ MRIB Route-DB Summary 
+  No. of (*,G) routes = 14
+  No. of (S,G) routes = 400
+  No. of Route x Interfaces (RxI) = 842
+SR1 MRIB route summary line:   No. of (S,G) routes = 400
+MRIB (S,G) route count verified: actual=400, expected=400

@@ -60,3 +60,5 @@ Trustpoint CISCO_IDEVID_CMCA_SUDI0:
     o=Cisco Systems
           Serial Number (hex): 5FF87B282B54DC8D42A315B568C9ADFF
     Certificate configured.
+
+Trustpoint trustpoint1:

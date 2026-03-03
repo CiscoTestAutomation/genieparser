@@ -9217,8 +9217,8 @@ class ShowCryptoPkiTrustpointsSchema(MetaParser):
                         Optional('o'): str,
                         }
                     },
-                "serial_number_in_hex": str,
-                "comment": str
+                Optional("serial_number_in_hex"): str,
+                Optional("comment"): str
                 },
             },
         }
@@ -12695,4 +12695,3 @@ class ShowCryptoAutovpnSessionPeerno(ShowCryptoAutovpnSessionPeernoSchema):
             return parsed_dict
         else:
             return {'0': ''}
-        

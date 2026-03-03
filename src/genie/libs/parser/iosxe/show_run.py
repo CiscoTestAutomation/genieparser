@@ -470,7 +470,13 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_verify_unicast_source_reachable_via_rx_allow_self_ping'): bool,
                 Optional('ip_verify_unicast_source_reachable_via_rx_acl'): str,
                 Optional('pnp_startup_vlan'): int,
-
+                Optional('storm_control'): {
+                    Any(): {
+                        Optional('level'): str,
+                        Optional('low_level'): str,
+                    },
+                    Optional('action'): str,
+                }
             }
         }
     }
@@ -873,6 +879,13 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         # pnp startup-vlan 100
         p117 = re.compile(r'^pnp startup-vlan (?P<vlan>\d+)$')
 
+        # storm-control broadcast level bps 100m 50m
+        # storm-control unicast level pps 20k
+        p118 = re.compile(r'^storm-control\s+(?P<storm_control_type>[\w\s\-]+)\s+level\s+(bps|pps)\s+(?P<level>\w+)(\s+(?P<low_level>\w+))?$')
+
+        # storm-control action trap
+        p119 = re.compile(r'^storm-control\s+action\s+(?P<action>\w+)$')				
+		
         for line in output.splitlines():
             line = line.strip()
 
@@ -1793,6 +1806,25 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 intf_dict['pnp_startup_vlan'] = int(group['vlan'])
                 continue
 
+		    # storm-control multicast level bps 100m 50m
+            # storm-control unicast level pps 20k
+            m = p118.match(line)
+            if m:
+                group = m.groupdict()
+                storm_dict=intf_dict.setdefault('storm_control', {}).setdefault(group['storm_control_type'], {})
+                storm_dict['level'] = group['level']
+                if group['low_level']:
+                    storm_dict['low_level'] = group['low_level']
+                continue
+                
+            # storm-control action trap     
+            m = p119.match(line)
+            if m:
+                group = m.groupdict()
+                action_dict = intf_dict.setdefault('storm_control', {})
+                action_dict['action'] = group['action']
+                continue
+            
         return config_dict
 
 

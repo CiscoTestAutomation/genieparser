@@ -1,0 +1,3 @@
+9300L-HA-UUT1#show fqdn summary
+FQDN ttl timeout factor: 10
+Registered FQDNs:

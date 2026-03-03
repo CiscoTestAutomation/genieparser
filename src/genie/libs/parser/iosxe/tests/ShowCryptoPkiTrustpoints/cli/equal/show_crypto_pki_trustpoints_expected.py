@@ -78,6 +78,12 @@ expected_output = {
    },
    "serial_number_in_hex": "5FF87B282B54DC8D42A315B568C9ADFF",
    "comment": "Certificate configured."
+  },
+  "trustpoint1": {
+   "issuing_ca": {
+    "subject": {
+    }
+   }
   }
  }
 }

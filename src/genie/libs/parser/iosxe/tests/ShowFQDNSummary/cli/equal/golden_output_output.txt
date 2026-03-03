@@ -1,0 +1,8 @@
+FQDN ttl timeout factor: Infinite
+Registered FQDNs:
+ FQDN: host1.demo1.msft.com
+   Registered Module IDs for IPv4: FQDN ACL Mgr,
+   Registered Module IDs for IPv6:
+ FQDN: host1.demo2.msft.com
+   Registered Module IDs for IPv4: FQDN ACL Mgr,
+   Registered Module IDs for IPv6:

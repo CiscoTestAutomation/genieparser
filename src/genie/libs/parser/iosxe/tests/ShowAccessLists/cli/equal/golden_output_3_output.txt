@@ -1,0 +1,31 @@
+show ip access-lists
+FQDN IP access list FQDN_ACL_WEBAUTH_REDIRECT
+    10 deny ip any host 100.8.12.107
+    20 deny ip any host dynamic www.msft10.com
+    30 deny ip any host dynamic www.msft11.com
+    40 permit ip any host dynamic www.msft12.com
+    50 permit ip any host dynamic www.msft13.com
+Extended IP access list FQDN_ACL_WEBAUTH_REDIRECT
+    100000 deny ip any host 100.8.12.107
+Extended IP access list IP-Adm-V4-Int-ACL-global
+    10 permit tcp any any eq www
+    20 permit tcp any any eq 443
+Extended IP access list implicit_deny
+    10 deny ip any any
+Extended IP access list implicit_permit
+    10 permit ip any any
+Extended IP access list meraki-fqdn-dns
+Extended IP access list preauth_v4
+    10 permit udp any any eq domain
+    20 permit tcp any any eq domain
+    30 permit udp any eq bootps any
+    40 permit udp any any eq bootpc
+    50 permit udp any eq bootpc any
+    60 deny ip any any
+Extended IP access list xACSACLx-IP-CWA_PRE_AUTH-69692867
+    1 permit udp any eq bootpc any eq bootps
+    2 permit tcp any any eq www
+    3 permit tcp any any eq 443
+    4 permit tcp any any eq 8443
+    5 permit udp any any eq domain
+    6 deny ip any any

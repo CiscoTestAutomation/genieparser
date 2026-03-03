@@ -1,0 +1,64 @@
+HSR-ring listing: 
+		--------------------
+
+HSR-ring: HS1
+------------
+ Layer type = L2 
+ Operation Mode = mode-H
+ Ports: 2	Maxports = 2
+ Port state = hsr-ring is In use
+ Protocol = Disabled  Redbox Mode = hsr-hsr  
+Ports in the ring:
+  1) Port: Gi1/4
+   Logical slot/port = 1/4	Port state = Not-In use (link down) 
+	Protocol = Disabled
+  2) Port: Gi1/5
+   Logical slot/port = 1/5	Port state = Not-In use (link down) 
+	Protocol = Disabled
+
+Ring Parameters: 
+ Redbox MacAddr: 0000.0003.0004
+ Node Forget Time: 60000 ms
+ Node Reboot Interval: 500 ms
+ Entry Forget Time: 400 ms
+ Proxy Node Forget Time: 60000 ms
+ Supervision Frame COS option: 0
+ Supervision Frame CFI option: 0
+ Supervision Frame VLAN Tag option: Disabled
+ Supervision Frame MacDa: 0x00
+ Supervision Frame VLAN id: 0
+ Supervision Frame Time: 3 ms
+ Life Check Interval: 1600 ms
+ Pause Time: 25 ms
+ fpgamode-DualUplinkEnhancement: Enabled 
+
+HSR-ring: HS2
+------------
+ Layer type = L2 
+ Operation Mode = mode-H
+ Ports: 2	Maxports = 2
+ Port state = hsr-ring is In use
+ Protocol = Disabled  Redbox Mode = hsr-hsr  
+Ports in the ring:
+  1) Port: Gi1/6
+   Logical slot/port = 1/6	Port state = Not-In use (link down) 
+	Protocol = Disabled
+  2) Port: Gi1/7
+   Logical slot/port = 1/7	Port state = Not-In use (link down) 
+	Protocol = Disabled
+
+Ring Parameters: 
+ Redbox MacAddr: 0000.0003.0006
+ Node Forget Time: 60000 ms
+ Node Reboot Interval: 500 ms
+ Entry Forget Time: 400 ms
+ Proxy Node Forget Time: 60000 ms
+ Supervision Frame COS option: 0
+ Supervision Frame CFI option: 0
+ Supervision Frame VLAN Tag option: Disabled
+ Supervision Frame MacDa: 0x00
+ Supervision Frame VLAN id: 0
+ Supervision Frame Time: 3 ms
+ Life Check Interval: 1600 ms
+ Pause Time: 25 ms
+ fpgamode-DualUplinkEnhancement: Enabled 

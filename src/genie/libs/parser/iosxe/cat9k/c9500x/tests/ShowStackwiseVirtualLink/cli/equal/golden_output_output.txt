@@ -1,0 +1,20 @@
+Stackwise Virtual Link(SVL) Information:
+----------------------------------------
+Flags:
+------
+Link Status
+-----------
+U-Up D-Down
+Protocol Status
+---------------
+s-Suspended P-Bundled E-Error D-Down R-RLayer3 I-Indiv
+-------------------------------------------------------
+Switch  SVL     Ports                           Link-Status     Protocol-Status
+------  ---     -----                           -----------     ---------------
+1       1       HundredGigE1/0/1                U               P
+                HundredGigE1/0/6                U               P
+2       1       HundredGigE2/0/1                U               P
+                HundredGigE2/0/6                U               P    
+
+
+

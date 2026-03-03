@@ -1,0 +1,12 @@
+    GigabitEthernet1/0/1
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other     112674    5306164          2        120
+                      IP      22150    2173570      22121    2167858
+                     ARP     109280    4590030          2        120
+                    IPv6         24       1944          0          0
+    GigabitEthernet1/0/2 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other       3483     741524         92       5520
+                      IP      11745     968690      10821    1148402
+                     ARP         91       5460         92       5520
+                    IPv6          1         70          0          0

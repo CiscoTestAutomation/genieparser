@@ -1,0 +1,27 @@
+expected_output = {
+   "ip_sgt_mappings":[
+      {
+         "ipv4":"14.1.1.2",
+         "SGT":4,
+         "source":"SXP",
+         "peer_ip":"1133:1:1::1",
+         "ins_num":1,
+         "status":"Active",
+         "seq_num":5,
+         "peer_seq":"1133:1:1::1"
+      },
+      {
+         "ipv6":"1144:1:1::2",
+         "SGT":4,
+         "source":"SXP",
+         "peer_ip":"1133:1:1::1",
+         "ins_num":1,
+         "status":"Active",
+         "seq_num":7,
+         "peer_seq":"1133:1:1::1"
+      }
+   ],
+   "sxp_ipv6_node_id_configured":"1144:1:1::1",
+   "sxp_node_id_generated":"0xAC171BCE(172.23.27.206)",
+   "total_number_of_ip_sgt_mappings":2
+}

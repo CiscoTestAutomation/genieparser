@@ -1,0 +1,31 @@
+show adjacency tunnel 1 {tunnel} internal
+Protocol Interface                 Address
+IP       Tunnel1                   point2point(19)
+                                   1998 packets, 1581880 bytes
+                                   epoch 0
+                                   sourced in sev-epoch 1110
+                                   Encap length 40
+                                   60000000000004FF0100010000010000
+                                   00000000000000010300030000010000
+                                   0000000000000001
+                                   P2P-ADJ
+                                   Next chain element:
+                                     IPV6 adj out of GigabitEthernet0/0/1, addr FE80::C6B2:39FF:FEFB:DC41 78EE054686C8
+                                     parent oce 0x78EE05468788
+                                     frame originated locally (Null0)
+                                   L3 mtu 1460
+                                     mtu update from interface suppressed
+                                   Flags (0x4928E4)
+                                   Fixup enabled (0x80000)
+                                         IPv6 in IPv6 tunnel
+                                   HWIDB/IDB pointers 0x78EDFF532770/0x78EE0541C910
+                                   IP redirect disabled
+                                   Switching vector: IPv4 midchain adj oce
+                                   Next-hop cannot be inferred
+                                   IP Tunnel stack to 300:300:1::1 in Default (0x0)
+                                    nh tracking enabled: 300:300:1::1/128
+                                    IPV6 adj out of GigabitEthernet0/0/1, addr FE80::C6B2:39FF:FEFB:DC41
+                                   Platform adj-id: 0xF8000216, 0x0, tun_qos_dpidx:0
+
+                                   Adjacency pointer 0x78EE05468F88
+                                   Next-hop unknown

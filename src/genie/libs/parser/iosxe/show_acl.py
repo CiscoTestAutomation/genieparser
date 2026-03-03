@@ -1,6 +1,8 @@
 """show_acl.py
    supported commands:
      *  show access-lists
+    * show ip access-list outbound
+    * show ip access-list inbound
 """
 
 # Python
@@ -251,11 +253,12 @@ class ShowAccessLists(ShowAccessListsSchema):
 
         # initial regexp pattern
         # Extended IP access list Gi2/0/24#v4#33476254
-        p_ip = re.compile(r'^(?P<acl_type>Extended|Standard|Role-based) +IP +access +list[s]? '
+        # FQDN IP access list FQDN_ACL_WEBAUTH_REDIRECT
+        p_ip = re.compile(r'^(?P<acl_type>Extended|Standard|Role-based|FQDN) +IP +access +list[s]? '
                           r'+(?P<name>[\w\-\.#\/]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-'
                             r'\.#]+)( *\((?P<per_user>.*)\))?$')
-        p_ipv6 = re.compile(r'^(?P<acl_type>IPv6 ?(Role-based)?) +access +list +(?P<name>[\w\-\.#]+)'
+        p_ipv6 = re.compile(r'^(?P<acl_type>IPv6 ?(Role-based|FQDN)?) +access +list +(?P<name>[\w\-\.#]+)'
                             r'( *\((?P<per_user>.*)\))?.*$')
         p_mac = re.compile(r'^(?P<acl_type>Extended) +MAC +access +list +(?P<name>[\w\-\.'
                            r']+)( *\((?P<per_user>.*)\))?$')
@@ -301,13 +304,14 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit icmp any 10.120.194.64 0.0.0.63
         # 20 permit tcp any eq 443 10.120.194.64 0.0.0.63
         # 10 permit icmp echo-reply (19 matches)
+        # 20 deny ip any host dynamic www.msft10.com
 
         p_ip_acl = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
             r'+(?P<src>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?'
             r'(?: +(?P<src_operator>eq|gt|lt|neq|range) '
             r'+(?P<src_port>.*?(?=(?: +any| +host +\d+.\d+.\d+.\d+| +\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)|$)))? '
-            r'?(?P<dst>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)?'
+            r'?(?P<dst>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+|host dynamic +\S+))?'
             r'(?: +(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\S?)+\S))?(?: '
             r'?(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
             r'router-advertisement|mld-query+))?(?P<left>.+)?$')
@@ -325,6 +329,8 @@ class ShowAccessLists(ShowAccessListsSchema):
         # permit tcp host 2001: DB8: 1: : 1 eq www any eq bgp sequence 30
         # permit udp any host 2001: DB8: 1: : 1 sequence 40
         # permit icmp (19 matches) sequence 10
+        # deny icmp any any nd-na sequence 1930000
+        # deny ipv6 any host dynamic *.atoz.msn.com sequence 4
         p_ipv6_acl = re.compile(
             r'^(?P<actions_forwarding>permit|deny) +(?P<protocol>ahp|esp|hbh'
             r'|icmp|ipv6|pcp|sctp|tcp|udp) ?(?P<src>(?:any|(?:\w+)?(?::(?:\w+)?)'
@@ -332,11 +338,11 @@ class ShowAccessLists(ShowAccessListsSchema):
             r'(?:\w+)?(?::(?:\w+)?){2,7}))?(?: +(?P<src_operator>eq|gt|lt|neq|range)'
             r' +(?P<src_port>[\S ]+\S(?=(?: +any| +(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)'
             r'|(?: +host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))))? '
-            r'?(?P<dst>(?:any|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)|'
+            r'?(?P<dst>(?:any|(host dynamic +\S+)|(?:\w+)?(?::(?:\w+)?){2,7}(?:\/\d+)|'
             r'(?:host|(?:\w+)?(?::(?:\w+)?){2,7}) (?:\w+)?(?::(?:\w+)?){2,7}))?(?: '
             r'+(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\w+ ?)'
             r'+\w+))?(?: +(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
-            r'router-advertisement|mld-query+))?(?: +time-range +(?P<time_range_name>\S+)'
+            r'router-advertisement|nd-na|nd-ns|router-solicitation|redirect|mld-query+))?(?: +time-range +(?P<time_range_name>\S+)'
             r'(?: +\((?P<time_range_status>\w+)\))?)?(?P<left>.+)? +sequence +(?P<seq>\d+)$')
 
         p_mac_acl = re.compile(
@@ -1284,3 +1290,469 @@ class ShowAccessListFqdnClient(ShowAccessListFqdnClientSchema):
                 continue
             
         return ret_dict
+
+class ShowPlatformSoftwareFedActiveAclPolicySchema(MetaParser):
+    """Schema for show platform software fed <mode> acl policy"""
+
+    schema = {
+        'interfaces': {
+            Any(): {   # Interface name
+                'mac': str,
+                'directions': {
+                    Any(): {   # ingress / egress
+                        'protocols': {
+                            Any(): {   # mac / ipv4 / ipv6
+                                'policy': {
+                                    'policy_name': str,
+                                    'policy_handle': str,
+                                    'policy_intf_handle': str,
+                                    'id': int,
+                                    'protocol': str,
+                                    'feature': str,
+                                    'number_of_acls': int,
+                                    'number_of_vmrs': int,
+                                    'acls': {
+                                        Any(): {   # ACL number (string)
+                                            'acl_handle': str,
+                                            'acl_flags': str,
+                                            'number_of_aces': int,
+                                            'aces': {
+                                                Any(): {   # ACE index (string)
+                                                    'ace_handle': str
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedActiveAclPolicy(ShowPlatformSoftwareFedActiveAclPolicySchema):
+    """Parser for show platform software fed <mode> acl policy"""
+
+    cli_command = [
+        'show platform software fed {mode} acl policy',
+    ]
+
+    def cli(self, mode="active", output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(mode=mode)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # ---------------- Context trackers ----------------
+        current_intf = None
+        current_direction = None
+        current_protocol = None
+        current_acl = None
+
+        # ---------------- Regex definitions ----------------
+        # INTERFACE: TenGigabitEthernet1/0/1
+        p0 = re.compile(r'^INTERFACE:\s+(?P<interface>\S+)')
+
+        # MAC 0000.0000.0000
+        p1 = re.compile(r'^MAC\s+(?P<mac>\S+)')
+
+        # Direction:  Input
+        # Direction:  Output
+        p2 = re.compile(r'^Direction:\s+(?P<direction>Input|Output)')
+
+        # Protocol Type:MAC
+        # Protocol Type:IPv4
+        # Protocol Type:IPv6
+        p3 = re.compile(r'^Protocol Type:(?P<protocol>\S+)')
+
+        # Policy Intface Handle: 0xee0000b5
+        p4 = re.compile(r'^Policy Intface Handle:\s+(?P<policy_intf_handle>\S+)')
+
+        # Policy handle       : 0x8c0000ad
+        p5 = re.compile(r'^Policy handle\s+:\s+(?P<policy_handle>\S+)')
+
+        # Policy name         : pacl1
+        p6 = re.compile(r'^Policy name\s+:\s+(?P<policy_name>.+)')
+
+        # ID                  : 60
+        p7 = re.compile(r'^ID\s+:\s+(?P<id>\d+)')
+
+        # Protocol            : [1] MAC
+        # Protocol            : [3] IPV4
+        # Protocol            : [4] IPV6
+        p8 = re.compile(r'^Protocol\s+:\s+\[\d+\]\s+(?P<protocol>\S+)')
+
+        # Feature             : [1] AAL_FEATURE_PACL
+        p9 = re.compile(r'^Feature\s+:\s+\[\d+\]\s+(?P<feature>\S+)')
+
+        # Number of ACLs      : 1
+        p10 = re.compile(r'^Number of ACLs\s+:\s+(?P<number_of_acls>\d+)')
+
+        # Acl number    : 1
+        p11 = re.compile(r'^Acl number\s+:\s+(?P<acl_number>\d+)')
+
+        # Acl handle      : 0x500000f0
+        p12 = re.compile(r'^Acl handle\s+:\s+(?P<acl_handle>\S+)')
+
+        # Acl flags       : 0x00000001
+        p13 = re.compile(r'^Acl flags\s+:\s+(?P<acl_flags>\S+)')
+
+        # Number of ACEs  : 5
+        p14 = re.compile(r'^Number of ACEs\s+:\s+(?P<number_of_aces>\d+)')
+
+        # Ace handle [1] : 0xb4000185
+        p15 = re.compile(r'^Ace handle \[(?P<index>\d+)\]\s+:\s+(?P<ace_handle>\S+)')
+
+        # Number of VMRs        : 4
+        p16 = re.compile(r'^Number of VMRs\s+:\s+(?P<vmrs>\d+)')
+
+        # ---------------- Parsing loop ----------------
+        for line in output.splitlines():
+            line = line.strip()
+
+            # INTERFACE: TenGigabitEthernet1/0/1
+            m = p0.match(line)
+            if m:
+                current_intf = m.group('interface')
+                intf_dict = ret_dict.setdefault('interfaces', {}).setdefault(current_intf, {})
+                current_direction = None
+                current_protocol = None
+                current_acl = None
+                dir_dict = None
+                proto_dict = None
+                policy = None
+                acl_entry = None
+                continue
+
+            # MAC 0000.0000.0000
+            m = p1.match(line)
+            if m and current_intf:
+                intf_dict['mac'] = m.group('mac')
+                continue
+
+            # Direction:  Input
+            # Direction:  Output
+            m = p2.match(line)
+            if m and current_intf:
+                current_direction = m.group('direction').strip().lower()
+
+                dir_dict = intf_dict.setdefault('directions', {}) \
+                                     .setdefault(current_direction, {'protocols': {}})
+
+                current_protocol = None
+                current_acl = None
+                proto_dict = None
+                policy = None
+                acl_entry = None
+                continue
+
+            # Protocol Type:MAC
+            # Protocol Type:IPv4
+            # Protocol Type:IPv6
+            m = p3.match(line)
+            if m and current_intf and current_direction:
+                current_protocol = m.group('protocol').lower()
+
+                proto_dict = dir_dict['protocols'].setdefault(current_protocol, {'policy': {}})
+                policy = proto_dict['policy']
+                continue
+
+            # Policy Intface Handle: 0xee0000b5
+            m = p4.match(line)
+            if m and policy is not None:
+                policy['policy_intf_handle'] = m.group('policy_intf_handle')
+                continue
+
+            # Policy handle       : 0x8c0000ad
+            m = p5.match(line)
+            if m and policy is not None:
+                policy['policy_handle'] = m.group('policy_handle')
+                continue
+
+            # Policy name         : pacl1
+            m = p6.match(line)
+            if m and policy is not None:
+                policy['policy_name'] = m.group('policy_name')
+                continue
+
+            # ID                  : 60
+            m = p7.match(line)
+            if m and policy is not None:
+                policy['id'] = int(m.group('id'))
+                continue
+
+            # Protocol            : [1] MAC
+            # Protocol            : [3] IPV4
+            # Protocol            : [4] IPV6
+            m = p8.match(line)
+            if m and policy is not None:
+                policy['protocol'] = m.group('protocol')
+                continue
+
+            # Feature             : [1] AAL_FEATURE_PACL
+            m = p9.match(line)
+            if m and policy is not None:
+                policy['feature'] = m.group('feature')
+                continue
+
+            # Number of ACLs      : 1
+            m = p10.match(line)
+            if m and policy is not None:
+                policy['number_of_acls'] = int(m.group('number_of_acls'))
+                policy.setdefault('acls', {})
+                continue
+
+            # Acl number    : 1
+            m = p11.match(line)
+            if m and policy is not None:
+                current_acl = m.group('acl_number')  # STRING key
+                acl_entry = policy['acls'].setdefault(current_acl, {'aces': {}})
+                continue
+
+            # Acl handle      : 0x500000f0
+            m = p12.match(line)
+            if m and acl_entry is not None:
+                acl_entry['acl_handle'] = m.group('acl_handle')
+                continue
+
+            # Acl flags       : 0x00000001
+            m = p13.match(line)
+            if m and acl_entry is not None:
+                acl_entry['acl_flags'] = m.group('acl_flags')
+                continue
+
+            # Number of ACEs  : 5
+            m = p14.match(line)
+            if m and acl_entry is not None:
+                acl_entry['number_of_aces'] = int(m.group('number_of_aces'))
+                continue
+
+            # Ace handle [1] : 0xb4000185
+            m = p15.match(line)
+            if m and acl_entry is not None:
+                idx = m.group('index')  # STRING key
+                acl_entry.setdefault('aces', {})[idx] = {'ace_handle': m.group('ace_handle')}
+                continue
+
+            # Number of VMRs        : 4
+            m = p16.match(line)
+            if m and policy is not None:
+                policy['number_of_vmrs'] = int(m.group('vmrs'))
+                continue
+
+        return ret_dict
+       
+class ShowIpAccessListOutboundSchema(MetaParser):
+    """Schema for show ip access-list outbound"""
+    schema = {
+        "acl": {
+            Any(): {
+                "name": str,
+                "type": str,
+                "aces": {
+                    Any(): {
+                        "sequence": int,
+                        "actions": {
+                            "forwarding": str
+                        },
+                        "protocol": str,
+                        "source": {
+                            "address": str,
+                            "wildcard_bits": str
+                        },
+                        "destination": {
+                            "address": str,
+                            "wildcard_bits": str
+                        },
+                        "matches": int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowIpAccessListOutbound(ShowIpAccessListOutboundSchema):
+    """Parser for show ip access-list outbound"""
+
+    cli_command = "show ip access-list outbound"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Extended IP access list outbound
+        p1 = re.compile(r"^\s*Extended\s+IP\s+access\s+list\s+(?P<name>\S+)\s*$")
+        #     10 permit tcp 100.1.1.0 0.0.0.255 200.1.1.0 0.0.0.255
+        p2 = re.compile(
+            r"^\s*(?P<sequence>\d+)\s+(?P<forwarding>permit|deny)\s+(?P<protocol>\S+)\s+"
+            r"(?P<src_addr>\d+\.\d+\.\d+\.\d+)\s+(?P<src_wb>\d+\.\d+\.\d+\.\d+)\s+"
+            r"(?P<dst_addr>\d+\.\d+\.\d+\.\d+)\s+(?P<dst_wb>\d+\.\d+\.\d+\.\d+)"
+            r"(?:\s+\((?P<matches>\d+)\s+matches\))?\s*$"
+        )
+
+        acl_name = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Extended IP access list outbound
+            m = p1.match(line)
+            if m:
+                name = m.groupdict()["name"]
+                acl_name = name
+                acl_dict = ret_dict.setdefault("acl", {}).setdefault(name, {})
+                acl_dict["name"] = name
+                acl_dict["type"] = "extended"
+                continue
+
+            # 10 permit tcp 100.1.1.0 0.0.0.255 200.1.1.0 0.0.0.255
+			
+            m = p2.match(line)
+            if m and acl_name:
+                group = m.groupdict()
+                seq = int(group["sequence"])
+
+                seq_dict = (
+                    ret_dict
+                    .setdefault("acl", {})
+                    .setdefault(acl_name, {})
+                    .setdefault("aces", {})
+                    .setdefault(seq, {})
+                )
+
+                matches_val = group.get("matches")
+
+                seq_dict.update({
+                    "sequence": seq,
+                    "protocol": group["protocol"],
+                    "matches": int(matches_val) if matches_val else 0,
+                })
+
+                seq_dict.setdefault("actions", {}).update({
+                    "forwarding": group["forwarding"],
+                })
+                seq_dict.setdefault("source", {}).update({
+                    "address": group["src_addr"],
+                    "wildcard_bits": group["src_wb"],
+                })
+                seq_dict.setdefault("destination", {}).update({
+                    "address": group["dst_addr"],
+                    "wildcard_bits": group["dst_wb"],
+                })
+                continue
+
+        return ret_dict
+
+          
+class ShowIpAccessListInboundSchema(MetaParser):
+    """Schema for show ip access-list inbound"""
+    schema = {
+        "acls": {
+            Any(): {
+                "name": str,
+                "type": str,
+                "aces": {
+                    Any(): {
+                        "sequence": int,
+                        "action": str,
+                        "protocol": str,
+                        "source": {
+                            "address": str,
+                            "wildcard_bits": str
+                        },
+                        "destination": {
+                            "address": str,
+                            "wildcard_bits": str
+                        },
+                        "matches": int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowIpAccessListInbound(ShowIpAccessListInboundSchema):
+    """Parser for show ip access-list inbound"""
+
+    cli_command = "show ip access-list inbound"
+
+    def cli(self, output=None):
+      if output is None:
+          output = self.device.execute(self.cli_command)
+
+      ret_dict = {}
+
+      # Extended IP access list inbound
+      p1 = re.compile(r"^\s*Extended\s+IP\s+access\s+list\s+(?P<name>\S+)\s*$")
+
+      # 10 deny tcp 200.1.1.0 0.0.0.255 100.1.1.0 0.0.0.255
+      p2 = re.compile(
+          r"^\s*(?P<sequence>\d+)\s+(?P<action>permit|deny)\s+(?P<protocol>\S+)\s+"
+          r"(?P<src_addr>\d+\.\d+\.\d+\.\d+)\s+(?P<src_wild>\d+\.\d+\.\d+\.\d+)\s+"
+          r"(?P<dst_addr>\d+\.\d+\.\d+\.\d+)\s+(?P<dst_wild>\d+\.\d+\.\d+\.\d+)"
+          r"(?:\s*\((?P<matches>\d+)\s+matches\))?\s*$"
+      )
+
+      acl_name = None
+
+      for line in output.splitlines():
+          line = line.rstrip()
+          if not line:
+              continue
+
+          # Extended IP access list inbound
+          m = p1.match(line)
+          if m:
+              name = m.group("name")
+              acl_name = name
+              acls = ret_dict.setdefault("acls", {})
+              acl_dict = acls.setdefault(name, {})
+              acl_dict.update({
+                  "name": name,
+                  "type": "extended",
+              })
+              continue
+
+          # 10 deny tcp 200.1.1.0 0.0.0.255 100.1.1.0 0.0.0.255
+          m = p2.match(line)
+          if m and acl_name:
+              gd = m.groupdict()
+              seq = gd["sequence"]
+
+              acls = ret_dict.setdefault("acls", {})
+              acl_dict = acls.setdefault(acl_name, {})
+              aces = acl_dict.setdefault("aces", {})
+              ace = aces.setdefault(seq, {})
+
+              matches_val = gd.get("matches")
+              ace.update({
+                  "sequence": int(gd["sequence"]),
+                  "action": gd["action"],
+                  "protocol": gd["protocol"],
+                  "matches": int(matches_val) if matches_val else 0,
+              })
+
+              src = ace.setdefault("source", {})
+              src.update({
+                  "address": gd["src_addr"],
+                  "wildcard_bits": gd["src_wild"],
+              })
+
+              dst = ace.setdefault("destination", {})
+              dst.update({
+                  "address": gd["dst_addr"],
+                  "wildcard_bits": gd["dst_wild"],
+              })
+              continue
+
+      return ret_dict

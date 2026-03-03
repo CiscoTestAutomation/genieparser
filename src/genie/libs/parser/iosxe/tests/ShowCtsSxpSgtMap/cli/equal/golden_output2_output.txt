@@ -1,0 +1,19 @@
+show cts sxp sgt-map
+SXP Node ID(generated):0xAC171BCE(172.23.27.206)
+SXP IPv6 Node ID(configured):1144:1:1::1
+IP-SGT Mappings as follows:
+IPv4,SGT: <14.1.1.2 , 4>
+source  : SXP;
+Peer IP : 1133:1:1::1;
+Ins Num : 1;
+Status  : Active;
+Seq Num : 5
+Peer Seq: 1133:1:1::1
+IPv6,SGT: <1144:1:1::2 , 4>
+source  : SXP;
+Peer IP : 1133:1:1::1;
+Ins Num : 1;
+Status  : Active;
+Seq Num : 7
+Peer Seq: 1133:1:1::1
+Total number of IP-SGT Mappings: 2

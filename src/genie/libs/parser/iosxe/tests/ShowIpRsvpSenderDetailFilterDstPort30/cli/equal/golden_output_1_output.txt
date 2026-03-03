@@ -1,0 +1,36 @@
+show ip rsvp sender detail filter dst-port 30
+Session Type 1 (rsvp)
+
+Session Type 7 (te-p2p-lsp)
+PATH:
+  Tun Dest:   100.1.1.2  Tun ID: 30  Ext Tun ID: 100.1.1.3
+  Tun Sender: 100.1.1.3  LSP ID: 40
+  Path refreshes:
+    sent:     to   NHOP 10.1.1.5 on FiveGigabitEthernet0/0/2
+  Session Attr:
+    Setup Prio: 2, Holding Prio: 2
+    Flags: (0x7) Local Prot desired, Label Recording, SE Style
+    Session Name: rt3_t30
+  ERO: (incoming)
+    100.1.1.3 (Strict IPv4 Prefix, 8 bytes, /32)
+    10.1.1.6 (Strict IPv4 Prefix, 8 bytes, /32)
+    10.1.1.5 (Strict IPv4 Prefix, 8 bytes, /32)
+    100.1.1.2 (Strict IPv4 Prefix, 8 bytes, /32)
+  ERO: (outgoing)
+    10.1.1.5 (Strict IPv4 Prefix, 8 bytes, /32)
+    100.1.1.2 (Strict IPv4 Prefix, 8 bytes, /32)
+  Traffic params - Rate: 158K bits/sec, Max. burst: 1K bytes
+    Min Policed Unit: 0 bytes, Max Pkt Size 2147483647 bytes
+  Fast-Reroute Backup info:
+    Inbound  FRR: Not active
+    Outbound FRR: Ready -- backup tunnel selected
+      Backup Tunnel: Tu31       (label 3)
+      Bkup Sender Template:
+        Tun Sender: 10.1.1.9  LSP ID: 40
+      Bkup FilerSpec:
+        Tun Sender: 10.1.1.9, LSP ID: 40
+  Path ID handle: FC000428.
+  Incoming policy: Accepted. Policy source(s): MPLS/TE
+  Status: Proxied
+  Output on FiveGigabitEthernet0/0/2. Policy status: Forwarding. Handle: 7D000405
+    Policy source(s): MPLS/TE

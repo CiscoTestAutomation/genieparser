@@ -1,0 +1,40 @@
+show platform hardware qfp active feature tunnel interface Tunnel1 {tunnel}
+General interface info:
+  Interface name: Tunnel1
+  Platform interface handle: 33
+  QFP interface handle: 20
+  QFP complex: 0
+  Rx uIDB: 65522  Tx uIDB: 65516
+  Hash index : 0x0001ab
+  Hash element ppe addr : 0xaa20010
+  ESP Hash element ppe addr : 00000000
+  AH Hash element ppe addr : 00000000
+  UDP Hash element ppe addr : 00000000
+  Output sb ppe addr : 0x994b070
+  Decap chk sb ppe addr : 00000000
+  DMVPN sb ppe addr input: 00000000 output: 00000000
+  SGRE input sb ppe addr : 00000000
+  L2TPOIPV6 input sb ppe addr : 00000000
+  SGRE Client Tunnel output sb ppe addr : 00000000
+  Hash index v6: 0xffffffff
+  Hash element ppe addr v6: 00000000
+  P2PADJ output sb ppe addr : 00000000
+Config:
+  mode: IPV6
+  src IP: 0100:0100:0001:0000:0000:0000:0000:0001  dest IP: 0300:0300:0001:0000:0000:0000:0000:0001
+  ipv4_intf_vrf: 0  tun_vrf: 0 tun_vrf_egress: 0
+  key: 0  flags: 0x0081  app_id: TUN_APP_CLI  app_data: 0
+  ttl: 255  tos: 0
+  tunnel_protection: FALSE
+  virtual MAC: 0000.0000.0000
+  lport: 0  rport: 0
+  tunnel_enable_entropy: FALSE
+  remote_session_id: 0 vlan id for l2tpoipv6: 0
+  remote_cookie_size: 0  local_cookie_size: 0 local_cookie_secondary_size: 0 
+  remote_cookie_low: 0  remote_cookie_high: 0
+  local_cookie_low: 0  local_cookie_high: 0
+  local_cookie_secondary_low: 0  local_cookie_secondary_high: 0
+  native vlan id: 0
+  tunnel_enable_nhrp_galcheck: FALSE
+  path_mtu_discovery: TRUE
+  path_mtu_discovery_mpls_ip_only: FALSE

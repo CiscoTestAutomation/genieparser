@@ -1,0 +1,46 @@
+9350stack#$rm software fed switch 3 ifm interface_name g3/0/24 vlan 666     
+Interface IF_ID         : 0x000500000198029a
+Interface Name          : Gi3/0/24_V666
+Interface Block Pointer : 0x7b463af04658
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Status        : ADD, 
+Interface Ref-Cnt       : 1
+Interface Type          : *UNKNOWN*
+Bootup breakout Config Done Slot 0: Port: 0
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+	Port VP Subblock
+		If Id ....................... [0x000500000198029a]
+		Parent If Id ................ [0x00000000000004a1]
+		Service port gid ............ [0x1e0c0(123072)]
+		Service port oid for Asic[0] ........... [0xca3(3235)]
+		Service port gid for punt ... [0x9e0c0(647360)]
+		Vlan Id ..................... [666]
+		Match vlan .................. [0]
+		Default vlan ................ [666]
+		Mac learning enable ......... [Yes]
+        STP state ................... [STP_FORWARDING]
+		STP state set................ [No]
+		Port Mode ................... [port_mode_access]
+		Port Mode set................ [No]
+		Port Tagging ................ [PORT_TAG_NATIVE]
+		Rx Span enabled ............. [No]
+		Tx Span enabled ............. [No]
+		Span dest GPN ............... [0]
+		Untagged .................... [Yes] 
+		Dense Mode VP.................... [Yes]
+	 Port CTS Subblock is NULL if_id = 0x198029a 
+	 Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Events Log
+[2026/02/10 22:45:20.532] Created
+[2026/02/10 22:45:20.532] STP Block
+[2026/02/10 22:45:20.534] Enable Mac Learning
+[2026/02/10 22:45:35.533] STP Learn
+[2026/02/10 22:45:35.533] Enable Mac Learning
+[2026/02/10 22:45:50.534] STP Forward

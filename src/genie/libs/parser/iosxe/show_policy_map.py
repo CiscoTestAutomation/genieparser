@@ -4025,3 +4025,190 @@ class ShowPolicyMapMultipoint(ShowPolicyMapMultipointSchema):
         if ret_dict:
             ret_dict = {'interfaces': ret_dict}
         return ret_dict
+
+
+class ShowPolicyMapTypeAccessControlInterfaceInterfaceInSchema(MetaParser):
+    schema = {
+        "interface": {
+            Any(): {
+                "service_policy": {
+                    "input": {
+                        "name": str,
+                        "type": str,
+                        "classes": {
+                            Any(): {
+                                "match_type": str,
+                                "packets": int,
+                                "bytes": int,
+                                "offered_rate_bps_5min": int,
+                                Optional("drop_rate_bps_5min"): int,
+                                "matches": ListOf(str),
+                                Optional("action"): str,
+                                Optional("child_policy"): {
+                                    "name": str,
+                                    "type": str,
+                                    "classes": {
+                                        Any(): {
+                                            "match_type": str,
+                                            "packets": int,
+                                            "bytes": int,
+                                            "offered_rate_bps_5min": int,
+                                            Optional("drop_rate_bps_5min"): int,
+                                            "matches": ListOf(str),
+                                            Optional("action"): str,
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPolicyMapTypeAccessControlInterfaceInterfaceIn(ShowPolicyMapTypeAccessControlInterfaceInterfaceInSchema):
+    cli_command = "show policy-map type access-control interface {interface} in"
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # Initialize intf_dict as None, will be set when interface name is parsed
+        intf_dict = None
+        actual_interface = interface
+
+        # GigabitEthernet0/0/0 - Interface names typically have numbers and/or special chars
+        p1 = re.compile(r"^\s*(?P<ifname>[A-Z][a-zA-Z]+[\d/:.-]+)\s*$")
+
+        # Service-policy access-control input: parent
+        p2 = re.compile(r"^\s*Service-policy\s+(?P<name>\S+)\s+input\s*:\s*(?P<type>\S+)\s*$")
+
+        #   Service-policy access-control : child
+        p3 = re.compile(r"^\s*Service-policy\s+(?P<name>\S+)\s*:\s*(?P<type>\S+)\s*$")
+
+        # Class-map: ip_tcp (match-all)
+        p4 = re.compile(r"^\s*Class-map:\s+(?P<class_name>\S+)\s+\((?P<match_type>match-\w+)\)\s*$")
+
+        #   584692 packets, 49114128 bytes
+        p5 = re.compile(r"^\s*(?P<packets>\d+)\s+packets\s*,\s*(?P<bytes>\d+)\s+bytes\s*$")
+
+        #   5 minute offered rate 1139000 bps
+        p6 = re.compile(r"^\s*5\s+minute\s+offered\s+rate\s+(?P<offered>\d+)\s+bps(?:\s*,\s*drop\s+rate\s+(?P<drop>\d+)\s+bps)?\s*$")
+
+        #   Match: field IP version eq 4
+        p7 = re.compile(r"^\s*Match\s*:\s*(?P<match>.*\S)\s*$")
+
+        #   drop
+        p8 = re.compile(r"^\s*(?P<action>drop)\s*$")
+
+        service_policy_input_dict = None
+        parent_classes_dict = None
+        current_class_dict = None
+        current_parent_class_name = None
+
+        # Child policy tracking
+        inside_child = False
+        child_classes_dict = None
+
+        for raw_line in output.splitlines():
+            line = raw_line.rstrip()
+            if not line.strip():
+                continue
+
+            # GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                # Extract interface name from output and set up intf_dict
+                actual_interface = m.groupdict()["ifname"]
+                intf_dict = ret_dict.setdefault("interface", {}).setdefault(actual_interface, {})
+                continue
+
+            # Service-policy access-control input: parent
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sp_dict = intf_dict.setdefault("service_policy", {})
+                service_policy_input_dict = sp_dict.setdefault("input", {})
+                service_policy_input_dict["name"] = group["name"]
+                service_policy_input_dict["type"] = group["type"]
+                parent_classes_dict = service_policy_input_dict.setdefault("classes", {})
+                continue
+
+            #   Service-policy access-control : child
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if current_class_dict is not None:
+                    cp_dict = current_class_dict.setdefault("child_policy", {})
+                    cp_dict["name"] = group["name"]
+                    cp_dict["type"] = group["type"]
+                    child_classes_dict = cp_dict.setdefault("classes", {})
+                    inside_child = True
+                continue
+
+            # Class-map: ip_tcp (match-all)
+            m = p4.match(line)
+            if m:
+                # Determine if this is a top-level class (no indent) to end child section if needed
+                starts_without_space = bool(re.match(r"^\S", raw_line))
+                if inside_child and starts_without_space:
+                    inside_child = False
+                    child_classes_dict = None
+
+                group = m.groupdict()
+                class_name = group["class_name"]
+                match_type = group["match_type"]
+
+                if inside_child and child_classes_dict is not None:
+                    target_classes = child_classes_dict
+                elif parent_classes_dict is not None:
+                    target_classes = parent_classes_dict
+                else:
+                    # Skip if we don't have a valid target
+                    continue
+
+                current_class_dict = target_classes.setdefault(class_name, {})
+                current_class_dict["match_type"] = match_type
+
+                if not inside_child:
+                    current_parent_class_name = class_name
+                continue
+
+            #   584692 packets, 49114128 bytes
+            m = p5.match(line)
+            if m and current_class_dict is not None:
+                group = m.groupdict()
+                current_class_dict["packets"] = int(group["packets"])
+                current_class_dict["bytes"] = int(group["bytes"])
+                continue
+
+            #   5 minute offered rate 1139000 bps
+            m = p6.match(line)
+            if m and current_class_dict is not None:
+                group = m.groupdict()
+                current_class_dict["offered_rate_bps_5min"] = int(group["offered"])
+                if group.get("drop"):
+                    current_class_dict["drop_rate_bps_5min"] = int(group["drop"])
+                continue
+
+            #   Match: field IP version eq 4
+            m = p7.match(line)
+            if m and current_class_dict is not None:
+                match_list = current_class_dict.setdefault("matches", [])
+                match_list.append(m.groupdict()["match"])
+                continue
+
+            #   drop
+            m = p8.match(line)
+            if m and current_class_dict is not None:
+                current_class_dict["action"] = m.groupdict()["action"]
+                continue
+
+        return ret_dict
