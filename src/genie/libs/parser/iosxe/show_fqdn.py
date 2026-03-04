@@ -8,7 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, ListOf
+from genie.metaparser.util.schemaengine import Any, ListOf, Optional
 
 # ====================================================
 # Schema for 'show fqdn packet statistics'
@@ -479,3 +479,121 @@ class ShowFQDNDebugStatistics(ShowFQDNDebugStatisticsSchema):
                 continue
 
         return ret_dict
+
+# ====================================================
+# Schema for 'show fqdn summary'
+# ====================================================
+class ShowFQDNSummarySchema(MetaParser):
+    """ Schema for show fqdn summary """
+
+    schema = {
+        'fqdn_ttl_timeout_factor': str,
+        Optional('registered_fqdns'): {
+            Any(): {
+                'registered_module_ids_ipv4': ListOf(str),
+                'registered_module_ids_ipv6': ListOf(str),
+            }
+        }
+    }
+
+# =============================================
+# Parser for 'show fqdn summary'
+# =============================================
+class ShowFQDNSummary(ShowFQDNSummarySchema):
+
+    cli_command = 'show fqdn summary'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # FQDN ttl timeout factor: Infinite
+        p1 = re.compile(r'^FQDN\s+ttl\s+timeout\s+factor:\s+(?P<fqdn_ttl_timeout_factor>.+)$')
+
+        # FQDN: host1.demo1.msft.com
+        p2 = re.compile(r'^FQDN:\s+(?P<fqdn_name>[\S]+)$')
+
+        # Registered Module IDs for IPv4: FQDN ACL Mgr,
+        p3 = re.compile(r'^Registered\s+Module\s+IDs\s+for\s+IPv4:\s+(?P<module_ids>.*)$')
+
+        # Registered Module IDs for IPv6:
+        p4 = re.compile(r'^Registered\s+Module\s+IDs\s+for\s+IPv6:\s+(?P<module_ids>.*)$')
+
+        current_fqdn = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # FQDN ttl timeout factor: Infinite
+            m = p1.match(line)
+            if m:
+                ret_dict['fqdn_ttl_timeout_factor'] = m.groupdict()['fqdn_ttl_timeout_factor']
+                continue
+
+            # FQDN: host1.demo1.msft.com
+            m = p2.match(line)
+            if m:
+                current_fqdn = m.groupdict()['fqdn_name']
+                fqdn_dict = ret_dict.setdefault('registered_fqdns', {}).setdefault(current_fqdn, {})
+                fqdn_dict['registered_module_ids_ipv4'] = []
+                fqdn_dict['registered_module_ids_ipv6'] = []
+                continue
+
+            # Registered Module IDs for IPv4: FQDN ACL Mgr,
+            m = p3.match(line)
+            if m and current_fqdn:
+                module_ids = m.groupdict()['module_ids'].strip()
+                if module_ids:
+                    fqdn_dict['registered_module_ids_ipv4'] = [mid.strip() for mid in module_ids.rstrip(',').split(',') if mid.strip()]
+                continue
+
+            # Registered Module IDs for IPv6:
+            m = p4.match(line)
+            if m and current_fqdn:
+                module_ids = m.groupdict()['module_ids'].strip()
+                if module_ids:
+                    fqdn_dict['registered_module_ids_ipv6'] = [mid.strip() for mid in module_ids.rstrip(',').split(',') if mid.strip()]
+                continue
+
+        return ret_dict
+
+# ====================================================
+# Schema for 'show fqdn database statistics'
+# ====================================================
+class ShowFQDNDatabaseStatisticsSchema(MetaParser):
+    """ Schema for show fqdn database statistics """
+
+    schema = {
+        'total_number_of_fqdn': int
+    }
+
+# =============================================
+# Parser for 'show fqdn database statistics'
+# =============================================
+class ShowFQDNDatabaseStatistics(ShowFQDNDatabaseStatisticsSchema):
+
+    cli_command = 'show fqdn database statistics'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Total Number of fqdn: 1
+        p1 = re.compile(r'^Total\s+Number\s+of\s+fqdn:\s+(?P<total_number_of_fqdn>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Total Number of fqdn: 1
+            m = p1.match(line)
+            if m:
+                ret_dict['total_number_of_fqdn'] = int(m.groupdict()['total_number_of_fqdn'])
+                continue
+
+        return ret_dict    

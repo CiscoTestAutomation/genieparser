@@ -1,0 +1,72 @@
+expected_output =  {
+    'feature_reference_count': 'No',
+    'interface_block_pointer': '0x7bc5bc7e1808',
+    'interface_block_state': 'Ready',
+    'interface_if_id': '0x00000000000004cd',
+    'interface_name': 'Vlan20',
+    'interface_ref_cnt': 1,
+    'interface_state': 'Enabled',
+    'interface_status': 'UPD,',
+    'interface_type': {
+        'SVI': {
+            'icmpv4_flags': '0x03',
+            'icmpv4_flags_list': ['unreachable', 'redirect'],
+            'icmpv6_flags': '0x03',
+            'icmpv6_flags_list': ['unreachable', 'redirect'],
+            'ipv4_mtu': 1500,
+            'ipv4_vrf_id': '0x0',
+            'ipv6_mtu': 1500,
+            'ipv6_vrf_id': '0x0',
+            'mac_address': 'dc:d8:3b:6a:f1:d6',
+            'misc_flags': '0x0043',
+            'misc_flags_list': ['ipv4', 'ipv6', '---'],
+            'protocol_flags': '0x0003',
+            'protocols': ['ipv4', 'ipv6'],
+            'snmp_if_index': 183,
+            'vlan_id': 20,
+        },
+    },
+    'l3_port_tcp_mss_subblock': {
+        'acl_asic_oid': {
+            0: {
+                'acl_asic_type': ['eth', 'ipv4', 'ipv6'],
+                'acl_oid_asic_id': ['0(0x0)', '0(0x0)', '0(0x0)'],
+            },
+            1: {
+                'acl_asic_type': ['eth', 'ipv4', 'ipv6'],
+                'acl_oid_asic_id': ['0(0x0)', '0(0x0)', '0(0x0)'],
+            },
+        },
+        'ipv4_maximum_mss_value': 0,
+        'ipv4_tcp_mss_adjust': 'OFF',
+        'ipv6_maximum_mss_value': 0,
+        'ipv6_tcp_mss_adjust': 'OFF',
+    },
+    'port_cts_subblock': {
+        'disable_sgacl': '0x0',
+        'port_sgt': '0xffff',
+        'propagate': '0x0',
+        'trust': '0x0',
+    },
+    'port_cts_subblock_null_if_id': '0x4cd',
+    'port_l3_subblock': {
+        'ipv4_mtu': 1500,
+        'ipv4_routing_enabled': 'Yes',
+        'ipv6_mtu': 1500,
+        'ipv6_routing_enabled': 'Yes',
+        'l3_srv_port_asic_id': {
+            0: {
+                'l3_srv_port_oid': '0xa85(2693)',
+            },
+            1: {
+                'l3_srv_port_oid': '0xa41(2625)',
+            },
+        },
+        'l3_srv_port_gid': 20,
+        'mpls_enabled': 'No',
+        'pimv4_enabled': 'No',
+        'pimv6_enabled': 'No',
+        'vrf_id': '0',
+    },
+    'ref_count': 1,
+}

@@ -1,0 +1,23 @@
+Stackwise Virtual Link(SVL) Information:
+----------------------------------------
+Flags:
+
+------
+Link Status
+-----------
+U-Up D-Down
+
+Protocol Status
+---------------
+
+S-Suspended P-Pending E-Error T-Timeout R-Ready
+-----------------------------------------------
+
+Switch	SVL	Ports                    	Link-Status	Protocol-Status
+------	---	-----                    	-----------	---------------
+
+1    	1	TenGigabitEthernet1/0/1   	U          	R              
+      	   	TenGigabitEthernet1/0/2   	U          	R              
+
+2    	1	TenGigabitEthernet2/0/1   	U          	R              
+      	   	TenGigabitEthernet2/0/2   	U          	R    

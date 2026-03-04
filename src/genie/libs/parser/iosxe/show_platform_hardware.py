@@ -86,6 +86,7 @@
     * 'show platform hardware cpp active feature nat datapath stats'
     * 'show platform hardware cpp active feature nat datapath bind'
     * 'show platform hardware qfp active feature nat datapath time'
+    * show platform hardware qfp active feature tunnel interface {tunnel}
 """
 import re
 import logging
@@ -18791,3 +18792,430 @@ class ShowPlatformHardwareCppActiveFeatureNatDatapathStats(ShowPlatformHardwareC
                 continue
 
         return parsed_dict
+
+
+class ShowPlatformHardwareQfpActiveFeatureTunnelInterfaceTunnelSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature tunnel interface {tunnel}"""
+
+    schema = {
+        "interface": {
+            Any(): {
+                "general": {
+                    "interface_name": str,
+                    "platform_interface_handle": int,
+                    "qfp_interface_handle": int,
+                    "qfp_complex": int,
+                    "rx_uidb": int,
+                    "tx_uidb": int,
+                    "hash_index": str,
+                    "hash_element_ppe_addr": str,
+                    "esp_hash_element_ppe_addr": str,
+                    "ah_hash_element_ppe_addr": str,
+                    "udp_hash_element_ppe_addr": str,
+                    "output_sb_ppe_addr": str,
+                    "decap_chk_sb_ppe_addr": str,
+                    "dmvpn_sb_ppe_addr_input": str,
+                    "dmvpn_sb_ppe_addr_output": str,
+                    "sgre_input_sb_ppe_addr": str,
+                    "l2tpoipv6_input_sb_ppe_addr": str,
+                    "sgre_client_tunnel_output_sb_ppe_addr": str,
+                    "hash_index_v6": str,
+                    "hash_element_ppe_addr_v6": str,
+                    "p2padj_output_sb_ppe_addr": str,
+                },
+                "config": {
+                    "mode": str,
+                    "src_ip": str,
+                    "dest_ip": str,
+                    "ipv4_intf_vrf": int,
+                    "tun_vrf": int,
+                    "tun_vrf_egress": int,
+                    "key": int,
+                    "flags": str,
+                    "app_id": str,
+                    "app_data": int,
+                    "ttl": int,
+                    "tos": int,
+                    "tunnel_protection": bool,
+                    "virtual_mac": str,
+                    "lport": int,
+                    "rport": int,
+                    "tunnel_enable_entropy": bool,
+                    "remote_session_id": int,
+                    "vlan_id_for_l2tpoipv6": int,
+                    "remote_cookie_size": int,
+                    "local_cookie_size": int,
+                    "local_cookie_secondary_size": int,
+                    "remote_cookie_low": int,
+                    "remote_cookie_high": int,
+                    "local_cookie_low": int,
+                    "local_cookie_high": int,
+                    "local_cookie_secondary_low": int,
+                    "local_cookie_secondary_high": int,
+                    "native_vlan_id": int,
+                    "tunnel_enable_nhrp_galcheck": bool,
+                    "path_mtu_discovery": bool,
+                    "path_mtu_discovery_mpls_ip_only": bool,
+                },
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveFeatureTunnelInterfaceTunnel(
+    ShowPlatformHardwareQfpActiveFeatureTunnelInterfaceTunnelSchema
+):
+    """Parser for show platform hardware qfp active feature tunnel interface {tunnel}"""
+
+    cli_command = "show platform hardware qfp active feature tunnel interface {tunnel}"
+
+    def cli(self, tunnel=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(tunnel=tunnel)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # Parse tunnel name from output instead of using input parameter
+        tunnel_key = None
+
+        tunnel_dict = None
+        general_dict = None
+        config_dict = None
+
+        # General interface info:
+        p1 = re.compile(r"^\s*General interface info:\s*$")
+        #   Interface name: Tunnel1
+        p2 = re.compile(r"^\s*Interface name\s*:\s*(?P<interface_name>\S+)\s*$")
+        #   Platform interface handle: 33
+        p3 = re.compile(r"^\s*Platform interface handle\s*:\s*(?P<pih>\d+)\s*$")
+        #   QFP interface handle: 20
+        p4 = re.compile(r"^\s*QFP interface handle\s*:\s*(?P<qih>\d+)\s*$")
+        #   QFP complex: 0
+        p5 = re.compile(r"^\s*QFP complex\s*:\s*(?P<qfp_complex>\d+)\s*$")
+        #   Rx uIDB: 65522  Tx uIDB: 65516
+        p6 = re.compile(
+            r"^\s*Rx uIDB\s*:\s*(?P<rx_uidb>\d+)\s+Tx uIDB\s*:\s*(?P<tx_uidb>\d+)\s*$"
+        )
+        #   Hash index : 0x0001ab
+        p7 = re.compile(r"^\s*Hash index\s*:\s*(?P<hash_index>\S+)\s*$")
+        #   Hash element ppe addr : 0xaa20010
+        p8 = re.compile(r"^\s*Hash element ppe addr\s*:\s*(?P<addr>\S+)\s*$")
+        #   ESP Hash element ppe addr : 00000000
+        p9 = re.compile(r"^\s*ESP Hash element ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   AH Hash element ppe addr : 00000000
+        p10 = re.compile(r"^\s*AH Hash element ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   UDP Hash element ppe addr : 00000000
+        p11 = re.compile(r"^\s*UDP Hash element ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   Output sb ppe addr : 0x994b070
+        p12 = re.compile(r"^\s*Output sb ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   Decap chk sb ppe addr : 00000000
+        p13 = re.compile(r"^\s*Decap chk sb ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   DMVPN sb ppe addr input: 00000000 output: 00000000
+        p14 = re.compile(
+            r"^\s*DMVPN sb ppe addr input\s*:\s*(?P<input>\S+)\s+output\s*:\s*(?P<output>\S+)\s*$"
+        )
+        #   SGRE input sb ppe addr : 00000000
+        p15 = re.compile(r"^\s*SGRE input sb ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   L2TPOIPV6 input sb ppe addr : 00000000
+        p16 = re.compile(r"^\s*L2TPOIPV6 input sb ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   SGRE Client Tunnel output sb ppe addr : 00000000
+        p17 = re.compile(r"^\s*SGRE Client Tunnel output sb ppe addr\s*:\s*(?P<val>\S+)\s*$")
+        #   Hash index v6: 0xffffffff
+        p18 = re.compile(r"^\s*Hash index v6\s*:\s*(?P<val>\S+)\s*$")
+        #   Hash element ppe addr v6: 00000000
+        p19 = re.compile(r"^\s*Hash element ppe addr v6\s*:\s*(?P<val>\S+)\s*$")
+        #   P2PADJ output sb ppe addr : 00000000
+        p20 = re.compile(r"^\s*P2PADJ output sb ppe addr\s*:\s*(?P<val>\S+)\s*$")
+
+        # Config:
+        p21 = re.compile(r"^\s*Config:\s*$")
+        #   mode: IPV6
+        p22 = re.compile(r"^\s*mode\s*:\s*(?P<mode>\S+)\s*$")
+        #   src IP: 0100:...  dest IP: 0300:...
+        p23 = re.compile(
+            r"^\s*src\s+IP\s*:\s*(?P<src_ip>\S+)\s+dest\s+IP\s*:\s*(?P<dest_ip>\S+)\s*$"
+        )
+        #   ipv4_intf_vrf: 0  tun_vrf: 0 tun_vrf_egress: 0
+        p24 = re.compile(
+            r"^\s*ipv4_intf_vrf\s*:\s*(?P<ipv4_intf_vrf>\d+)\s+tun_vrf\s*:\s*(?P<tun_vrf>\d+)\s+tun_vrf_egress\s*:\s*(?P<tun_vrf_egress>\d+)\s*$"
+        )
+        #   key: 0  flags: 0x0081  app_id: TUN_APP_CLI  app_data: 0
+        p25 = re.compile(
+            r"^\s*key\s*:\s*(?P<key>\d+)\s+flags\s*:\s*(?P<flags>\S+)\s+app_id\s*:\s*(?P<app_id>\S+)\s+app_data\s*:\s*(?P<app_data>\d+)\s*$"
+        )
+        #   ttl: 255  tos: 0
+        p26 = re.compile(r"^\s*ttl\s*:\s*(?P<ttl>\d+)\s+tos\s*:\s*(?P<tos>\d+)\s*$")
+        #   tunnel_protection: FALSE
+        p27 = re.compile(r"^\s*tunnel_protection\s*:\s*(?P<val>TRUE|FALSE)\s*$")
+        #   virtual MAC: 0000.0000.0000
+        p28 = re.compile(r"^\s*virtual\s+MAC\s*:\s*(?P<val>\S+)\s*$")
+        #   lport: 0  rport: 0
+        p29 = re.compile(r"^\s*lport\s*:\s*(?P<lport>\d+)\s+rport\s*:\s*(?P<rport>\d+)\s*$")
+        #   tunnel_enable_entropy: FALSE
+        p30 = re.compile(r"^\s*tunnel_enable_entropy\s*:\s*(?P<val>TRUE|FALSE)\s*$")
+        #   remote_session_id: 0 vlan id for l2tpoipv6: 0
+        p31 = re.compile(
+            r"^\s*remote_session_id\s*:\s*(?P<remote_session_id>\d+)\s+vlan id for l2tpoipv6\s*:\s*(?P<vlan_id>\d+)\s*$"
+        )
+        #   remote_cookie_size: 0  local_cookie_size: 0 local_cookie_secondary_size: 0
+        p32 = re.compile(
+            r"^\s*remote_cookie_size\s*:\s*(?P<remote_cookie_size>\d+)\s+local_cookie_size\s*:\s*(?P<local_cookie_size>\d+)\s+local_cookie_secondary_size\s*:\s*(?P<local_cookie_secondary_size>\d+)\s*$"
+        )
+        #   remote_cookie_low: 0  remote_cookie_high: 0
+        p33 = re.compile(
+            r"^\s*remote_cookie_low\s*:\s*(?P<remote_cookie_low>\d+)\s+remote_cookie_high\s*:\s*(?P<remote_cookie_high>\d+)\s*$"
+        )
+        #   local_cookie_low: 0  local_cookie_high: 0
+        p34 = re.compile(
+            r"^\s*local_cookie_low\s*:\s*(?P<local_cookie_low>\d+)\s+local_cookie_high\s*:\s*(?P<local_cookie_high>\d+)\s*$"
+        )
+        #   local_cookie_secondary_low: 0  local_cookie_secondary_high: 0
+        p35 = re.compile(
+            r"^\s*local_cookie_secondary_low\s*:\s*(?P<local_cookie_secondary_low>\d+)\s+local_cookie_secondary_high\s*:\s*(?P<local_cookie_secondary_high>\d+)\s*$"
+        )
+        #   native vlan id: 0
+        p36 = re.compile(r"^\s*native\s+vlan\s+id\s*:\s*(?P<val>\d+)\s*$")
+        #   tunnel_enable_nhrp_galcheck: FALSE
+        p37 = re.compile(r"^\s*tunnel_enable_nhrp_galcheck\s*:\s*(?P<val>TRUE|FALSE)\s*$")
+        #   path_mtu_discovery: TRUE
+        p38 = re.compile(r"^\s*path_mtu_discovery\s*:\s*(?P<val>TRUE|FALSE)\s*$")
+        #   path_mtu_discovery_mpls_ip_only: FALSE
+        p39 = re.compile(r"^\s*path_mtu_discovery_mpls_ip_only\s*:\s*(?P<val>TRUE|FALSE)\s*$")
+
+        def t_bool(v):
+            return True if v == "TRUE" else False
+
+        current_section = None
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # General interface info:
+            m = p1.match(line)
+            if m:
+                current_section = "general"
+                continue
+
+            #   Interface name: Tunnel1  (defines tunnel_key)
+            m = p2.match(line)
+            if m and current_section == "general":
+                tunnel_key = m.group("interface_name")
+                tunnel_dict = ret_dict.setdefault("interface", {}).setdefault(tunnel_key, {})
+                general_dict = tunnel_dict.setdefault("general", {})
+                general_dict["interface_name"] = tunnel_key
+                continue
+
+            # ---- General section fields ----
+            m = p3.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["platform_interface_handle"] = int(m.group("pih"))
+                continue
+
+            m = p4.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["qfp_interface_handle"] = int(m.group("qih"))
+                continue
+
+            m = p5.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["qfp_complex"] = int(m.group("qfp_complex"))
+                continue
+
+            m = p6.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["rx_uidb"] = int(m.group("rx_uidb"))
+                general_dict["tx_uidb"] = int(m.group("tx_uidb"))
+                continue
+
+            m = p7.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["hash_index"] = m.group("hash_index")
+                continue
+
+            m = p8.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["hash_element_ppe_addr"] = m.group("addr")
+                continue
+
+            m = p9.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["esp_hash_element_ppe_addr"] = m.group("val")
+                continue
+
+            m = p10.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["ah_hash_element_ppe_addr"] = m.group("val")
+                continue
+
+            m = p11.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["udp_hash_element_ppe_addr"] = m.group("val")
+                continue
+
+            m = p12.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["output_sb_ppe_addr"] = m.group("val")
+                continue
+
+            m = p13.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["decap_chk_sb_ppe_addr"] = m.group("val")
+                continue
+
+            m = p14.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["dmvpn_sb_ppe_addr_input"] = m.group("input")
+                general_dict["dmvpn_sb_ppe_addr_output"] = m.group("output")
+                continue
+
+            m = p15.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["sgre_input_sb_ppe_addr"] = m.group("val")
+                continue
+
+            m = p16.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["l2tpoipv6_input_sb_ppe_addr"] = m.group("val")
+                continue
+
+            m = p17.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["sgre_client_tunnel_output_sb_ppe_addr"] = m.group("val")
+                continue
+
+            m = p18.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["hash_index_v6"] = m.group("val")
+                continue
+
+            m = p19.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["hash_element_ppe_addr_v6"] = m.group("val")
+                continue
+
+            m = p20.match(line)
+            if m and current_section == "general" and general_dict is not None:
+                general_dict["p2padj_output_sb_ppe_addr"] = m.group("val")
+                continue
+
+            # Config:
+            m = p21.match(line)
+            if m:
+                if tunnel_key is None:
+                    continue
+                current_section = "config"
+                tunnel_dict = ret_dict.setdefault("interface", {}).setdefault(tunnel_key, {})
+                config_dict = tunnel_dict.setdefault("config", {})
+                continue
+
+            # ---- Config section fields ----
+            m = p22.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["mode"] = m.group("mode")
+                continue
+
+            m = p23.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["src_ip"] = m.group("src_ip")
+                config_dict["dest_ip"] = m.group("dest_ip")
+                continue
+
+            m = p24.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["ipv4_intf_vrf"] = int(m.group("ipv4_intf_vrf"))
+                config_dict["tun_vrf"] = int(m.group("tun_vrf"))
+                config_dict["tun_vrf_egress"] = int(m.group("tun_vrf_egress"))
+                continue
+
+            m = p25.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["key"] = int(m.group("key"))
+                config_dict["flags"] = m.group("flags")
+                config_dict["app_id"] = m.group("app_id")
+                config_dict["app_data"] = int(m.group("app_data"))
+                continue
+
+            m = p26.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["ttl"] = int(m.group("ttl"))
+                config_dict["tos"] = int(m.group("tos"))
+                continue
+
+            m = p27.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["tunnel_protection"] = t_bool(m.group("val"))
+                continue
+
+            m = p28.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["virtual_mac"] = m.group("val")
+                continue
+
+            m = p29.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["lport"] = int(m.group("lport"))
+                config_dict["rport"] = int(m.group("rport"))
+                continue
+
+            m = p30.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["tunnel_enable_entropy"] = t_bool(m.group("val"))
+                continue
+
+            m = p31.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["remote_session_id"] = int(m.group("remote_session_id"))
+                config_dict["vlan_id_for_l2tpoipv6"] = int(m.group("vlan_id"))
+                continue
+
+            m = p32.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["remote_cookie_size"] = int(m.group("remote_cookie_size"))
+                config_dict["local_cookie_size"] = int(m.group("local_cookie_size"))
+                config_dict["local_cookie_secondary_size"] = int(m.group("local_cookie_secondary_size"))
+                continue
+
+            m = p33.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["remote_cookie_low"] = int(m.group("remote_cookie_low"))
+                config_dict["remote_cookie_high"] = int(m.group("remote_cookie_high"))
+                continue
+
+            m = p34.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["local_cookie_low"] = int(m.group("local_cookie_low"))
+                config_dict["local_cookie_high"] = int(m.group("local_cookie_high"))
+                continue
+
+            m = p35.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["local_cookie_secondary_low"] = int(m.group("local_cookie_secondary_low"))
+                config_dict["local_cookie_secondary_high"] = int(m.group("local_cookie_secondary_high"))
+                continue
+
+            m = p36.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["native_vlan_id"] = int(m.group("val"))
+                continue
+
+            m = p37.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["tunnel_enable_nhrp_galcheck"] = t_bool(m.group("val"))
+                continue
+
+            m = p38.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["path_mtu_discovery"] = t_bool(m.group("val"))
+                continue
+
+            m = p39.match(line)
+            if m and current_section == "config" and config_dict is not None:
+                config_dict["path_mtu_discovery_mpls_ip_only"] = t_bool(m.group("val"))
+                continue
+
+        return ret_dict

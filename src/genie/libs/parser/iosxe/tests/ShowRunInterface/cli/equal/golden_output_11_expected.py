@@ -11,6 +11,17 @@ expected_output = {
             'mab': True,
             'output_policy': 'AutoQos-4.0-Output-Policy',
             'spanning_tree_portfast': True,
+            'storm_control': {
+                'broadcast': {
+                    'level': '100k',
+                },
+                'multicast': {
+                    'level': '100k',
+                },
+                'unicast': {
+                    'level': '100k',
+                },
+            },
             'switchport_access_vlan': '19',
             'switchport_mode': 'access',
             'trust_device': 'cisco-phone',

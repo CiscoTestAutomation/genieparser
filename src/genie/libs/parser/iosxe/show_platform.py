@@ -7156,7 +7156,7 @@ class ShowPlatformPktTraceSummarySchema(MetaParser):
                 'output_intf': str,
                 'state': str,
                 Optional('reason'): {
-                    'code': int,
+                    'code': Any(),
                     'text': str
                 }
             }
@@ -7180,7 +7180,7 @@ class ShowPlatformPacketSumm(ShowPlatformPktTraceSummarySchema):
         # Pkt   Input            Output           State  Reason
         # 0     Gi0/0/1          Gi0/0/0          FWD     97  (Packets to LFTS)
         p = re.compile(r'\s*(?P<pkt>\d+)\s+(?P<input>\S+)\s+(?P<output>\S+)'
-                       r'\s+(?P<state>\S+)(\s+(?P<reason_code>\d+)\s+(?P<reason_str>.*$))?')
+                       r'\s+(?P<state>\S+)(?:\s+(?P<reason_code>\d+)\s+(?P<reason_str>.*$)|\s+(?P<reason_text>.+$))?')
 
         for line in output.splitlines():
             m = p.match(line)
@@ -7195,7 +7195,7 @@ class ShowPlatformPacketSumm(ShowPlatformPktTraceSummarySchema):
                     }
                 })
 
-                # add the reason code if matched
+                # add the reason code and text if matched (code + text)
                 reason_code = groups['reason_code'] or None
                 if reason_code is not None:
                     reason_code = int(reason_code)
@@ -7203,6 +7203,14 @@ class ShowPlatformPacketSumm(ShowPlatformPktTraceSummarySchema):
                         'reason': {
                             'code': reason_code,
                             'text': groups['reason_str']
+                        },
+                    })
+                # add the reason text only if matched (text only, no code)
+                elif groups['reason_text']:
+                    ret_dict['packets'][pkt_num].update({
+                        'reason': {
+                            'code': '',
+                            'text': groups['reason_text']
                         },
                     })
         return ret_dict

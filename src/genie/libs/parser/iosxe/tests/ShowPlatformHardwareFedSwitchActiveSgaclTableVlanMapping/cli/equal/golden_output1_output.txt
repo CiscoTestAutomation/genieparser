@@ -1,0 +1,6 @@
+BD-VRF Hardware Mapping Table:
+
+VLAN     ASIC     HW VRF-ID    VRF-Mapped
+-------- -------- ------------ ----------
+30       0        0            Yes
+30       1        0            Yes

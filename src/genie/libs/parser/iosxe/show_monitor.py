@@ -825,6 +825,10 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                 Optional('padding'): str,
                 Optional('message_type'): str,
                 Optional('host_name'): str,
+                Optional('section_number'): str,
+                Optional('utc_arrival_time'): str,
+                Optional('epoch_arrival_time'): str,
+                Optional('data'): str,
             }
         }
     }

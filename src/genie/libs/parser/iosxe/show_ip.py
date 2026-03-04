@@ -623,7 +623,6 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
 
         return parsed_dict
 
-
 class ShowIpNatTranslationsSchema(MetaParser):
     """ Schema for the commands:
             * show ip nat translations
@@ -648,11 +647,20 @@ class ShowIpNatTranslationsSchema(MetaParser):
                             'create': str,
                             'use': str,
                             'timeout': str,
-                            'map_id_in': int,
-                            'mac_address': str,
-                            'input_idb': str,
+                            Optional('map_id_in'): int,
+                            Optional('mac_address'): str,
+                            Optional('input_idb'): str,
                             'entry_id': str,
                             'use_count': int,
+                            Optional('rule_id'): int,
+                            Optional('flags'): str,
+                            Optional('alg_application_type'): str,
+                            Optional('wlan_flags'): str,
+                            Optional('in_pkts'): int,
+                            Optional('in_bytes'): int,
+                            Optional('out_pkts'): int,
+                            Optional('out_bytes'): int,
+                            Optional('output_idb'): str,
                         }
                     },
                 },
@@ -671,17 +679,17 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
     """
 
     cli_command = ['show ip nat translations',
-                   'show ip nat translations verbose',
+                   'show ip nat translations {verbose}',
                    'show ip nat translations vrf {vrf}',
-                   'show ip nat translations vrf {vrf} verbose']
+                   'show ip nat translations vrf {vrf} {verbose}']
 
-    def cli(self, vrf=None, option=None, output=None):
+    def cli(self, vrf=None, verbose=None, output=None):
         if output is None:
-            if option and vrf is None:
-                cmd = self.cli_command[1].format(verbose=option)
-            elif option and vrf:
-                cmd = self.cli_command[3].format(vrf=vrf, verbose=option)
-            elif vrf and option is None:
+            if verbose and vrf is None:
+                cmd = self.cli_command[1].format(verbose=verbose)
+            elif verbose and vrf:
+                cmd = self.cli_command[3].format(vrf=vrf, verbose=verbose)
+            elif vrf and verbose is None:
                 cmd = self.cli_command[2].format(vrf=vrf)
             else:
                 cmd = self.cli_command[0]
@@ -719,8 +727,8 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
                         r'+(?P<input_idb>\S+))?$')
 
         # IOS-XE: Mac-Address: 0000.0000.0000    Input-IDB: TenGigabitEthernet1/1/0
-        p4 = re.compile(r'^Mac-Address: +(?P<mac_address>\S+) +Input-IDB: '
-                        r'+(?P<input_idb>\S+)$')
+        p4 = re.compile(r'^Mac-Address: +(?P<mac_address>\S+) +Input-IDB: *'
+                        r'(?P<input_idb>\S*)$')
 
         # entry-id: 0x0, use_count:1
         p5 = re.compile(r'^entry-id: +(?P<entry_id>\S+), '
@@ -735,6 +743,28 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
         # Format(H:M:S) Time-left :0:0:-1
         p8 = re.compile(r'^Format\S+ +Time\-left +\:(?P<time_left>\S+)$')
+
+        # RuleID : 4
+        p9 = re.compile(r'^RuleID +\: +(?P<rule_id>\d+)$')
+
+        # Flags: static
+        p10 = re.compile(r'^Flags: +(?P<flags>\S+)$')
+
+        # ALG Application Type: NA
+        p11 = re.compile(r'^ALG Application Type: +(?P<alg_application_type>\S+)$')
+
+        # WLAN-Flags: unknown
+        p12 = re.compile(r'^WLAN-Flags: +(?P<wlan_flags>\S+)$')
+
+        # Mac-Address: 0000.0000.0000    Input-IDB:
+        p13 = re.compile(r'^Mac-Address: +(?P<mac_address>\S+) +Input-IDB: *(?P<input_idb>\S*)$')
+
+        # In_pkts: 0 In_bytes: 0, Out_pkts: 0 Out_bytes: 0
+        p14 = re.compile(r'^In_pkts: +(?P<in_pkts>\d+) +In_bytes: +(?P<in_bytes>\d+), +Out_pkts: +(?P<out_pkts>\d+) +Out_bytes: +(?P<out_bytes>\d+)$')
+
+        # Output-IDB:
+        # Output-IDB: GigabitEthernet5
+        p15 = re.compile(r'^Output-IDB: *(?P<output_idb>\S*)$')
 
         # initialize variables
         ret_dict = {}
@@ -825,10 +855,12 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                 else:
                     tmp_details_dict.update(
-                        {'mac_address': group['mac_address']})
-                    tmp_details_dict.update({'input_idb': group['input_idb']})
-                    tmp_details_dict.update(
                         {'map_id_in': int(group['map_id_in'])})
+                    if group['mac_address']:
+                        tmp_details_dict.update(
+                            {'mac_address': group['mac_address']})
+                    if group['input_idb']:
+                        tmp_details_dict.update({'input_idb': group['input_idb']})
 
                 continue
 
@@ -908,8 +940,93 @@ class ShowIpNatTranslations(ShowIpNatTranslationsSchema):
 
                 continue
 
-        return ret_dict
+            # RuleID : 4
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if protocol_dict:
+                    details_dict.update({'rule_id': int(group['rule_id'])})
+                else:
+                    tmp_details_dict.update({'rule_id': int(group['rule_id'])})
+                continue
 
+            # Flags: static
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                if protocol_dict:
+                    details_dict.update(group)
+                else:
+                    tmp_details_dict.update(group)
+                continue
+
+            # ALG Application Type: NA
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                if protocol_dict:
+                    details_dict.update(group)
+                else:
+                    tmp_details_dict.update(group)
+                continue
+
+            # WLAN-Flags: unknown
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                if protocol_dict:
+                    details_dict.update(group)
+                else:
+                    tmp_details_dict.update(group)
+                continue
+
+            # Mac-Address: 0000.0000.0000    Input-IDB:
+            # Mac-Address: 0000.0000.0000    Input-IDB: GigabitEthernet4
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                if protocol_dict:
+                    if group['mac_address'] is not None:
+                        details_dict.update({'mac_address': group['mac_address']})
+                    if group['input_idb'] is not None:
+                        details_dict.update({'input_idb': group['input_idb']})
+                else:
+                    if group['mac_address'] is not None:
+                        tmp_details_dict.update({'mac_address': group['mac_address']})
+                    if group['input_idb'] is not None:
+                        tmp_details_dict.update({'input_idb': group['input_idb']})
+                continue
+
+            # In_pkts: 0 In_bytes: 0, Out_pkts: 0 Out_bytes: 0
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                traffic_stats = {
+                    'in_pkts': int(group['in_pkts']),
+                    'in_bytes': int(group['in_bytes']),
+                    'out_pkts': int(group['out_pkts']),
+                    'out_bytes': int(group['out_bytes'])
+                }
+                if protocol_dict:
+                    details_dict.update(traffic_stats)
+                else:
+                    tmp_details_dict.update(traffic_stats)
+                continue
+
+            # Output-IDB:
+            # Output-IDB: GigabitEthernet5
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                if protocol_dict:
+                    if group['output_idb']:
+                        details_dict.update({'output_idb': group['output_idb']})
+                else:
+                    if group['output_idb']:
+                        tmp_details_dict.update({'output_idb': group['output_idb']})
+                continue
+
+        return ret_dict
 
 class ShowIpNatStatisticsSchema(MetaParser):
     """ Schema for command:
@@ -11599,3 +11716,287 @@ class ShowIpSsh(ShowIpSshSchema):
                 ssh_dict.setdefault('ecdsa_key', {})['key_data'] = key_data
                     
         return parsed_dict
+        
+class ShowIpRibVrfDatabaseDetailSchema(MetaParser):
+    """Schema for show ip rib vrf {vrf} database detail"""
+    
+    schema = {
+        'vrf': {
+            Any(): {
+                'rib_table_name': str,
+                'table_id': str,
+                'table_is_base': bool,
+                'forwarding_mode': str,
+                'cef_forwarding_enabled': bool,
+                'route_count': int,
+                'routes_added': int,
+                'routes_removed': int,
+                'route_limit': int,
+                'route_warn_limit': int,
+                'route_threshold': int,
+                'route_threshold_percent': int,
+                'route_count_total': int,
+                'route_mid_trap_reset_enabled': bool,
+                'route_max_trap_reset_enabled': bool,
+                'state': str,
+                'replicated_recursion_policy': str,
+                'last_default_path_event': str,
+                'default_path_change': bool,
+                Optional('supernet_mask_count'): int,
+                Optional('gateway_of_last_resort'): str,
+                Optional('network_exists'): str,
+                Optional('owner_queues'): {
+                    Optional('static_route_ownerq_has_elements'): bool,
+                    Optional('connected_route_ownerq_has_elements'): bool,
+                }
+            }
+        }
+    }
+
+class ShowIpRibVrfDatabaseDetail(ShowIpRibVrfDatabaseDetailSchema):
+    """Parser for show ip rib vrf {vrf} database detail"""
+    
+    cli_command = ['show ip rib vrf {vrf} database detail']
+    
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = 'show ip rib database detail'
+            output = self.device.execute(cmd)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # Regex patterns
+        # RIB table name: demo1
+        p1 = re.compile(r'^RIB table name:\s+(?P<rib_table_name>\S+)$')
+        
+        # Table ID: 0x9
+        p2 = re.compile(r'^Table ID:\s+(?P<table_id>\S+)$')
+        
+        # Table is base
+        p3 = re.compile(r'^Table is\s+(?P<table_type>\S+)$')
+        
+        # Forwarding mode: Strict
+        p4 = re.compile(r'^Forwarding mode:\s+(?P<forwarding_mode>\S+)$')
+        
+        # CEF forwarding is enabled
+        p5 = re.compile(r'^CEF forwarding is\s+(?P<cef_status>\S+)$')
+        
+        # Route count: 50
+        p6 = re.compile(r'^Route count:\s+(?P<route_count>\d+)$')
+        
+        # Routes added: 50
+        p7 = re.compile(r'^Routes added:\s+(?P<routes_added>\d+)$')
+        
+        # Routes removed: 0
+        p8 = re.compile(r'^Routes removed:\s+(?P<routes_removed>\d+)$')
+        
+        # Route limit: 4294967295
+        p9 = re.compile(r'^Route limit:\s+(?P<route_limit>\d+)$')
+        
+        # Route warn limit: 4294967295
+        p10 = re.compile(r'^Route warn limit:\s+(?P<route_warn_limit>\d+)$')
+        
+        # Route threshold: 0
+        p11 = re.compile(r'^Route threshold:\s+(?P<route_threshold>\d+)$')
+        
+        # Route threshold percent: 0
+        p12 = re.compile(r'^Route threshold percent:\s+(?P<route_threshold_percent>\d+)$')
+        
+        # Route count total: 50
+        p13 = re.compile(r'^Route count total:\s+(?P<route_count_total>\d+)$')
+        
+        # Route mid trap reset is enabled
+        p14 = re.compile(r'^Route mid trap reset is\s+(?P<mid_trap_reset>\S+)$')
+        
+        # Route max trap reset is enabled
+        p15 = re.compile(r'^Route max trap reset is\s+(?P<max_trap_reset>\S+)$')
+        
+        # State: Up
+        p16 = re.compile(r'^State:\s+(?P<state>\S+)$')
+        
+        # Replicated recursion policy: None
+        p17 = re.compile(r'^Replicated recursion policy:\s+(?P<recursion_policy>.+)$')
+        
+        # Last default path event 0x0
+        p18 = re.compile(r'^Last default path event\s+(?P<last_event>\S+)$')
+        
+        # Default path change is FALSE
+        p19 = re.compile(r'^Default path change is\s+(?P<path_change>\S+)$')
+        
+        # Supernet mask count: 1
+        p20 = re.compile(r'^Supernet mask count:\s+(?P<supernet_count>\d+)$')
+        
+        # Gateway of last resort is 10.85.120.129 to network 0.0.0.0
+        p21 = re.compile(r'^Gateway of last resort is\s+(?P<gateway>\S+)\s+to network\s+(?P<network>\S+)$')
+        
+        # Network 0/0 exists
+        p22 = re.compile(r'^Network\s+(?P<network>\S+)\s+exists$')
+        
+        # static route ownerQ has elements OR connected route ownerQ has elements
+        p23 = re.compile(r'^(?P<route_type>static|connected) route ownerQ has elements$')
+        
+        
+        current_vrf = None
+        
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            
+            # RIB table name - indicates start of new VRF section
+            m = p1.match(line)
+            if m:
+                current_vrf = m.groupdict()['rib_table_name']
+                if 'vrf' not in ret_dict:
+                    ret_dict['vrf'] = {}
+                if current_vrf not in ret_dict['vrf']:
+                    ret_dict['vrf'][current_vrf] = {}
+                ret_dict['vrf'][current_vrf]['rib_table_name'] = current_vrf
+                continue
+            
+            if current_vrf is None:
+                continue
+                
+            # Table ID
+            m = p2.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['table_id'] = m.groupdict()['table_id']
+                continue
+            
+            # Table is base
+            m = p3.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['table_is_base'] = m.groupdict()['table_type'] == 'base'
+                continue
+            
+            # Forwarding mode
+            m = p4.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['forwarding_mode'] = m.groupdict()['forwarding_mode']
+                continue
+            
+            # CEF forwarding
+            m = p5.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['cef_forwarding_enabled'] = m.groupdict()['cef_status'] == 'enabled'
+                continue
+            
+            # Route count
+            m = p6.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_count'] = int(m.groupdict()['route_count'])
+                continue
+            
+            # Routes added
+            m = p7.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['routes_added'] = int(m.groupdict()['routes_added'])
+                continue
+            
+            # Routes removed
+            m = p8.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['routes_removed'] = int(m.groupdict()['routes_removed'])
+                continue
+            
+            # Route limit
+            m = p9.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_limit'] = int(m.groupdict()['route_limit'])
+                continue
+            
+            # Route warn limit
+            m = p10.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_warn_limit'] = int(m.groupdict()['route_warn_limit'])
+                continue
+            
+            # Route threshold
+            m = p11.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_threshold'] = int(m.groupdict()['route_threshold'])
+                continue
+            
+            # Route threshold percent
+            m = p12.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_threshold_percent'] = int(m.groupdict()['route_threshold_percent'])
+                continue
+            
+            # Route count total
+            m = p13.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_count_total'] = int(m.groupdict()['route_count_total'])
+                continue
+            
+            # Route mid trap reset
+            m = p14.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_mid_trap_reset_enabled'] = m.groupdict()['mid_trap_reset'] == 'enabled'
+                continue
+            
+            # Route max trap reset
+            m = p15.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['route_max_trap_reset_enabled'] = m.groupdict()['max_trap_reset'] == 'enabled'
+                continue
+            
+            # State
+            m = p16.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['state'] = m.groupdict()['state']
+                continue
+            
+            # Replicated recursion policy
+            m = p17.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['replicated_recursion_policy'] = m.groupdict()['recursion_policy']
+                continue
+            
+            # Last default path event
+            m = p18.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['last_default_path_event'] = m.groupdict()['last_event']
+                continue
+            
+            # Default path change
+            m = p19.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['default_path_change'] = m.groupdict()['path_change'] == 'TRUE'
+                continue
+            
+            # Supernet mask count (optional)
+            m = p20.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['supernet_mask_count'] = int(m.groupdict()['supernet_count'])
+                continue
+            
+            # Gateway of last resort (optional)
+            m = p21.match(line)
+            if m:
+                gateway = m.groupdict()['gateway']
+                network = m.groupdict()['network']
+                ret_dict['vrf'][current_vrf]['gateway_of_last_resort'] = f"{gateway} to network {network}"
+                continue
+            
+            # Network exists (optional)
+            m = p22.match(line)
+            if m:
+                ret_dict['vrf'][current_vrf]['network_exists'] = m.groupdict()['network']
+                continue
+            
+            # Owner queue elements
+            m = p23.match(line)
+            if m:
+                if 'owner_queues' not in ret_dict['vrf'][current_vrf]:
+                    ret_dict['vrf'][current_vrf]['owner_queues'] = {}
+                route_type = m.groupdict()['route_type']
+                ret_dict['vrf'][current_vrf]['owner_queues'][f'{route_type}_route_ownerq_has_elements'] = True
+                continue
+        
+        return ret_dict
+

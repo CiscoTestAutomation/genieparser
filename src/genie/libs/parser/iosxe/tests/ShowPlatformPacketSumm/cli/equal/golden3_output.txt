@@ -1,0 +1,16 @@
+Pkt   Input                     Output                    State  Reason
+0     Tu1                       Tu1                       CONS   Packet Consumed
+1     Tu1                       internal0/0/recycle:0     PUNT   26  (QFP ICMP generated packet)
+2     INJ.9                     Gi1                       FWD
+3     Tu1                       Tu1                       CONS   Packet Consumed
+4     Tu1                       internal0/0/recycle:0     PUNT   26  (QFP ICMP generated packet)
+5     INJ.9                     Gi1                       FWD
+6     Tu1                       Tu1                       CONS   Packet Consumed
+7     Tu1                       internal0/0/recycle:0     PUNT   26  (QFP ICMP generated packet)
+8     INJ.9                     Gi1                       FWD
+9     Tu1                       Tu1                       CONS   Packet Consumed
+10    Tu1                       internal0/0/recycle:0     PUNT   26  (QFP ICMP generated packet)
+11    INJ.9                     Gi1                       FWD
+12    Tu1                       Tu1                       CONS   Packet Consumed
+13    Tu1                       internal0/0/recycle:0     PUNT   26  (QFP ICMP generated packet)
+14    INJ.9                     Gi1                       FWD

@@ -1,0 +1,58 @@
+show ip nat translations verbose
+Pro  Inside global         Inside local          Outside local         Outside global
+---  80.0.0.12             5.1.1.2               ---                   ---
+  create: 12/18/25 07:40:45, use: 12/18/25 07:40:45, timeout: 00:00:00
+  RuleID : 4
+  Flags: static
+  ALG Application Type: NA
+  WLAN-Flags: unknown
+  Mac-Address: 0000.0000.0000    Input-IDB:
+  entry-id: 0x0, use_count:0
+  In_pkts: 0 In_bytes: 0, Out_pkts: 0 Out_bytes: 0
+  Output-IDB:
+
+---  80.0.0.11             5.1.1.1               ---                   ---
+  create: 12/18/25 07:40:45, use: 12/18/25 07:41:03, timeout: 00:00:00
+  RuleID : 3
+  Flags: static
+  ALG Application Type: NA
+  WLAN-Flags: unknown
+  Mac-Address: 0000.0000.0000    Input-IDB:
+  entry-id: 0x0, use_count:3
+  In_pkts: 0 In_bytes: 0, Out_pkts: 0 Out_bytes: 0
+  Output-IDB:
+
+icmp 80.0.0.11:7           5.1.1.1:7             80.1.1.1:7            80.1.1.1:7
+  create: 12/18/25 07:41:02, use: 12/18/25 07:41:02, timeout: 00:00:59
+  RuleID : 3
+  Flags: unknown
+  ALG Application Type: NA
+  WLAN-Flags: unknown
+  Mac-Address: 0000.0000.0000    Input-IDB: GigabitEthernet4
+  entry-id: 0xe8441990, use_count:1
+  In_pkts: 5 In_bytes: 400, Out_pkts: 5 Out_bytes: 400
+  Output-IDB: GigabitEthernet5
+
+icmp 80.0.0.11:6           5.1.1.1:6             80.1.1.1:6            80.1.1.1:6
+  create: 12/18/25 07:40:50, use: 12/18/25 07:40:52, timeout: 00:00:49
+  RuleID : 3
+  Flags: unknown
+  ALG Application Type: NA
+  WLAN-Flags: unknown
+  Mac-Address: 0000.0000.0000    Input-IDB: GigabitEthernet4
+  entry-id: 0xe8441840, use_count:1
+  In_pkts: 5 In_bytes: 400, Out_pkts: 4 Out_bytes: 320
+  Output-IDB: GigabitEthernet5
+
+icmp 80.0.0.11:3           5.1.1.1:3             80.1.1.1:3            80.1.1.1:3
+  create: 12/18/25 07:41:03, use: 12/18/25 07:41:03, timeout: 00:01:00
+  RuleID : 3
+  Flags: unknown
+  ALG Application Type: NA
+  WLAN-Flags: unknown
+  Mac-Address: 0000.0000.0000    Input-IDB: GigabitEthernet5
+  entry-id: 0xe8441ae0, use_count:1
+  In_pkts: 5 In_bytes: 400, Out_pkts: 5 Out_bytes: 400
+  Output-IDB:
+
+Total number of translations: 5

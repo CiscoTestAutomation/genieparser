@@ -1,0 +1,93 @@
+show ip rib vrf demo1 database detail
+
+RIB table name: demo1
+Table ID: 0x9
+Table is base
+Forwarding mode: Strict
+CEF forwarding is enabled
+Route count: 50
+Routes added: 50
+Routes removed: 0
+Route limit: 4294967295
+Route warn limit: 4294967295
+Route threshold: 0
+Route threshold percent: 0
+Route count total: 50
+Route mid trap reset is enabled
+Route max trap reset is enabled
+State: Up
+Replicated recursion policy: None
+Last default path event 0x0
+Default path change is FALSE
+connected route ownerQ has elements
+
+show ip rib vrf demo2 database detail
+
+RIB table name: demo2
+Table ID: 0xA
+Table is base
+Forwarding mode: Strict
+CEF forwarding is enabled
+Route count: 0
+Routes added: 0
+Routes removed: 0
+Route limit: 4294967295
+Route warn limit: 4294967295
+Route threshold: 0
+Route threshold percent: 0
+Route count total: 0
+Route mid trap reset is enabled
+Route max trap reset is enabled
+State: Up
+Replicated recursion policy: None
+Last default path event 0x0
+Default path change is FALSE
+
+show ip rib vrf demo3 database detail
+
+RIB table name: demo3
+Table ID: 0xB
+Table is base
+Forwarding mode: Strict
+CEF forwarding is enabled
+Route count: 0
+Routes added: 0
+Routes removed: 0
+Route limit: 4294967295
+Route warn limit: 4294967295
+Route threshold: 0
+Route threshold percent: 0
+Route count total: 0
+Route mid trap reset is enabled
+Route max trap reset is enabled
+State: Up
+Replicated recursion policy: None
+Last default path event 0x0
+Default path change is FALSE
+
+show ip rib vrf Mgmt-vrf database detail
+
+RIB table name: Mgmt-vrf
+Table ID: 0x1
+Table is base
+Forwarding mode: Strict
+CEF forwarding is enabled
+Route count: 3
+Routes added: 3
+Routes removed: 0
+Route limit: 4294967295
+Route warn limit: 4294967295
+Route threshold: 0
+Route threshold percent: 0
+Route count total: 3
+Route mid trap reset is enabled
+Route max trap reset is enabled
+Supernet mask count: 1
+Gateway of last resort is 10.85.120.129 to network 0.0.0.0
+Network 0/0 exists
+State: Up
+Replicated recursion policy: None
+Last default path event 0x0
+Default path change is FALSE
+static route ownerQ has elements
+connected route ownerQ has elements

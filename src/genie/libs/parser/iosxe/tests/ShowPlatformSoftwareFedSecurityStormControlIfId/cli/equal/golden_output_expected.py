@@ -1,0 +1,43 @@
+expected_output = {
+    'iif_id': '0000000000000441',
+    'iif_name': 'FiftyGigE1/1/2',
+    'speed': '10000000000 BitsPerSecond',
+    'traffic_type': {
+        'BCAST': {
+            'bytes_drop': 0,
+            'current_rate': 0,
+            'level': 100000000,
+            'low_level': 50000000,
+            'packets_drop': 0,
+            'storm_exists': 'No',
+            'supp_type': 'BPS',
+        },
+        'MCAST': {
+            'bytes_drop': 0,
+            'current_rate': 0,
+            'level': 100000000,
+            'low_level': 50000000,
+            'packets_drop': 0,
+            'storm_exists': 'No',
+            'supp_type': 'BPS',
+        },
+        'UCAST': {
+            'bytes_drop': 0,
+            'current_rate': 0,
+            'level': 20000,
+            'low_level': 20000,
+            'packets_drop': 0,
+            'storm_exists': 'No',
+            'supp_type': 'PPS',
+        },
+        'UNKNOWN_UCAST': {
+            'bytes_drop': 0,
+            'current_rate': 0,
+            'level': 20000,
+            'low_level': 20000,
+            'packets_drop': 0,
+            'storm_exists': 'No',
+            'supp_type': 'PPS',
+        },
+    },
+}

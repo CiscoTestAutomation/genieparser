@@ -1,0 +1,18 @@
+IPv6 FQDN access list FQDN_v6ACL_WEBAUTH_REDIRECT
+    deny ipv6 any host dynamic *.atoz.msn.com sequence 4
+    deny ipv6 any host dynamic www.ab.*.*.*.test.com sequence 5
+    deny ipv6 any host 1:1:2::23 sequence 20000
+    deny ipv6 any host 1:1:1::23 sequence 20001
+    deny ipv6 any host 1:1:2::24 sequence 20002
+    deny ipv6 any host 1:1:1::24 sequence 20003
+    deny udp any any eq domain sequence 1900000
+    deny tcp any any eq domain sequence 1910000
+    deny icmp any any nd-ns sequence 1920000
+    deny icmp any any nd-na sequence 1930000
+    deny icmp any any router-solicitation sequence 1940000
+    deny icmp any any router-advertisement sequence 1950000
+    deny icmp any any redirect sequence 1960000
+    deny udp any eq 547 any eq 546 sequence 1970000
+    deny udp any eq 546 any eq 547 sequence 1980000
+    permit tcp any any eq www sequence 1990000
+    permit tcp any any eq 443 sequence 2000000    

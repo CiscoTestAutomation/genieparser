@@ -1,0 +1,15 @@
+st-raitt-stack1#sh run int fif1/1/2
+Building configuration...
+ 
+Current configuration : 281 bytes
+!
+interface FiftyGigE1/1/2
+ switchport access vlan 100
+ switchport mode access
+ storm-control broadcast level bps 100m 50m 
+ storm-control multicast level bps 100m 50m
+ storm-control unicast level pps 20k
+ storm-control unknown-unicast level pps 20k
+ storm-control action trap
+end
+ 

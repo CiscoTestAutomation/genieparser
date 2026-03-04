@@ -4203,3 +4203,145 @@ class ShowPlatformSoftwareIgmpSnoopingGroupsVlanCount(ShowPlatformSoftwareIgmpSn
                 continue
 
         return ret_dict 
+
+class ShowPlatformSoftwareFedSecurityStormControlIfIdSchema(MetaParser):
+    """Schema for show platform software fed {switch} security-fed storm-control if-id {if_id}"""
+    schema = {
+        'iif_id': str,
+        'iif_name': str,
+        'speed': str,
+        'traffic_type': {
+            Any(): {
+                'supp_type': str,
+                'level': int,
+                'low_level': int,
+                'storm_exists': str,
+                'bytes_drop': int,
+                'packets_drop': int,
+                'current_rate': int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSecurityStormControlIfId(ShowPlatformSoftwareFedSecurityStormControlIfIdSchema):
+    """Parser for show platform software fed {switch} security-fed storm-control if-id {if_id}"""
+
+    cli_command = ['show platform software fed {switch_var} security-fed storm-control if-id {if_id}',
+                     'show platform software fed {switch} {switch_var} security-fed storm-control if-id {if_id}']
+
+    def cli(self, switch_var=None, switch=None, if_id=None, output=None):
+        if output is None:
+            if switch_var:
+                cmd = self.cli_command[1].format(switch=switch, switch_var=switch_var, if_id=if_id)
+            else:
+                cmd = self.cli_command[0].format(switch_var=switch_var, if_id=if_id)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # IIF-ID   : 0000000000000441
+        p0 = re.compile(r'^IIF-ID\s+:\s+(?P<iif_id>\w+)$')
+
+        # IIF-Name : FiftyGigE1/1/2
+        p1 = re.compile(r'^IIF-Name\s+:\s+(?P<iif_name>[\w\/]+)$')
+
+        # Speed    : 10000000000 BitsPerSecond
+        p2 = re.compile(r'^Speed\s+:\s+(?P<speed>[\d\s\w]+)$')
+
+        # Traffic type: BCAST
+        p3 = re.compile(r'^Traffic type:\s+(?P<traffic_type>\w+)$')
+
+        # Supp Type    : BPS
+        p4 = re.compile(r'^Supp Type\s+:\s+(?P<supp_type>\w+)$')
+
+        # Level        : 100000000
+        p5 = re.compile(r'^Level\s+:\s+(?P<level>\d+)$')
+
+        # Low Level    : 50000000
+        p6 = re.compile(r'^Low Level\s+:\s+(?P<low_level>\d+)$')
+
+        # Storm Exists : No
+        p7 = re.compile(r'^Storm Exists\s+:\s+(?P<storm_exists>\w+)$')
+
+        # Bytes drop   : 0
+        p8 = re.compile(r'^Bytes drop\s+:\s+(?P<bytes_drop>\d+)$')
+
+        # Packets drop : 0
+        p9 = re.compile(r'^Packets drop\s+:\s+(?P<packets_drop>\d+)$')
+
+        # Current Rate : 0
+        p10 = re.compile(r'^Current Rate\s+:\s+(?P<current_rate>\d+)$')
+
+        current_traffic_type = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IIF-ID   : 0000000000000441
+            m = p0.match(line)
+            if m:
+                ret_dict['iif_id'] = m.group('iif_id')
+                continue
+
+            # IIF-Name : FiftyGigE1/1/2
+            m = p1.match(line)
+            if m:
+                ret_dict['iif_name'] = m.group('iif_name')
+                continue
+
+            # Speed    : 10000000000 BitsPerSecond
+            m = p2.match(line)
+            if m:
+                ret_dict['speed'] = m.group('speed')
+                continue
+
+            # Traffic type: BCAST
+            m = p3.match(line)
+            if m:
+                current_traffic_type = m.group('traffic_type')
+                traffic_types_dict = ret_dict.setdefault('traffic_type', {}).setdefault(current_traffic_type, {})
+                continue
+
+            # Supp Type    : BPS
+            m = p4.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['supp_type'] = m.group('supp_type')
+                continue
+
+            # Level        : 100000000
+            m = p5.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['level'] = int(m.group('level'))
+                continue
+
+            # Low Level    : 50000000
+            m = p6.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['low_level'] = int(m.group('low_level'))
+                continue
+
+            # Storm Exists : No
+            m = p7.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['storm_exists'] = m.group('storm_exists')
+                continue
+
+            # Bytes drop   : 0
+            m = p8.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['bytes_drop'] = int(m.group('bytes_drop'))
+                continue
+
+            # Packets drop : 0
+            m = p9.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['packets_drop'] = int(m.group('packets_drop'))
+                continue
+
+            # Current Rate : 0
+            m = p10.match(line)
+            if m and current_traffic_type:
+                traffic_types_dict['current_rate'] = int(m.group('current_rate'))
+                continue
+
+        return ret_dict

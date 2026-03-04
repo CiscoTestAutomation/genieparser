@@ -1,0 +1,63 @@
+expected_output = {
+ "interface": {
+  "Tunnel1": {
+   "general": {
+    "interface_name": "Tunnel1",
+    "platform_interface_handle": 33,
+    "qfp_interface_handle": 20,
+    "qfp_complex": 0,
+    "rx_uidb": 65522,
+    "tx_uidb": 65516,
+    "hash_index": "0x0001ab",
+    "hash_element_ppe_addr": "0xaa20010",
+    "esp_hash_element_ppe_addr": "00000000",
+    "ah_hash_element_ppe_addr": "00000000",
+    "udp_hash_element_ppe_addr": "00000000",
+    "output_sb_ppe_addr": "0x994b070",
+    "decap_chk_sb_ppe_addr": "00000000",
+    "dmvpn_sb_ppe_addr_input": "00000000",
+    "dmvpn_sb_ppe_addr_output": "00000000",
+    "sgre_input_sb_ppe_addr": "00000000",
+    "l2tpoipv6_input_sb_ppe_addr": "00000000",
+    "sgre_client_tunnel_output_sb_ppe_addr": "00000000",
+    "hash_index_v6": "0xffffffff",
+    "hash_element_ppe_addr_v6": "00000000",
+    "p2padj_output_sb_ppe_addr": "00000000"
+   },
+   "config": {
+    "mode": "IPV6",
+    "src_ip": "0100:0100:0001:0000:0000:0000:0000:0001",
+    "dest_ip": "0300:0300:0001:0000:0000:0000:0000:0001",
+    "ipv4_intf_vrf": 0,
+    "tun_vrf": 0,
+    "tun_vrf_egress": 0,
+    "key": 0,
+    "flags": "0x0081",
+    "app_id": "TUN_APP_CLI",
+    "app_data": 0,
+    "ttl": 255,
+    "tos": 0,
+    "tunnel_protection": False,
+    "virtual_mac": "0000.0000.0000",
+    "lport": 0,
+    "rport": 0,
+    "tunnel_enable_entropy": False,
+    "remote_session_id": 0,
+    "vlan_id_for_l2tpoipv6": 0,
+    "remote_cookie_size": 0,
+    "local_cookie_size": 0,
+    "local_cookie_secondary_size": 0,
+    "remote_cookie_low": 0,
+    "remote_cookie_high": 0,
+    "local_cookie_low": 0,
+    "local_cookie_high": 0,
+    "local_cookie_secondary_low": 0,
+    "local_cookie_secondary_high": 0,
+    "native_vlan_id": 0,
+    "tunnel_enable_nhrp_galcheck": False,
+    "path_mtu_discovery": True,
+    "path_mtu_discovery_mpls_ip_only": False
+   }
+  }
+ }
+}

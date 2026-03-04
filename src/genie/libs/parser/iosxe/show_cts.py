@@ -4365,20 +4365,26 @@ class ShowCtsCredentials(ShowCtsCredentialsSchema):
 class ShowCtsSxpSgtMapSchema(MetaParser):
     """Schema for show cts sxp sgt-map"""
     schema = {
-        'sxp_node_id_generated': str,
-        'sxp_ipv6_node_id_generated': str,
+        Optional('sxp_node_id_generated'): str,
+        Optional('sxp_node_id_configured'): str,
+        Optional('sxp_ipv6_node_id_generated'): str,
+        Optional('sxp_ipv6_node_id_configured'): str,
         Optional('ip_sgt_mappings'): ListOf(dict),
-        Optional('total_number_of_ip_sgt_mappings'): int
+        'total_number_of_ip_sgt_mappings': int
     }
 
 class ShowCtsSxpSgtMap(ShowCtsSxpSgtMapSchema):
     """Parser for show cts sxp sgt-map"""
 
-    cli_command = 'show cts sxp sgt-map'
+    cli_command = ['show cts sxp sgt-map', 'show cts sxp sgt-map vrf {vrf}']
 
-    def cli(self, output=None):
+    def cli(self, vrf='', output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
 
         ret_dict = {}
         ip_sgt_mappings = []
@@ -4386,10 +4392,14 @@ class ShowCtsSxpSgtMap(ShowCtsSxpSgtMapSchema):
         current_type = None
 
         # SXP Node ID(generated):0xAC171B96(172.23.27.150)
-        p0 = re.compile(r'^SXP Node ID\(generated\):(?P<node_id>.+)$')
+        # SXP Node ID(configured):0x0000ABCD(0.0.171.205)
+        p0 = re.compile(r'^SXP Node ID\((?P<type>generated|configured)\):(?P<node_id>.+)$')
 
         # SXP IPv6 Node ID(generated):1133:1:1::2
         p1 = re.compile(r'^SXP IPv6 Node ID\(generated\):(?P<ipv6_node_id>.+)$')
+
+        # SXP IPv6 Node ID(configured):1133:1:1::2
+        p1_2 = re.compile(r'^SXP IPv6 Node ID\(configured\):(?P<ipv6_node_id_configured>.+)$')
 
         # IPv4,SGT: <100.1.1.123 , 100>
         # IPv6,SGT: <100:1::123 , 100>
@@ -4416,21 +4426,35 @@ class ShowCtsSxpSgtMap(ShowCtsSxpSgtMapSchema):
         # Total number of IP-SGT Mappings: 10
         p9 = re.compile(r'^Total number of IP-SGT Mappings:\s*(?P<total>\d+)$')
 
+        # There are no IP-SGT Mappings
+        p10 = re.compile(r'^There are no IP-SGT Mappings$')
+
         for line in output.splitlines():
             line = line.strip()
             if not line:
                 continue
 
             # SXP Node ID(generated):0xAC171B96(172.23.27.150)
+            # SXP Node ID(configured):0xAC171C96(172.23.27.10)
             m = p0.match(line)
             if m:
-                ret_dict['sxp_node_id_generated'] = m.group('node_id')
+                node_type = m.group('type')
+                if node_type == 'generated':
+                    ret_dict['sxp_node_id_generated'] = m.group('node_id')
+                else:
+                    ret_dict['sxp_node_id_configured'] = m.group('node_id')
                 continue
 
             # SXP IPv6 Node ID(generated):1133:1:1::2
             m = p1.match(line)
             if m:
                 ret_dict['sxp_ipv6_node_id_generated'] = m.group('ipv6_node_id')
+                continue
+
+            # SXP IPv6 Node ID(configured):1133:1:1::2
+            m = p1_2.match(line)
+            if m:
+                ret_dict['sxp_ipv6_node_id_configured'] = m.group('ipv6_node_id_configured')
                 continue
 
             # IPv4,SGT: <100.1.1.123 , 100>
@@ -4487,6 +4511,12 @@ class ShowCtsSxpSgtMap(ShowCtsSxpSgtMapSchema):
             m = p9.match(line)
             if m:
                 ret_dict['total_number_of_ip_sgt_mappings'] = int(m.group('total'))
+                continue
+
+            # There are no IP-SGT Mappings
+            m = p10.match(line)
+            if m:
+                ret_dict['total_number_of_ip_sgt_mappings'] = 0
                 continue
 
         # Append the last mapping if it exists

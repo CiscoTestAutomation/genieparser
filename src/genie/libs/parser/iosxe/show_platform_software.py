@@ -14808,46 +14808,100 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMapsSchema(MetaParser):
                 'name': str,
                 'index': int,
                 'type': str,
-                'global_parameter_map': bool,
-                'alerts': str,
-                'audits': str,
-                'drop_log': str,
-                'hsl_mode': str,
-                'host': str,
-                'port': int,
-                'template': str,
-                'session_rate_high': int,
-                'session_rate_low': int,
-                'time_duration': str,
-                'half_open': {
-                    'high': int,
-                    'low': int,
-                    'host': int,
-                    'host_block_time': int,
+                Optional('global_parameter_map'): bool,
+                Optional('alerts'): str,
+                Optional('audits'): str,
+                Optional('drop_log'): str,
+                Optional('log_flow'): str,
+                Optional('hsl_mode'): str,
+                Optional('host'): str,
+                Optional('port'): int,
+                Optional('template'): str,
+                Optional('session_rate_high'): int,
+                Optional('session_rate_low'): int,
+                Optional('time_duration'): str,
+                Optional('half_open'): {
+                    Optional('high'): int,
+                    Optional('low'): int,
+                    Optional('host'): int,
+                    Optional('host_block_time'): int,
                 },
-                'inactivity_times': {
-                    'dns': int,
-                    'icmp': int,
-                    'tcp': int,
-                    'udp': int,
+                Optional('inactivity_times'): {
+                    Optional('dns'): int,
+                    Optional('icmp'): int,
+                    Optional('tcp'): int,
+                    Optional('udp'): int,
                 },
-                'tcp_timeouts': {
-                    'syn_wait_time': int,
-                    'fin_wait_time': int,
+                Optional('inactivity_age_out_times'): {
+                    Optional('icmp'): int,
+                    Optional('tcp'): int,
+                    Optional('udp'): int,
                 },
-                'tcp_rst_pkt_control': {
-                    'half_open': str,
-                    'half_close': str,
-                    'idle': str,
+                Optional('tcp_timeouts'): {
+                    Optional('syn_wait_time'): int,
+                    Optional('fin_wait_time'): int,
                 },
-                'udp_timeout': {
-                    'udp_half_open_time': int,
+                Optional('tcp_ageout_timeouts'): {
+                    Optional('syn_wait_time'): int,
+                    Optional('fin_wait_time'): int,
                 },
-                'max_sessions': str,
-                'number_of_simultaneous_packet_per_sessions': int,
-                'syn_cookie_and_resource_management': {
-                    'global_syn_flood_limit': int,
-                    'global_total_session': int,
+                Optional('tcp_rst_pkt_control'): {
+                    Optional('half_open'): str,
+                    Optional('half_close'): str,
+                    Optional('idle'): str,
+                },
+                Optional('udp_timeout'): {
+                    Optional('udp_half_open_time'): int,
+                },
+                Optional('udp_ageout_timeout'): {
+                    Optional('udp_half_open_time'): int,
+                },
+                Optional('max_sessions'): str,
+                Optional('number_of_simultaneous_packet_per_sessions'): int,
+                Optional('syn_cookie_and_resource_management'): {
+                    Optional('global_syn_flood_limit'): int,
+                    Optional('global_total_session'): int,
+                    Optional('global_number_of_simultaneous_packet_per_session'): str,
+                    Optional('global_total_session_aggressive_aging'): str,
+                    Optional('global_alert'): str,
+                    Optional('global_max_incomplete'): int,
+                    Optional('global_max_incomplete_tcp'): int,
+                    Optional('global_max_incomplete_udp'): int,
+                    Optional('global_max_incomplete_icmp'): int,
+                    Optional('global_max_incomplete_aggressive_aging'): str,
+                    Optional('per_box_syn_flood_limit'): int,
+                    Optional('per_box_total_session_aggressive_aging'): str,
+                    Optional('per_box_max_incomplete'): int,
+                    Optional('per_box_max_incomplete_tcp'): int,
+                    Optional('per_box_max_incomplete_udp'): int,
+                    Optional('per_box_max_incomplete_icmp'): int,
+                    Optional('per_box_max_incomplete_aggressive_aging'): str,
+                },
+                Optional('vrf_pmap_syn_flood_limit'): int,
+                Optional('vrf_pmap_total_session'): int,
+                Optional('vrf_pmap_total_session_aggressive_aging'): str,
+                Optional('vrf_pmap_alert'): str,
+                Optional('vrf_pmap_max_incomplete'): int,
+                Optional('vrf_pmap_max_incomplete_tcp'): int,
+                Optional('vrf_pmap_max_incomplete_udp'): int,
+                Optional('vrf_pmap_max_incomplete_icmp'): int,
+                Optional('vrf_pmap_max_incomplete_aggressive_aging'): str,
+                Optional('zone_mismatch_drop'): str,
+                Optional('icmp_unreachable_allowed'): str,
+                Optional('session_reclassify_allowed'): str,
+                Optional('vpn_zone_security'): str,
+                Optional('vpn_zone_allow_dia'): str,
+                Optional('hsl_template_timeout'): int,
+                Optional('inspect_global_syn_flood_limit'): int,
+                Optional('inspect_global_total_session_aggressive_aging'): str,
+                Optional('inspect_global_max_incomplete'): int,
+                Optional('inspect_global_max_incomplete_tcp'): int,
+                Optional('inspect_global_max_incomplete_udp'): int,
+                Optional('inspect_global_max_incomplete_icmp'): int,
+                Optional('inspect_global_max_incomplete_aggressive_aging'): str,
+                Optional('tcp_winscale_loose'): str,
+                Optional('application_protocol_control'): {
+                    Any(): str
                 },
             }
         }
@@ -14866,19 +14920,22 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
         # Initialize return dictionary
         ret_dict = {}
 
-        # Inspect Parameter Map: global, Index 1
-        p1 = re.compile(r'^Inspect Parameter Map: (?P<name>\S+), Index (?P<index>\d+)$')
+        # Inspect Parameter Map: global, Index 1 OR VRF Parameter Map: vrf-default, Index 2
+        p1 = re.compile(r'^(?:Inspect|VRF) Parameter Map: (?P<name>\S+), Index (?P<index>\d+)$')
 
         # Parameter Map Type: Parameter-Map
         p2 = re.compile(r'^Parameter Map Type: (?P<type>[\S\s]+)$')
 
         # Global Parameter-Map
-        p3 = re.compile(r'^Global Parameter-Map$')
+        p3 = re.compile(r'^Global Parameter-Map$|^(?P<pmap_name>[\w-]+) Parameter-Map$')
 
-        # Alerts: On, Audits: Off, Drop-Log: Off
-        p4 = re.compile(r'^Alerts: (?P<alerts>\S+), Audits: (?P<audits>\S+), Drop-Log: (?P<drop_log>\S+)$')
+        # Alerts: On, Audits: Off, Drop-Log: Off, Log flow: Off
+        p4 = re.compile(r'^Alerts: (?P<alerts>\S+), Audits: (?P<audits>\S+), Drop-Log: (?P<drop_log>\S+)(?:, Log flow: (?P<log_flow>\S+))?$')
 
-        # HSL Mode: V9, Host: 10.1.1.1:9000, Port: 54174, Template: 300 sec
+        # Alerts: On, Drop-Log: On (without Audits field)
+        p4_alt = re.compile(r'^Alerts: (?P<alerts>\S+), Drop-Log: (?P<drop_log>\S+)$')
+
+        # HSL Mode: Disabled, Host: 0.0.0.0:0, Port: 0, Template: 300 sec
         p5 = re.compile(r'^HSL Mode: (?P<hsl_mode>\S+), Host: (?P<host>\S+), Port: (?P<port>\d+), Template: (?P<template>[\d\s\w]+)$')
 
         # Session Rate High: 2147483647, Session Rate Low: 2147483647, Time Duration: 60 sec
@@ -14887,8 +14944,11 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
         # High: 2147483647, Low: 2147483647, Host: 4294967295, Host Block Time: 0
         p7 = re.compile(r'^High: (?P<high>\d+), Low: (?P<low>\d+), Host: (?P<host_val>\d+), Host Block Time: (?P<host_block_time>\d+)$')
 
-        # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+        # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30 (Inactivity Times)
         p8 = re.compile(r'^DNS: (?P<dns>\d+), ICMP: (?P<icmp>\d+), TCP: (?P<tcp>\d+), UDP: (?P<udp>\d+)$')
+
+        # ICMP: 10, TCP: 3600, UDP: 30 (Inactivity Age-out Times)
+        p8_ageout = re.compile(r'^ICMP: (?P<icmp>\d+), TCP: (?P<tcp>\d+), UDP: (?P<udp>\d+)$')
 
         # SYN wait time: 30, FIN wait time: 1
         p9 = re.compile(r'^SYN wait time: (?P<syn_wait_time>\d+), FIN wait time: (?P<fin_wait_time>\d+)$')
@@ -14897,13 +14957,13 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
         p10 = re.compile(r'^half-open: (?P<half_open>\S+), half-close: (?P<half_close>\S+), idle: (?P<idle>\S+)$')
 
         # UDP Half-open time: 30000
-        p11 = re.compile(r'^UDP Half-open time: (?P<udp_half_open_time>\d+)$')
+        p11 = re.compile(r'^\s*UDP Half-open time: (?P<udp_half_open_time>\d+)$')
 
         # Max Sessions: Unlimited
         p12 = re.compile(r'^Max Sessions: (?P<max_sessions>\S+)$')
 
         # Number of Simultaneous Packet per Sessions: 0
-        p13 = re.compile(r'^Number of Simultaneous Packet per Sessions: (?P<number_of_simultaneous_packet_per_sessions>\d+)$')
+        p13 = re.compile(r'^\s*Number of Simultaneous Packet per Sessions:\s*(?P<number_of_simultaneous_packet_per_sessions>\d+)$')
 
         # Global Syn Flood Limit: 4294967295
         p14 = re.compile(r'^Global Syn Flood Limit: (?P<global_syn_flood_limit>\d+)$')
@@ -14911,10 +14971,126 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
         # Global Total Session : 4294967295
         p15 = re.compile(r'^Global Total Session\s*:\s*(?P<global_total_session>\d+)$')
 
+        # Global Number of Simultaneous Packet per Session :
+        p16 = re.compile(r'^Global Number of Simultaneous Packet per Session\s*:$')
+
+        # Global Total Session Aggressive Aging Disabled
+        p17 = re.compile(r'^Global Total Session Aggressive Aging (?P<status>\w+)$')
+
+        # Global alert : Off
+        p18 = re.compile(r'^Global alert\s*:\s*(?P<global_alert>\S+)$')
+
+        # Global max incomplete : 4294967295
+        p19 = re.compile(r'^Global max incomplete\s*:\s*(?P<global_max_incomplete>\d+)$')
+
+        # Global max incomplete TCP: 4294967295
+        p20 = re.compile(r'^Global max incomplete TCP:\s*(?P<global_max_incomplete_tcp>\d+)$')
+
+        # Global max incomplete UDP: 4294967295
+        p21 = re.compile(r'^Global max incomplete UDP:\s*(?P<global_max_incomplete_udp>\d+)$')
+
+        # Global max incomplete ICMP: 4294967295
+        p22 = re.compile(r'^Global max incomplete ICMP:\s*(?P<global_max_incomplete_icmp>\d+)$')
+
+        # Global max incomplete Aggressive Aging Disabled
+        p23 = re.compile(r'^Global max incomplete Aggressive Aging (?P<status>\w+)$')
+
+        # syn flood limit : 4294967295
+        p24 = re.compile(r'^syn flood limit\s*:\s*(?P<syn_flood_limit>\d+)$')
+
+        # Total Session Aggressive Aging Disabled
+        p25 = re.compile(r'^Total Session Aggressive Aging (?P<status>\w+)$')
+
+        # max incomplete : 4294967295
+        p26 = re.compile(r'^max incomplete\s*:\s*(?P<max_incomplete>\d+)$')
+
+        # max incomplete TCP: 4294967295
+        p27 = re.compile(r'^max incomplete TCP:\s*(?P<max_incomplete_tcp>\d+)$')
+
+        # max incomplete UDP: 4294967295
+        p28 = re.compile(r'^max incomplete UDP:\s*(?P<max_incomplete_udp>\d+)$')
+
+        # max incomplete ICMP: 4294967295
+        p29 = re.compile(r'^max incomplete ICMP:\s*(?P<max_incomplete_icmp>\d+)$')
+
+        # max incomplete Aggressive Aging Disabled
+        p30 = re.compile(r'^max incomplete Aggressive Aging (?P<status>\w+)$')
+
+        # VRF PMAP syn flood limit : 4294967295
+        p31 = re.compile(r'^VRF PMAP syn flood limit\s*:\s*(?P<vrf_pmap_syn_flood_limit>\d+)$')
+
+        # VRF PMAP total session : 4294967295
+        p32 = re.compile(r'^VRF PMAP total session\s*:\s*(?P<vrf_pmap_total_session>\d+)$')
+
+        # VRF PMAP total session Aggressive Aging Disabled
+        p33 = re.compile(r'^VRF PMAP total session Aggressive Aging (?P<vrf_pmap_total_session_aggressive_aging>\w+)$')
+
+        # VRF PMAP alert : Off
+        p34 = re.compile(r'^VRF PMAP alert\s*:\s*(?P<vrf_pmap_alert>\S+)$')
+
+        # VRF PMAP max incomplete : 4294967295
+        p35 = re.compile(r'^VRF PMAP max incomplete\s*:\s*(?P<vrf_pmap_max_incomplete>\d+)$')
+
+        # VRF PMAP max incomplete TCP: 4294967295
+        p36 = re.compile(r'^VRF PMAP max incomplete TCP:\s*(?P<vrf_pmap_max_incomplete_tcp>\d+)$')
+
+        # VRF PMAP max incomplete UDP: 4294967295
+        p37 = re.compile(r'^VRF PMAP max incomplete UDP:\s*(?P<vrf_pmap_max_incomplete_udp>\d+)$')
+
+        # VRF PMAP max incomplete ICMP: 4294967295
+        p38 = re.compile(r'^VRF PMAP max incomplete ICMP:\s*(?P<vrf_pmap_max_incomplete_icmp>\d+)$')
+
+        # VRF PMAP max incomplete Aggressive Aging Disabled
+        p39 = re.compile(r'^VRF PMAP max incomplete Aggressive Aging (?P<vrf_pmap_max_incomplete_aggressive_aging>\w+)$')
+
+        # Zone mismatch drop: Off
+        p40 = re.compile(r'^Zone mismatch drop:\s*(?P<zone_mismatch_drop>\S+)$')
+
+        # ICMP unreachable allowed: No
+        p41 = re.compile(r'^ICMP unreachable allowed:\s*(?P<icmp_unreachable_allowed>\S+)$')
+
+        # Session reclassify allowed: No
+        p42 = re.compile(r'^Session reclassify allowed:\s*(?P<session_reclassify_allowed>\S+)$')
+
+        # vpn zone security: Off
+        p43 = re.compile(r'^vpn zone security:\s*(?P<vpn_zone_security>\S+)$')
+
+        # vpn zone allow dia: Off
+        p44 = re.compile(r'^vpn zone allow dia:\s*(?P<vpn_zone_allow_dia>\S+)$')
+
+        # HSL Template Timeout [sec]: 300
+        p45 = re.compile(r'^HSL Template Timeout \[sec\]:\s*(?P<hsl_template_timeout>\d+)$')
+
+        # tcp winscale loose: Off
+        p46 = re.compile(r'^tcp winscale loose:\s*(?P<tcp_winscale_loose>\S+)$')
+
+        # Application protocol control: (start of table)
+        p47 = re.compile(r'^Application protocol control:$')
+
+        # Protocol         Status
+        p48 = re.compile(r'^Protocol\s+Status$')
+
+        # dns              on  OR  DNS: on
+        p49 = re.compile(r'^(?P<protocol>\S+?)\:?\s+(?P<status>\S+)$')
+
         current_param_map = None
+        in_half_open_section = False
+        in_inactivity_section = False
+        in_inactivity_ageout_section = False
+        in_tcp_timeouts_section = False
+        in_tcp_ageout_timeouts_section = False
+        in_udp_timeout_section = False
+        in_udp_ageout_timeout_section = False
+        in_per_box_section = False
+        in_application_protocol_section = False
+        in_syn_cookie_section = False
 
         for line in output.splitlines():
             line = line.strip()
+
+            # Skip empty lines and section headers
+            if not line or 'Forwarding Manager Inspect Parameter-Maps' in line or line.startswith('-----'):
+                continue
 
             # Inspect Parameter Map: global, Index 1
             m = p1.match(line)
@@ -14924,6 +15100,20 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
                 current_param_map = ret_dict.setdefault('parameter_maps', {}).setdefault(name, {})
                 current_param_map['name'] = name
                 current_param_map['index'] = int(group['index'])
+                # Reset section flags
+                in_half_open_section = False
+                in_inactivity_section = False
+                in_inactivity_ageout_section = False
+                in_tcp_timeouts_section = False
+                in_tcp_ageout_timeouts_section = False
+                in_udp_timeout_section = False
+                in_udp_ageout_timeout_section = False
+                in_per_box_section = False
+                in_application_protocol_section = False
+                in_syn_cookie_section = False
+                continue
+
+            if current_param_map is None:
                 continue
 
             # Parameter Map Type: Parameter-Map
@@ -14933,22 +15123,69 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
                 current_param_map['type'] = group['type']
                 continue
 
-            # Global Parameter-Map
+            # Global Parameter-Map or inspect-global Parameter-Map
             m = p3.match(line)
             if m:
-                current_param_map['global_parameter_map'] = True
+                if 'Global Parameter-Map' in line:
+                    current_param_map['global_parameter_map'] = True
                 continue
 
-            # Alerts: On, Audits: Off, Drop-Log: Off
+            # Section headers
+            if 'Half-Open:' in line:
+                in_half_open_section = True
+                continue
+            elif 'Inactivity Times [sec]:' in line:
+                in_inactivity_section = True
+                continue
+            elif 'Inactivity Age-out Times [sec]:' in line:
+                in_inactivity_ageout_section = True
+                continue
+            elif 'TCP Timeouts [sec]:' in line:
+                in_tcp_timeouts_section = True
+                continue
+            elif 'TCP Ageout Timeouts [sec]:' in line:
+                in_tcp_ageout_timeouts_section = True
+                continue
+            elif 'TCP RST pkt control:' in line:
+                continue
+            elif 'UDP Timeout [msec]:' in line:
+                in_udp_timeout_section = True
+                continue
+            elif 'UDP Ageout Timeout [msec]:' in line:
+                in_udp_ageout_timeout_section = True
+                continue
+            elif 'Syn Cookie and Resource Management:' in line:
+                in_syn_cookie_section = True
+                continue
+            elif 'Per Box Configuration' in line:
+                in_per_box_section = True
+                continue
+            elif 'Application protocol control:' in line:
+                in_application_protocol_section = True
+                continue
+            elif '--------------------------------' in line:
+                continue
+
+            # Alerts: On, Audits: Off, Drop-Log: Off, Log flow: Off
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 current_param_map['alerts'] = group['alerts']
                 current_param_map['audits'] = group['audits']
                 current_param_map['drop_log'] = group['drop_log']
+                if group.get('log_flow'):
+                    current_param_map['log_flow'] = group['log_flow']
                 continue
 
-            # HSL Mode: V9, Host: 10.1.1.1:9000, Port: 54174, Template: 300 sec
+            # Alerts: On, Drop-Log: On (without Audits field)
+            m = p4_alt.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['alerts'] = group['alerts']
+                current_param_map['drop_log'] = group['drop_log']
+                continue
+
+            # HSL Mode: Disabled, Host: 0.0.0.0:0, Port: 0, Template: 300 sec
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -14976,26 +15213,60 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
                 half_open_dict['low'] = int(group['low'])
                 half_open_dict['host'] = int(group['host_val'])
                 half_open_dict['host_block_time'] = int(group['host_block_time'])
+                in_half_open_section = False
                 continue
 
-            # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30
+            # DNS: 5, ICMP: 10, TCP: 3600, UDP: 30 (for inactivity times)
             m = p8.match(line)
-            if m:
+            if m and in_inactivity_section:
                 group = m.groupdict()
                 inactivity_dict = current_param_map.setdefault('inactivity_times', {})
                 inactivity_dict['dns'] = int(group['dns'])
                 inactivity_dict['icmp'] = int(group['icmp'])
                 inactivity_dict['tcp'] = int(group['tcp'])
                 inactivity_dict['udp'] = int(group['udp'])
+                in_inactivity_section = False
+                continue
+
+            # ICMP: 10, TCP: 3600, UDP: 30 (for inactivity age-out times)
+            m = p8_ageout.match(line)
+            if m and in_inactivity_ageout_section:
+                group = m.groupdict()
+                inactivity_ageout_dict = current_param_map.setdefault('inactivity_age_out_times', {})
+                inactivity_ageout_dict['icmp'] = int(group['icmp'])
+                inactivity_ageout_dict['tcp'] = int(group['tcp'])
+                inactivity_ageout_dict['udp'] = int(group['udp'])
+                in_inactivity_ageout_section = False
+                continue
+
+            # Handle section headers for TCP timeouts
+            if 'TCP timeout:' in line:
+                in_tcp_timeouts_section = True
+                in_tcp_ageout_timeouts_section = False
+                continue
+            elif 'TCP age-out timeout:' in line:
+                in_tcp_timeouts_section = False
+                in_tcp_ageout_timeouts_section = True
                 continue
 
             # SYN wait time: 30, FIN wait time: 1
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                tcp_timeouts_dict = current_param_map.setdefault('tcp_timeouts', {})
-                tcp_timeouts_dict['syn_wait_time'] = int(group['syn_wait_time'])
-                tcp_timeouts_dict['fin_wait_time'] = int(group['fin_wait_time'])
+                if in_tcp_timeouts_section:
+                    tcp_timeouts_dict = current_param_map.setdefault('tcp_timeouts', {})
+                    tcp_timeouts_dict['syn_wait_time'] = int(group['syn_wait_time'])
+                    tcp_timeouts_dict['fin_wait_time'] = int(group['fin_wait_time'])
+                    in_tcp_timeouts_section = False
+                elif in_tcp_ageout_timeouts_section:
+                    tcp_ageout_timeouts_dict = current_param_map.setdefault('tcp_ageout_timeouts', {})
+                    tcp_ageout_timeouts_dict['syn_wait_time'] = int(group['syn_wait_time'])
+                    tcp_ageout_timeouts_dict['fin_wait_time'] = int(group['fin_wait_time'])
+                    in_tcp_ageout_timeouts_section = False
+                continue
+
+            # TCP RST packet control section header
+            if 'TCP RST packet control:' in line:
                 continue
 
             # half-open: On, half-close: On, idle: On
@@ -15008,13 +15279,32 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
                 tcp_rst_dict['idle'] = group['idle']
                 continue
 
-            # UDP Half-open time: 30000
+            # UDP timeout section headers
+            if 'UDP Timeout [msec]:' in line:
+                in_udp_timeout_section = True
+                in_udp_ageout_timeout_section = False
+                continue
+            elif 'UDP Ageout Timeout [msec]:' in line:
+                in_udp_timeout_section = False
+                in_udp_ageout_timeout_section = True
+                continue
+
+            # UDP half-open time: 30000 sec
             m = p11.match(line)
             if m:
-                group = m.groupdict()
-                udp_timeout_dict = current_param_map.setdefault('udp_timeout', {})
-                udp_timeout_dict['udp_half_open_time'] = int(group['udp_half_open_time'])
+                if in_udp_timeout_section:
+                    udp_timeout_dict = current_param_map.setdefault('udp_timeout', {})
+                    udp_timeout_dict['udp_half_open_time'] = int(m.group('udp_half_open_time'))
+                    # Reset UDP timeout section flag after processing
+                    in_udp_timeout_section = False
+                elif in_udp_ageout_timeout_section:
+                    udp_ageout_timeout_dict = current_param_map.setdefault('udp_ageout_timeout', {})
+                    udp_ageout_timeout_dict['udp_half_open_time'] = int(m.group('udp_half_open_time'))
+                    # Reset UDP ageout timeout section flag after processing
+                    in_udp_ageout_timeout_section = False
                 continue
+
+
 
             # Max Sessions: Unlimited
             m = p12.match(line)
@@ -15044,6 +15334,268 @@ class ShowPlatformSoftwareFirewallFPActiveParameterMaps(ShowPlatformSoftwareFire
                 group = m.groupdict()
                 syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
                 syn_cookie_dict['global_total_session'] = int(group['global_total_session'])
+                continue
+
+            # Global Number of Simultaneous Packet per Session :
+            m = p16.match(line)
+            if m:
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_number_of_simultaneous_packet_per_session'] = ''
+                continue
+
+            # Global Total Session Aggressive Aging Disabled
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_total_session_aggressive_aging'] = group['status']
+                continue
+
+            # Global alert : Off
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_alert'] = group['global_alert']
+                continue
+
+            # Global max incomplete : 4294967295
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_max_incomplete'] = int(group['global_max_incomplete'])
+                continue
+
+            # Global max incomplete TCP: 4294967295
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_max_incomplete_tcp'] = int(group['global_max_incomplete_tcp'])
+                continue
+
+            # Global max incomplete UDP: 4294967295
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_max_incomplete_udp'] = int(group['global_max_incomplete_udp'])
+                continue
+
+            # Global max incomplete ICMP: 4294967295
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_max_incomplete_icmp'] = int(group['global_max_incomplete_icmp'])
+                continue
+
+            # Global max incomplete Aggressive Aging Disabled
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                syn_cookie_dict['global_max_incomplete_aggressive_aging'] = group['status']
+                continue
+
+            # syn flood limit : 4294967295
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_syn_flood_limit'] = int(group['syn_flood_limit'])
+                else:
+                    current_param_map['inspect_global_syn_flood_limit'] = int(group['syn_flood_limit'])
+                continue
+
+            # Total Session Aggressive Aging Disabled
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_total_session_aggressive_aging'] = group['status']
+                else:
+                    current_param_map['inspect_global_total_session_aggressive_aging'] = group['status']
+                continue
+
+            # max incomplete : 4294967295 or 0
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_max_incomplete'] = int(group['max_incomplete'])
+                else:
+                    current_param_map['inspect_global_max_incomplete'] = int(group['max_incomplete'])
+                continue
+
+            # max incomplete TCP: 4294967295
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_max_incomplete_tcp'] = int(group['max_incomplete_tcp'])
+                else:
+                    current_param_map['inspect_global_max_incomplete_tcp'] = int(group['max_incomplete_tcp'])
+                continue
+
+            # max incomplete UDP: 4294967295
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_max_incomplete_udp'] = int(group['max_incomplete_udp'])
+                else:
+                    current_param_map['inspect_global_max_incomplete_udp'] = int(group['max_incomplete_udp'])
+                continue
+
+            # max incomplete ICMP: 4294967295
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_max_incomplete_icmp'] = int(group['max_incomplete_icmp'])
+                else:
+                    current_param_map['inspect_global_max_incomplete_icmp'] = int(group['max_incomplete_icmp'])
+                continue
+
+            # max incomplete Aggressive Aging Disabled
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                if in_per_box_section:
+                    syn_cookie_dict = current_param_map.setdefault('syn_cookie_and_resource_management', {})
+                    syn_cookie_dict['per_box_max_incomplete_aggressive_aging'] = group['status']
+                else:
+                    current_param_map['inspect_global_max_incomplete_aggressive_aging'] = group['status']
+                continue
+
+            # VRF PMAP syn flood limit : 4294967295
+            m = p31.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_syn_flood_limit'] = int(group['vrf_pmap_syn_flood_limit'])
+                continue
+
+            # VRF PMAP total session : 4294967295
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_total_session'] = int(group['vrf_pmap_total_session'])
+                continue
+
+            # VRF PMAP total session Aggressive Aging Disabled
+            m = p33.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_total_session_aggressive_aging'] = group['vrf_pmap_total_session_aggressive_aging']
+                continue
+
+            # VRF PMAP alert : Off
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_alert'] = group['vrf_pmap_alert']
+                continue
+
+            # VRF PMAP max incomplete : 4294967295
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_max_incomplete'] = int(group['vrf_pmap_max_incomplete'])
+                continue
+
+            # VRF PMAP max incomplete TCP: 4294967295
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_max_incomplete_tcp'] = int(group['vrf_pmap_max_incomplete_tcp'])
+                continue
+
+            # VRF PMAP max incomplete UDP: 4294967295
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_max_incomplete_udp'] = int(group['vrf_pmap_max_incomplete_udp'])
+                continue
+
+            # VRF PMAP max incomplete ICMP: 4294967295
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_max_incomplete_icmp'] = int(group['vrf_pmap_max_incomplete_icmp'])
+                continue
+
+            # VRF PMAP max incomplete Aggressive Aging Disabled
+            m = p39.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vrf_pmap_max_incomplete_aggressive_aging'] = group['vrf_pmap_max_incomplete_aggressive_aging']
+                continue
+
+            # Zone mismatch drop: Off
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['zone_mismatch_drop'] = group['zone_mismatch_drop']
+                continue
+
+            # ICMP unreachable allowed: No
+            m = p41.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['icmp_unreachable_allowed'] = group['icmp_unreachable_allowed']
+                continue
+
+            # Session reclassify allowed: No
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['session_reclassify_allowed'] = group['session_reclassify_allowed']
+                continue
+
+            # vpn zone security: Off
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vpn_zone_security'] = group['vpn_zone_security']
+                continue
+
+            # vpn zone allow dia: Off
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['vpn_zone_allow_dia'] = group['vpn_zone_allow_dia']
+                continue
+
+            # HSL Template Timeout [sec]: 300
+            m = p45.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['hsl_template_timeout'] = int(group['hsl_template_timeout'])
+                continue
+
+            # tcp winscale loose: Off
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                current_param_map['tcp_winscale_loose'] = group['tcp_winscale_loose']
+                continue
+
+            # Protocol Status pairs in application protocol control section
+            m = p49.match(line)
+            if m and in_application_protocol_section and not p48.match(line):
+                group = m.groupdict()
+                app_protocol_dict = current_param_map.setdefault('application_protocol_control', {})
+                # Remove colon from protocol name (preserve original case)
+                protocol = group['protocol'].rstrip(':')
+                app_protocol_dict[protocol] = group['status']
                 continue
 
         return ret_dict

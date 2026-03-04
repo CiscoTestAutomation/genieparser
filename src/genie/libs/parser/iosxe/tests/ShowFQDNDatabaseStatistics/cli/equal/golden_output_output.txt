@@ -1,0 +1,2 @@
+Access-9300-4M-1#show fqdn database statistics 
+Total Number of fqdn: 1 

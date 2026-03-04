@@ -6,6 +6,7 @@
         *  show ip mfib summary
         *  show ipv6 mfib interface 
         *  show ipv6 mfib active
+    * show ip mrib route summary
 """
 # Python
 import re
@@ -763,3 +764,75 @@ class ShowIpv6MfibActive(ShowIpv6MfibActiveSchema):
                 continue
 
         return parsed_dict
+
+
+class ShowIpMribRouteSummarySchema(MetaParser):
+    """Schema for show ip mrib route summary"""
+    schema = {
+        "mrib": {
+            "route_db_summary": {
+                "total_star_g_routes": int,
+                "total_s_g_routes": int,
+                "total_route_x_interfaces": int
+            }
+        }
+    }
+
+class ShowIpMribRouteSummary(ShowIpMribRouteSummarySchema):
+    """Parser for show ip mrib route summary"""
+
+    cli_command = "show ip mrib route summary"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        #  MRIB Route-DB Summary 
+        p1 = re.compile(r"^\s*MRIB Route-DB Summary\s*$")
+        #   No. of (*,G) routes = 14
+        p2 = re.compile(r"^\s*No\.\s+of\s+\(\*,G\)\s+routes\s*=\s*(?P<val>\d+)\s*$")
+        #   No. of (S,G) routes = 400
+        p3 = re.compile(r"^\s*No\.\s+of\s+\(S,G\)\s+routes\s*=\s*(?P<val>\d+)\s*$")
+        #   No. of Route x Interfaces (RxI) = 842
+        p4 = re.compile(r"^\s*No\.\s+of\s+Route\s+x\s+Interfaces\s+\(RxI\)\s*=\s*(?P<val>\d+)\s*$")
+
+        summary_dict = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #  MRIB Route-DB Summary 
+            m = p1.match(line)
+            if m:
+                summary_dict = ret_dict.setdefault("mrib", {}).setdefault("route_db_summary", {})
+                continue
+
+            #   No. of (*,G) routes = 14
+            m = p2.match(line)
+            if m:
+                if summary_dict is None:
+                    summary_dict = ret_dict.setdefault("mrib", {}).setdefault("route_db_summary", {})
+                summary_dict["total_star_g_routes"] = int(m.group("val"))
+                continue
+
+            #   No. of (S,G) routes = 400
+            m = p3.match(line)
+            if m:
+                if summary_dict is None:
+                    summary_dict = ret_dict.setdefault("mrib", {}).setdefault("route_db_summary", {})
+                summary_dict["total_s_g_routes"] = int(m.group("val"))
+                continue
+
+            #   No. of Route x Interfaces (RxI) = 842
+            m = p4.match(line)
+            if m:
+                if summary_dict is None:
+                    summary_dict = ret_dict.setdefault("mrib", {}).setdefault("route_db_summary", {})
+                summary_dict["total_route_x_interfaces"] = int(m.group("val"))
+                continue
+
+        return ret_dict

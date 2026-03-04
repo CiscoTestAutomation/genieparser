@@ -1,0 +1,47 @@
+st-raitt-stack1#sh platform software fed switch 1 security-fed storm-control if-id 0x0000000000000441
+Platform Storm Control Information
+
+
+IIF-ID   : 0000000000000441
+IIF-Name : FiftyGigE1/1/2
+Speed    : 10000000000 BitsPerSecond
+
+Traffic type: BCAST
+  
+  Supp Type    : BPS
+  Level        : 100000000
+  Low Level    : 50000000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0
+
+Traffic type: MCAST
+  
+  Supp Type    : BPS
+  Level        : 100000000
+  Low Level    : 50000000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0
+
+Traffic type: UCAST
+  
+  Supp Type    : PPS
+  Level        : 20000
+  Low Level    : 20000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0
+
+Traffic type: UNKNOWN_UCAST
+  
+  Supp Type    : PPS
+  Level        : 20000
+  Low Level    : 20000
+  Storm Exists : No
+  Bytes drop   : 0
+  Packets drop : 0
+  Current Rate : 0

@@ -1,0 +1,19 @@
+show cts sxp sgt-map vrf VRF-GRP-1
+SXP Node ID(generated):0xAC171BC9(172.23.27.201)
+SXP IPv6 Node ID(generated):2001:1122:AABB:2:DDEE:77CC:4321:2222
+IP-SGT Mappings as follows:
+IPv4,SGT: <33.0.0.2 , 30>
+source  : SXP;
+Peer IP : 2001:1122:AABB:2:DDEE:77CC:4321:1111;
+Ins Num : 1;
+Status  : Active;
+Seq Num : 1
+Peer Seq: 2001:1122:AABB:2:DDEE:77CC:4321:1111
+IPv6,SGT: <33::2 , 30>
+source  : SXP;
+Peer IP : 2001:1122:AABB:2:DDEE:77CC:4321:1111;
+Ins Num : 1;
+Status  : Active;
+Seq Num : 3
+Peer Seq: 2001:1122:AABB:2:DDEE:77CC:4321:1111
+Total number of IP-SGT Mappings: 2

@@ -1,0 +1,15 @@
+RAITT-43#show platform hardware fed switch active sgacl table vlan-mapping 
+BD-VRF Hardware Mapping Table:
+
+VLAN     ASIC     HW VRF-ID    VRF-Mapped
+-------- -------- ------------ ----------
+1        0        0            Yes
+2        0        0            Yes
+3        0        0            Yes
+4        0        0            Yes
+5        0        0            Yes
+6        0        0            Yes
+7        0        0            Yes
+8        0        0            Yes
+9        0        0            Yes
+10       0        0            Yes

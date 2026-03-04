@@ -31,7 +31,7 @@ class ShowDiagSubslotEepromDetailSchema(MetaParser):
                 'rma_history': str,
                 'product_identifier_pid': str,
                 'version_identifier_vid': str,
-                'clei_code': str,
+                Optional('clei_code'): str,
                 'top_assy_part_number': str,
                 'board_revision': str,
                 'environment_monitor_data': str,

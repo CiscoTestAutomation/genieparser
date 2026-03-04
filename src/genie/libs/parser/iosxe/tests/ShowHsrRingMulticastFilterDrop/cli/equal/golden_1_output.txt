@@ -1,0 +1,10 @@
+		HSR-ring listing: 
+		--------------------
+
+HSR-ring: HS1
+---------------
+Multicast filter drop count: 0
+
+HSR-ring: HS2
+---------------
+Multicast filter drop count: 0

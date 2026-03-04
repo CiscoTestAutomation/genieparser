@@ -1,0 +1,53 @@
+show platform hardware fed switch 1 sgacl resource usage
+
+SGACL RESOURCE DETAILS ASIC :#0
+================================
+                                                  Percent     Thresholds
+Hardware Resource               MAX      Used      Used    Upper     Lower
+---------------------------------------------------------------------------
+  CTS Cell Matrix Config    :                                 80        70
+  CTS Cell Matrix Entries   :   8192         2         0         Normal
+  CTS Cell Overflow Entries :    512         1         0
+
+  Policy Configuration      :                                 80        70
+  Policy Entries            :    256         5         1         Normal
+
+  DGT Config                :                                 80        70
+  DGT Entries               :   4096         1         0         Normal
+
+  Security ACL Configured   :                                 80        70
+  Security ACL Entries      :   5120       142         2         Normal
+
+                                  Total     Percent
+      SGACL TCAM Entries           Used      Used
+      ------------------------------------------------------------------
+      Output PRE SGACL      :        4        0
+      Output SGACL          :        8        0
+      Output SGACL DEFAULT  :        0        0
+
+
+
+SGACL RESOURCE DETAILS ASIC :#1
+================================
+                                                  Percent     Thresholds
+Hardware Resource               MAX      Used      Used    Upper     Lower
+---------------------------------------------------------------------------
+  CTS Cell Matrix Config    :                                 80        70
+  CTS Cell Matrix Entries   :   8192         2         0         Normal
+  CTS Cell Overflow Entries :    512         1         0
+
+  Policy Configuration      :                                 80        70
+  Policy Entries            :    256         5         1         Normal
+
+  DGT Config                :                                 80        70
+  DGT Entries               :   4096         1         0         Normal
+
+  Security ACL Configured   :                                 80        70
+  Security ACL Entries      :   5120       142         2         Normal
+
+                                  Total     Percent
+      SGACL TCAM Entries           Used      Used
+      ------------------------------------------------------------------
+      Output PRE SGACL      :        4        0
+      Output SGACL          :        8        0
+      Output SGACL DEFAULT  :        0        0

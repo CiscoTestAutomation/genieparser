@@ -1,0 +1,49 @@
+show platform software fed switch 1 ifm interface_name Vlan20
+Interface IF_ID         : 0x00000000000004cd
+Interface Name          : Vlan20
+Interface Block Pointer : 0x7bc5bc7e1808
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Status        : UPD,
+Interface Ref-Cnt       : 1
+Interface Type          : SVI
+	Vlan id        : 20
+	SNMP IF Index  : 183
+	IPv4 MTU       : 1500
+	IPv6 MTU       : 1500
+	IPv4 VRF ID    : 0x0
+	IPv6 VRF ID    : 0x0
+	Protocol flags : 0x0003 [ ipv4 ipv6 ]
+	Misc flags     : 0x0043 [ ipv4 ipv6 --- ]
+	ICMPv4 flags   : 0x03 [ unreachable redirect ]
+	ICMPv6 flags   : 0x03 [ unreachable redirect ]
+	Mac Address    : dc:d8:3b:6a:f1:d6
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+	Port L3 Subblock
+		VRF ID .................. [0]
+		IPv4 Routing Enabled .... [Yes]
+		IPv6 Routing Enabled .... [Yes]
+		MPLS Enabled ............ [No]
+		Pimv4 Enabled ........... [No]
+		Pimv6 Enabled ........... [No]
+		IPv4 MTU ................ [1500]
+		IPv6 MTU ................ [1500]
+		L3 srv port gid ......... [20]
+		L3 srv port oid for Asic[0] ......... [0xa85(2693)]
+		L3 srv port oid for Asic[1] ......... [0xa41(2625)]
+	L3 Port Tcp MSS Subblock
+		IPv4 Tcp/Mss Adjust.......... [OFF]
+		IPv4 Maximum Mss Value..... [0]
+		IPv6 Tcp/Mss Adjust.......... [OFF]
+		IPv6 Maximum Mss Value..... [0]
+		ACL_oid Asic[0] [eth:ipv4:ipv6]..... [0(0x0):0(0x0):0(0x0)]
+		ACL_oid Asic[1] [eth:ipv4:ipv6]..... [0(0x0):0(0x0):0(0x0)]
+	 Port CTS Subblock is NULL if_id = 0x4cd
+	 Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Events Log

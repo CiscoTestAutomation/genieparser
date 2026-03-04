@@ -1,0 +1,69 @@
+show monitor capture file flash:/mypcap.pcap packet-number 4 detailed
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+Frame 4: 114 bytes on wire (912 bits), 114 bytes captured (912 bits) on interface /tmp/epc_ws/wif_to_ts_pipe, id 0
+    Section number: 1
+    Interface id: 0 (/tmp/epc_ws/wif_to_ts_pipe)
+        Interface name: /tmp/epc_ws/wif_to_ts_pipe
+    Encapsulation type: Ethernet (1)
+    Arrival Time: Feb 13, 2026 10:43:22.352964000 UTC
+    UTC Arrival Time: Feb 13, 2026 10:43:22.352964000 UTC
+    Epoch Arrival Time: 1770979402.352964000
+    [Time shift for this packet: 0.000000000 seconds]
+    [Time delta from previous captured frame: 0.000421000 seconds]
+    [Time delta from previous displayed frame: 0.000000000 seconds]
+    [Time since reference or first frame: 0.001440000 seconds]
+    Frame Number: 4
+    Frame Length: 114 bytes (912 bits)
+    Capture Length: 114 bytes (912 bits)
+    [Frame is marked: False]
+    [Frame is ignored: False]
+    [Protocols in frame: eth:ethertype:ip:icmp:data]
+Ethernet II, Src: Cisco_47:09:02 (ec:ce:13:47:09:02), Dst: Cisco_46:0c:c5 (a4:53:0e:46:0c:c5)
+    Destination: Cisco_46:0c:c5 (a4:53:0e:46:0c:c5)
+        Address: Cisco_46:0c:c5 (a4:53:0e:46:0c:c5)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Source: Cisco_47:09:02 (ec:ce:13:47:09:02)
+        Address: Cisco_47:09:02 (ec:ce:13:47:09:02)
+        .... ..0. .... .... .... .... = LG bit: Globally unique address (factory default)
+        .... ...0 .... .... .... .... = IG bit: Individual address (unicast)
+    Type: IPv4 (0x0800)
+Internet Protocol Version 4, Src: 11.1.6.2, Dst: 11.1.6.3
+    0100 .... = Version: 4
+    .... 0101 = Header Length: 20 bytes (5)
+    Differentiated Services Field: 0x00 (DSCP: CS0, ECN: Not-ECT)
+        0000 00.. = Differentiated Services Codepoint: Default (0)
+        .... ..00 = Explicit Congestion Notification: Not ECN-Capable Transport (0)
+    Total Length: 100
+    Identification: 0x004e (78)
+    000. .... = Flags: 0x0
+        0... .... = Reserved bit: Not set
+        .0.. .... = Don't fragment: Not set
+        ..0. .... = More fragments: Not set
+    ...0 0000 0000 0000 = Fragment Offset: 0
+    Time to Live: 255
+    Protocol: ICMP (1)
+    Header Checksum: 0x9944 [validation disabled]
+    [Header checksum status: Unverified]
+    Source Address: 11.1.6.2
+    Destination Address: 11.1.6.3
+Internet Control Message Protocol
+    Type: 0 (Echo (ping) reply)
+    Code: 0
+    Checksum: 0x4306 [correct]
+    [Checksum Status: Good]
+    Identifier (BE): 15 (0x000f)
+    Identifier (LE): 3840 (0x0f00)
+    Sequence Number (BE): 3 (0x0003)
+    Sequence Number (LE): 768 (0x0300)
+    Data (72 bytes)
+
+0000  00 00 00 00 04 88 3e aa ab cd ab cd ab cd ab cd   ......>.........
+0010  ab cd ab cd ab cd ab cd ab cd ab cd ab cd ab cd   ................
+0020  ab cd ab cd ab cd ab cd ab cd ab cd ab cd ab cd   ................
+0030  ab cd ab cd ab cd ab cd ab cd ab cd ab cd ab cd   ................
+0040  ab cd ab cd ab cd ab cd                           ........
+        Data: 0000000004883eaaabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcdabcd
+        [Length: 72]
+

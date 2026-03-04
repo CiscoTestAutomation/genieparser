@@ -1,0 +1,27 @@
+expected_output = {
+   "ip_sgt_mappings":[
+      {
+         "ipv4":"33.0.0.2",
+         "SGT":30,
+         "source":"SXP",
+         "peer_ip":"2001:1122:AABB:2:DDEE:77CC:4321:1111",
+         "ins_num":1,
+         "status":"Active",
+         "seq_num":1,
+         "peer_seq":"2001:1122:AABB:2:DDEE:77CC:4321:1111"
+      },
+      {
+         "ipv6":"33::2",
+         "SGT":30,
+         "source":"SXP",
+         "peer_ip":"2001:1122:AABB:2:DDEE:77CC:4321:1111",
+         "ins_num":1,
+         "status":"Active",
+         "seq_num":3,
+         "peer_seq":"2001:1122:AABB:2:DDEE:77CC:4321:1111"
+      }
+   ],
+   "sxp_ipv6_node_id_generated":"2001:1122:AABB:2:DDEE:77CC:4321:2222",
+   "sxp_node_id_generated":"0xAC171BC9(172.23.27.201)",
+   "total_number_of_ip_sgt_mappings":2
+}

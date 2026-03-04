@@ -3835,10 +3835,11 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
         # initial regexp pattern
         # GigabitEthernet0/0/0/0
         # GigabitEthernet11 OOB Net
+        # TenGigabitEthernet0/0/0 rvartr101 e1/9  rack  107-37 N2C-BE VRF
         # (need to exclude below line)
         # -------------------------------------------------------------------------------------------------------------------------
         p1 = re.compile(
-            r'^(?!-)(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>( (\S)+)*)$'
+            r'^(?!-)(?P<interface>[a-zA-Z\-\d\/\.]+)(?P<description>(\s\s?(\S)+)*)$'
         )
 
         # Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1

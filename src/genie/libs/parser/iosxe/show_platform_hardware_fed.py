@@ -4739,28 +4739,72 @@ class ShowPlatformHardwareFedSwitchActiveSgaclResourceUsageSchema(MetaParser):
     # Schema for 'show platform hardware fed switch active sgacl resource usage'
     schema = {
         'device_id': int,
-        'policy_entries': {
+        Optional('policy_entries'): {
             'used': int,
             'max': int
+        },
+        Optional('sgacl_resource_asic'): {
+            Any(): {
+                Optional('sgacl_tcam_entry'): {
+                    Any(): {
+                        'total_used': int,
+                        'percent_used': int
+                        },  
+                },        
+                'hardware_resource': {
+                    Any(): {
+                        Optional('max'): int,
+                        Optional('used'): int,
+                        Optional('percent_used'): int,
+                        Optional('upper_threshold'): int,
+                        Optional('lower_threshold'): int,
+                        Optional('status'): str
+                    },
+                    
+                }
+            }
         }
     }
 
 class ShowPlatformHardwareFedSwitchActiveSgaclResourceUsage(ShowPlatformHardwareFedSwitchActiveSgaclResourceUsageSchema):
     # Parser for 'show platform hardware fed switch active sgacl resource usage'
 
-    cli_command = 'show platform hardware fed switch active sgacl resource usage'
+    cli_command = [
+        'show platform hardware fed {switch_var} {switch_type} sgacl resource usage',
+        'show platform hardware fed {switch_type} sgacl resource usage'
+    ]
 
-    def cli(self, output=None):
+    def cli(self, switch_var="", switch_type="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            if switch_var:
+                output = self.device.execute(self.cli_command[0].format(switch_var=switch_var, switch_type=switch_type))
+            else:
+                output = self.device.execute(self.cli_command[1].format(switch_type=switch_type))
 
         ret_dict = {}
-
         # ------------------------ SG-ACL Usage for Device ID 0 ------------------------
         p1 = re.compile(r'^.*SG-ACL Usage for Device ID (?P<device_id>\d+).*$')
 
         # Policy Entries : Used = 5, Max = 508
         p2 = re.compile(r'^Policy Entries : Used = (?P<used>\d+), Max = (?P<max>\d+)$')
+
+        # SGACL RESOURCE DETAILS ASIC :#0
+        p3 = re.compile(r'^SGACL RESOURCE DETAILS ASIC :#(?P<asic>\d+)$')
+
+        #                             Total     Percent
+        # SGACL TCAM Entries           Used      Used
+        # ------------------------------------------------------------------
+        # Output PRE SGACL      :        4        0
+        p4 = re.compile(r'^Output\s+(?P<sgacl_tcam_entry>[\w\s]+)\s+:\s+(?P<total_used>\d+)\s+(?P<percent_used>\d+)$')
+
+        #                                                   Percent     Thresholds
+        # Hardware Resource               MAX      Used      Used    Upper     Lower
+        # ---------------------------------------------------------------------------
+        # CTS Cell Matrix Config    :                                 80        70
+        p5 = re.compile(r'^(?P<hardware_resource>[\w\s]+)\s+:\s+((?P<max>\d+)?)\s+((?P<used>\d+)?)\s+((?P<percent_used>\d+)?)\s+(?P<upper_threshold>\d+)\s+(?P<lower_threshold>\d+)$')
+
+        # CTS Cell Matrix Entries   :   8192         2         0         Normal
+        p6 = re.compile(r'^(?P<hardware_resource>[\w\s]+)\s+:\s+(?P<max>\d+)\s+(?P<used>\d+)\s+(?P<percent_used>\d+)\s+(?P<status>\w+)?$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -4779,6 +4823,50 @@ class ShowPlatformHardwareFedSwitchActiveSgaclResourceUsage(ShowPlatformHardware
                 result_dict=ret_dict.setdefault('policy_entries',{})
                 result_dict['used']=int(group['used'])
                 result_dict['max']=int(group['max'])
+                continue
+
+            # SGACL RESOURCE DETAILS ASIC :#0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                asic_dict=ret_dict.setdefault('sgacl_resource_asic', {}).setdefault(int(group['asic']), {})
+                ret_dict['device_id'] = int(group['asic'])                
+                continue    
+
+            # Output PRE SGACL      :        4        0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                sgacl_tcam_entry_dict=asic_dict.setdefault('sgacl_tcam_entry', {}).setdefault(group['sgacl_tcam_entry'].strip(), {})
+                sgacl_tcam_entry_dict['total_used']=int(group['total_used'])
+                sgacl_tcam_entry_dict['percent_used']=int(group['percent_used'])
+                continue
+
+            # CTS Cell Matrix Config    :                                 80        70
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                hardware_resource_dict=asic_dict.setdefault('hardware_resource', {}).setdefault(group['hardware_resource'].strip(), {})
+                if group['max']:
+                    hardware_resource_dict['max']=int(group['max'])
+                if group['used']:
+                    hardware_resource_dict['used']=int(group['used'])
+                if group['percent_used']:
+                    hardware_resource_dict['percent_used']=int(group['percent_used'])
+                hardware_resource_dict['upper_threshold']=int(group['upper_threshold'])
+                hardware_resource_dict['lower_threshold']=int(group['lower_threshold'])
+                continue
+
+            # CTS Cell Matrix Entries   :   8192         2         0         Normal
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                hardware_resource_dict=asic_dict.setdefault('hardware_resource', {}).setdefault(group['hardware_resource'].strip(), {})
+                hardware_resource_dict['max']=int(group['max'])
+                hardware_resource_dict['used']=int(group['used'])
+                hardware_resource_dict['percent_used']=int(group['percent_used'])
+                if group['status']:
+                    hardware_resource_dict['status']=group['status']
                 continue
 
         return ret_dict
@@ -11297,3 +11385,61 @@ class ShowPlatformHardwareFedSwitchFwdAsicAbstractionPrintResourceHandle(
                 continue
 
         return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveSgaclTableVlanMappingSchema(MetaParser):
+    """Schema for show platform hardware fed {switch} {switch_type} sgacl table vlan-mapping"""
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'asic': {
+                    int: {
+                        'hw_vrf_id': int,
+                        'vrf_mapped': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveSgaclTableVlanMapping(ShowPlatformHardwareFedSwitchActiveSgaclTableVlanMappingSchema):
+    """Parser for show platform hardware fed {switch} {switch_type} sgacl table vlan-mapping"""
+
+    cli_command = ['show platform hardware fed {switch} {switch_type} sgacl table vlan-mapping',
+                    'show platform hardware fed {switch_type} sgacl table vlan-mapping',
+                    'show platform hardware fed {switch} {switch_type} sgacl table vlan-mapping {vlan}',
+                    'show platform hardware fed {switch_type} sgacl table vlan-mapping {vlan}']
+
+    def cli(self, switch_type=None, switch=None, vlan=None, output=None):
+        if output is None:
+            if switch:
+                if vlan:
+                    cmd = self.cli_command[2].format(switch=switch, switch_type=switch_type, vlan=vlan)
+                else:
+                    cmd = self.cli_command[0].format(switch=switch, switch_type=switch_type)
+            else:
+                if vlan:
+                    cmd = self.cli_command[3].format(switch_type=switch_type, vlan=vlan)
+                else:
+                    cmd = self.cli_command[1].format(switch_type=switch_type)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # 1        0        0            Yes
+        p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<asic>\d+)\s+(?P<hw_vrf_id>\d+)\s+(?P<vrf_mapped>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 1        0        0            Yes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(int(group['vlan']), {})
+                asic_dict = vlan_dict.setdefault('asic', {}).setdefault(int(group['asic']), {})
+                asic_dict['hw_vrf_id'] = int(group['hw_vrf_id'])
+                asic_dict['vrf_mapped'] = group['vrf_mapped']
+                continue
+
+        return ret_dict        

@@ -1,4 +1,4 @@
 {
     "vrf": "genie",
-    "option": "verbose"
+    "verbose": "verbose"
 }

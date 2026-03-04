@@ -1,0 +1,4 @@
+3M9350LUX#show cts sxp sgt-map
+SXP Node ID(generated):0xAC1B001F(172.27.0.31)
+SXP IPv6 Node ID(generated):
+There are no IP-SGT Mappings

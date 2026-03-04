@@ -1,0 +1,16 @@
+		HSR-ring listing: 
+		--------------------
+
+HSR-ring: HS1
+---------------
+
+Vlan allowed list
+----------------------
+10,20
+
+HSR-ring: HS2
+---------------
+
+Vlan allowed list
+----------------------
+10,20
