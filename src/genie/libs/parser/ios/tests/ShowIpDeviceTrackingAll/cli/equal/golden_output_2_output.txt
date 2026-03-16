@@ -1,0 +1,21 @@
+IP Device Tracking = Enabled
+IP Device Tracking Probe Count = 3
+IP Device Tracking Probe Interval = 30
+IP Device Tracking Probe Delay Interval = 0
+-----------------------------------------------------------------------
+  IP Address     MAC Address   Vlan  Interface                STATE
+-----------------------------------------------------------------------
+10.11.12.166    1866.da1f.234f  20  GigabitEthernet2/0/13    ACTIVE
+10.11.12.158    806d.971b.2967  20  GigabitEthernet1/0/19    ACTIVE
+10.11.12.156    3c52.8271.35e7  20  GigabitEthernet1/0/31    ACTIVE
+10.11.12.135    8851.fb5e.809b  20  GigabitEthernet1/0/17    ACTIVE
+10.11.12.92     001a.e879.0830  25  GigabitEthernet1/0/26    ACTIVE
+10.11.12.90     001a.e879.0808  25  GigabitEthernet1/0/13    ACTIVE
+10.11.12.82     1866.da3e.ef8e  21  GigabitEthernet3/0/17    ACTIVE
+10.11.12.50     1866.da14.8fc5  21  GigabitEthernet3/0/9     ACTIVE
+
+Total number interfaces enabled: 16
+Enabled interfaces:
+  Gi1/0/1, Gi1/0/6, Gi1/0/13, Gi1/0/17, Gi1/0/19, Gi1/0/21, Gi1/0/24,
+  Gi1/0/26, Gi1/0/28, Gi1/0/31, Gi2/0/13, Gi3/0/2, Gi3/0/4, Gi3/0/9,
+  Gi3/0/17, Gi3/0/28
