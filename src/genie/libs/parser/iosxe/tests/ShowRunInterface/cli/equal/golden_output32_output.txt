@@ -1,0 +1,10 @@
+Building configuration...
+
+Current configuration : 173 bytes
+!
+interface GigabitEthernet1/0/11
+ no switchport
+ ip address 10.10.10.1 255.255.255.0
+ ipv6 flow monitor IPv6_MON_IN input
+ ipv6 flow monitor IPv6_MON_OUT output
+end

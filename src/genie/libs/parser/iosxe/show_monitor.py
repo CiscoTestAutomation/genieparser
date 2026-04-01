@@ -686,7 +686,8 @@ class ShowMonitorCaptureBuffer(ShowMonitorCaptureBufferSchema):
 
         # 1   0.000000 f4:db:e6:5b:97:04 -> 01:80:c2:00:00:00 STP 60 RST. Root = 32768/805/6c:b2:ae:49:6a:40  Cost = 0  Port = 0x8185
         # 2   2.999988     10.1.1.2 -> 233.252.252.127 IPv4 96 Fragmented IP protocol (proto=UDP 17, off=1480, ID=93f1)
-        p1 = re.compile(r'^(?P<pck_no>\d+) +(?P<time>[\d\.]+) +(?P<scr_mac_address>[\da-f\:\.]+) +-> +(?P<dst_mac_address>[\da-f\:\.]+) +(?P<protocol>[\w]+) +(?P<packet_size>[0-9]+) +(?P<data>.*)$')
+        # 1   0.000000 SchneiderEle_00:00:10 -> Cisco_00:00:20 0xffff 500 Ethernet II
+        p1 = re.compile(r'^(?P<pck_no>\d+) +(?P<time>[\d\.]+) +(?P<scr_mac_address>[\w\:\.]+) +-> +(?P<dst_mac_address>[\w\:\.]+) +(?P<protocol>[\w]+) +(?P<packet_size>[0-9]+) +(?P<data>.*)$')
 
         ret_dict = {}
 

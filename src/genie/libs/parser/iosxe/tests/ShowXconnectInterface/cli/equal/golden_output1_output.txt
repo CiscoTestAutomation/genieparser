@@ -1,0 +1,11 @@
+Router# show xconnect interface GigabitEthernet0/0/0
+XC ST  Segment 1                         S1 Segment 2                         S2
+------+---------------------------------+--+---------------------------------+--
+UP pri   ac Gi0/0/0:8(Ethernet)          UP l2tp 100.3.1.1:101                UP
+DN sec   ac Gi0/0/1:10(Ethernet)         DN mpls 10.239.6.2:684955608         DN
+UP pri   mpls 10.16.2.2:888              UP ac Gi3:9(Ethernet)                UP
+IA pri   bd 300                          UP vfi sample-vfi                    IA
+UP sec   ac Gi0/0/2:15(Ethernet)         UP l2tp 192.168.1.5:201              UP
+AD pri   mpls 172.16.1.1:999             AD ac Gi1/0/1:20(Ethernet)           AD
+SB sec   bd 400                          
+

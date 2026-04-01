@@ -427,3 +427,63 @@ class ShowFacilityAlarmStatus(ShowFacilityAlarmStatusSchema):
                 alarm_dict.update({'severity' : group['severity'].strip() , 'description':group['description'].strip(), 'index' : int(group['index'].strip()), 'time' : group['time'].strip() })
 
         return ret_dict
+
+
+#==================================================
+# Schema for 'show facility-alarm relay major'
+#==================================================
+
+class ShowFacilityAlarmRelayMajorSchema(MetaParser):
+    """
+    Schema for show facility-alarm relay major
+    """
+    schema = {
+             'alarms' : {
+                    Any() : {
+                        Optional('source'): str,
+                        Optional('description'): str,
+                        Optional('relay'): str,
+                        Optional('time'): str,
+                        },
+                    }
+                }
+    
+#==================================================
+# Parser for 'show facility-alarm relay major'
+#==================================================
+
+class ShowFacilityAlarmRelayMajor(ShowFacilityAlarmRelayMajorSchema):
+    """Parser for show facility-alarm relay major
+    """
+    cli_command = 'show facility-alarm relay major'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        ret_dict = {}
+
+        #Source                 Description                         Relay    Time
+        p1 = re.compile(r'Source\s+Description\s+Relay\s+Time')
+
+        #GigabitEthernet1/8       1 Link Fault                        MAJ      Mar 02 2023 10:19:20
+        p2 = re.compile(r'(?P<source>([\w\/\d\-\_]+))\s\s+(?P<description>([\w\s\d]+))\s\s+(?P<relay>([A-Z]+))\s\s+(?P<time>([\w\d\s\:]+))')
+        
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Source                 Description                         Relay    Time
+            m = p1.match(line)
+            if m:
+                root_dict = ret_dict.setdefault('alarms', {})
+                continue
+
+            #GigabitEthernet1/8       1 Link Fault                        MAJ      Mar 02 2023 10:19:20
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                alarm_dict = root_dict.setdefault(group['source'] , {})
+                alarm_dict.update({'description':group['description'].strip(), 'relay' : group['relay'].strip() , 'time' : group['time'].strip() })
+
+        return ret_dict

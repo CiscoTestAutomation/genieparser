@@ -1,0 +1,10 @@
+Current configuration : 170 bytes
+!
+interface Vlan1
+ mac-address 481b.a401.3e80
+ ip address dhcp client-id Vlan1
+ ip proxy-arp
+ ipv6 address autoconfig
+ ipv6 enable
+ ipv6 nd autoconfig default-route
+end

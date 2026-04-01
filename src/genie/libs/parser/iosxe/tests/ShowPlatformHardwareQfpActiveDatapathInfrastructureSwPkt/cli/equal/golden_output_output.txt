@@ -1,0 +1,25 @@
+Packet memory free count 1638
+Packet burst buffer free count 4073
+
+
+Egress buffer pool OOR (out of resources) state:
+        PMD : No OOR. Buffer egress pool not stressed.
+        B4Q : No OOR. Buffer egress pool not stressed.
+
+PMD pool buffer size 2176, free 22975 of 31744, util 27%
+
+B4Q pool size 124 lock 0 overrun 0 glb free 13860 lcl free 59 tot 13926 util  0%
+B4Q pool size 128 lock 0 overrun 0 glb free 13888 lcl free 36 tot 13926 util  0%
+B4Q pool size 256 lock 0 overrun 0 glb free 13888 lcl free 34 tot 13926 util  0%
+B4Q pool size 512 lock 0 overrun 0 glb free 8336 lcl free 16 tot 8355 util  0%
+B4Q pool size 1024 lock 0 overrun 0 glb free 7664 lcl free 65 tot 7736 util  0%
+B4Q pool size 1536 lock 0 overrun 0 glb free 7392 lcl free 99 tot 7498 util  0%
+B4Q pool size 2048 lock 0 overrun 0 glb free 7372 lcl free 0 tot 7372 util  0%
+B4Q pool size 4096 lock 0 overrun 0 glb free 7174 lcl free 0 tot 7174 util  0%
+B4Q pool size 10240 lock 0 overrun 0 glb free 3760 lcl free 18 tot 3782 util  0%
+B4Q pool size 16384 lock 0 overrun 0 glb free 3238 lcl free 0 tot 3238 util  0%
+B4Q total packet memory 167052392
+
+B4Q total buffer size 178257920
+
+PMD buffer size  2176 free  26114 tot  31744 util  17% (pool pmd_pri_mbuf_pool)

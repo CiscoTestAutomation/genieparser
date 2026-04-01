@@ -1,0 +1,52 @@
+show platform software adj fp active
+Number of adjacency objects: 4
+
+Adjacency id: 0xe (14)
+  Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+  Encap: 0:50:56:8b:7b:52:c4:b2:39:fb:dc:43:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 172.100.0.2
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 14879, HW handle: 0x55a9a5b76d50 (created)
+
+Adjacency id: 0x15 (21)
+  Interface: NVI0, IF index: 16, Link Type: MCP_LINK_IP
+  Encap: ca:fe:ba:be
+  Encap Length: 4, Encap Type: MCP_ET_NULL, MTU: 9216
+  Flags: no-l3-inject, is-nvi
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 100.0.0.2
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 106, HW handle: 0x55a9a578bb50 (created)
+
+Adjacency id: 0x30 (48)
+  Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+  Encap: 8:96:ad:8d:71:0:c4:b2:39:fb:dc:43:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 172.100.0.1
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 14872, HW handle: 0x55a9a5b75960 (created)
+
+Adjacency id: 0xf80000a4 (4160749732)
+  Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+  Encap: 1:0:5e:0:0:0:c4:b2:39:fb:dc:43:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: p2mp-type
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 227.0.0.0
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 604, HW handle: 0x55a9a5b5d110 (created)
+  
+  

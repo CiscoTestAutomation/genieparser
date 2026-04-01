@@ -1,0 +1,13 @@
+
+show interfaces HundredGigE1/0/0 mac-accounting
+HundredGigE1/0/0
+Input(494 free)
+0000.0c5d.92f9(58): 1 packets, 106 bytes, last: 4038ms ago
+0004.c059.c060(61): 0 packets, 0 bytes, last: 2493135ms ago
+00b0.64bc.4860(64): 1 packets, 106 bytes, last: 20165ms ago
+0090.f2c9.cc00(103): 12 packets, 720 bytes, last: 3117ms ago
+Total: 14 packets, 932 bytes
+
+Output (511 free)
+0090.f2c9.cc00(103): 8 packets, 504 bytes, last: 4311ms ago
+Total: 8 packets, 504 bytes

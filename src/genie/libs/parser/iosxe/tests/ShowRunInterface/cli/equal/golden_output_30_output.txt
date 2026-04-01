@@ -1,0 +1,6 @@
+interface Port-channel1
+ no switchport
+ vrf forwarding vrf_1
+ no ip address
+ port-channel min-links 3
+end

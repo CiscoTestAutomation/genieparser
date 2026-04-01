@@ -28,7 +28,7 @@ class ShowIoxSchema(MetaParser):
         'ioxman_service': str,
         'sec_storage_service': str,
         'libvirtd': str,
-        'dockerd': str,
+        Optional('dockerd'): str,
         Optional('sync_status'): str,
         Optional('redundancy_status'): str,
         Optional('last_application_sync_time'): str

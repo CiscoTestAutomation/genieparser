@@ -5,12 +5,13 @@
      * show interfaces counters errors
      * show interfaces {interface} counters errors
      * show interface {interface} counters etherchannel
+    * show interfaces {tunnel} counters protocol status
 """
 
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 from genie.libs.parser.utils.common import Common
 
 
@@ -337,4 +338,51 @@ class ShowInterfacesCountersPort(ShowInterfacesCountersPortSchema):
                 )
                 continue
         
+        return ret_dict
+
+class ShowInterfacesTunnelCountersProtocolStatusSchema(MetaParser):
+    """Schema for show interfaces {tunnel} counters protocol status"""
+    schema = {
+        "interfaces": {
+            Any(): {
+                "protocols_allocated": ListOf(str)
+            }
+        }
+    }
+
+class ShowInterfacesTunnelCountersProtocolStatus(ShowInterfacesTunnelCountersProtocolStatusSchema):
+    """Parser for show interfaces {tunnel} counters protocol status"""
+    cli_command = "show interfaces {tunnel} counters protocol status"
+
+    def cli(self, tunnel=None, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(tunnel=tunnel))
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # Tunnel1: Other, IP, IPv6
+        # Exclude the header line: "Protocols allocated:"
+        p1 = re.compile(
+            r"^\s*(?!Protocols\s+allocated\s*:)(?P<intf>\S+)\s*:\s*(?P<protocols>.+?)\s*$",
+            re.IGNORECASE,
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            m = p1.match(line)
+            if not m:
+                continue
+
+            group = m.groupdict()
+            intf = group["intf"]
+            protocols = [p.strip() for p in group["protocols"].split(",") if p.strip()]
+
+            interfaces_dict = ret_dict.setdefault("interfaces", {}).setdefault(intf, {})
+            interfaces_dict.update({"protocols_allocated": protocols})
+
         return ret_dict

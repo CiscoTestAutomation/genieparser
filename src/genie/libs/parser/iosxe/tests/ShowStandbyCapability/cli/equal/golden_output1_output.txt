@@ -1,0 +1,20 @@
+C8151H-C-G2                                   * indicates hardware may support HSRP
+                                              |
+Interface          Type                       H  Potential Max Groups per subin
+Te0/0/0            89  C8151H-C-1X            *  35   (0xAAAAEAB7BCCC, 0xAAAAEAB7BCCC)
+Gi0/1/6            27  C8151H-C-ES-9          *  127  (0xAAAAEAB7BCCC, 0xAAAAEAB7BCCC)
+Gi0/1/7            27  C8151H-C-ES-9          *  127  (0xAAAAEAB7BCCC, 0xAAAAEAB7BCCC)
+Gi0/1/8            27  C8151H-C-ES-9          *  127  (0xAAAAEAB7BCCC, 0xAAAAEAB7BCCC)
+Cellular0/2/0      6   5G Redcap pluggable-LT    -   
+Cellular0/2/1      6   5G Redcap pluggable-LT    -   
+LIIN0              27  LIIN                      -   
+LI-Null0           161 Unknown                   -   
+Tunnel99           0   Tunnel                    -   
+Vlan1              156 Ethernet SVI           *  4096 (0xAAAAEDF6BA7C, 0xAAAAF68ACEAC)
+Vlan22             156 Ethernet SVI           *  4096 (0xAAAAEDF6BA7C, 0xAAAAF68ACEAC)
+Vlan33             156 Ethernet SVI           *  4096 (0xAAAAEDF6BA7C, 0xAAAAF68ACEAC)
+Vlan4000           156 Ethernet SVI           *  4096 (0xAAAAEDF6BA7C, 0xAAAAF68ACEAC)
+VoIP-Null0         222 VoIP-Null                 -   
+
+
+

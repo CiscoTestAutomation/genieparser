@@ -1117,7 +1117,7 @@ class ShowVlanMapping(ShowVlanMappingSchema):
         # Interface Po6:
         p2 = re.compile(r"^Interface\s+(?P<interface>\S+):$")
         # 20                                    30             1-to-1
-        p3 = re.compile(r"^(?P<vlan_map>\d+)\s+(?P<trans_vlan>\d+)\s+(?P<operation>\S+)$")
+        p3 = re.compile(r"^\s*(?P<vlan_map>[\d\-*]+)\s+(?P<trans_vlan>\d+)\s+(?P<operation>.+?)\s*$")
 
         ret_dict = {}
 

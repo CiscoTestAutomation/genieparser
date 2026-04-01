@@ -1,0 +1,34 @@
+show ip dhcp sip session detail
+
+-----------------  DHCP SIP Session Summary ---------------
+Total DHCP Session Count: 1
+-----------------------------------------------------------
+DHCP SIP Session context with MAC Address: 3010.e495.b058
+UID                :851
+SSS Hdl            :0x2A00095C
+AAA Uid            :2871
+Access IE Hdl      :0x31000B2B
+IP Session Hdl     :0x200000B7
+SHDB Hdl           :0xDC00001D
+Current State      :Up
+Last State         :Address Authorization
+Last Event         :Address Authorization Done Ev
+Last to Last State :Start-on-sync/reload
+Last to Last Event :Author Done Ev
+Access interface   :Tunnel1
+Incoming interface :Tunnel1
+Elapsed-time(start):00:04:39
+IP Addr            :40.0.0.2
+Elapsed-time
+  since Addr acked :00:04:36
+VRF ID               :0
+IP Domain            :0
+Circuit ID         :120.0.40.10
+Remote ID          :unauthenticated
+Session Type       :Converted to Dedicated
+Default Configs are set as:
+    Class name     : (len = 0)
+    IP Domain      :0
+    VRF ID         :0
+Session updated    :False
+Dynamic sync       :False

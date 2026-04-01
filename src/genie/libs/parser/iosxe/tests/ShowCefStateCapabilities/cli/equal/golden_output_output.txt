@@ -1,0 +1,53 @@
+CEF Capabilities:
+  Supported address families:         IPv4 IPv6 Binding-Label
+  Active address families:            IPv4 IPv6 Binding-Label
+  Distributed Platform:               yes
+  Warm or Hot Standby supported:      yes
+  CEF NSF capable:                    yes
+  Hardware forwarding:                no
+  Checker auto-repair supported:      yes
+  Crashdump on memory failure:        no
+  Blocking STANDBY_HOT until synced:  yes
+Label-FIB CEF Status:
+ universal per-destination load sharing algorithm, id 5808CE4A
+IPv4 CEF Capabilities:
+  Default CEF switching:              yes
+  Always FIB switching:               yes
+  Default dCEF switching:             yes
+  Always dCEF switching:              yes
+  Drop multicast packets:             no
+  OK to punt packets:                 yes
+  NVGEN CEF state:                    no
+  fastsend() used:                    yes
+  Support per packet load sharing:    no
+  Multicast (*,G) groups in CEF:      no
+  Install local entries from RIB:     no
+IPv6 CEF Capabilities:
+  Default CEF switching:              yes
+  Always FIB switching:               yes
+  Default dCEF switching:             yes
+  Always dFIB switching:              yes
+  Drop multicast packets:             no
+  OK to punt packets:                 yes
+  NVGEN CEF state:                    no
+  fastsend() used:                    yes
+
+CEF ISSU Status:
+  FIBHWIDB broker
+    No slots are ISSU capable.
+  FIBIDB broker
+    No slots are ISSU capable.
+  FIBHWIDB Subblock broker
+    No slots are ISSU capable.
+  FIBIDB Subblock broker
+    No slots are ISSU capable.
+  Adjacency update
+    No slots are ISSU capable.
+  IPv4 table broker
+    No slots are ISSU capable.
+  IPv6 table broker
+    No slots are ISSU capable.
+  CEF push
+    No slots are ISSU capable.
+  Label FIB table broker
+    No slots are ISSU capable.

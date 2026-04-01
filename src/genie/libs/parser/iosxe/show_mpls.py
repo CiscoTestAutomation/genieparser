@@ -2447,9 +2447,10 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
 
         # Local interface: VFI PE1-VPLS-A up
         # Local interface: Fa2/1/1.2 up, line protocol up, Eth VLAN 2 up
+        # Local interface: Gi2.2 up, line protocol up, Eth VLAN 10/101 up
         p1 = re.compile(r'^Local +interface: +(?P<interface>[\w\d\/\.\s\-]+)'
                          r' +(?P<state>\w+)(, line +protocol +(?P<line_protocol_status>\w+),'
-                         r' Eth +VLAN +(?P<number>\d+) +(?P<status>\w+))?$')
+                         r' Eth +VLAN +(?P<number>[\d\/]+) +(?P<status>\w+))?$')
 
         # Local interface: Se0/1/0:0 up, line protocol up, HDLC up
         p1_1 = re.compile(r'^Local +interface: +(?P<interface>[\w\W]+) +(?P<state>\w+), +line +protocol +(?P<line_protocol_status>\w+), +(?P<protocol>\w+) +(?P<status>\w+)$')
@@ -2578,7 +2579,8 @@ class ShowMplsL2TransportDetail(ShowMplsL2TransportSchema):
                 if group['line_protocol_status']:
                     final_dict['line_protocol_status'] = group['line_protocol_status']
                 if group['number'] and group['status']:
-                    ether_number = int(group['number'])
+                    # Convert to int if it's a simple number, keep as string if it contains '/'
+                    ether_number = int(group['number']) if '/' not in group['number'] else group['number']
                     final_dict.setdefault('ethernet_vlan', {}).\
                         setdefault(ether_number, {})
                     final_dict['ethernet_vlan'][ether_number]['status'] = \

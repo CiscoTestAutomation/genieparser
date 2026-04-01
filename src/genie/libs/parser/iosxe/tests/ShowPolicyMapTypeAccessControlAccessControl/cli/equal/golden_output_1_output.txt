@@ -1,0 +1,11 @@
+show policy-map type access-control parent {access-control}
+  Policy Map type access-control parent
+    Class ip_udp
+      service-policy child
+    Class attack4
+      drop
+      send-response icmp-unreachable
+    Class attack1
+      drop
+    Class attack2
+      log

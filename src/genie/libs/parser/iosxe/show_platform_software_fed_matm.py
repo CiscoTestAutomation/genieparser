@@ -665,7 +665,7 @@ class ShowPlatformSoftwareFedSwitchMatmStats(
         #   Total non-cpu mac entries       : 3
         #   Mac Learn SPI Msg Count         : 0
         #   Mac Learn SPI Err Count         : 0
-        p = re.compile(r"^(?P<key>[\S\s]+)\s+:\s+(?P<count>\d+)$")
+        p = re.compile(r"^(?P<key>.+?)\s*:\s*(?P<count>\d+)$")
 
         ret_dict = {}
 
@@ -691,7 +691,7 @@ class ShowPlatformSoftwareFedSwitchMatmStats(
                 continue
 
         return ret_dict
-
+    
 
 # ======================================================
 # Parser for 'show platform software fed switch active matm adjacencies '
@@ -1157,6 +1157,9 @@ class ShowPlatformSoftwareFedActiveMatmMacTableVlanMacDetail(ShowPlatformSoftwar
         # 300   0030.8200.21e7  0x1  166464  2     8      0x0        0x0       0x0       0x0       300      191227           No   
         p0 = re.compile(r'^(?P<vlan>\d+)\s+(?P<mac>\S+)\s+(?P<type>\S+)\s+(?P<seq>\d+)\s+(?P<ec_bi>\d+)\s+(?P<flags>\d+)\s+(?P<mac_handle>\S+)\s+(?P<si_handle>\S+)\s+(?P<ri_handle>\S+)\s+(?P<di_handle>\S+)\s+(?P<a_time>\d+)\s+(?P<e_time>\d+)\s+(?P<ports>\d+|\s+)\s+(?P<con>\w+)$')
         
+        # 100    0011.0100.0001       0x101     196      0      0        300        0                                                                No
+        p0_1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<mac>\S+)\s+(?P<type>\S+)\s+(?P<seq>\d+)\s+(?P<ec_bi>\d+)\s+(?P<flags>\d+)\s+(?P<a_time>\d+)\s+(?P<e_time>\d+)\s+(?P<ports>\d+|\s+)\s+(?P<con>\w+)$')
+
         # ======platform software details ======
         p1 = re.compile(r'^======platform software details ======$')
 
@@ -1241,7 +1244,27 @@ class ShowPlatformSoftwareFedActiveMatmMacTableVlanMacDetail(ShowPlatformSoftwar
                     'con': group['con'],
                 })
                 continue
-            
+
+            # 100    0011.0100.0001       0x101     196      0      0        300        0                                                                No
+            m = p0_1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan_dict', {})
+                vlan_dict.update({
+                    'vlan': int(group['vlan']),
+                    'mac': group['mac'],
+                    'type': group['type'],
+                    'seq': int(group['seq']),
+                    'ec_bi': int(group['ec_bi']),
+                    'flags': int(group['flags']),
+                    'a_time': int(group['a_time']),
+                    'e_time': int(group['e_time']),
+                    'con': group['con'],
+                })
+                if "ports" in group and group["ports"] is not ' ':
+                    vlan_dict["ports"] = group["ports"]                
+                continue
+
             # ======platform software details ======    
             m = p1.match(line)
             if m:

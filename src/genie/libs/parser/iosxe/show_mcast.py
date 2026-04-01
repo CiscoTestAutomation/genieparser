@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * 'show consistency-checker mcast <layer> start vlan <vlan_id> <address>
     * 'show control cpu'
 
+    * show ipv6 mroute vrf {vrf} summary
 """
 
 # Python
@@ -1364,6 +1365,81 @@ class ShowIpv6MldSnoopingAddress(ShowIpv6MldSnoopingAddressSchema):
                 source_entry = group_dict.setdefault(source_dict['source_ip'], {})
                 source_entry['type'] = source_dict['type']
                 source_entry['port_list'] = source_dict['port_list']
+                continue
+
+        return ret_dict
+
+class ShowIpv6MrouteVrfVrfSummarySchema(MetaParser):
+    """Schema for:
+        show ipv6 mroute vrf {vrf} summary
+    """
+    schema = {
+        "vrf": {
+            Any(): {
+                "address_family": {
+                    Any(): {
+                        "multicast_group": {
+                            Any(): {
+                                "source_address": {
+                                    Any(): {
+                                        "uptime": str,
+                                        "expires": str,
+                                        Optional("rp_address"): str,
+                                        "oif_count": int,
+                                        "flags": str
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowIpv6MrouteVrfVrfSummary(ShowIpv6MrouteVrfVrfSummarySchema):
+    """Parser for:  show ipv6 mroute vrf {vrf} summary
+    """
+    cli_command = "show ipv6 mroute vrf {vrf} summary"
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # (*, FF08:4000::1), 00:03:45/never, RP 2001:2310::3, OIF count: 1, flags: SCJ
+        p1 = re.compile(r'^\(\s*(?P<source>[\w\:\.\*]+)\s*,\s*(?P<group>[\w\:\.]+)\s*\)\s*,\s*'
+                        r'(?P<uptime>[\w\:]+)\/(?P<expires>[\w\:]+)\s*,\s*'
+                        r'(?:RP\s*(?P<rp_address>[\w\:\.]+)\s*,\s*)?'
+                        r'OIF\s*count\s*:\s*(?P<oif_count>\d+)\s*,\s*flags\s*:\s*(?P<flags>[A-Za-z]+)$')
+
+        vrf_key = "vrf2" if vrf is None else vrf
+        af_name = "ipv6"
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # (*, FF08:4000::1), 00:03:45/never, RP 2001:2310::3, OIF count: 1, flags: SCJ
+            m = p1.match(line)
+            if m:
+                gd = m.groupdict()
+                group = gd["group"]
+                source = gd["source"]
+                ret_dict.setdefault("vrf", {}).setdefault(vrf_key, {}).setdefault("address_family", {}).setdefault(af_name, {}).setdefault("multicast_group", {}).setdefault(group, {}).setdefault("source_address", {}).setdefault(source, {})
+                src_dict = ret_dict["vrf"][vrf_key]["address_family"][af_name]["multicast_group"][group]["source_address"][source]
+                src_dict["uptime"] = gd["uptime"]
+                src_dict["expires"] = gd["expires"]
+                if gd.get("rp_address"):
+                    src_dict["rp_address"] = gd["rp_address"]
+                src_dict["oif_count"] = int(gd["oif_count"])
+                src_dict["flags"] = gd["flags"]
                 continue
 
         return ret_dict

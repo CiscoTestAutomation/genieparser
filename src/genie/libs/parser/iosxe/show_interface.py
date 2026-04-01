@@ -37,6 +37,8 @@
     * show interfaces transceiver properties
     * show interfaces transceiver module {mod}
     * show interfaces {interface} trunk
+    * show interfaces {interface} mac-accounting
+    * show interfaces mac-accounting
 """
 
 import os
@@ -73,6 +75,7 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 logger = logging.getLogger(__name__)
 
@@ -6567,3 +6570,325 @@ class ShowInterfaceTeAccount(ShowInterfaceTeAccountSchema):
                 result[current_intf]['protocols'].append(protocol_data)
 
         return result
+        
+class ShowInterfacePlatformSchema(MetaParser):
+    """Schema for show interface {interface} platform"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'oper_status': str,
+                'line_protocol': str,
+                'hardware_type': str,
+                'mac_address': str,
+                'bia': str,
+                'mtu': int,
+                'bandwidth_kbit': int,
+                'duplex': str,
+                'speed': str,
+                Optional('controller_status'): {
+                    'tx_total_bytes': int,
+                    'rx_total_bytes': int,
+                },
+                Optional('interface_manager'): {
+                    'if_id': str,
+                    'state': str,
+                    'status': str,
+                    'type': str,
+                    'created_time': str,
+                    'last_modified_time': str,
+                }
+            }
+        }
+    }
+
+
+class ShowInterfacePlatform(ShowInterfacePlatformSchema):
+    """Parser for show interface {interface} platform"""
+
+    cli_command = 'show interface {interface} platform'
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(interface=interface)
+            )
+
+        # Initialize return dictionary
+        ret_dict = {}
+        current_intf = None
+        found_interfaces = False
+        
+        # example output:        
+        # Match: GigabitEthernet1/0/45 is up, line protocol is up (connected)
+        p1 = re.compile(r'^(?P<intf>\S+) is (?P<oper>\w+), line protocol is (?P<line>\w+)')
+        
+        # Match: Hardware is Gigabit Ethernet, address is 9088.5526.5bad (bia 9088.5526.5bad)
+        p2 = re.compile(r'^Hardware is (?P<hardware>.+), address is (?P<mac>\S+) \(bia (?P<bia>\S+)\)')
+        
+        # Match: MTU 1500 bytes, BW 1000000 Kbit/sec
+        p3 = re.compile(r'^MTU (?P<mtu>\d+) bytes, BW (?P<bw>\d+) Kbit/sec')
+        
+        # Match: Full-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
+        p4 = re.compile(r'^(?P<duplex>\S+-duplex), (?P<speed>\S+), media type')
+        
+        # Match: 13794363 Total bytes              355068592 Total bytes
+        p5 = re.compile(r'^\s*(?P<tx>\d+) Total bytes\s+(?P<rx>\d+) Total bytes$')
+        
+        # Match: Interface IF_ID         : 0x0000000000000035
+        p6 = re.compile(r'^Interface IF_ID\s+:\s+(?P<ifid>\S+)')
+        
+        # Match: Interface Block State   : READY
+        p7 = re.compile(r'^Interface Block State\s+:\s+(?P<state>\S+)')
+        
+        # Match: Interface Status        : ADD, UPD
+        p8 = re.compile(r'^Interface Status\s+:\s+(?P<status>.+)')
+        
+        # Match: Interface Type          : ETHER
+        p9 = re.compile(r'^Interface Type\s+:\s+(?P<type>\S+)')
+        
+        # Match: Created Time            : 2026/01/20 12:03:10.285
+        p10 = re.compile(r'^Created Time\s+:\s+(?P<created>.+)')
+        
+        # Match: Last Modified Time      : 2026/01/20 12:06:39.984
+        p11 = re.compile(r'^Last Modified Time\s+:\s+(?P<modified>.+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Match: GigabitEthernet1/0/45 is up, line protocol is up (connected)
+            m = p1.match(line)
+            if m:
+                current_intf = m.groupdict()['intf']
+                if not found_interfaces:
+                    ret_dict['interfaces'] = {}
+                    found_interfaces = True
+                ret_dict['interfaces'][current_intf] = {
+                    'oper_status': m.groupdict()['oper'],
+                    'line_protocol': m.groupdict()['line']
+                }
+                continue
+
+            if current_intf is None:
+                continue
+
+            # Match: Hardware is Gigabit Ethernet, address is 9088.5526.5bad (bia 9088.5526.5bad)
+            m = p2.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf].update({
+                    'hardware_type': m.groupdict()['hardware'],
+                    'mac_address': m.groupdict()['mac'],
+                    'bia': m.groupdict()['bia']
+                })
+                continue
+
+            # Match: MTU 1500 bytes, BW 1000000 Kbit/sec
+            m = p3.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf].update({
+                    'mtu': int(m.groupdict()['mtu']),
+                    'bandwidth_kbit': int(m.groupdict()['bw'])
+                })
+                continue
+
+            # Match: Full-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
+            m = p4.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf].update({
+                    'duplex': m.groupdict()['duplex'],
+                    'speed': m.groupdict()['speed']
+                })
+                continue
+
+            # Match: 13794363 Total bytes              355068592 Total bytes
+            m = p5.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf].setdefault(
+                    'controller_status', {}
+                ).update({
+                    'tx_total_bytes': int(m.groupdict()['tx']),
+                    'rx_total_bytes': int(m.groupdict()['rx'])
+                })
+                continue
+
+            # Match: Interface IF_ID         : 0x0000000000000035
+            m = p6.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf].setdefault(
+                    'interface_manager', {}
+                )['if_id'] = m.groupdict()['ifid']
+                continue
+
+            # Match: Interface Block State   : READY
+            m = p7.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf]['interface_manager']['state'] = m.groupdict()['state']
+                continue
+
+            # Match: Interface Status        : ADD, UPD
+            m = p8.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf]['interface_manager']['status'] = m.groupdict()['status']
+                continue
+
+            # Match: Interface Type          : ETHER
+            m = p9.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf]['interface_manager']['type'] = m.groupdict()['type']
+                continue
+
+            # Match: Created Time            : 2026/01/20 12:03:10.285
+            m = p10.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf]['interface_manager']['created_time'] = m.groupdict()['created']
+                continue
+
+            # Match: Last Modified Time      : 2026/01/20 12:06:39.984
+            m = p11.match(line)
+            if m:
+                ret_dict['interfaces'][current_intf]['interface_manager']['last_modified_time'] = m.groupdict()['modified']
+                continue
+
+        return ret_dict
+
+
+# ====================================================
+#  Schema and Parser for:
+#    * show interfaces {interface} mac-accounting
+#    * show interfaces mac-accounting
+# ====================================================
+class ShowInterfacesMacAccountingSchema(MetaParser):
+    """Schema for:
+        show interfaces {interface} mac-accounting
+        show interfaces mac-accounting
+    """
+    schema = {
+        Any(): {
+            Optional('input'): {
+                Optional('free_count'): int,
+                Optional('mac_entries'): {
+                    Any(): {
+                        Optional('index'): int,
+                        'packets': int,
+                        'bytes': int,
+                        Optional('last_ms'): int,
+                    }
+                },
+                Optional('total_packets'): int,
+                Optional('total_bytes'): int,
+            },
+            Optional('output'): {
+                Optional('free_count'): int,
+                Optional('mac_entries'): {
+                    Any(): {
+                        Optional('index'): int,
+                        'packets': int,
+                        'bytes': int,
+                        Optional('last_ms'): int,
+                    }
+                },
+                Optional('total_packets'): int,
+                Optional('total_bytes'): int,
+            },
+        }
+    }
+
+
+class ShowInterfacesMacAccounting(ShowInterfacesMacAccountingSchema):
+    """Parser for:
+        show interfaces {interface} mac-accounting
+        show interfaces mac-accounting
+    """
+    cli_command = [
+        'show interfaces {interface} mac-accounting',
+        'show interfaces mac-accounting',
+    ]
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            else:
+                cmd = self.cli_command[1]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+        current_intf = None
+        current_direction = None
+
+        # HundredGigE1/0/0
+        p_intf = re.compile(
+            r'^(?P<interface>[a-zA-Z][a-zA-Z\d\/\.\-]+)$'
+        )
+
+        # Input(494 free)  or  Output (511 free)
+        p_dir = re.compile(
+            r'^(?P<direction>Input|Output)\s*\((?P<free>\d+)\s+free\)',
+            re.IGNORECASE
+        )
+
+        # 0000.0c5d.92f9(58): 1 packets, 106 bytes, last: 4038ms ago
+        p_mac = re.compile(
+            r'^(?P<mac>[0-9a-fA-F]{4}\.[0-9a-fA-F]{4}\.[0-9a-fA-F]{4})'
+            r'\((?P<index>\d+)\):\s+(?P<packets>\d+)\s+packets?,\s+'
+            r'(?P<bytes>\d+)\s+bytes?,\s+last:\s+(?P<last_ms>\d+)ms\s+ago$'
+        )
+
+        # Total: 14 packets, 932 bytes
+        p_total = re.compile(
+            r'^Total:\s+(?P<total_packets>\d+)\s+packets?,\s+(?P<total_bytes>\d+)\s+bytes?$'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Match interface name
+            m = p_intf.match(line)
+            if m and not p_dir.match(line):
+                current_intf = m.group('interface')
+                current_direction = None
+                ret_dict.setdefault(current_intf, {})
+                continue
+
+            if current_intf is None:
+                continue
+
+            # Match Input/Output section header
+            m = p_dir.match(line)
+            if m:
+                current_direction = m.group('direction').lower()
+                free = int(m.group('free'))
+                ret_dict[current_intf].setdefault(current_direction, {})
+                ret_dict[current_intf][current_direction]['free_count'] = free
+                continue
+
+            if current_direction is None:
+                continue
+
+            # Match MAC accounting entry
+            m = p_mac.match(line)
+            if m:
+                mac = m.group('mac').lower()
+                ret_dict[current_intf][current_direction].setdefault('mac_entries', {})
+                ret_dict[current_intf][current_direction]['mac_entries'][mac] = {
+                    'index': int(m.group('index')),
+                    'packets': int(m.group('packets')),
+                    'bytes': int(m.group('bytes')),
+                    'last_ms': int(m.group('last_ms')),
+                }
+                continue
+
+            # Match Total line
+            m = p_total.match(line)
+            if m:
+                ret_dict[current_intf][current_direction]['total_packets'] = int(m.group('total_packets'))
+                ret_dict[current_intf][current_direction]['total_bytes'] = int(m.group('total_bytes'))
+                continue
+
+        return ret_dict

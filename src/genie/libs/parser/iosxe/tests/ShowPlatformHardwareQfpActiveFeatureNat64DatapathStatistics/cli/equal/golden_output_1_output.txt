@@ -1,0 +1,16 @@
+show platform hardware qfp active feature nat64 datapath statistics
+non-extended 0 statics 0 ext_binds 0
+v6v4 xlated pkts 836081273
+v4v6 xlated pkts 262336181
+NAT46 v4v6 xlated pkts 0
+NAT46 v6v4 xlated pkts 0
+generated tcp csum 0
+generated udp csum 4005
+Proxy Stats ipc retry fail 0
+Alias: add 0 del 0 add_fail 0 del_fail 0
+nat64_v6tov4_pkts 0 nat64_v4tov6_pkts 0 nat64_fbd_hits 0
+v6v4 xlated pkts 0
+frag_pakts_1st 0
+frag_pakts_non1st 0
+
+NAT64_DROP_SC_NO_N64_SB 6

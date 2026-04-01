@@ -4,13 +4,14 @@ IOSXE parsers for show commands:
     * 'show standby all'
     * 'show standby internal'
     * 'show standby brief'
+    * 'show standby capability'
 """
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, ListOf
 
 
 # ======================================
@@ -1049,4 +1050,88 @@ class ShowStandbyBrief(ShowStandbyBriefSchema):
                     continue
 
         return ret_dict
-        
+
+# =========================
+# Schema for:
+#  * 'show standby capability'
+# =========================    
+class ShowStandbyCapabilitySchema(MetaParser):
+    schema = {
+        "platform": str,
+        "hsrp_hardware_indicator": str,
+        "interface": {
+            Any(): {
+                "type_number": int,
+                "type_name": str,
+                "hardware_support_hsrp": bool,
+                Optional("max_groups_per_subinterface"): int,
+                Optional("addresses"): ListOf(str),
+            }
+        }
+    }
+
+# =========================
+# Parser for:
+#  * 'show standby capability'
+# =========================    
+
+class ShowStandbyCapability(ShowStandbyCapabilitySchema):
+    cli_command = "show standby capability"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # C8375-E-G2                                    * indicates hardware may support HSRP
+        p1 = re.compile(r'^(?P<platform>\S+)\s+(?P<indicator>\* indicates hardware may support HSRP)$')
+
+        # Tw0/0/0            317 4M-2xSFP+              *  499  (0xAAAAB56F9A40, 0xAAAAB56F9A40)
+        p2 = re.compile(r'^(?P<intf>\S+)\s+(?P<type_number>\d+)\s+(?P<type_name>.+?)\s+\*\s+(?P<max>\d+)\s+\((?P<addr1>0x[0-9A-Fa-f]+),\s*(?P<addr2>0x[0-9A-Fa-f]+)\)$')
+
+        # LIIN0              27  LIIN                      -
+        p3 = re.compile(r'^(?P<intf>\S+)\s+(?P<type_number>\d+)\s+(?P<type_name>.+?)\s+-$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # C8375-E-G2                                    * indicates hardware may support HSRP
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["platform"] = group["platform"]
+                ret_dict["hsrp_hardware_indicator"] = group["indicator"]
+                continue
+
+            # Tw0/0/0            317 4M-2xSFP+              *  499  (0xAAAAB56F9A40, 0xAAAAB56F9A40)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces_dict = ret_dict.setdefault("interface", {})
+                intf = group["intf"]
+                intf_dict = interfaces_dict.setdefault(intf, {})
+                intf_dict["type_number"] = int(group["type_number"])
+                intf_dict["type_name"] = group["type_name"].strip()
+                intf_dict["hardware_support_hsrp"] = True
+                intf_dict["max_groups_per_subinterface"] = int(group["max"])
+                intf_dict["addresses"] = [group["addr1"], group["addr2"]]
+                continue
+
+            # LIIN0              27  LIIN                      -
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interfaces_dict = ret_dict.setdefault("interface", {})
+                intf = group["intf"]
+                intf_dict = interfaces_dict.setdefault(intf, {})
+                intf_dict["type_number"] = int(group["type_number"])
+                intf_dict["type_name"] = group["type_name"].strip()
+                intf_dict["hardware_support_hsrp"] = False
+                continue
+
+        return ret_dict

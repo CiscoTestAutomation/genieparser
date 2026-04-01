@@ -1,0 +1,2 @@
+show platform hardware qfp active interface all statistics drop_summary subinterface clear_drop
+The drop stats were all zero

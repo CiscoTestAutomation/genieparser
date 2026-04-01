@@ -1,0 +1,9 @@
+IOx Infrastructure Summary:
+---------------------------
+IOx service (CAF)              : Running
+IOx service (HA)               : Not Running
+IOx service (IOxman)           : Not Running
+IOx service (Sec storage)      : Not Supported
+Libvirtd                       : Running
+Redundancy Status              : Non-Redundant
+
