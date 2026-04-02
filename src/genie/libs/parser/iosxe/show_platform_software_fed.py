@@ -19902,7 +19902,7 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceName(ShowPlatformSoftwareFedSwitc
 
         for line in output.splitlines():
             line = line.strip()
-            print (line)
+
             # Interface IF_ID         : 0x0000000000000441
             m = p1.match(line)
             if m:
@@ -20560,4 +20560,60 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceName(ShowPlatformSoftwareFedSwitc
             ret_dict['events_log'] = events_log
 
         return ret_dict
-                
+
+
+class ShowPlatformSoftwareFedSwitchActiveSgaclBdMappingSchema(MetaParser):
+    """Schema for show platform software fed {switch} {switch_type} sgacl bd-mapping"""
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'svi_if_id': str,
+                'vrf_id': int,
+                'vrf_mapped': str
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActiveSgaclBdMapping(ShowPlatformSoftwareFedSwitchActiveSgaclBdMappingSchema):
+    """Parser for show platform software fed {switch} {switch_type} sgacl bd-mapping"""
+
+    cli_command = ['show platform software fed {switch} {switch_type} sgacl bd-mapping',
+                    'show platform software fed {switch_type} sgacl bd-mapping',
+                    'show platform software fed {switch} {switch_type} sgacl bd-mapping {vlan}',
+                    'show platform software fed {switch_type} sgacl bd-mapping {vlan}']
+
+    def cli(self, switch_type=None, switch=None, vlan=None, output=None):
+        if output is None:
+            if switch:
+                if vlan:
+                    cmd = self.cli_command[2].format(switch=switch, switch_type=switch_type, vlan=vlan)
+                else:
+                    cmd = self.cli_command[0].format(switch=switch, switch_type=switch_type)
+            else:
+                if vlan:
+                    cmd = self.cli_command[3].format(switch_type=switch_type, vlan=vlan)
+                else:
+                    cmd = self.cli_command[1].format(switch_type=switch_type)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # 1        0x0000000000000000   0        Yes
+        p1 = re.compile(r'^(?P<vlan>\d+)\s+(?P<svi_if_id>\S+)\s+(?P<vrf_id>\d+)\s+(?P<vrf_mapped>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 1        0x0000000000000000   0        Yes
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vlan_dict = ret_dict.setdefault('vlan', {}).setdefault(int(group['vlan']), {})
+                vlan_dict['svi_if_id'] = group['svi_if_id']
+                vlan_dict['vrf_id'] = int(group['vrf_id'])
+                vlan_dict['vrf_mapped'] = group['vrf_mapped']
+                continue
+
+        return ret_dict
+

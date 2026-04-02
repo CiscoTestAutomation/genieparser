@@ -1,0 +1,3 @@
+show interfaces Tunnel1 counters protocol status
+Protocols allocated:
+ Tunnel1: Other, IP, IPv6

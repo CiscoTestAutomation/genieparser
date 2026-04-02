@@ -1,0 +1,10 @@
+Building configuration...
+
+Current configuration : 169 bytes
+!
+interface GigabitEthernet1/0/10
+ no switchport
+ ip address 192.168.1.1 255.255.255.0
+ datalink flow monitor DATALINK_MON_IN input
+ datalink flow monitor DATALINK_MON_OUT output
+end

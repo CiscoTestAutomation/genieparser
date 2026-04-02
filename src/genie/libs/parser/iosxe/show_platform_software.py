@@ -64,6 +64,7 @@
     * show platform software firewall qfp active runtime
     * show platform software ip FP active cef summary
     * show platform software adjacency nexthop-ipfrr
+    * show platform software adj fp active
 """
 
 # Python
@@ -17051,6 +17052,202 @@ class ShowPlatformSoftwareAdjacencyNexthopIpfrr(ShowPlatformSoftwareAdjacencyNex
             m = p8.match(line)
             if m:
                 static_dict["total_nexthop_adjacency_triggered"] = int(m.group("total"))
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareAdjFpActiveSchema(MetaParser):
+    """Schema for show platform software adj fp active"""
+
+    schema = {
+        "number_of_adjacency_objects": int,
+        "adjacencies": {
+            Any(): {
+                "id": {"hex": str, "dec": int},
+                "interface": str,
+                "if_index": int,
+                "link_type": str,
+                "encap": str,
+                "encap_length": int,
+                "encap_type": str,
+                "mtu": int,
+                "flags": ListOf(str),
+                "incomplete_behavior_type": str,
+                "fixup": str,
+                "fixup_flags_2": str,
+                "nexthop_addr": str,
+                "ip_frr": {"mode": str, "value": int},
+                "aom_id": int,
+                "hw_handle": str,
+                "hw_handle_state": str,
+            }
+        },
+    }
+
+
+class ShowPlatformSoftwareAdjFpActive(ShowPlatformSoftwareAdjFpActiveSchema):
+    """Parser for show platform software adj fp active"""
+
+    cli_command = "show platform software adj fp active"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        curr_id_hex = None
+
+        # Number of adjacency objects: 4
+        p1 = re.compile(r"^\s*Number of adjacency objects\s*:\s*(?P<num>\d+)\s*$")
+
+        # Adjacency id: 0xe (14)
+        p2 = re.compile(
+            r"^\s*Adjacency id\s*:\s*(?P<hex>0x[0-9a-fA-F]+)\s*\((?P<dec>\d+)\)\s*$"
+        )
+
+        #   Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+        p3 = re.compile(
+            r"^\s*Interface\s*:\s*(?P<intf>[^,]+)\s*,\s*IF index\s*:\s*(?P<if_index>\d+)\s*,\s*Link Type\s*:\s*(?P<link_type>\S+)\s*$"
+        )
+
+        #   Encap: 0:50:56:8b:7b:52:c4:b2:39:fb:dc:43:8:0
+        p4 = re.compile(r"^\s*Encap\s*:\s*(?P<encap>.+?)\s*$")
+
+        #   Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+        p5 = re.compile(
+            r"^\s*Encap Length\s*:\s*(?P<encap_length>\d+)\s*,\s*Encap Type\s*:\s*(?P<encap_type>\S+)\s*,\s*MTU\s*:\s*(?P<mtu>\d+)\s*$"
+        )
+
+        #   Flags: no-l3-inject
+        p6 = re.compile(r"^\s*Flags\s*:\s*(?P<flags>.+?)\s*$")
+
+        #   Incomplete behavior type: None
+        p7 = re.compile(
+            r"^\s*Incomplete behavior type\s*:\s*(?P<incomplete_behavior_type>.+?)\s*$"
+        )
+
+        #   Fixup: unknown
+        p8 = re.compile(r"^\s*Fixup\s*:\s*(?P<fixup>\S+)\s*$")
+
+        #   Fixup_Flags_2: unknown
+        p9 = re.compile(r"^\s*Fixup_Flags_2\s*:\s*(?P<fixup_flags_2>\S+)\s*$")
+
+        #   Nexthop addr: 172.100.0.2
+        p10 = re.compile(r"^\s*Nexthop addr\s*:\s*(?P<nexthop_addr>\S+)\s*$")
+
+        #   IP FRR MCP_ADJ_IPFRR_NONE 0
+        p11 = re.compile(r"^\s*IP FRR\s+(?P<mode>\S+)\s+(?P<value>\d+)\s*$")
+
+        #   aom id: 14879, HW handle: 0x55a9a5b76d50 (created)
+        p12 = re.compile(
+            r"^\s*aom id\s*:\s*(?P<aom_id>\d+)\s*,\s*HW handle\s*:\s*(?P<hw_handle>\S+)\s*\((?P<hw_handle_state>\S+)\)\s*$"
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Number of adjacency objects: 4
+            m = p1.match(line)
+            if m:
+                ret_dict["number_of_adjacency_objects"] = int(m.group("num"))
+                continue
+
+            # Adjacency id: 0xe (14)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                curr_id_hex = group["hex"]
+                adj_dicts = ret_dict.setdefault("adjacencies", {})
+                one_adj = adj_dicts.setdefault(curr_id_hex, {})
+                id_dict = one_adj.setdefault("id", {})
+                id_dict["hex"] = group["hex"]
+                id_dict["dec"] = int(group["dec"])
+                continue
+
+            if not curr_id_hex:
+                continue
+
+            one_adj = ret_dict.setdefault("adjacencies", {}).setdefault(curr_id_hex, {})
+
+            #   Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                one_adj["interface"] = group["intf"]
+                one_adj["if_index"] = int(group["if_index"])
+                one_adj["link_type"] = group["link_type"]
+                continue
+
+            #   Encap: 0:50:56:8b:7b:52:c4:b2:39:fb:dc:43:8:0
+            m = p4.match(line)
+            if m:
+                one_adj["encap"] = m.group("encap")
+                continue
+
+            #   Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                one_adj["encap_length"] = int(group["encap_length"])
+                one_adj["encap_type"] = group["encap_type"]
+                one_adj["mtu"] = int(group["mtu"])
+                continue
+
+            #   Flags: no-l3-inject
+            m = p6.match(line)
+            if m:
+                flags_str = m.group("flags")
+                flags_list = [f.strip() for f in flags_str.split(",") if f.strip()]
+                one_adj["flags"] = flags_list
+                continue
+
+            #   Incomplete behavior type: None
+            m = p7.match(line)
+            if m:
+                one_adj["incomplete_behavior_type"] = m.group(
+                    "incomplete_behavior_type"
+                )
+                continue
+
+            #   Fixup: unknown
+            m = p8.match(line)
+            if m:
+                one_adj["fixup"] = m.group("fixup")
+                continue
+
+            #   Fixup_Flags_2: unknown
+            m = p9.match(line)
+            if m:
+                one_adj["fixup_flags_2"] = m.group("fixup_flags_2")
+                continue
+
+            #   Nexthop addr: 172.100.0.2
+            m = p10.match(line)
+            if m:
+                one_adj["nexthop_addr"] = m.group("nexthop_addr")
+                continue
+
+            #   IP FRR MCP_ADJ_IPFRR_NONE 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ip_frr_dict = one_adj.setdefault("ip_frr", {})
+                ip_frr_dict["mode"] = group["mode"]
+                ip_frr_dict["value"] = int(group["value"])
+                continue
+
+            #   aom id: 14879, HW handle: 0x55a9a5b76d50 (created)
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                one_adj["aom_id"] = int(group["aom_id"])
+                one_adj["hw_handle"] = group["hw_handle"]
+                one_adj["hw_handle_state"] = group["hw_handle_state"]
                 continue
 
         return ret_dict

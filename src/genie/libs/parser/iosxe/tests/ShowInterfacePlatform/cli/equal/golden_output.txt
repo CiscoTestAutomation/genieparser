@@ -1,0 +1,189 @@
+show interface GigabitEthernet1/0/45 platform
+GigabitEthernet1/0/45 is up, line protocol is up (connected)
+  Hardware is Gigabit Ethernet, address is 9088.5526.5bad (bia 9088.5526.5bad)
+  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 1000Mb/s, media type is 10/100/1000BaseTX
+  input flow-control is on, output flow-control is unsupported
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:01, output 00:00:01, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue: 0/40 (size/max)
+  5 minute input rate 3000 bits/sec, 3 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     4342019 packets input, 355068592 bytes, 0 no buffer
+     Received 4331535 broadcasts (4191284 multicasts)
+     0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+     0 watchdog, 4191284 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     206837 packets output, 13794363 bytes, 0 underruns
+     Output 60 broadcasts (1363 multicasts)
+     0 output errors, 0 collisions, 6 interface resets
+     2273 unknown protocol drops
+     0 babbles, 0 late collision, 0 deferred
+     0 lost carrier, 0 no carrier, 0 pause output
+     0 output buffer failures, 0 output buffers swapped out
+
+------------------ Interface controller status ------------------
+
+
+Transmit                  GigabitEthernet1/0/45 		Receive
+     13794363 Total bytes              	    355068592 Total bytes
+       205414 Unicast frames           	        10484 Unicast frames
+     13146496 Unicast bytes            	      1017940 Unicast bytes
+         1363 Multicast frames         	      4191284 Multicast frames
+       638950 Multicast bytes          	    328958453 Multicast bytes
+           60 Broadcast frames         	       140251 Broadcast frames
+         8917 Broadcast bytes          	     25092199 Broadcast bytes
+            0 System FCS error frames  	            0 IpgViolation frames
+            0 MacUnderrun frames       	            0 MacOverrun frames
+            0 Pause frames             	            0 Pause frames
+            0 Cos 0 Pause frames       	            0 Cos 0 Pause frames
+            0 Cos 1 Pause frames       	            0 Cos 1 Pause frames
+            0 Cos 2 Pause frames       	            0 Cos 2 Pause frames
+            0 Cos 3 Pause frames       	            0 Cos 3 Pause frames
+            0 Cos 4 Pause frames       	            0 Cos 4 Pause frames
+            0 Cos 5 Pause frames       	            0 Cos 5 Pause frames
+            0 Cos 6 Pause frames       	            0 Cos 6 Pause frames
+            0 Cos 7 Pause frames       	            0 Cos 7 Pause frames
+            0 Oam frames               	            0 OamProcessed frames
+            0 Oam frames               	            0 OamDropped frames
+       205470 Minimum size frames      	      2165425 Minimum size frames
+           54 65 to 127 byte frames    	      2122842 65 to 127 byte frames
+            0 128 to 255 byte frames   	         7649 128 to 255 byte frames
+         1309 256 to 511 byte frames   	        34798 256 to 511 byte frames
+            4 512 to 1023 byte frames  	        11303 512 to 1023 byte frames
+            0 1024 to 1518 byte frames 	            2 1024 to 1518 byte frames
+            0 1519 to 2047 byte frames 	            0 1519 to 2047 byte frames
+            0 2048 to 4095 byte frames 	            0 2048 to 4095 byte frames
+            0 4096 to 8191 byte frames 	            0 4096 to 8191 byte frames
+            0 8192 to 16383 byte frames	            0 8192 to 16383 byte frames
+            0 16384 to 32767 byte frame	            0 16384 to 32767 byte frame
+            0 > 32768 byte frames      	            0 > 32768 byte frames
+            0 Late collision frames    	            0 SymbolErr frames
+            0 Excess Defer frames      	            0 Collision fragments
+            0 Good (1 coll) frames     	            0 ValidUnderSize frames
+            0 Good (>1 coll) frames    	            0 InvalidOverSize frames
+            0 Deferred frames          	            0 ValidOverSize frames
+            0 Gold frames dropped      	            0 FcsErr frames
+            0 Gold frames truncated
+            0 Gold frames successful
+            0 1 collision frames
+            0 2 collision frames
+            0 3 collision frames
+            0 4 collision frames
+            0 5 collision frames
+            0 6 collision frames
+            0 7 collision frames
+            0 8 collision frames
+            0 9 collision frames
+            0 10 collision frames
+            0 11 collision frames
+            0 12 collision frames
+            0 13 collision frames
+            0 14 collision frames
+            0 15 collision frames
+            0 Excess collision frames
+
+LAST UPDATE 4413 msecs AGO
+
+------------------ Interface Manager status ------------------
+
+Interface IF_ID         : 0x0000000000000035
+Interface Name          : GigabitEthernet1/0/45
+Interface Block Pointer : 0x7d47d530cca8
+Interface Block State   : READY
+Interface State         : Enabled
+Interface Status        : ADD, UPD
+Interface Ref-Cnt       : 7
+Interface Type          : ETHER
+Created Time            : 2026/01/20 12:03:10.285
+Last Modified Time      : 2026/01/20 12:06:39.984
+Current Time            : 2026/01/20 12:30:32.167
+	Port Type         : SWITCH PORT
+	Port Location     : LOCAL
+	Slot              : 1
+	Unit              : 0
+	Slot Unit         : 45
+	SNMP IF Index     : 53
+	GPN               : 45
+	EC Channel        : 0
+	EC Index          : 0
+	Port Handle       : 0xce00015e
+	LISP v4 Mobility  : false
+	LISP v6 Mobility  : false
+	QoS Trust Type    : 3
+	ES ID             : 0
+	Label             : 0
+
+	Port Information
+	Handle ............ [0xce00015e]
+	Type .............. [Layer2]
+	Identifier ........ [0x35]
+	Slot .............. [1]
+	Unit .............. [45]
+	Port Physical Subblock
+		Affinity .......... [local]
+		Asic Instance ..... [0 (A:0,C:0)]
+		AsicPort .......... [44]
+		AsicSubPort ....... [0]
+		MacNum ............ [16]
+		ContextId ......... [26]
+		LPN ............... [45]
+		GPN ............... [45]
+		Speed ............. [1GB]
+		type .............. [NIF]
+		PORT_LE ........... [0x7d47d5266f58]
+		L3IF_LE ........... [0x0]
+		DI ................ [0x7d47d575e878]
+		SubIf count ....... [0]
+	Port L2 Subblock
+		Enabled ............. [Yes]
+		Allow dot1q ......... [No]
+		Allow native ........ [Yes]
+		Default VLAN ........ [10]
+		Allow priority tag ... [No]
+		Allow unknown unicast  [Yes]
+		Allow unknown multicast[Yes]
+		Allow unknown broadcast[Yes]
+		Allow unknown multicast[Enabled]
+		Allow unknown unicast  [Enabled]
+		Protected ............ [No]
+		IPv4 ARP snoop ....... [No]
+		IPv6 ARP snoop ....... [No]
+		Jumbo MTU ............ [1500]
+		Learning Mode ........ [1]
+		Vepa ................. [Disabled]
+		App Hosting........... [Disabled]
+	Port QoS Subblock
+		Trust Type .................... [0x2]
+		Default Value ................. [0]
+		Ingress Table Map ............. [0x0]
+		Egress Table Map .............. [0x0]
+		Queue Map ..................... [0x0]
+	Port Netflow Subblock
+	Port Policy Subblock
+	List of Ingress Policies attached to an interface
+	List of Egress Policies attached to an interface
+	Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Ref Count : 7 (feature Ref Counts + 1)
+IFM Feature Ref Counts
+	FID : 82 (AAL_FEATURE_L2_WIRELESS), Ref Count : 1
+	FID : 98 (AAL_FEATURE_L2_MULTICAST_IGMP), Ref Count : 1
+	FID : 116 (AAL_FEATURE_STATS), Ref Count : 1
+	FID : 26 (AAL_FEATURE_SC), Ref Count : 1
+	FID : 85 (AAL_FEATURE_L2_MATM), Ref Count : 1
+	FID : 42 (AAL_FEATURE_QOS), Ref Count : 1
+IFM Feature Sub block information
+	FID : 82 (AAL_FEATURE_L2_WIRELESS), Private Data Ptr: 0x7d47d5301a88
+	FID : 26 (AAL_FEATURE_SC), Private Data Ptr: 0x7d47d56d48e8
+	FID : 42 (AAL_FEATURE_QOS), Private Data Ptr: 0x7d47d57b3c98

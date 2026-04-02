@@ -1,0 +1,31 @@
+show platform software fed switch active matm macTable vlan 100 mac 00:11:01:00:00:01 detail
+VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                                                         Con
+-----------------------------------------------------------------------------------------------------------------------------------------------
+100    0011.0100.0001       0x101     196      0      0        300        0                                                                No
+
+======platform software details ======
+ASIC [0]:
+	L2 Service Port OID.........[2144]
+	L2 Service Port GID.........[340]
+
+======platform hardware details ======
+ASIC [0]:
+	Age Value...................[0]
+	Age Remaining...............[0]
+	L2 Service Port OID.........[2144]
+	L2 Service Port GID.........[340]
+	 -------- L2 Service port OID Info --------
+	L2 Service Port Object
+	Port Type: AC Port
+	STP Type: Forwarding
+	VLAN(BD) OID................[1521]
+	VLAN(BD) GID................[100]
+	Ethernet Port OID...........[883]
+	System Port OID.............[882]
+	System Port GID.............[1099]
+
+====== NPL Hardware Information ======
+MAC address: 0011.0100.0001
+Relay ID: 100
+Tag Type: L2 DLP, Destination ID 4266
+Interface Details: HundredGigE2/0/35

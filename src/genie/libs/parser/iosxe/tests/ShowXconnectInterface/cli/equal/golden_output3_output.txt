@@ -1,0 +1,5 @@
+Router# show xconnect interface GigabitEthernet0/0/1
+XC ST  Segment 1                         S1 Segment 2                         S2
+------+---------------------------------+--+---------------------------------+--
+SB sec   bd 400                          
+UP pri   ac Gi0/0/3:11(Ethernet)         UP mpls 10.1.1.1:100                 UP

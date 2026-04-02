@@ -47,7 +47,7 @@
     * 'show platform hardware cpp active feature nat datapath map'
     * 'show platform hardware qfp active feature bfd datapath session'
     * 'show platform hardware qfp active feature alg statistics sip l7data'
-    * 'show platform hardware qfp active feature ipsec sa 3'
+    * 'show platform hardware qfp active feature ipsec sa {sa_id}'
     * 'show platform hardware qfp active feature firewall memory'
     * 'show platform hardware qfp active feature alg statistics'
     * 'show platform hardware qfp active feature alg statistics dns'
@@ -78,6 +78,7 @@
     * 'show platform hardware qfp active feature nat datapath time'
     * 'show platform hardware cpp active feature nat datapath pool'
     * 'show platform hardware subslot <subslot> module host-if status'
+    * 'show platform hardware subslot {subslot} module device "debug macflt show_range {start_index} {end_index}"'
     * 'show platform hardware qfp active feature alg statistics login clear'
     * 'show platform hardware qfp active feature firewall zonepair 1'
     * 'show platform hardware qfp active feature ess session'
@@ -87,6 +88,9 @@
     * 'show platform hardware cpp active feature nat datapath bind'
     * 'show platform hardware qfp active feature nat datapath time'
     * show platform hardware qfp active feature tunnel interface {tunnel}
+    * 'show platform hardware qfp active datapath infrastructure sw-pktmem'
+    * 'show platform hardware qfp active interface all statistics drop_summary subinterface clear_drop'
+    * show platform hardware qfp active feature nat64 datapath statistics
 """
 import re
 import logging
@@ -9095,8 +9099,8 @@ class ShowPlatformHardwareQfpActiveFeatureBfdDatapathSession(ShowPlatformHardwar
                 continue
         return parsed_dict
 
-class ShowPlatformHardwareQfpActiveFeatureIpsecSa3Schema(MetaParser):
-    """Schema for show platform hardware qfp active feature ipsec sa 3"""
+class ShowPlatformHardwareQfpActiveFeatureIpsecSaSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature ipsec sa {sa_id}"""
     schema = {
         'qfp_ipsec_sa_information': {
             'qfp_sa_id': int,
@@ -9109,8 +9113,8 @@ class ShowPlatformHardwareQfpActiveFeatureIpsecSa3Schema(MetaParser):
             'flags_details': ListOf(str),
             'flags_parsed': {str: str},
             'qos_group': str,
-            'mtu': str,
-            'mtu_adj': str,
+            Optional('mtu'): str,
+            Optional('mtu_adj'): str,
             'ext_ar_window_size': int,
             'ext_ar_window_top': int,
             'sar_delta': int,
@@ -9131,15 +9135,15 @@ class ShowPlatformHardwareQfpActiveFeatureIpsecSa3Schema(MetaParser):
         }
     }
 
-class ShowPlatformHardwareQfpActiveFeatureIpsecSa3(ShowPlatformHardwareQfpActiveFeatureIpsecSa3Schema):
+class ShowPlatformHardwareQfpActiveFeatureIpsecSa(ShowPlatformHardwareQfpActiveFeatureIpsecSaSchema):
     """Parser for:
-        show platform hardware qfp active feature ipsec sa 3
+        show platform hardware qfp active feature ipsec sa {sa_id}
     """
-    cli_command = 'show platform hardware qfp active feature ipsec sa 3'
+    cli_command = 'show platform hardware qfp active feature ipsec sa {sa_id}'
 
-    def cli(self, output=None):
+    def cli(self, sa_id, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(sa_id=sa_id))
 
         parsed_dict = {}
         # QFP sa  id: 12345
@@ -9169,11 +9173,11 @@ class ShowPlatformHardwareQfpActiveFeatureIpsecSa3(ShowPlatformHardwareQfpActive
         # qos_group: 0x2F
         p9 = re.compile(r'^qos_group: (?P<qos_group>0x[0-9a-fA-F]+)$')  # "qos_group"
 
-        # mtu: 0x1000=0
-        p10 = re.compile(r'^mtu: (?P<mtu>0x[0-9a-fA-F]+=0)$')
+        # mtu: 0x58e=1422 or 0x0=0
+        p10 = re.compile(r'^mtu: (?P<mtu>0x[0-9a-fA-F]+=\d+)$')
 
-        # mtu_adj: 0x1100=0
-        p11 = re.compile(r'^mtu_adj: (?P<mtu_adj>0x[0-9a-fA-F]+=0)$')
+        # mtu_adj: 0x578=1400 or 0x0=0
+        p11 = re.compile(r'^mtu_adj: (?P<mtu_adj>0x[0-9a-fA-F]+=\d+)$')
 
         #  ext_ar window_size: 50
         p12 = re.compile(r'^ext_ar window_size: (?P<ext_ar_window_size>\d+)$')
@@ -16902,6 +16906,81 @@ class ShowPlatformHardwareSubslotModuleHostIfStatus(
                 continue
 
         return ret_dict
+    
+
+# =========================================================
+# Schema for 'show platform hardware subslot {subslot} module device "debug macflt show_range {start_index} {end_index}"'
+# =========================================================
+class ShowPlatformHardwareSubslotModuleDeviceDebugMacfltShowRangeSchema(MetaParser):
+    """Schema for show platform hardware subslot {subslot} module device "debug macflt show_range {start_index} {end_index}" """
+
+    schema = {
+        Optional("indices"): {
+            Any(): {
+                "tcam_rule": int,
+                "mac_48": str,
+                "mac_mask": str,
+                "interface": str,
+            }
+        },
+        "total_entries": int,
+    }
+
+
+# =========================================================
+# Parser for 'show platform hardware subslot {subslot} module device "debug macflt show_range {start_index} {end_index}"'
+# =========================================================
+class ShowPlatformHardwareSubslotModuleDeviceDebugMacfltShowRange(ShowPlatformHardwareSubslotModuleDeviceDebugMacfltShowRangeSchema):
+    """Parser for show platform hardware subslot {subslot} module device "debug macflt show_range {start_index} {end_index}" """
+
+    cli_command = 'show platform hardware subslot {subslot} module device "debug macflt show_range {start_index} {end_index}"'
+
+    def cli(self, subslot=None, start_index=None, end_index=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(
+                subslot=subslot,
+                start_index=start_index,
+                end_index=end_index
+            )
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Idx: 0: tcam-rule:3072 mac-48:1b:a4:65:36:88 macmask-ff:ff:ff:ff:ff:ff intf-GE0
+        p1 = re.compile(
+            r"^Idx:\s*(?P<index>\d+)\s*:\s*tcam-rule:\s*(?P<tcam_rule>\d+)\s+"
+            r"mac-(?P<mac48>[\da-fA-F:]+)\s+macmask-(?P<macmask>[\da-fA-F:]+)\s+intf-(?P<intf>\S+)\s*$"
+        )
+
+        # Total eneries: 2
+        p2 = re.compile(r"^Total\s+eneries\s*:\s*(?P<total>\d+)\s*$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Idx: 0: tcam-rule:3072 mac-48:1b:a4:65:36:88 macmask-ff:ff:ff:ff:ff:ff intf-GE0
+            m = p1.match(line)
+            if m:
+                gd = m.groupdict()
+                idx = int(gd["index"])
+                indices_dict = ret_dict.setdefault("indices", {})
+                idx_dict = indices_dict.setdefault(idx, {})
+                idx_dict["tcam_rule"] = int(gd["tcam_rule"])
+                idx_dict["mac_48"] = gd["mac48"]
+                idx_dict["mac_mask"] = gd["macmask"]
+                idx_dict["interface"] = gd["intf"]
+                continue
+
+            # Total eneries: 2
+            m = p2.match(line)
+            if m:
+                gd = m.groupdict()
+                ret_dict["total_entries"] = int(gd["total"])
+                continue
+
+        return ret_dict
  
 # ========================================================================
 # Schema for 'show platform hardware subslot {subslot} module interface {interface} statistics'
@@ -19217,5 +19296,500 @@ class ShowPlatformHardwareQfpActiveFeatureTunnelInterfaceTunnel(
             if m and current_section == "config" and config_dict is not None:
                 config_dict["path_mtu_discovery_mpls_ip_only"] = t_bool(m.group("val"))
                 continue
+
+        return ret_dict
+
+# ===============================================================
+# Schema for 'show platform hardware qfp active datapath infrastructure sw-pktmem'
+# ===============================================================
+class ShowPlatformHardwareQfpActiveDatapathInfrastructureSwPktSchema(MetaParser):
+    """Schema for show platform hardware qfp active datapath infrastructure sw-pktmem"""
+    schema = {
+        "packet_memory_free_count": int,
+        "packet_burst_buffer_free_count": int,
+        "egress_buffer_pool_oor": {
+            "pmd": {
+                "status": str,
+                "description": str,
+            },
+            "b4q": {
+                "status": str,
+                "description": str,
+            },
+        },
+        "pmd_pool": {
+            "buffer_size": int,
+            "free": int,
+            "total": int,
+            "util_percent": int,
+        },
+        "b4q_pools": {
+            Any(): {
+                "size": int,
+                "lock": int,
+                "overrun": int,
+                "glb_free": int,
+                "lcl_free": int,
+                "tot": int,
+                "util_percent": int,
+            },
+        },
+        "b4q_total_packet_memory": int,
+        "b4q_total_buffer_size": int,
+        Optional("pmd_buffer"): {
+            "size": int,
+            "free": int,
+            "total": int,
+            "util_percent": int,
+            "pool_name": str,
+        },
+    }
+
+# ===============================================================
+# Parser for 'show platform hardware qfp active datapath infrastructure sw-pktmem'
+# ===============================================================
+class ShowPlatformHardwareQfpActiveDatapathInfrastructureSwPkt(ShowPlatformHardwareQfpActiveDatapathInfrastructureSwPktSchema):
+    """Parser for show platform hardware qfp active datapath infrastructure sw-pktmem"""
+
+    cli_command = "show platform hardware qfp active datapath infrastructure sw-pktmem"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initial return dictionary
+        parsed_dict = {}
+
+        #Packet memory free count 1638
+        p1 = re.compile(r'^Packet memory free count (?P<count>\d+)$')
+
+        # Packet burst buffer free count 4073
+        p2 = re.compile(r'^Packet burst buffer free count (?P<count>\d+)$')
+
+        # PMD : No OOR. Buffer egress pool not stressed.
+        p3 = re.compile(r'^(?P<type>PMD|B4Q)\s*:\s*(?P<status>No OOR|OOR)\.\s*(?P<description>.+)$')
+
+        # PMD pool buffer size 2176, free 22975 of 31744, util 27%
+        p4 = re.compile(r'^PMD pool buffer size (?P<size>\d+), free (?P<free>\d+) of (?P<total>\d+), util (?P<util>\d+)%$')
+
+        # B4Q pool size 124 lock 0 overrun 0 glb free 13860 lcl free 59 tot 13926 util  0%
+        p5 = re.compile(r'^B4Q pool size (?P<size>\d+) lock (?P<lock>\d+) overrun (?P<overrun>\d+) glb free (?P<glb_free>\d+) lcl free (?P<lcl_free>\d+) tot (?P<tot>\d+) util\s+(?P<util>\d+)%$')
+
+        # B4Q total packet memory 167052392
+        p6 = re.compile(r'^B4Q total packet memory (?P<memory>\d+)$')
+
+        # B4Q total buffer size 178257920
+        p7 = re.compile(r'^B4Q total buffer size (?P<size>\d+)$')
+
+        # PMD buffer size  2176 free  26114 tot  31744 util  17% (pool pmd_pri_mbuf_pool)
+        p8 = re.compile(r'^PMD buffer size\s+(?P<size>\d+) free\s+(?P<free>\d+) tot\s+(?P<total>\d+) util\s+(?P<util>\d+)% \(pool (?P<pool_name>\S+)\)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Packet burst buffer free count 4073
+            m = p1.match(line)
+            if m:
+                parsed_dict['packet_memory_free_count'] = int(m.group('count'))
+                continue
+
+            # PMD : No OOR. Buffer egress pool not stressed.
+            m = p2.match(line)
+            if m:
+                parsed_dict['packet_burst_buffer_free_count'] = int(m.group('count'))
+                continue
+
+            # PMD : No OOR. Buffer egress pool not stressed.
+            m = p3.match(line)
+            if m:
+                oor_dict = parsed_dict.setdefault('egress_buffer_pool_oor', {})
+                pool_type = m.group('type').lower()
+                oor_dict[pool_type] = {
+                    'status': m.group('status'),
+                    'description': m.group('description')
+                }
+                continue
+
+            # PMD pool buffer size 2176, free 22975 of 31744, util 27%
+            m = p4.match(line)
+            if m:
+                parsed_dict['pmd_pool'] = {
+                    'buffer_size': int(m.group('size')),
+                    'free': int(m.group('free')),
+                    'total': int(m.group('total')),
+                    'util_percent': int(m.group('util'))
+                }
+                continue
+
+            # B4Q pool size 124 lock 0 overrun 0 glb free 13860 lcl free 59 tot 13926 util  0%
+            m = p5.match(line)
+            if m:
+                b4q_pools = parsed_dict.setdefault('b4q_pools', {})
+                pool_size = int(m.group('size'))
+                b4q_pools[pool_size] = {
+                    'size': pool_size,
+                    'lock': int(m.group('lock')),
+                    'overrun': int(m.group('overrun')),
+                    'glb_free': int(m.group('glb_free')),
+                    'lcl_free': int(m.group('lcl_free')),
+                    'tot': int(m.group('tot')),
+                    'util_percent': int(m.group('util'))
+                }
+                continue
+
+            # B4Q total packet memory 167052392
+            m = p6.match(line)
+            if m:
+                parsed_dict['b4q_total_packet_memory'] = int(m.group('memory'))
+                continue
+
+            # B4Q total buffer size 178257920
+            m = p7.match(line)
+            if m:
+                parsed_dict['b4q_total_buffer_size'] = int(m.group('size'))
+                continue
+
+            # PMD buffer size  2176 free  26114 tot  31744 util  17% (pool pmd_pri_mbuf_pool)
+            m = p8.match(line)
+            if m:
+                parsed_dict['pmd_buffer'] = {
+                    'size': int(m.group('size')),
+                    'free': int(m.group('free')),
+                    'total': int(m.group('total')),
+                    'util_percent': int(m.group('util')),
+                    'pool_name': m.group('pool_name')
+                }
+                continue
+
+        return parsed_dict
+
+class ShowPlatformHardwareQfpActiveFeatureNat64DatapathStatisticsSchema(MetaParser):
+    """Schema for show platform hardware qfp active feature nat64 datapath statistics"""
+
+    schema = {
+        "statistics": {
+            "non_extended": int,
+            "statics": int,
+            "ext_binds": int,
+            "v6v4_xlated_pkts": int,
+            "v4v6_xlated_pkts": int,
+            "nat46_v4v6_xlated_pkts": int,
+            "nat46_v6v4_xlated_pkts": int,
+            "generated_tcp_csum": int,
+            "generated_udp_csum": int,
+            "proxy_stats_ipc_retry_fail": int,
+            "alias_add": int,
+            "alias_del": int,
+            "alias_add_fail": int,
+            "alias_del_fail": int,
+            "nat64_v6tov4_pkts": int,
+            "nat64_v4tov6_pkts": int,
+            "nat64_fbd_hits": int,
+            "v6v4_xlated_pkts_2": int,
+            "frag_pakts_1st": int,
+            "frag_pakts_non1st": int,
+            "drops": {
+                Any(): int
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveFeatureNat64DatapathStatistics(
+    ShowPlatformHardwareQfpActiveFeatureNat64DatapathStatisticsSchema
+):
+    """Parser for show platform hardware qfp active feature nat64 datapath statistics"""
+
+    cli_command = "show platform hardware qfp active feature nat64 datapath statistics"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+        v6v4_seen = False
+
+        # non-extended 0 statics 0 ext_binds 0
+        p1 = re.compile(
+            r"^non-extended\s+(?P<non_extended>\d+)\s+statics\s+(?P<statics>\d+)\s+ext_binds\s+(?P<ext_binds>\d+)$"
+        )
+
+        # v6v4 xlated pkts 836081273
+        p2 = re.compile(r"^v6v4\s+xlated\s+pkts\s+(?P<v6v4_xlated_pkts>\d+)$")
+
+        # v4v6 xlated pkts 262336181
+        p3 = re.compile(r"^v4v6\s+xlated\s+pkts\s+(?P<v4v6_xlated_pkts>\d+)$")
+
+        # NAT46 v4v6 xlated pkts 0
+        p4 = re.compile(
+            r"^NAT46\s+v4v6\s+xlated\s+pkts\s+(?P<nat46_v4v6_xlated_pkts>\d+)$"
+        )
+
+        # NAT46 v6v4 xlated pkts 0
+        p5 = re.compile(
+            r"^NAT46\s+v6v4\s+xlated\s+pkts\s+(?P<nat46_v6v4_xlated_pkts>\d+)$"
+        )
+
+        # generated tcp csum 0
+        p6 = re.compile(r"^generated\s+tcp\s+csum\s+(?P<generated_tcp_csum>\d+)$")
+
+        # generated udp csum 4005
+        p7 = re.compile(r"^generated\s+udp\s+csum\s+(?P<generated_udp_csum>\d+)$")
+
+        # Proxy Stats ipc retry fail 0
+        p8 = re.compile(
+            r"^Proxy\s+Stats\s+ipc\s+retry\s+fail\s+(?P<proxy_stats_ipc_retry_fail>\d+)$"
+        )
+
+        # Alias: add 0 del 0 add_fail 0 del_fail 0
+        p9 = re.compile(
+            r"^Alias\s*:\s*add\s+(?P<alias_add>\d+)\s+del\s+(?P<alias_del>\d+)\s+add_fail\s+(?P<alias_add_fail>\d+)\s+del_fail\s+(?P<alias_del_fail>\d+)$"
+        )
+
+        # nat64_v6tov4_pkts 0 nat64_v4tov6_pkts 0 nat64_fbd_hits 0
+        p10 = re.compile(
+            r"^nat64_v6tov4_pkts\s+(?P<nat64_v6tov4_pkts>\d+)\s+nat64_v4tov6_pkts\s+(?P<nat64_v4tov6_pkts>\d+)\s+nat64_fbd_hits\s+(?P<nat64_fbd_hits>\d+)$"
+        )
+
+        # frag_pakts_1st 0
+        p11 = re.compile(r"^frag_pakts_1st\s+(?P<frag_pakts_1st>\d+)$")
+
+        # frag_pakts_non1st 0
+        p12 = re.compile(r"^frag_pakts_non1st\s+(?P<frag_pakts_non1st>\d+)$")
+
+        # NAT64_DROP_SC_NO_N64_SB 6
+        p13 = re.compile(r"^(?P<drop_key>[A-Z0-9_]+)\s+(?P<drop_val>\d+)$")
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # non-extended 0 statics 0 ext_binds 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["non_extended"] = int(group["non_extended"])
+                ret_dict["statistics"]["statics"] = int(group["statics"])
+                ret_dict["statistics"]["ext_binds"] = int(group["ext_binds"])
+                continue
+
+            # v6v4 xlated pkts 836081273
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                if not v6v4_seen:
+                    ret_dict["statistics"]["v6v4_xlated_pkts"] = int(
+                        group["v6v4_xlated_pkts"]
+                    )
+                    v6v4_seen = True
+                else:
+                    ret_dict["statistics"]["v6v4_xlated_pkts_2"] = int(
+                        group["v6v4_xlated_pkts"]
+                    )
+                continue
+
+            # v4v6 xlated pkts 262336181
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["v4v6_xlated_pkts"] = int(
+                    group["v4v6_xlated_pkts"]
+                )
+                continue
+
+            # NAT46 v4v6 xlated pkts 0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["nat46_v4v6_xlated_pkts"] = int(
+                    group["nat46_v4v6_xlated_pkts"]
+                )
+                continue
+
+            # NAT46 v6v4 xlated pkts 0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["nat46_v6v4_xlated_pkts"] = int(
+                    group["nat46_v6v4_xlated_pkts"]
+                )
+                continue
+
+            # generated tcp csum 0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["generated_tcp_csum"] = int(
+                    group["generated_tcp_csum"]
+                )
+                continue
+
+            # generated udp csum 4005
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["generated_udp_csum"] = int(
+                    group["generated_udp_csum"]
+                )
+                continue
+
+            # Proxy Stats ipc retry fail 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["proxy_stats_ipc_retry_fail"] = int(
+                    group["proxy_stats_ipc_retry_fail"]
+                )
+                continue
+
+            # Alias: add 0 del 0 add_fail 0 del_fail 0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["alias_add"] = int(group["alias_add"])
+                ret_dict["statistics"]["alias_del"] = int(group["alias_del"])
+                ret_dict["statistics"]["alias_add_fail"] = int(group["alias_add_fail"])
+                ret_dict["statistics"]["alias_del_fail"] = int(group["alias_del_fail"])
+                continue
+
+            # nat64_v6tov4_pkts 0 nat64_v4tov6_pkts 0 nat64_fbd_hits 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["nat64_v6tov4_pkts"] = int(
+                    group["nat64_v6tov4_pkts"]
+                )
+                ret_dict["statistics"]["nat64_v4tov6_pkts"] = int(
+                    group["nat64_v4tov6_pkts"]
+                )
+                ret_dict["statistics"]["nat64_fbd_hits"] = int(group["nat64_fbd_hits"])
+                continue
+
+            # frag_pakts_1st 0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["frag_pakts_1st"] = int(group["frag_pakts_1st"])
+                continue
+
+            # frag_pakts_non1st 0
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"]["frag_pakts_non1st"] = int(
+                    group["frag_pakts_non1st"]
+                )
+                continue
+
+            # NAT64_DROP_SC_NO_N64_SB 6
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("statistics", {})
+                ret_dict["statistics"].setdefault("drops", {})
+                ret_dict["statistics"]["drops"][group["drop_key"]] = int(
+                    group["drop_val"]
+                )
+                continue
+
+        return ret_dict
+
+# =========================================================================
+# Schema for 'show platform hardware qfp active interface all statistics
+# drop_summary subinterface clear_drop'
+# =========================================================================
+class ShowPlatformHardwareQfpActiveInterfaceAllStatisticsDropSummarySubinterfaceClearSchema(MetaParser):
+    """Schema for show platform hardware qfp active interface all statistics drop_summary subinterface clear_drop"""
+
+    schema = {
+        "drop_stats_summary": {
+            "interfaces": {
+                Any(): {
+                    "rx_pkts": int,
+                    "tx_pkts": int,
+                }
+            }
+        }
+    }
+
+
+# =========================================================================
+# Parser for 'show platform hardware qfp active interface all statistics
+# drop_summary subinterface clear_drop'
+# =========================================================================
+class ShowPlatformHardwareQfpActiveInterfaceAllStatisticsDropSummarySubinterfaceClear(
+    ShowPlatformHardwareQfpActiveInterfaceAllStatisticsDropSummarySubinterfaceClearSchema
+):
+    """
+    Parser for
+        show platform hardware qfp active interface all statistics drop_summary subinterface clear_drop
+    """
+
+    cli_command = "show platform hardware qfp active interface all statistics drop_summary subinterface clear_drop"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Drop Stats Summary:
+        # note: 1) these drop stats are only updated when PAL
+        #          reads the interface stats.
+        #
+        # Interface                                       Rx Pkts             Tx Pkts
+        # ---------------------------------------------------------------------------
+        # GigabitEthernet0/0/0                               1179                   0
+        # VirtualPortGroup1                                     1                   0
+        # VirtualPortGroup2                                  2491                   0
+        # VirtualPortGroup3                                     1                   0
+
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<rx_pkts>\d+)\s+(?P<tx_pkts>\d+)$')
+
+        # The drop stats were all zero
+        p2 = re.compile(r'^The drop stats were all zero$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # GigabitEthernet0/0/0                               1179                   0
+            # VirtualPortGroup1                                     1                   0
+
+            m = p1.match(line)
+            if m:
+                interface = m.group('interface')
+                rx_pkts = int(m.group('rx_pkts'))
+                tx_pkts = int(m.group('tx_pkts'))
+
+                if 'drop_stats_summary' not in ret_dict:
+                    ret_dict['drop_stats_summary'] = {}
+                if 'interfaces' not in ret_dict['drop_stats_summary']:
+                    ret_dict['drop_stats_summary']['interfaces'] = {}
+
+                ret_dict['drop_stats_summary']['interfaces'][interface] = {
+                    'rx_pkts': rx_pkts,
+                    'tx_pkts': tx_pkts
+                }
+
+            # The drop stats were all zero
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault("drop_stats_summary", {})
+                ret_dict["drop_stats_summary"] = {"interfaces": {"NA": {"rx_pkts": 0, "tx_pkts": 0}}}
 
         return ret_dict

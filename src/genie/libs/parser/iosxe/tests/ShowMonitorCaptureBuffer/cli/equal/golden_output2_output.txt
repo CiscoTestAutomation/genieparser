@@ -1,0 +1,13 @@
+show monitor capture mac_cap buffer
+Starting the packet display ........ Press Ctrl + Shift + 6 to exit
+
+    1   0.000000 SchneiderEle_00:00:10 -> Cisco_00:00:20 0xffff 500 Ethernet II
+    2   0.000887 SchneiderEle_00:00:11 -> Cisco_00:00:21 0xffff 500 Ethernet II
+    3   0.001921 SchneiderEle_00:00:12 -> Cisco_00:00:22 0xffff 500 Ethernet II
+    4   0.002845 SchneiderEle_00:00:13 -> Cisco_00:00:23 0xffff 500 Ethernet II
+    5   0.003875 SchneiderEle_00:00:14 -> Cisco_00:00:24 0xffff 500 Ethernet II
+    6   0.004909 SchneiderEle_00:00:15 -> Cisco_00:00:25 0xffff 500 Ethernet II
+    7   0.005937 SchneiderEle_00:00:16 -> Cisco_00:00:26 0xffff 500 Ethernet II
+    8   0.006869 SchneiderEle_00:00:17 -> Cisco_00:00:27 0xffff 500 Ethernet II
+    9   0.007899 SchneiderEle_00:00:18 -> Cisco_00:00:28 0xffff 500 Ethernet II
+   10   0.008931 SchneiderEle_00:00:19 -> Cisco_00:00:29 0xffff 500 Ethernet II

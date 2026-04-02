@@ -1,0 +1,16 @@
+show ipv6 interface brief
+GigabitEthernet0/0/0   [up/up]
+    unassigned
+GigabitEthernet0/0/1   [up/up]
+    unassigned
+GigabitEthernet0/0/2   [up/up]
+    unassigned
+GigabitEthernet0/0/3   [up/up]
+    unassigned
+GigabitEthernet0/0/4   [up/up]
+    FE80::C6B2:39FF:FEFB:C414
+    100:300:1::2
+GigabitEthernet0/0/5   [up/up]
+    unassigned
+Loopback0              [up/up]
+    unassigned

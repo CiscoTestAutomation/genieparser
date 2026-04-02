@@ -37,3 +37,4 @@ Mac Lisp Local Move Count       : 0
 Mac Lisp Remote Move Count      : 0
 Mac Lisp Delete Count           : 0
 Mac VPLS move from/to Count     : 0
+Static Mac Learn Record Drop Count: 5563

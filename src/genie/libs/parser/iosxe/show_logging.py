@@ -1684,7 +1684,8 @@ class ShowLoggingOnboardRpStandbyUptimeDetail(ShowLoggingOnboardRpStandbyUptimeD
         p5 = re.compile(r'^Number of slot changes\s+: (?P<numberof_slot_changes>\d+)$')
 
         # Current reset reason    : Reload Command
-        p6 = re.compile(r'^Current reset reason\s+: (?P<current_reset_reason>[A-Z a-z]+)$')
+        # Current reset reason    : redundancy force-switchover
+        p6 = re.compile(r'^Current reset reason\s+: (?P<current_reset_reason>[\w\s\-]+)$')
 
         # Current reset timestamp : 10/06/2019 01:28:26
         p7 = re.compile(r'^Current reset timestamp\s+: (?P<current_reset_timestamp>(\d+\/){2}\d+.*)$')

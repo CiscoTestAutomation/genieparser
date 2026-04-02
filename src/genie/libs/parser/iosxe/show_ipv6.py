@@ -44,6 +44,7 @@
     * show ipv6 virtual-reassembly features
     * show ipv6 mfib {group} active
     * show ipv6 traffic
+    * show ipv6 interface brief
 """
 
 # Python
@@ -4184,3 +4185,114 @@ class ShowIpv6VirtualReassembly(ShowIpv6VirtualReassemblySchema):
                 continue
 
         return result
+
+
+class ShowIpv6InterfaceBriefSchema(MetaParser):
+    """
+    	Schema for: 
+     		show ipv6 interface brief
+    """
+
+    schema = {
+        "interface": {
+            Any(): {
+                "interface_state": str,
+                "protocol_state": str,
+                "link_local_address": str,
+                "ipv6_addresses": ListOf(str),
+            }
+        }
+    }
+
+
+class ShowIpv6InterfaceBrief(ShowIpv6InterfaceBriefSchema):
+    """
+        Parser for: 
+		show ipv6 interface brief
+        show ipv6 interface brief
+		GigabitEthernet0/0/0   [up/up]
+			unassigned
+		GigabitEthernet0/0/1   [up/up]
+			unassigned
+		GigabitEthernet0/0/2   [up/up]
+			unassigned
+		GigabitEthernet0/0/3   [up/up]
+			unassigned
+		GigabitEthernet0/0/4   [up/up]
+			unassigned
+		GigabitEthernet0/0/5   [administratively down/down]
+			unassigned
+		Loopback0              [up/up]
+			unassigned
+		NVI0                   [up/up]
+			FE80::C6B2:39FF:FEFB:DC40
+		Tunnel192              [up/up]
+			unassigned
+    """
+
+    cli_command = "show ipv6 interface brief"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        ret_dict = {}
+
+        if not output:
+            return ret_dict
+
+        # Match interface line with states
+	# Example: GigabitEthernet0/0/0   [up/up]
+	# Groups:
+	#   intf             -> interface name
+	#   interface_state  -> up/down
+	#   protocol_state   -> up/down
+        p1 = re.compile(r'^(?P<intf>\S+)\s+\[(?P<interface_state>[^/\]]+)\/(?P<protocol_state>[^\]]+)\]$')
+        # Match "unassigned" IPv6 state line
+	# Example:     unassigned
+        p2 = re.compile(r'^\s*unassigned$')
+        # Match IPv6 address line
+	# Example:     FE80::C6B2:39FF:FEFB:DC40
+	# Group:
+	#   ipv6 -> IPv6 address
+        p3 = re.compile(r'^\s*(?P<ipv6>\S+)$')
+
+        current_intf = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # GigabitEthernet0/0/0   [up/up]
+            m = p1.match(line)
+            if m:
+                intf = m.groupdict()["intf"]
+                interface_state = m.groupdict()["interface_state"]
+                protocol_state = m.groupdict()["protocol_state"]
+
+                intf_dict = ret_dict.setdefault("interface", {}).setdefault(intf, {})
+                intf_dict["interface_state"] = interface_state
+                intf_dict["protocol_state"] = protocol_state
+                intf_dict["link_local_address"] = ""
+                intf_dict["ipv6_addresses"] = []
+
+                current_intf = intf
+                continue
+
+            #     unassigned
+            m = p2.match(line)
+            if m:
+                # No addresses assigned for current interface
+                continue
+
+            #     FE80::C6B2:39FF:FEFB:DC40
+            m = p3.match(line)
+            if m and current_intf:
+                addr = m.groupdict()["ipv6"]
+                if addr.upper().startswith("FE80::"):
+                    ret_dict["interface"][current_intf]["link_local_address"] = addr
+                else:
+                    ret_dict["interface"][current_intf]["ipv6_addresses"].append(addr)
+                continue
+
+        return ret_dict

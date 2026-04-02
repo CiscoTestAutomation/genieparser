@@ -1,0 +1,10 @@
+Drop Stats Summary:
+note: 1) these drop stats are only updated when PAL
+         reads the interface stats.
+
+Interface                                       Rx Pkts             Tx Pkts
+---------------------------------------------------------------------------
+GigabitEthernet0/0/0                               1179                   0
+VirtualPortGroup1                                     1                   0
+VirtualPortGroup2                                  2491                   0
+VirtualPortGroup3                                     1                   0

@@ -1,0 +1,11 @@
+GILMOUR-35#sh platform software fed sw active sgacl bd-mapping 
+BD-VRF Mapping Table:
+
+VLAN     SVI IF-ID            VRF-ID   VRF-Mapped
+-------- -------------------- -------- ----------
+1        0x0000000000000000   0        Yes
+2        0x0000000000000000   0        Yes
+3        0x0000000000000000   0        Yes
+4        0x0000000000000000   0        Yes
+5        0x0000000000000000   0        Yes
+6        0x0000000000000000   0        Yes

@@ -1,0 +1,27 @@
+show policy-map type access-control interface GigabitEthernet0/0/0 output
+ GigabitEthernet0/0/0
+  Service-policy access-control output: parent
+
+    Class-map: ip_tcp (match-all)
+      1 packets, 60 bytes
+      5 minute offered rate 0000 bps
+      Match: field IP version eq 4
+      Match: field IP ihl eq 5
+      Match: field IP protocol eq 6 next TCP
+      Service-policy access-control : child
+
+        Class-map: test (match-any)
+          1 packets, 60 bytes
+          5 minute offered rate 0000 bps, drop rate 0000 bps
+          Match: field TCP dest-port eq 36
+      drop
+
+        Class-map: class-default (match-any)
+          0 packets, 0 bytes
+          5 minute offered rate 0000 bps, drop rate 0000 bps
+          Match: any
+
+    Class-map: class-default (match-any)
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any

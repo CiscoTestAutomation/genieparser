@@ -1,0 +1,3 @@
+Idx: 0: tcam-rule:0 mac-e4:a4:1c:83:81:26 macmask-ff:ff:ff:ff:ff:ff intf-TW2
+Idx: 1: tcam-rule:2 mac-e4:a4:1c:83:81:27 macmask-ff:ff:ff:ff:ff:ff intf-TW3
+Total eneries: 2

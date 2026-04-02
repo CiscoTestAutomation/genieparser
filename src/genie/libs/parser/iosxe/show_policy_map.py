@@ -4026,8 +4026,7 @@ class ShowPolicyMapMultipoint(ShowPolicyMapMultipointSchema):
             ret_dict = {'interfaces': ret_dict}
         return ret_dict
 
-
-class ShowPolicyMapTypeAccessControlInterfaceInterfaceInSchema(MetaParser):
+class ShowPolicyMapTypeAccessControlInterfaceInterfaceInputSchema(MetaParser):
     schema = {
         "interface": {
             Any(): {
@@ -4068,8 +4067,8 @@ class ShowPolicyMapTypeAccessControlInterfaceInterfaceInSchema(MetaParser):
     }
 
 
-class ShowPolicyMapTypeAccessControlInterfaceInterfaceIn(ShowPolicyMapTypeAccessControlInterfaceInterfaceInSchema):
-    cli_command = "show policy-map type access-control interface {interface} in"
+class ShowPolicyMapTypeAccessControlInterfaceInterfaceInput(ShowPolicyMapTypeAccessControlInterfaceInterfaceInputSchema):
+    cli_command = "show policy-map type access-control interface {interface} input"
 
     def cli(self, interface=None, output=None):
         if output is None:
@@ -4106,12 +4105,12 @@ class ShowPolicyMapTypeAccessControlInterfaceInterfaceIn(ShowPolicyMapTypeAccess
         p7 = re.compile(r"^\s*Match\s*:\s*(?P<match>.*\S)\s*$")
 
         #   drop
-        p8 = re.compile(r"^\s*(?P<action>drop)\s*$")
+        #   log
+        p8 = re.compile(r"^\s*(?P<action>drop|log)\s*$")
 
         service_policy_input_dict = None
         parent_classes_dict = None
         current_class_dict = None
-        current_parent_class_name = None
 
         # Child policy tracking
         inside_child = False
@@ -4139,6 +4138,9 @@ class ShowPolicyMapTypeAccessControlInterfaceInterfaceIn(ShowPolicyMapTypeAccess
                 service_policy_input_dict["name"] = group["name"]
                 service_policy_input_dict["type"] = group["type"]
                 parent_classes_dict = service_policy_input_dict.setdefault("classes", {})
+                # Reset child tracking when we see a new service-policy input
+                inside_child = False
+                child_classes_dict = None
                 continue
 
             #   Service-policy access-control : child
@@ -4156,9 +4158,194 @@ class ShowPolicyMapTypeAccessControlInterfaceInterfaceIn(ShowPolicyMapTypeAccess
             # Class-map: ip_tcp (match-all)
             m = p4.match(line)
             if m:
-                # Determine if this is a top-level class (no indent) to end child section if needed
+                # Check if this line starts without indentation - if so, we've exited child mode
                 starts_without_space = bool(re.match(r"^\S", raw_line))
                 if inside_child and starts_without_space:
+                    inside_child = False
+                    child_classes_dict = None
+
+                group = m.groupdict()
+                class_name = group["class_name"]
+                match_type = group["match_type"]
+
+                if inside_child and child_classes_dict is not None:
+                    target_classes = child_classes_dict
+                elif parent_classes_dict is not None:
+                    target_classes = parent_classes_dict
+                else:
+                    # Skip if we don't have a valid target
+                    continue
+
+                current_class_dict = target_classes.setdefault(class_name, {})
+                current_class_dict["match_type"] = match_type
+
+                continue
+
+            #   584692 packets, 49114128 bytes
+            m = p5.match(line)
+            if m and current_class_dict is not None:
+                group = m.groupdict()
+                current_class_dict["packets"] = int(group["packets"])
+                current_class_dict["bytes"] = int(group["bytes"])
+                continue
+
+            #   5 minute offered rate 1139000 bps
+            m = p6.match(line)
+            if m and current_class_dict is not None:
+                group = m.groupdict()
+                current_class_dict["offered_rate_bps_5min"] = int(group["offered"])
+                if group.get("drop"):
+                    current_class_dict["drop_rate_bps_5min"] = int(group["drop"])
+                continue
+
+            #   Match: field IP version eq 4
+            m = p7.match(line)
+            if m and current_class_dict is not None:
+                match_list = current_class_dict.setdefault("matches", [])
+                match_list.append(m.groupdict()["match"])
+                continue
+
+            #   drop
+            m = p8.match(line)
+            if m and current_class_dict is not None:
+                current_class_dict["action"] = m.groupdict()["action"]
+                continue
+
+        return ret_dict
+
+class ShowPolicyMapTypeAccessControlInterfaceInterfaceOutSchema(MetaParser):
+    schema = {
+        "interface": {
+            Any(): {
+                "service_policy": {
+                    "output": {
+                        "name": str,
+                        "type": str,
+                        "classes": {
+                            Any(): {
+                                "match_type": str,
+                                "packets": int,
+                                "bytes": int,
+                                "offered_rate_bps_5min": int,
+                                Optional("drop_rate_bps_5min"): int,
+                                "matches": ListOf(str),
+                                Optional("action"): str,
+                                Optional("child_policy"): {
+                                    "name": str,
+                                    "type": str,
+                                    "classes": {
+                                        Any(): {
+                                            "match_type": str,
+                                            "packets": int,
+                                            "bytes": int,
+                                            "offered_rate_bps_5min": int,
+                                            Optional("drop_rate_bps_5min"): int,
+                                            "matches": ListOf(str),
+                                            Optional("action"): str,
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPolicyMapTypeAccessControlInterfaceInterfaceOut(ShowPolicyMapTypeAccessControlInterfaceInterfaceOutSchema):
+    cli_command = "show policy-map type access-control interface {interface} output"
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # Initialize intf_dict as None, will be set when interface name is parsed
+        intf_dict = None
+        actual_interface = interface
+
+        # Interface names typically have numbers and/or special chars
+        # GigabitEthernet0/0/0
+        p1 = re.compile(r"^\s*(?P<ifname>[A-Z][a-zA-Z]+[\d/:.-]+)\s*$")
+
+        # Service-policy access-control output: parent
+        p2 = re.compile(r"^\s*Service-policy\s+(?P<name>\S+)\s+output\s*:\s*(?P<type>\S+)\s*$")
+
+        #   Service-policy access-control : child
+        p3 = re.compile(r"^\s*Service-policy\s+(?P<name>\S+)\s*:\s*(?P<type>\S+)\s*$")
+
+        # Class-map: ip_tcp (match-all)
+        p4 = re.compile(r"^\s*Class-map:\s+(?P<class_name>\S+)\s+\((?P<match_type>match-\w+)\)\s*$")
+
+        #   584692 packets, 49114128 bytes
+        p5 = re.compile(r"^\s*(?P<packets>\d+)\s+packets\s*,\s*(?P<bytes>\d+)\s+bytes\s*$")
+
+        #   5 minute offered rate 1139000 bps
+        p6 = re.compile(r"^\s*5\s+minute\s+offered\s+rate\s+(?P<offered>\d+)\s+bps(?:\s*,\s*drop\s+rate\s+(?P<drop>\d+)\s+bps)?\s*$")
+
+        #   Match: field IP version eq 4
+        p7 = re.compile(r"^\s*Match\s*:\s*(?P<match>.*\S)\s*$")
+
+        #   drop
+        p8 = re.compile(r"^\s*(?P<action>drop)\s*$")
+
+        service_policy_output_dict = None
+        parent_classes_dict = None
+        current_class_dict = None
+        current_parent_class_name = None
+
+        # Child policy tracking
+        inside_child = False
+        child_classes_dict = None
+
+        for raw_line in output.splitlines():
+            line = raw_line.rstrip()
+            if not line.strip():
+                continue
+
+            # GigabitEthernet0/0/0
+            m = p1.match(line)
+            if m:
+                # Extract interface name from output and set up intf_dict
+                actual_interface = m.groupdict()["ifname"]
+                intf_dict = ret_dict.setdefault("interface", {}).setdefault(actual_interface, {})
+                continue
+
+            # Service-policy access-control output: parent
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sp_dict = intf_dict.setdefault("service_policy", {})
+                service_policy_output_dict = sp_dict.setdefault("output", {})
+                service_policy_output_dict["name"] = group["name"]
+                service_policy_output_dict["type"] = group["type"]
+                parent_classes_dict = service_policy_output_dict.setdefault("classes", {})
+                continue
+
+            #   Service-policy access-control : child
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                if current_class_dict is not None:
+                    cp_dict = current_class_dict.setdefault("child_policy", {})
+                    cp_dict["name"] = group["name"]
+                    cp_dict["type"] = group["type"]
+                    child_classes_dict = cp_dict.setdefault("classes", {})
+                    inside_child = True
+                continue
+
+            # Class-map: ip_tcp (match-all)
+            m = p4.match(line)
+            if m:
+                # Determine if this is a top-level class by checking indentation
+                # Parent classes have 4 spaces, child classes have 8+ spaces
+                indent = len(raw_line) - len(raw_line.lstrip())
+                if inside_child and indent <= 4:
                     inside_child = False
                     child_classes_dict = None
 
@@ -4209,6 +4396,113 @@ class ShowPolicyMapTypeAccessControlInterfaceInterfaceIn(ShowPolicyMapTypeAccess
             m = p8.match(line)
             if m and current_class_dict is not None:
                 current_class_dict["action"] = m.groupdict()["action"]
+                continue
+
+        return ret_dict
+
+
+class ShowPolicyMapTypeAccessControlAccessControlSchema(MetaParser):
+    """Schema for show policy-map type access-control {access-control}"""
+    schema = {
+        'policy_map': {
+            'type': str,
+            'name': str,
+            'class': {
+                Any(): {
+                    'actions': {
+                        Optional('service_policy'): str,
+                        Optional('drop'): bool,
+                        Optional('send_response'): str,
+                        Optional('log'): bool
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPolicyMapTypeAccessControlAccessControl(ShowPolicyMapTypeAccessControlAccessControlSchema):
+    """Parser for show policy-map type access-control {access-control}"""
+    cli_command = "show policy-map type access-control parent {access_control}"
+
+    def cli(self, access_control="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(access_control=access_control)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        #   Policy Map type access-control parent
+        p1 = re.compile(r'^\s*Policy Map type\s+(?P<type>.+)$')
+
+        #     Class ip_udp
+        p2 = re.compile(r'^\s*Class\s+(?P<class_name>\S+)$')
+
+        #       service-policy child
+        p3 = re.compile(r'^\s*service-policy\s+(?P<service_policy>\S+)$')
+
+        #       drop
+        p4 = re.compile(r'^\s*drop\s*$')
+
+        #       send-response icmp-unreachable
+        p5 = re.compile(r'^\s*send-response\s+(?P<send_response>\S+)$')
+
+        #       log
+        p6 = re.compile(r'^\s*log\s*$')
+
+        policy_map_dict = {}
+        class_dict = {}
+        current_class_dict = None
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #   Policy Map type access-control parent
+            m = p1.match(line)
+            if m:
+                pm_type = m.groupdict()['type'].strip()
+                policy_map_dict = ret_dict.setdefault('policy_map', {})
+                policy_map_dict['type'] = pm_type
+                policy_map_dict['name'] = ""
+                class_dict = policy_map_dict.setdefault('class', {})
+                current_class_dict = None
+                continue
+
+            #     Class ip_udp
+            m = p2.match(line)
+            if m:
+                class_name = m.groupdict()['class_name']
+                current_class_dict = class_dict.setdefault(class_name, {})
+                continue
+
+            #       service-policy child
+            m = p3.match(line)
+            if m and current_class_dict is not None:
+                actions = current_class_dict.setdefault('actions', {})
+                actions['service_policy'] = m.groupdict()['service_policy']
+                continue
+
+            #       drop
+            m = p4.match(line)
+            if m and current_class_dict is not None:
+                actions = current_class_dict.setdefault('actions', {})
+                actions['drop'] = True
+                continue
+
+            #       send-response icmp-unreachable
+            m = p5.match(line)
+            if m and current_class_dict is not None:
+                actions = current_class_dict.setdefault('actions', {})
+                actions['send_response'] = m.groupdict()['send_response']
+                continue
+
+            #       log
+            m = p6.match(line)
+            if m and current_class_dict is not None:
+                actions = current_class_dict.setdefault('actions', {})
+                actions['log'] = True
                 continue
 
         return ret_dict

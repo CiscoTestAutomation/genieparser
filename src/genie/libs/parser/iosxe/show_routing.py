@@ -339,8 +339,10 @@ class ShowIpRoute(ShowIpRouteSchema):
         #      via 2001:DB8:20:4:6::6%VRF2
         #      via Null0, receive
         #      via 33.33.33.33%default, Vlan100%default
-        p6 = re.compile(r'^via( +(?P<next_hop>[\w]+[.:][\w\:\.\%]{4,}),?)?'
-                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]+),?)?,?( +receive)?'
+        #      via ::100.0.0.2, NVI0
+        #      via ::128.0.1.0, NVI0
+        p6 = re.compile(r'^via( +(?P<next_hop>(?:[\w]+[.:]|:+)[\w\:\.\%]{4,}),?)?'
+                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]*),?)?,?( +receive)?'
                         r'( +directly connected)?( +indirectly connected)?$')
 
         for line in out.splitlines():

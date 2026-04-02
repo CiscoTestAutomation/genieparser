@@ -1,0 +1,2 @@
+Router# show xconnect interface GigabitEthernet0/0/0
+

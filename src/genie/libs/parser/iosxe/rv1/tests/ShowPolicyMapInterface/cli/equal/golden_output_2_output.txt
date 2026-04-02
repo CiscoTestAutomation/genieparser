@@ -1,0 +1,64 @@
+show policy-map interface TenGigabitEthernet0/0/15 {interface}
+ TenGigabitEthernet0/0/15 
+
+  Service-policy output: wred
+
+    Class-map: prec1 (match-all)  
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match:  precedence 1 
+      Queueing
+      queue limit 640 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      shape (average) cir 1000000000, bc 10000000, be 10000000
+      target shape rate 1000000000
+      
+
+    Class-map: prec2 (match-all)  
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match:  precedence 2 
+      Queueing
+      queue limit 5120 bytes
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      shape (average) cir 20000000, bc 80000, be 80000
+      target shape rate 20000000
+      
+
+    Class-map: prec3 (match-all)  
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match:  precedence 3 
+      Queueing
+      queue limit 10 ms/ 375000 bytes
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+      bandwidth 300000 kbps
+      shape (average) cir 1000000000, bc 4000000, be 4000000
+      target shape rate 1000000000
+      
+        Exp-weight-constant: 9 (1/512)
+        Mean queue depth: 0 ms/ 0 bytes
+        class       Transmitted         Random drop      Tail drop          Minimum        Maximum     Mark
+                pkts/bytes            pkts/bytes       pkts/bytes          thresh         thresh     prob
+                                                                         ms/bytes      ms/bytes
+        0               0/0               0/0              0/0              2/93750       5/187500    1/10
+        1               0/0               0/0              0/0              2/105468       5/187500    1/10
+        2               0/0               0/0              0/0              3/117187       5/187500    1/10
+        3               0/0               0/0              0/0              2/75000       5/187500    1/10
+        4               0/0               0/0              0/0              3/140625       5/187500    1/10
+        5               0/0               0/0              0/0              4/152343       5/187500    1/10
+        6               0/0               0/0              0/0              4/164062       5/187500    1/10
+        7               0/0               0/0              0/0              4/175781       5/187500    1/10
+
+    Class-map: class-default (match-any)  
+      0 packets, 0 bytes
+      5 minute offered rate 0000 bps, drop rate 0000 bps
+      Match: any 
+      
+      queue limit 41666 packets
+      (queue depth/total drops/no-buffer drops) 0/0/0
+      (pkts output/bytes output) 0/0
+

@@ -15,7 +15,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 class ShowCefPathSetIdDetailReplicateOceSchema(MetaParser):
     """Schema for:
@@ -1056,3 +1056,492 @@ class ShowCefTableConsistencyCheck(ShowCefTableConsistencyCheckSchema):
                 continue
 
         return parsed_dict
+
+
+
+class ShowCefStateCapabilitiesSchema(MetaParser):
+    '''Schema for show cef state capabilities'''
+    schema = {
+        'cef_capabilities': {
+            'supported_address_families': ListOf(str),
+            'active_address_families': ListOf(str),
+            'distributed_platform': bool,
+            'warm_or_hot_standby_supported': bool,
+            'cef_nsf_capable': bool,
+            'hardware_forwarding': bool,
+            'checker_auto_repair_supported': bool,
+            'crashdump_on_memory_failure': bool,
+            'blocking_standby_hot_until_synced': bool,
+        },
+        'label_fib_cef_status': {
+            'load_sharing_algorithm': str,
+            'algorithm_id': str,
+        },
+        'ipv4_cef_capabilities': {
+            'default_cef_switching': bool,
+            'always_fib_switching': bool,
+            'default_dcef_switching': bool,
+            'always_dcef_switching': bool,
+            'drop_multicast_packets': bool,
+            'ok_to_punt_packets': bool,
+            'nvgen_cef_state': bool,
+            'fastsend_used': bool,
+            'support_per_packet_load_sharing': bool,
+            'multicast_groups_in_cef': bool,
+            'install_local_entries_from_rib': bool,
+        },
+        'ipv6_cef_capabilities': {
+            'default_cef_switching': bool,
+            'always_fib_switching': bool,
+            'default_dcef_switching': bool,
+            'always_dfib_switching': bool,
+            'drop_multicast_packets': bool,
+            'ok_to_punt_packets': bool,
+            'nvgen_cef_state': bool,
+            'fastsend_used': bool,
+        },
+        'cef_issu_status': {
+            'fibhwidb_broker': {
+                'status': str,
+            },
+            'fibidb_broker': {
+                'status': str,
+            },
+            'fibhwidb_subblock_broker': {
+                'status': str,
+            },
+            'fibidb_subblock_broker': {
+                'status': str,
+            },
+            'adjacency_update': {
+                'status': str,
+            },
+            'ipv4_table_broker': {
+                'status': str,
+            },
+            'ipv6_table_broker': {
+                'status': str,
+            },
+            'cef_push': {
+                'status': str,
+            },
+            'label_fib_table_broker': {
+                'status': str,
+            },
+        },
+    }
+
+class ShowCefStateCapabilities(ShowCefStateCapabilitiesSchema):
+    '''Parser for show cef state capabilities'''
+    
+    cli_command = 'show cef state capabilities'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+
+        if output:
+            # Compile regex patterns
+            
+            # CEF Capabilities:
+            p0 = re.compile(r'^CEF Capabilities:')
+            
+            #  Supported address families:         IPv4 IPv6 Binding-Label
+            p1 = re.compile(r'^\s*Supported address families:\s+(.+)$')
+            
+            #  Active address families:            IPv4 IPv6 Binding-Label
+            p2 = re.compile(r'^\s*Active address families:\s+(.+)$')
+            
+            #  Distributed Platform:               yes
+            p3 = re.compile(r'^\s*Distributed Platform:\s+(\w+)$')
+            
+            #  Warm or Hot Standby supported:      yes
+            p4 = re.compile(r'^\s*Warm or Hot Standby supported:\s+(\w+)$')
+            
+            #  CEF NSF capable:                    yes
+            p5 = re.compile(r'^\s*CEF NSF capable:\s+(\w+)$')
+            
+            #  Hardware forwarding:                no
+            p6 = re.compile(r'^\s*Hardware forwarding:\s+(\w+)$')
+            
+            #  Checker auto-repair supported:      yes
+            p7 = re.compile(r'^\s*Checker auto-repair supported:\s+(\w+)$')
+            
+            #  Crashdump on memory failure:        no
+            p8 = re.compile(r'^\s*Crashdump on memory failure:\s+(\w+)$')
+            
+            #  Blocking STANDBY_HOT until synced:  yes
+            p9 = re.compile(r'^\s*Blocking STANDBY_HOT until synced:\s+(\w+)$')
+            
+            # Label-FIB CEF Status:
+            p10 = re.compile(r'^Label-FIB CEF Status:')
+            
+            #  universal per-destination load sharing algorithm, id 5808CE4A
+            p11 = re.compile(r'^\s*(.+), id (\w+)$')
+            
+            # IPv4 CEF Capabilities:
+            p12 = re.compile(r'^IPv4 CEF Capabilities:')
+            
+            #  Default CEF switching:              yes
+            p13 = re.compile(r'^\s*Default CEF switching:\s+(\w+)$')
+            
+            #  Always FIB switching:               yes
+            p14 = re.compile(r'^\s*Always FIB switching:\s+(\w+)$')
+            
+            #  Default dCEF switching:             yes
+            p15 = re.compile(r'^\s*Default dCEF switching:\s+(\w+)$')
+            
+            #  Always dCEF switching:              yes
+            p16 = re.compile(r'^\s*Always dCEF switching:\s+(\w+)$')
+            
+            #  Drop multicast packets:             no
+            p17 = re.compile(r'^\s*Drop multicast packets:\s+(\w+)$')
+            
+            #  OK to punt packets:                 yes
+            p18 = re.compile(r'^\s*OK to punt packets:\s+(\w+)$')
+            
+            #  NVGEN CEF state:                    no
+            p19 = re.compile(r'^\s*NVGEN CEF state:\s+(\w+)$')
+            
+            #  fastsend() used:                    yes
+            p20 = re.compile(r'^\s*fastsend\(\) used:\s+(\w+)$')
+            
+            #  Support per packet load sharing:    no
+            p21 = re.compile(r'^\s*Support per packet load sharing:\s+(\w+)$')
+            
+            #  Multicast (*,G) groups in CEF:      no
+            p22 = re.compile(r'^\s*Multicast \(\*,G\) groups in CEF:\s+(\w+)$')
+            
+            #  Install local entries from RIB:     no
+            p23 = re.compile(r'^\s*Install local entries from RIB:\s+(\w+)$')
+            
+            # IPv6 CEF Capabilities:
+            p24 = re.compile(r'^IPv6 CEF Capabilities:')
+            
+            #  Always dFIB switching:              yes
+            p25 = re.compile(r'^\s*Always dFIB switching:\s+(\w+)$')
+            
+            # CEF ISSU Status:
+            p26 = re.compile(r'^CEF ISSU Status:')
+            
+            #  FIBHWIDB broker
+            p27 = re.compile(r'^\s*FIBHWIDB broker')
+            
+            #  FIBIDB broker
+            p28 = re.compile(r'^\s*FIBIDB broker')
+            
+            #  FIBHWIDB Subblock broker
+            p29 = re.compile(r'^\s*FIBHWIDB Subblock broker')
+            
+            #  FIBIDB Subblock broker
+            p30 = re.compile(r'^\s*FIBIDB Subblock broker')
+            
+            #  Adjacency update
+            p31 = re.compile(r'^\s*Adjacency update')
+            
+            #  IPv4 table broker
+            p32 = re.compile(r'^\s*IPv4 table broker')
+            
+            #  IPv6 table broker
+            p33 = re.compile(r'^\s*IPv6 table broker')
+            
+            #  CEF push
+            p34 = re.compile(r'^\s*CEF push')
+            
+            #  Label FIB table broker
+            p35 = re.compile(r'^\s*Label FIB table broker')
+
+            current_section = None
+            current_broker = None
+
+            # Helper function to convert yes/no to boolean
+            def yes_no_to_bool(value):
+                return value.lower() == 'yes' if value else False
+
+            # Process each line
+            for line in output.splitlines():
+                line = line.rstrip()
+                if not line:
+                    continue
+
+                # CEF Capabilities:
+                m0 = p0.match(line)
+                if m0:
+                    current_section = 'cef_capabilities'
+                    result['cef_capabilities'] = {}
+                    continue
+
+                if current_section == 'cef_capabilities':
+                    #  Supported address families:         IPv4 IPv6 Binding-Label
+                    m1 = p1.match(line)
+                    if m1:
+                        families = m1.group(1).split()
+                        result['cef_capabilities']['supported_address_families'] = families
+                        continue
+
+                    #  Active address families:            IPv4 IPv6 Binding-Label
+                    m2 = p2.match(line)
+                    if m2:
+                        families = m2.group(1).split()
+                        result['cef_capabilities']['active_address_families'] = families
+                        continue
+
+                    #  Distributed Platform:               yes
+                    m3 = p3.match(line)
+                    if m3:
+                        result['cef_capabilities']['distributed_platform'] = yes_no_to_bool(m3.group(1))
+                        continue
+
+                    #  Warm or Hot Standby supported:      yes
+                    m4 = p4.match(line)
+                    if m4:
+                        result['cef_capabilities']['warm_or_hot_standby_supported'] = yes_no_to_bool(m4.group(1))
+                        continue
+
+                    #  CEF NSF capable:                    yes
+                    m5 = p5.match(line)
+                    if m5:
+                        result['cef_capabilities']['cef_nsf_capable'] = yes_no_to_bool(m5.group(1))
+                        continue
+
+                    #  Hardware forwarding:                no
+                    m6 = p6.match(line)
+                    if m6:
+                        result['cef_capabilities']['hardware_forwarding'] = yes_no_to_bool(m6.group(1))
+                        continue
+
+                    #  Checker auto-repair supported:      yes
+                    m7 = p7.match(line)
+                    if m7:
+                        result['cef_capabilities']['checker_auto_repair_supported'] = yes_no_to_bool(m7.group(1))
+                        continue
+
+                    #  Crashdump on memory failure:        no
+                    m8 = p8.match(line)
+                    if m8:
+                        result['cef_capabilities']['crashdump_on_memory_failure'] = yes_no_to_bool(m8.group(1))
+                        continue
+
+                    #  Blocking STANDBY_HOT until synced:  yes
+                    m9 = p9.match(line)
+                    if m9:
+                        result['cef_capabilities']['blocking_standby_hot_until_synced'] = yes_no_to_bool(m9.group(1))
+                        continue
+
+                # Label-FIB CEF Status:
+                m10 = p10.match(line)
+                if m10:
+                    current_section = 'label_fib'
+                    result['label_fib_cef_status'] = {}
+                    continue
+
+                if current_section == 'label_fib':
+                    #  universal per-destination load sharing algorithm, id 5808CE4A
+                    m11 = p11.match(line)
+                    if m11:
+                        result['label_fib_cef_status']['load_sharing_algorithm'] = m11.group(1).strip()
+                        result['label_fib_cef_status']['algorithm_id'] = m11.group(2)
+                        continue
+
+                # IPv4 CEF Capabilities:
+                m12 = p12.match(line)
+                if m12:
+                    current_section = 'ipv4_cef'
+                    result['ipv4_cef_capabilities'] = {}
+                    continue
+
+                if current_section == 'ipv4_cef':
+                    #  Default CEF switching:              yes
+                    m13 = p13.match(line)
+                    if m13:
+                        result['ipv4_cef_capabilities']['default_cef_switching'] = yes_no_to_bool(m13.group(1))
+                        continue
+
+                    #  Always FIB switching:               yes
+                    m14 = p14.match(line)
+                    if m14:
+                        result['ipv4_cef_capabilities']['always_fib_switching'] = yes_no_to_bool(m14.group(1))
+                        continue
+
+                    #  Default dCEF switching:             yes
+                    m15 = p15.match(line)
+                    if m15:
+                        result['ipv4_cef_capabilities']['default_dcef_switching'] = yes_no_to_bool(m15.group(1))
+                        continue
+
+                    #  Always dCEF switching:              yes
+                    m16 = p16.match(line)
+                    if m16:
+                        result['ipv4_cef_capabilities']['always_dcef_switching'] = yes_no_to_bool(m16.group(1))
+                        continue
+
+                    #  Drop multicast packets:             no
+                    m17 = p17.match(line)
+                    if m17:
+                        result['ipv4_cef_capabilities']['drop_multicast_packets'] = yes_no_to_bool(m17.group(1))
+                        continue
+
+                    #  OK to punt packets:                 yes
+                    m18 = p18.match(line)
+                    if m18:
+                        result['ipv4_cef_capabilities']['ok_to_punt_packets'] = yes_no_to_bool(m18.group(1))
+                        continue
+
+                    #  NVGEN CEF state:                    no
+                    m19 = p19.match(line)
+                    if m19:
+                        result['ipv4_cef_capabilities']['nvgen_cef_state'] = yes_no_to_bool(m19.group(1))
+                        continue
+
+                    #  fastsend() used:                    yes
+                    m20 = p20.match(line)
+                    if m20:
+                        result['ipv4_cef_capabilities']['fastsend_used'] = yes_no_to_bool(m20.group(1))
+                        continue
+
+                    #  Support per packet load sharing:    no
+                    m21 = p21.match(line)
+                    if m21:
+                        result['ipv4_cef_capabilities']['support_per_packet_load_sharing'] = yes_no_to_bool(m21.group(1))
+                        continue
+
+                    #  Multicast (*,G) groups in CEF:      no
+                    m22 = p22.match(line)
+                    if m22:
+                        result['ipv4_cef_capabilities']['multicast_groups_in_cef'] = yes_no_to_bool(m22.group(1))
+                        continue
+
+                    #  Install local entries from RIB:     no
+                    m23 = p23.match(line)
+                    if m23:
+                        result['ipv4_cef_capabilities']['install_local_entries_from_rib'] = yes_no_to_bool(m23.group(1))
+                        continue
+
+                # IPv6 CEF Capabilities:
+                m24 = p24.match(line)
+                if m24:
+                    current_section = 'ipv6_cef'
+                    result['ipv6_cef_capabilities'] = {}
+                    continue
+
+                if current_section == 'ipv6_cef':
+                    #  Default CEF switching:              yes
+                    m13 = p13.match(line)
+                    if m13:
+                        result['ipv6_cef_capabilities']['default_cef_switching'] = yes_no_to_bool(m13.group(1))
+                        continue
+
+                    #  Always FIB switching:               yes
+                    m14 = p14.match(line)
+                    if m14:
+                        result['ipv6_cef_capabilities']['always_fib_switching'] = yes_no_to_bool(m14.group(1))
+                        continue
+
+                    #  Default dCEF switching:             yes
+                    m15 = p15.match(line)
+                    if m15:
+                        result['ipv6_cef_capabilities']['default_dcef_switching'] = yes_no_to_bool(m15.group(1))
+                        continue
+
+                    #  Always dFIB switching:              yes
+                    m25 = p25.match(line)
+                    if m25:
+                        result['ipv6_cef_capabilities']['always_dfib_switching'] = yes_no_to_bool(m25.group(1))
+                        continue
+
+                    #  Drop multicast packets:             no
+                    m17 = p17.match(line)
+                    if m17:
+                        result['ipv6_cef_capabilities']['drop_multicast_packets'] = yes_no_to_bool(m17.group(1))
+                        continue
+
+                    #  OK to punt packets:                 yes
+                    m18 = p18.match(line)
+                    if m18:
+                        result['ipv6_cef_capabilities']['ok_to_punt_packets'] = yes_no_to_bool(m18.group(1))
+                        continue
+
+                    #  NVGEN CEF state:                    no
+                    m19 = p19.match(line)
+                    if m19:
+                        result['ipv6_cef_capabilities']['nvgen_cef_state'] = yes_no_to_bool(m19.group(1))
+                        continue
+
+                    #  fastsend() used:                    yes
+                    m20 = p20.match(line)
+                    if m20:
+                        result['ipv6_cef_capabilities']['fastsend_used'] = yes_no_to_bool(m20.group(1))
+                        continue
+
+                # CEF ISSU Status:
+                m26 = p26.match(line)
+                if m26:
+                    current_section = 'cef_issu'
+                    result['cef_issu_status'] = {}
+                    continue
+
+                if current_section == 'cef_issu':
+                    #  FIBHWIDB broker
+                    m27 = p27.match(line)
+                    if m27:
+                        current_broker = 'fibhwidb_broker'
+                        continue
+
+                    #  FIBIDB broker
+                    m28 = p28.match(line)
+                    if m28:
+                        current_broker = 'fibidb_broker'
+                        continue
+
+                    #  FIBHWIDB Subblock broker
+                    m29 = p29.match(line)
+                    if m29:
+                        current_broker = 'fibhwidb_subblock_broker'
+                        continue
+
+                    #  FIBIDB Subblock broker
+                    m30 = p30.match(line)
+                    if m30:
+                        current_broker = 'fibidb_subblock_broker'
+                        continue
+
+                    #  Adjacency update
+                    m31 = p31.match(line)
+                    if m31:
+                        current_broker = 'adjacency_update'
+                        continue
+
+                    #  IPv4 table broker
+                    m32 = p32.match(line)
+                    if m32:
+                        current_broker = 'ipv4_table_broker'
+                        continue
+
+                    #  IPv6 table broker
+                    m33 = p33.match(line)
+                    if m33:
+                        current_broker = 'ipv6_table_broker'
+                        continue
+
+                    #  CEF push
+                    m34 = p34.match(line)
+                    if m34:
+                        current_broker = 'cef_push'
+                        continue
+
+                    #  Label FIB table broker
+                    m35 = p35.match(line)
+                    if m35:
+                        current_broker = 'label_fib_table_broker'
+                        continue
+
+                    #    No slots are ISSU capable.
+                    if current_broker and line.strip().startswith('No slots'):
+                        status_text = line.strip().rstrip('.')  # Remove trailing period
+                        result['cef_issu_status'][current_broker] = {'status': status_text}
+                        current_broker = None
+                        continue
+
+        return result

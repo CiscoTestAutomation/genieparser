@@ -36,7 +36,8 @@ expected_output= {
       "mac_lisp_local_move_count":0,
       "mac_lisp_remote_move_count":0,
       "mac_lisp_delete_count":0,
-      "mac_vpls_move_from_to_count":0
+      "mac_vpls_move_from_to_count":0,
+      "static_mac_learn_record_drop_count":5563,
    }
 }
 

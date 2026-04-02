@@ -1,0 +1,19 @@
+show ipv6 mroute vrf vrf2 {vrf} summary
+Multicast Routing Table
+Flags: D - Dense, S - Sparse, B - Bidir Group, s - SSM Group, 
+       C - Connected, L - Local, I - Received Source Specific Host Report,
+       P - Pruned, R - RP-bit set, F - Register flag, T - SPT-bit set,
+       J - Join SPT, Y - Joined MDT-data group,
+       y - Sending to MDT-data group
+       g - BGP signal originated, G - BGP Signal received,
+       N - BGP Shared-Tree Prune received, n - BGP C-Mroute suppressed,
+       q - BGP Src-Active originated, Q - BGP Src-Active received
+       E - Extranet
+Timers: Uptime/Expires
+Interface state: Interface, State
+
+(*, FF08:4000::1), 00:03:45/never, RP 2001:2310::3, OIF count: 1, flags: SCJ
+
+(2001:2410::42, FF08:4000::1), 00:01:31/00:01:58, OIF count: 1, flags: SJT
+
+(2001:2410::43, FF08:4000::1), 00:01:31/00:01:58, OIF count: 1, flags: SJT

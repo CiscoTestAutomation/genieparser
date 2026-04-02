@@ -1,0 +1,92 @@
+expected_output = {
+    "platform": "C8151H-C-G2",
+    "hsrp_hardware_indicator": "* indicates hardware may support HSRP",
+    "interface": {
+        "Te0/0/0": {
+            "type_number": 89,
+            "type_name": "C8151H-C-1X",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 35,
+            "addresses": ["0xAAAAEAB7BCCC", "0xAAAAEAB7BCCC"],
+        },
+        "Gi0/1/6": {
+            "type_number": 27,
+            "type_name": "C8151H-C-ES-9",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 127,
+            "addresses": ["0xAAAAEAB7BCCC", "0xAAAAEAB7BCCC"],
+        },
+        "Gi0/1/7": {
+            "type_number": 27,
+            "type_name": "C8151H-C-ES-9",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 127,
+            "addresses": ["0xAAAAEAB7BCCC", "0xAAAAEAB7BCCC"],
+        },
+        "Gi0/1/8": {
+            "type_number": 27,
+            "type_name": "C8151H-C-ES-9",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 127,
+            "addresses": ["0xAAAAEAB7BCCC", "0xAAAAEAB7BCCC"],
+        },
+        "Cellular0/2/0": {
+            "type_number": 6,
+            "type_name": "5G Redcap pluggable-LT",
+            "hardware_support_hsrp": False,
+        },
+        "Cellular0/2/1": {
+            "type_number": 6,
+            "type_name": "5G Redcap pluggable-LT",
+            "hardware_support_hsrp": False,
+        },
+        "LIIN0": {
+            "type_number": 27,
+            "type_name": "LIIN",
+            "hardware_support_hsrp": False,
+        },
+        "LI-Null0": {
+            "type_number": 161,
+            "type_name": "Unknown",
+            "hardware_support_hsrp": False,
+        },
+        "Tunnel99": {
+            "type_number": 0,
+            "type_name": "Tunnel",
+            "hardware_support_hsrp": False,
+        },
+        "Vlan1": {
+            "type_number": 156,
+            "type_name": "Ethernet SVI",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 4096,
+            "addresses": ["0xAAAAEDF6BA7C", "0xAAAAF68ACEAC"],
+        },
+        "Vlan22": {
+            "type_number": 156,
+            "type_name": "Ethernet SVI",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 4096,
+            "addresses": ["0xAAAAEDF6BA7C", "0xAAAAF68ACEAC"],
+        },
+        "Vlan33": {
+            "type_number": 156,
+            "type_name": "Ethernet SVI",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 4096,
+            "addresses": ["0xAAAAEDF6BA7C", "0xAAAAF68ACEAC"],
+        },
+        "Vlan4000": {
+            "type_number": 156,
+            "type_name": "Ethernet SVI",
+            "hardware_support_hsrp": True,
+            "max_groups_per_subinterface": 4096,
+            "addresses": ["0xAAAAEDF6BA7C", "0xAAAAF68ACEAC"],
+        },
+        "VoIP-Null0": {
+            "type_number": 222,
+            "type_name": "VoIP-Null",
+            "hardware_support_hsrp": False,
+        },
+    },
+}

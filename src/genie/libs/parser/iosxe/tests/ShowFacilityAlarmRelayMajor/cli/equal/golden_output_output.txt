@@ -1,0 +1,4 @@
+show facility-alarm relay major
+Source                  Description                         Relay    Time
+GigabitEthernet1/8      1 Link Fault                        MAJ      Mar 02 2023 10:19:20
+

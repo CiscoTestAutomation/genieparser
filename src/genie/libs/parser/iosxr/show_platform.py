@@ -2842,7 +2842,7 @@ class ShowRedundancySchema(MetaParser):
                  Optional('primary_rmf_state'): str,
                  Optional('primary_rmf_state_reason'): str,
                  'last_reload_timestamp': str,
-                 'time_since_last_reload': str,
+                 Optional('time_since_last_reload'): str,
                  'node_uptime': str,
                  'node_uptime_timestamp': str,
                  'node_uptime_in_seconds': int,
@@ -2987,15 +2987,18 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # A9K-RSP440-TR reloaded Thu Apr 27 02:14:12 2017: 1 hour, 16 minutes ago
+            # A9K-RSP880-SE reloaded Sun Jan 10 03:24:10 2027:
             p6 = re.compile(r'\s*(?P<node_name>[a-zA-Z0-9\-]+) +reloaded'
-                             r' +(?P<last_reload_timestamp>[a-zA-Z0-9\:\s]+):'
-                             r' +(?P<time_since_last_reload>[a-zA-Z0-9\,\s]+)$')
+                             r' +(?P<last_reload_timestamp>[a-zA-Z0-9\:\s]+\d{4}):'
+                             r'(?:\s+(?P<time_since_last_reload>[a-zA-Z0-9\,\s]+\S))?'
+                             r'\s*$')
             m = p6.match(line)
             if m:
                 redundancy_dict['node'][node]['last_reload_timestamp'] =\
                     str(m.groupdict()['last_reload_timestamp'])
-                redundancy_dict['node'][node]['time_since_last_reload'] =\
-                    str(m.groupdict()['time_since_last_reload'])
+                if m.groupdict()['time_since_last_reload']:
+                    redundancy_dict['node'][node]['time_since_last_reload'] =\
+                        str(m.groupdict()['time_since_last_reload'])
                 continue
 
             # Active node booted Thu Apr 27 03:22:37 2017: 8 minutes ago

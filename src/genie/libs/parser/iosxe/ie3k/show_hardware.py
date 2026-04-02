@@ -182,6 +182,7 @@ class ShowHardwareLedSchema(MetaParser):
         Optional('mode_duplex'): str,
         Optional('mode_redundancy'): str,
         Optional('mode_stack'): str,
+        Optional('mode_poe'): str,
         Optional('usb_type_host'): str,
         Optional('stack_active'): str,
         Optional('stack_a'): str,
@@ -246,6 +247,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
         # MODE-DUPLEX: BLACK
         # MODE-REDUNDANCY: BLACK
         # MODE-STACK: BLACK
+        # MODE-POE: BLACK
         p11 = re.compile(r'^MODE-(?P<mode>\w+):\s+(?P<mode_color>\w+)$')
 
         # USB-TYPE-A-HOST: BLACK
@@ -357,6 +359,7 @@ class ShowHardwareLed(ShowHardwareLedSchema):
             # MODE-DUPLEX: BLACK
             # MODE-REDUNDANCY: BLACK    
             # MODE-STACK: BLACK
+            # MODE-POE: BLACK
             m = p11.match(line)
             if m:
                 group = m.groupdict()

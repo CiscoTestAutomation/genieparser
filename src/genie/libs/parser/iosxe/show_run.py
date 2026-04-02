@@ -340,8 +340,10 @@ class ShowRunInterfaceSchema(MetaParser):
                     },
                 },
                 Optional('ipv4'): {
-                    'ip': str,
-                    'netmask': str,
+                    Optional('ip'): str,
+                    Optional('netmask'): str,
+                    Optional('dhcp'): bool,
+                    Optional('client_id'): str,
                 },
                 Optional('ipv6'): list,
                 Optional('ipv6_ospf'): {
@@ -470,13 +472,16 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('ip_verify_unicast_source_reachable_via_rx_allow_self_ping'): bool,
                 Optional('ip_verify_unicast_source_reachable_via_rx_acl'): str,
                 Optional('pnp_startup_vlan'): int,
+                Optional('datalink_flow_monitor_input'): str,
+                Optional('datalink_flow_monitor_output'): str,
                 Optional('storm_control'): {
                     Any(): {
                         Optional('level'): str,
                         Optional('low_level'): str,
                     },
                     Optional('action'): str,
-                }
+                },
+                Optional('min_links'): int,
             }
         }
     }
@@ -524,6 +529,9 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
         # ip address 10.1.21.249 255.255.255.0
         p4 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+)$')
+
+        # ip address dhcp client-id Vlan1
+        p4_1 = re.compile(r'^ip +address +dhcp +client-id +(?P<client_id>\S+)$')
 
         # ipv6 address 2001:db8:4:1::1/64
         # ipv6 address 2001:db8:400:1::2/112
@@ -884,8 +892,24 @@ class ShowRunInterface(ShowRunInterfaceSchema):
         p118 = re.compile(r'^storm-control\s+(?P<storm_control_type>[\w\s\-]+)\s+level\s+(bps|pps)\s+(?P<level>\w+)(\s+(?P<low_level>\w+))?$')
 
         # storm-control action trap
-        p119 = re.compile(r'^storm-control\s+action\s+(?P<action>\w+)$')				
-		
+        p119 = re.compile(r'^storm-control\s+action\s+(?P<action>\w+)$')
+
+        # port-channel min-links 3
+        p120 = re.compile(
+            r'^port-channel +min-links +(?P<min_links>\d+)$')
+
+        # datalink flow monitor fnf_mon input
+        p121 = re.compile(r'^datalink +flow +monitor +(?P<datalink_flow_monitor_input>[\S]+) +input$')
+
+        # datalink flow monitor fnf_mon output
+        p122 = re.compile(r'^datalink +flow +monitor +(?P<datalink_flow_monitor_output>[\S]+) +output$')
+
+        # ipv6 flow monitor monitor_ipv6_in input
+        p123 = re.compile(r'^ipv6 +flow +monitor +(?P<flow_monitor_input_v6>[\S]+) +input$')
+
+        # ipv6 flow monitor monitor_ipv6_out output
+        p124 = re.compile(r'^ipv6 +flow +monitor +(?P<flow_monitor_output_v6>[\S]+) +output$')
+
         for line in output.splitlines():
             line = line.strip()
 
@@ -920,6 +944,16 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                                     'netmask': group['netmask']},
                                 })
                 continue
+
+            # ip address dhcp client-id Vlan1
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                ipv4_dict = intf_dict.setdefault('ipv4', {})
+                ipv4_dict['dhcp'] = True
+                ipv4_dict['client_id'] = group['client_id']
+                continue
+
 
             # ipv6 address 2001:db8:4:1::1/64
             m = p5.match(line)
@@ -1824,7 +1858,44 @@ class ShowRunInterface(ShowRunInterfaceSchema):
                 action_dict = intf_dict.setdefault('storm_control', {})
                 action_dict['action'] = group['action']
                 continue
-            
+
+            # port-channel min-links 3
+            m = p120.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({
+                    'min_links': int(group['min_links'])
+                })
+                continue
+
+            # datalink flow monitor fnf_mon input
+            m = p121.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'datalink_flow_monitor_input': group['datalink_flow_monitor_input']})
+                continue
+
+            # datalink flow monitor fnf_mon output
+            m = p122.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'datalink_flow_monitor_output': group['datalink_flow_monitor_output']})
+                continue
+
+            # ipv6 flow monitor monitor_ipv6_in input
+            m = p123.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'flow_monitor_input_v6': group['flow_monitor_input_v6']})
+                continue
+
+            # ipv6 flow monitor monitor_ipv6_out output
+            m = p124.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict.update({'flow_monitor_output_v6': group['flow_monitor_output_v6']})
+                continue
+
         return config_dict
 
 

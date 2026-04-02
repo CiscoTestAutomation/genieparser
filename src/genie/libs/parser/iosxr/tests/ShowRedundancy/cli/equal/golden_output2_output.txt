@@ -1,0 +1,22 @@
+Redundancy information for node 0/RSP1/CPU0:
+==========================================
+Node 0/RSP1/CPU0 is in ACTIVE role
+Partner node (0/RSP0/CPU0) is in STANDBY role
+Standby node in 0/RSP0/CPU0 is ready
+Standby node in 0/RSP0/CPU0 is NSR-not-configured
+
+Reload and Boot Info
+-----------------------
+A9K-RSP880-SE reloaded Sun Jan 10 03:24:10 2027: 
+Active node booted Tue Nov 11 10:42:31 2025: 1 week, 2 days, 1 hour, 46 minutes ago
+Last switch-over Thu Nov 13 17:43:34 2025: 6 days, 18 hours, 45 minutes ago
+Standby node boot Wed Jan 20 05:02:58 2027: 
+Standby node last went not ready Thu Nov 13 21:10:04 2025: 6 days, 15 hours, 19 minutes ago
+Standby node last went ready Thu Nov 13 21:10:04 2025: 6 days, 15 hours, 19 minutes ago
+Standby node last went not NSR-ready Fri Nov 14 02:00:32 2025: 6 days, 10 hours, 28 minutes ago
+Standby node last went NSR-ready Fri Nov 14 02:00:32 2025: 6 days, 10 hours, 28 minutes ago
+There have been 3 switch-overs since reload
+
+Active node reload "Initiating switch-over."
+Standby node reload "User initiated graceful reload "
+

@@ -1,0 +1,62 @@
+  show platform software adj fp active
+Number of adjacency objects: 5
+
+Adjacency id: 0x11 (17)
+  Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+  Encap: 8:96:ad:8d:71:0:c4:b2:39:fb:c4:13:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 172.100.0.1
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 124, HW handle: 0x563820228040 (created)
+
+Adjacency id: 0x17 (23)
+  Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+  Encap: 0:50:56:8b:7b:52:c4:b2:39:fb:c4:13:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 172.100.0.2
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 131, HW handle: 0x56382022a5d0 (created)
+
+Adjacency id: 0xf8000011 (4160749585)
+  Interface: Null0, IF index: 1, Link Type: MCP_LINK_IP
+  Encap: f8:0:0:11
+  Encap Length: 4, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: incomplete, no-l3-inject, p2mp-type
+  Incomplete behavior type: Punt
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 225.0.0.0
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 165, HW handle: 0x5638202d2380 (created)
+
+Adjacency id: 0xf8000081 (4160749697)
+  Interface: GigabitEthernet0/0/1, IF index: 8, Link Type: MCP_LINK_IP
+  Encap: 1:0:5e:0:0:0:c4:b2:39:fb:c4:11:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: no-l3-inject, p2mp-type
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 225.0.0.0
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 191, HW handle: 0x56382030fdc0 (created)
+
+Adjacency id: 0xf80000a4 (4160749732)
+  Interface: GigabitEthernet0/0/3, IF index: 10, Link Type: MCP_LINK_IP
+  Encap: 1:0:5e:0:0:0:c4:b2:39:fb:c4:13:8:0
+  Encap Length: 14, Encap Type: MCP_ET_ARPA, MTU: 1500
+  Flags: p2mp-type
+  Incomplete behavior type: None
+  Fixup: unknown
+  Fixup_Flags_2: unknown
+  Nexthop addr: 227.0.0.0
+  IP FRR MCP_ADJ_IPFRR_NONE 0
+  aom id: 117, HW handle: 0x5638201f8cc0 (created)

@@ -605,7 +605,7 @@ class ShowAppHostingDetailAppidSchema(MetaParser):
                 'network_name': str
             }
         },
-        'application_health': {
+        Optional('application_health'): {
             'status': str,
             Optional('last_probe_error'): str,
             Optional('last_probe_output'): str
