@@ -98,6 +98,7 @@ expected_output = {
 				'evpn': {
 					'EVPN': {
 						'state': 'up',
+                        'evi': '1002',
 						'xc_id': '0x80000003',
 						'statistics': {
 							'packet_totals': {
