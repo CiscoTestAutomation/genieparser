@@ -1107,7 +1107,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
         result_dict = {}
 
         # IS-IS Process: test VRF: default
-        p1 = re.compile(r'^IS-IS +[Pp]rocess: +(?P<process_id>\S+) +VRF: +(?P<vrf>\S+)$')
+        p1 = re.compile(r'^IS-IS +[Pp]rocess: +(?P<process_id>\S+) +VRF:( |)+(?P<vrf>\S+)$')
 
         # System ID       SNPA            Level  State  Hold Time  Interface
         # R2_xr           fa16.3eff.4abd  1      UP     00:00:09   Ethernet1/1.115
