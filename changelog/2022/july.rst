@@ -114,7 +114,7 @@
         * Updated patterns <p7> and <p8> to accommodate various outputs to parse VXlan related information
     * Modified ShowIpMfib:
         * Made multicast_group and source_address as optional keys under ShowIpMfibSchema
---------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
                                       Fix                                       
 --------------------------------------------------------------------------------
 

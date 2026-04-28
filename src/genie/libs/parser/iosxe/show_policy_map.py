@@ -4506,3 +4506,170 @@ class ShowPolicyMapTypeAccessControlAccessControl(ShowPolicyMapTypeAccessControl
                 continue
 
         return ret_dict
+
+
+class ShowPolicyMapControlPlaneAllSchema(MetaParser):
+    """Schema for show policy-map control-plane all"""
+    schema = {
+        'control_plane': {
+            'service_policy': {
+                'output': {
+                    Any(): {
+                        'class': {
+                            Any(): {
+                                'packets': int,
+                                'bytes': int,
+                                'rate': {
+                                    'interval': int,
+                                    'offered_rate_bps': int,
+                                    'drop_rate_bps': int
+                                },
+                                'match_evaluated': str,
+                                'match': ListOf(str),
+                                Optional('qos_set'): {
+                                    'ip': {
+                                        'dscp': {
+                                            Any(): {
+                                                'marker_statistics': str
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPolicyMapControlPlaneAll(ShowPolicyMapControlPlaneAllSchema):
+    """Parser for show policy-map control-plane all"""
+    cli_command = "show policy-map control-plane all"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        current_class_dict = None
+        classes_dict = None
+        qos_set_active = False
+        dscp_name = None
+
+        #  Control Plane
+        p1 = re.compile(r'^\s*Control Plane$')
+
+        #   Service-policy output: copp
+        p2 = re.compile(r'^\s*Service-policy\s+output\s*:\s*(?P<policy>\S+)$')
+
+        #     Class-map: copp (match-all)
+        p3 = re.compile(r'^\s*Class-map\s*:\s*(?P<class_name>\S+)\s+\((?P<match_eval>[\w\-]+)\)$')
+
+        #       44266 packets, 3452858 bytes
+        p4 = re.compile(r'^\s*(?P<packets>\d+)\s+packets,\s+(?P<bytes>\d+)\s+bytes$')
+
+        #       5 minute offered rate 91000 bps, drop rate 0000 bps
+        p5 = re.compile(r'^\s*(?P<interval>\d+)\s+minute(?:s)?\s+offered\s+rate\s+(?P<offered>\d+)\s+bps,\s+drop\s+rate\s+(?P<drop>\d+)\s+bps$')
+
+        #       Match: access-group name copp
+        p6 = re.compile(r'^\s*Match\s*:\s*(?P<match>.+)$')
+
+        #       QoS Set
+        p7 = re.compile(r'^\s*QoS\s+Set$')
+
+        #         ip dscp default
+        p8 = re.compile(r'^\s*ip\s+dscp\s+(?P<dscp>\S+)$')
+
+        #           Marker statistics: Disabled
+        p9 = re.compile(r'^\s*Marker\s+statistics\s*:\s*(?P<marker>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #  Control Plane
+            m = p1.match(line)
+            if m:
+                cp_dict = ret_dict.setdefault('control_plane', {})
+                continue
+
+            #   Service-policy output: copp
+            m = p2.match(line)
+            if m:
+                policy = m.group('policy')
+                service_policy_dict = ret_dict.setdefault('control_plane', {}).setdefault('service_policy', {})
+                output_dict = service_policy_dict.setdefault('output', {})
+                policy_dict = output_dict.setdefault(policy, {})
+                classes_dict = policy_dict.setdefault('class', {})
+                continue
+
+            #     Class-map: copp (match-all)
+            m = p3.match(line)
+            if m:
+                class_name = m.group('class_name')
+                match_eval = m.group('match_eval')
+                current_class_dict = classes_dict.setdefault(class_name, {})
+                current_class_dict['match_evaluated'] = match_eval
+                qos_set_active = False
+                dscp_name = None
+                continue
+
+            #       44266 packets, 3452858 bytes
+            m = p4.match(line)
+            if m and current_class_dict is not None:
+                current_class_dict['packets'] = int(m.group('packets'))
+                current_class_dict['bytes'] = int(m.group('bytes'))
+                continue
+
+            #       5 minute offered rate 91000 bps, drop rate 0000 bps
+            m = p5.match(line)
+            if m and current_class_dict is not None:
+                interval_minutes = int(m.group('interval'))
+                rate_dict = current_class_dict.setdefault('rate', {})
+                rate_dict['interval'] = interval_minutes * 60
+                rate_dict['offered_rate_bps'] = int(m.group('offered'))
+                rate_dict['drop_rate_bps'] = int(m.group('drop'))
+                continue
+
+            #       Match: access-group name copp
+            m = p6.match(line)
+            if m and current_class_dict is not None:
+                match_list = current_class_dict.setdefault('match', [])
+                match_list.append(m.group('match'))
+                continue
+
+            #       QoS Set
+            m = p7.match(line)
+            if m and current_class_dict is not None:
+                qos_set_active = True
+                current_class_dict.setdefault('qos_set', {})
+                continue
+
+            #         ip dscp default
+            m = p8.match(line)
+            if m and current_class_dict is not None and qos_set_active:
+                dscp_name = m.group('dscp')
+                qos_set_dict = current_class_dict.setdefault('qos_set', {})
+                ip_dict = qos_set_dict.setdefault('ip', {})
+                dscp_dict = ip_dict.setdefault('dscp', {})
+                dscp_entry = dscp_dict.setdefault(dscp_name, {})
+                continue
+
+            #           Marker statistics: Disabled
+            m = p9.match(line)
+            if m and current_class_dict is not None and qos_set_active and dscp_name:
+                qos_set_dict = current_class_dict.get('qos_set', {})
+                ip_dict = qos_set_dict.get('ip', {})
+                dscp_dict = ip_dict.get('dscp', {})
+                dscp_entry = dscp_dict.get(dscp_name, {})
+                dscp_entry['marker_statistics'] = m.group('marker')
+                # Ensure assignment back in case references were not direct (defensive)
+                dscp_dict[dscp_name] = dscp_entry
+                ip_dict['dscp'] = dscp_dict
+                qos_set_dict['ip'] = ip_dict
+                current_class_dict['qos_set'] = qos_set_dict
+                continue
+
+        return ret_dict

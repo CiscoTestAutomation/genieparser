@@ -1,0 +1,10 @@
+{
+    "version": "2c",
+    "ip": "172.23.18.83",
+    "vrf": "Mgmt-vrf",
+    "community_str": "public@2550",
+    "non_repeaters": "1",
+    "max_repetitions": "1",
+    "oid": "1.3.6.1.2.1.17.7.1.2.2.1.2"
+}
+

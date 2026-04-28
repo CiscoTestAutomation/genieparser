@@ -1,0 +1,73 @@
+show platform hardware slot R0 {slot} sensor consumer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+Temp1             640      22  C    15:52:30
+Temp: FC PWM1     641      26  C    15:52:30
+Temp1             660      24  C    15:52:33
+Temp: FC PWM1     661      26  C    15:52:33
+Temp1             660      24  C    15:52:36
+Temp: FC PWM1     661      24  C    15:52:36
+Temp1             620      22  C    15:52:38
+Temp: FC PWM1     621      26  C    15:52:39
+Temp1             640      21  C    15:52:39
+Temp: FC PWM1     641      24  C    15:52:40
+Vin               500  228000  mV   15:53:27
+Pin               501  872784       15:53:27
+Iin               502    3828  mA   15:53:27
+Vout              503   12035  mV   15:53:27
+Pout              504   -4797       15:53:27
+Iout              505   64625  mA   15:53:27
+Temp1             506      23  C    15:53:27
+Temp2             507      31  C    15:53:27
+Temp3             508      34  C    15:53:27
+Vin               520       0  mV   15:53:27
+Pin               521       0       15:53:27
+Iin               522       0  mA   15:53:27
+Vout              523       0  mV   15:53:27
+Pout              524       0       15:53:27
+Iout              525       0  mA   15:53:27
+Temp1             526      23  C    15:53:27
+Temp2             527       0  C    15:53:27
+Temp3             528      24  C    15:53:27
+Vin               540       0  mV   15:53:27
+Pin               541       0       15:53:27
+Iin               542       0  mA   15:53:27
+Vout              543       0  mV   15:53:27
+Pout              544       0       15:53:27
+Iout              545       0  mA   15:53:27
+Temp1             546      22  C    15:53:27
+Temp2             547       0  C    15:53:27
+Temp3             548      24  C    15:53:27
+Temp1             620      22  C    15:53:27
+Temp: FC PWM1     621      25  C    15:53:27
+Temp1             640      22  C    15:53:27
+Temp: FC PWM1     641      25  C    15:53:27
+Temp1             660      24  C    15:53:27
+Temp: FC PWM1     661      25  C    15:53:27
+VVM 0: VX1        20      604  mV   15:53:27
+VVM 0: VX2        21     1212  mV   15:53:27
+VVM 0: VX3        22     1209  mV   15:53:27
+VVM 0: VX4        23      996  mV   15:53:27
+VVM 0: VP1        24     3333  mV   15:53:27
+VVM 0: VP2        25     3347  mV   15:53:27
+VVM 0: VP3        26     5033  mV   15:53:27
+VVM 0: VP4        27     1509  mV   15:53:27
+VVM 0: VH         28    11924  mV   15:53:27
+VVM 1: VX3        29     1053  mV   15:53:27
+VVM 1: VP1        30     1701  mV   15:53:27
+VVM 1: VP2        31     1810  mV   15:53:27
+VVM 1: VP3        32     2525  mV   15:53:27
+VVM 1: VP4        33     3248  mV   15:53:27
+VVM 1: VH         34    11909  mV   15:53:27
+VVM 2: VX1        35      995  mV   15:53:27
+VVM 2: VP1        36     1197  mV   15:53:27
+VVM 2: VP2        37     1807  mV   15:53:27
+VVM 2: VH         38    11914  mV   15:53:27
+Temp: CPU-IN      39       24  C    15:53:27
+Temp: Outlet      40       31  C    15:53:27
+Temp: Center      41       18  C    15:53:27
+Temp: Inlet       42       29  C    15:53:27
+Temp: DDR4 In     43       29  C    15:53:27
+Temp: DDR4 Out    44       23  C    15:53:27
+

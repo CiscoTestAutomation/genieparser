@@ -1,0 +1,12 @@
+Redundancy Group 100 (0x64)
+  Applications connected: mLACP, Pseudo-mLACP
+  Monitor mode: BFD
+  member ip: 99.1.1.2 "Router", CONNECTING
+    mLACP state: AUTO_CONNECT
+    Pseudo-mLACP state: AUTO_CONNECT
+  backbone int GigabitEthernet0/0/4: UP (IP)
+
+ICRM fast-failure detection neighbor table
+  IP Address       Status Type Next-hop IP      Interface
+  ==========       ====== ==== ===========      =========
+  99.1.1.2         DOWN   RW

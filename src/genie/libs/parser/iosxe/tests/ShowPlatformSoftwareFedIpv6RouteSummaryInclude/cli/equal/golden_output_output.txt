@@ -1,0 +1,4 @@
+Total number of v6 fib EM hw entries for device:0 = 2
+Total number of v6 fib EM hw entries for device:1 = 2
+Total number of v6 fib EM hw entries for device:2 = 2
+Total number of v6 fib EM hw entries for device:3 = 2

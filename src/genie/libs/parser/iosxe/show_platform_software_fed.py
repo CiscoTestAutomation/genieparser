@@ -6219,7 +6219,9 @@ class ShowPlatformSoftwareFedActiveMonitor(ShowPlatformSoftwareFedActiveMonitorS
         )
 
         # Source VLANs         : None
-        p4 = re.compile(r"^Source VLANs\s+:\s+(?P<source_vlans>[\w\-\d\s]+(?<!None))$")
+        # Source VLANs         : VLAN-100
+        # Source VLANs         : RX: VLAN-200 TX: None
+        p4 = re.compile(r"^Source VLANs\s+:\s+(?P<source_vlans>.+)$")
 
         # Destination VLANs    : None
         p5 = re.compile(
@@ -6315,9 +6317,24 @@ class ShowPlatformSoftwareFedActiveMonitor(ShowPlatformSoftwareFedActiveMonitorS
 
             m = p4.match(line)
             if m:
-                ret_dict.setdefault(
-                    "source_vlans", m.groupdict()["source_vlans"].split(" ")
+                source_vlans = m.groupdict()["source_vlans"].strip()
+                if source_vlans.lower() == "none":
+                    continue
+
+                vlan_list = []
+                rx_tx_match = re.match(
+                    r"^RX:\s*(?P<rx>.*?)\s*TX:\s*(?P<tx>.*)$", source_vlans
                 )
+                if rx_tx_match:
+                    for direction in ["rx", "tx"]:
+                        vlan_value = rx_tx_match.groupdict()[direction].strip()
+                        if vlan_value and vlan_value.lower() != "none":
+                            vlan_list.extend(vlan_value.split())
+                else:
+                    vlan_list = source_vlans.split()
+
+                if vlan_list:
+                    ret_dict.setdefault("source_vlans", vlan_list)
                 continue
 
             m = p5.match(line)
@@ -20616,4 +20633,176 @@ class ShowPlatformSoftwareFedSwitchActiveSgaclBdMapping(ShowPlatformSoftwareFedS
                 continue
 
         return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActiveVmapAllSchema(MetaParser):
+    """Schema for show platform software fed switch active vmap all"""
+
+    schema = {
+        "interfaces": {
+            Any(): {
+                "if_id": int,
+                "type": str,
+                "svlan": int,
+                "cvlan": str,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchActiveVmapAll(
+    ShowPlatformSoftwareFedSwitchActiveVmapAllSchema
+):
+    """Parser for show platform software fed switch active vmap all"""
+
+    cli_command = "show platform software fed switch active vmap all"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+
+        # Example:
+        # 1227 Po10 1-to-1 18 4075
+        p = re.compile(r'^(?P<if_id>\d+)\s+(?P<intf>\S+)\s+(?P<type>\S+)\s+(?P<svlan>\d+)\s+(?P<cvlan>[\d,-]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # 1227    Po10            1-to-1       18        4075
+            m = p.match(line)
+            if m:
+                intf = m.group("intf")
+
+                result.setdefault("interfaces", {})
+                result["interfaces"][intf] = {
+                    "if_id": int(m.group("if_id")),
+                    "type": m.group("type"),
+                    "svlan": int(m.group("svlan")),
+                    "cvlan": m.group("cvlan"),
+                }
+
+        return result
+
+class ShowPlatformSoftwareFedSwitchActiveVpKeyDetailSchema(MetaParser):
+    """Schema for show platform software fed switch active vp key <iif> <vlan> detail"""
+
+    schema = {
+        "vp": {   
+            Optional("iif_id"): int,
+            Optional("vlan_id"): int,
+            Optional("vp_if_id"): str,
+            Optional("l2_srv_port_oid"): int,
+            Optional("l2_srv_port_gid"): int,
+            Optional("match_vlan"): int,
+            Optional("default_vlan"): int,
+            Optional("info"): {
+                Optional("stp_state"): str,
+                Optional("port_mode"): str,
+                Optional("port_tagging"): str,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchActiveVpKeyDetail(
+    ShowPlatformSoftwareFedSwitchActiveVpKeyDetailSchema
+):
+    """Parser for show platform software fed switch active vp key <iif> <vlan> detail"""
+
+    cli_command = "show platform software fed switch active vp key {iif_id} {vlan_id} detail"
+
+    def cli(self, iif_id=None, vlan_id=None, output=None):
+
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(iif_id=iif_id, vlan_id=vlan_id)
+            )
+
+        result = {}
+        vp_dict = {}
+
+        # Example: iif_id = 1445, vlan_id = 18,
+        p1 = re.compile(r'iif_id\s*=\s*(?P<iif_id>\d+),\s*vlan_id\s*=\s*(?P<vlan_id>\d+)')
+
+        # Example: vp_if_id = 0x90a0012,
+        p2 = re.compile(r'vp_if_id\s*=\s*(?P<vp_if_id>0x[0-9a-fA-F]+)')
+
+        # Example: l2_srv_port_oid = 1216, l2_srv_port_gid = 210
+        p3 = re.compile(r'l2_srv_port_oid\s*=\s*(?P<oid>\d+),\s*l2_srv_port_gid\s*=\s*(?P<gid>\d+)')
+
+        # Example: match_vlan = 18,
+        p4 = re.compile(r'match_vlan\s*=\s*(?P<match_vlan>\d+)')
+
+        # Example: default_vlan = 1,
+        p5 = re.compile(r'default_vlan\s*=\s*(?P<default_vlan>\d+)')
+
+        # Example: STP State : forwarding
+        p6 = re.compile(r'STP\s+State\s*:\s*(?P<state>\S+)')
+
+        # Example: port  mode : Trunk
+        p7 = re.compile(r'port\s+mode\s*:\s*(?P<mode>\S+)')
+
+        # Example: port tagging : Native
+        p8 = re.compile(r'port\s+tagging\s*:\s*(?P<tagging>\S+)')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # iif_id = 1445, vlan_id = 18,
+            m = p1.match(line)
+            if m:
+                vp_dict["iif_id"] = int(m.group("iif_id"))
+                vp_dict["vlan_id"] = int(m.group("vlan_id"))
+                continue
+
+            # vp_if_id = 0x90a0012,
+            m = p2.match(line)
+            if m:
+                vp_dict["vp_if_id"] = m.group("vp_if_id")
+                continue
+
+            # l2_srv_port_oid = 1216, l2_srv_port_gid = 210
+            m = p3.match(line)
+            if m:
+                vp_dict["l2_srv_port_oid"] = int(m.group("oid"))
+                vp_dict["l2_srv_port_gid"] = int(m.group("gid"))
+                continue
+
+            # default_vlan = 1,
+            m = p4.match(line)
+            if m:
+                vp_dict["match_vlan"] = int(m.group("match_vlan"))
+                continue
+
+            # STP State : forwarding
+            m = p5.match(line)
+            if m:
+                vp_dict["default_vlan"] = int(m.group("default_vlan"))
+                continue
+
+            # port  mode : Trunk
+            m = p6.match(line)
+            if m:
+                info_dict = vp_dict.setdefault("info", {})
+                info_dict["stp_state"] = m.group("state")
+                continue
+
+            # port tagging : Native
+            m = p7.match(line)
+            if m:
+                info_dict = vp_dict.setdefault("info", {})
+                info_dict["port_mode"] = m.group("mode")
+                continue
+
+            # match_vlan = 18,
+            m = p8.match(line)
+            if m:
+                info_dict = vp_dict.setdefault("info", {})
+                info_dict["port_tagging"] = m.group("tagging")
+                continue
+
+        if vp_dict:
+            result["vp"] = vp_dict
+
+        return result
 

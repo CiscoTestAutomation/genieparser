@@ -1,0 +1,8 @@
+  Telemetry receivers
+
+  Name                              Type        Profile               State       Status
+  --------------------------------------------------------------------------------------------------------------------------------------------
+  grpc-tcp                          protocol                          Valid       Receiver validated
+  grpc-tls                          protocol                          Invalid     Value 'unspecified' not supported for parameter 'protocol'.
+  pullrecv                          pull mode                         Valid       Receiver validated
+

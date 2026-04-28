@@ -900,3 +900,260 @@ class ShowRedundancyLinecardAll(ShowRedundancyLinecardAllSchema):
                 ret['slot'][slot]['role'] = m1.groupdict()['role']
                 ret['slot'][slot]['mode'] = m1.groupdict()['mode']
         return ret
+# =======================================
+# Parser for:
+#  * 'show redundancy interchassis'
+# =======================================
+class ShowRedundancyInterchassisSchema(MetaParser):
+    """Schema for show redundancy interchassis
+                  show redundancy interchassis <group_id>"""
+
+    schema = {
+        'redundancy': {
+            Any(): {  # group_id as string key
+                'group': {
+                    'id': int,
+                    'id_hex': str,
+                },
+                Optional('applications_connected'): list,
+                Optional('monitor_mode'): str,
+                Optional('members'): {
+                    Any(): {  # member IP
+                        Optional('name'): str,
+                        'status': str,
+                        Optional('bfd_neighbor'): {
+                            'interface': str,
+                            'next_hop_ip': str,
+                            'status': str,
+                        },
+                        Optional('mlacp_state'): str,
+                        Optional('pseudo_mlacp_state'): str,
+                    },
+                },
+                Optional('backbone_interfaces'): {
+                    Any(): {  # interface name
+                        'status': str,
+                        Optional('protocol'): str,
+                    },
+                },
+                Optional('icrm_fast_failure_detection'): {
+                    'neighbor_table': {
+                        Optional('neighbors'): {
+                            Any(): {  # neighbor IP
+                                'status': str,
+                                'type': str,
+                                Optional('next_hop_ip'): str,
+                                Optional('interface'): str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowRedundancyInterchassis(ShowRedundancyInterchassisSchema):
+    """Parser for show redundancy interchassis
+                  show redundancy interchassis <group_id>"""
+
+    cli_command = [
+        'show redundancy interchassis',
+        'show redundancy interchassis {group_id}',
+    ]
+
+    def cli(self, group_id=None, output=None):
+        if output is None:
+            if group_id:
+                cmd = self.cli_command[1].format(group_id=group_id)
+            else:
+                cmd = self.cli_command[0]
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Redundancy Group 4294967295 (0xFFFFFFFF)
+        p1 = re.compile(
+            r'^Redundancy\s+Group\s+(?P<group_id>\d+)\s+'
+            r'\((?P<group_id_hex>0x[0-9A-Fa-f]+)\)$')
+
+        # Applications connected: mLACP, Pseudo-mLACP
+        p2 = re.compile(
+            r'^Applications\s+connected\s*:\s*(?P<applications>.+)$')
+
+        # Monitor mode: BFD
+        p3 = re.compile(
+            r'^Monitor\s+mode\s*:\s*(?P<monitor_mode>\S+)$')
+
+        # member ip: 88.1.1.2 "Router", CONNECTED
+        # member ip: 88.1.1.2, CONNECTING
+        p4 = re.compile(
+            r'^member\s+ip\s*:\s*(?P<ip>\S+)'
+            r'(?:\s+"(?P<name>[^"]*)")?\s*,\s*(?P<status>\S+)$')
+
+        # BFD neighbor: TenGigabitEthernet0/0/1, next hop 80.1.3.2, UP
+        p5 = re.compile(
+            r'^BFD\s+neighbor\s*:\s*(?P<interface>\S+?)\s*,'
+            r'\s*next\s+hop\s+(?P<next_hop_ip>\S+?)\s*,\s*(?P<status>\S+)$')
+
+        # mLACP state: CONNECTED
+        p6 = re.compile(
+            r'^mLACP\s+state\s*:\s*(?P<mlacp_state>\S+)$')
+
+        # Pseudo-mLACP state: CONNECTED
+        p7 = re.compile(
+            r'^Pseudo-mLACP\s+state\s*:\s*(?P<pseudo_mlacp_state>\S+)$')
+
+        # backbone int TenGigabitEthernet0/0/2: UP (IP)
+        # backbone int TenGigabitEthernet0/0/2: UP
+        p8 = re.compile(
+            r'^backbone\s+int\s+(?P<interface>\S+)\s*:\s*'
+            r'(?P<status>\S+)(?:\s+\((?P<protocol>[^)]+)\))?$')
+
+        # ICRM table row (full): 88.1.1.2  UP  BFD  80.1.3.2  TenGigabitEthernet0/0/1
+        p9 = re.compile(
+            r'^(?P<ip>\d+\.\d+\.\d+\.\d+)\s+(?P<status>\S+)\s+'
+            r'(?P<type>\S+)\s+(?P<next_hop_ip>\d+\.\d+\.\d+\.\d+)\s+'
+            r'(?P<interface>\S+)$')
+
+        # ICRM table row (broken, no next-hop/interface): 88.1.1.2  DOWN  RW
+        p10 = re.compile(
+            r'^(?P<ip>\d+\.\d+\.\d+\.\d+)\s+(?P<status>\S+)\s+'
+            r'(?P<type>\S+)\s*$')
+
+        current_grp = None
+        current_grp_key = None
+        current_member = None
+        in_icrm_table = False
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Skip header/separator lines
+            if line.startswith('=') or line.startswith('IP Address'):
+                continue
+
+            # Detect ICRM section start
+            if 'ICRM fast-failure' in line:
+                in_icrm_table = True
+                if current_grp is not None:
+                    current_grp.setdefault(
+                        'icrm_fast_failure_detection', {}).setdefault(
+                            'neighbor_table', {})
+                current_member = None
+                continue
+
+            # p1: Redundancy Group
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                grp_id = int(group['group_id'])
+                current_grp_key = str(grp_id)
+                current_grp = ret_dict.setdefault(
+                    'redundancy', {}).setdefault(current_grp_key, {})
+                current_grp['group'] = {
+                    'id': grp_id,
+                    'id_hex': group['group_id_hex'],
+                }
+                current_member = None
+                in_icrm_table = False
+                continue
+
+            if current_grp is None:
+                continue
+
+            # p2: Applications connected
+            m = p2.match(line)
+            if m:
+                apps = [a.strip() for a in m.group('applications').split(',')]
+                current_grp['applications_connected'] = apps
+                continue
+
+            # p3: Monitor mode
+            m = p3.match(line)
+            if m:
+                current_grp['monitor_mode'] = m.group('monitor_mode')
+                continue
+
+            # p4: member ip
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ip = group['ip']
+                member_dict = current_grp.setdefault(
+                    'members', {}).setdefault(ip, {})
+                if group['name']:
+                    member_dict['name'] = group['name']
+                member_dict['status'] = group['status']
+                current_member = member_dict
+                continue
+
+            # p5-p7: BFD neighbor, mLACP state, Pseudo-mLACP state (under member)
+            if current_member is not None and not in_icrm_table:
+                m = p5.match(line)
+                if m:
+                    group = m.groupdict()
+                    current_member['bfd_neighbor'] = {
+                        'interface': group['interface'],
+                        'next_hop_ip': group['next_hop_ip'],
+                        'status': group['status'],
+                    }
+                    continue
+
+                m = p6.match(line)
+                if m:
+                    current_member['mlacp_state'] = m.group('mlacp_state')
+                    continue
+
+                m = p7.match(line)
+                if m:
+                    current_member['pseudo_mlacp_state'] = m.group(
+                        'pseudo_mlacp_state')
+                    continue
+
+            # p8: backbone int
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group['interface']
+                bb_dict = current_grp.setdefault(
+                    'backbone_interfaces', {}).setdefault(intf, {})
+                bb_dict['status'] = group['status']
+                if group['protocol']:
+                    bb_dict['protocol'] = group['protocol']
+                current_member = None
+                continue
+
+            # ICRM table rows
+            if in_icrm_table:
+                # p9: full ICRM row
+                m = p9.match(line)
+                if m:
+                    group = m.groupdict()
+                    ip = group['ip']
+                    icrm_dict = current_grp.setdefault(
+                        'icrm_fast_failure_detection', {}).setdefault(
+                            'neighbor_table', {}).setdefault(
+                                'neighbors', {}).setdefault(ip, {})
+                    icrm_dict['status'] = group['status']
+                    icrm_dict['type'] = group['type']
+                    icrm_dict['next_hop_ip'] = group['next_hop_ip']
+                    icrm_dict['interface'] = group['interface']
+                    continue
+
+                # p10: broken ICRM row (no next-hop/interface)
+                m = p10.match(line)
+                if m:
+                    group = m.groupdict()
+                    ip = group['ip']
+                    icrm_dict = current_grp.setdefault(
+                        'icrm_fast_failure_detection', {}).setdefault(
+                            'neighbor_table', {}).setdefault(
+                                'neighbors', {}).setdefault(ip, {})
+                    icrm_dict['status'] = group['status']
+                    icrm_dict['type'] = group['type']
+                    continue
+
+        return ret_dict

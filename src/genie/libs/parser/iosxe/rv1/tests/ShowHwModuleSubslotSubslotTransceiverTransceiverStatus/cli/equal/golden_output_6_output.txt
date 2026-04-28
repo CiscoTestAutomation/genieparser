@@ -1,0 +1,7 @@
+show hw-module subslot 1/0 {subslot} transceiver 8 {transceiver} status
+The Transceiver in slot 1 subslot 0 port 8 is enabled.
+  Module temperature                        = +31.476 C
+  Transceiver Tx supply voltage             = 3307.8 mVolts
+  Transceiver Tx bias current               = 8792 uAmps
+  Transceiver Tx power                      = -2.6 dBm
+  Transceiver Rx optical power              = -3.2 dBm

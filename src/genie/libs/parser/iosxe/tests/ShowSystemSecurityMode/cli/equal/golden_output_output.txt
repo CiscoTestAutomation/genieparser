@@ -1,0 +1,2 @@
+9300_L2_DUT#show system security mode
+System Security Mode : Insecure

@@ -1,0 +1,8 @@
+{
+    "version": "2c",
+    "ip": "6.6.6.6",
+    "community_str": "public",
+    "non_repeaters": "0",
+    "max_repetitions": "2",
+    "oid": "dot1qTpFdbPort"
+}

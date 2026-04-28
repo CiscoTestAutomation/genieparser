@@ -1,0 +1,51 @@
+show platform hardware slot R1 {slot} sensor producer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+Vin               500  228500  mV   03:13:32
+Pin               501  542687       03:13:32
+Iin               502    2375  mA   03:13:33
+Vout              503   11996  mV   03:13:33
+Pout              504  996187       03:13:32
+Iout              505   40250  mA   03:13:32
+Temp1             506      25  C    03:13:32
+Temp2             507      34  C    03:13:33
+Temp3             508      43  C    03:13:33
+Vin               520  228500  mV   02:44:28
+Pin               521  344806       02:44:28
+Iin               522    1509  mA   02:44:28
+Vout              523   12074  mV   03:13:32
+Pout              524  106000       03:13:32
+Iout              525   40000  mA   03:13:32
+Temp1             526      27  C    03:13:32
+Temp2             527      31  C    03:13:32
+Temp3             528      34  C    03:13:32
+Temp1             620      37  C    03:13:32
+Temp: FC PWM1     621      35  C    03:13:32
+Temp1             640      38  C    03:13:32
+Temp: FC PWM1     641      35  C    03:13:33
+VVM 0: VX1        20      607  mV   03:13:33
+VVM 0: VX2        21     1213  mV   03:13:33
+VVM 0: VX3        22     1198  mV   03:13:33
+VVM 0: VX4        23      994  mV   03:13:33
+VVM 0: VP1        24     3312  mV   03:13:33
+VVM 0: VP2        25     3320  mV   03:13:33
+VVM 0: VP3        26     5009  mV   03:13:32
+VVM 0: VP4        27     1505  mV   03:13:32
+VVM 0: VH         28    11940  mV   03:13:32
+VVM 1: VX3        29     1055  mV   03:13:32
+VVM 1: VP1        30     1705  mV   03:13:32
+VVM 1: VP2        31     1803  mV   03:13:32
+VVM 1: VP3        32     2528  mV   03:13:32
+VVM 1: VP4        33     3290  mV   03:13:32
+VVM 1: VH         34    11945  mV   03:13:32
+VVM 2: VX1        35      996  mV   03:13:32
+VVM 2: VP1        36     1195  mV   03:13:32
+VVM 2: VP2        37     1809  mV   03:13:32
+VVM 2: VH         38    11951  mV   03:13:32
+Temp: CPU-IN      39       35  C    03:13:32
+Temp: Outlet      40       38  C    03:13:32
+Temp: Center      41       26  C    03:13:32
+Temp: Inlet       42       37  C    03:13:33
+Temp: DDR4 In     43       36  C    03:13:33
+Temp: DDR4 Out    44       31  C    03:13:33

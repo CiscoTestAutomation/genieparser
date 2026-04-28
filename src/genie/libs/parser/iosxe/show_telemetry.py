@@ -64,35 +64,43 @@ class ShowTelemetryIETFSubscriptionSchema(MetaParser):
     schema = {
         'id':{
             int: {
-            Optional('type'): str,
-            'state': str,
-            Optional('stream'): str,
-            Optional('filter'): {
-                Optional('filter_type'): str,
-                Optional('xpath'): str,
-            },
-            Optional('state_description'): str,
-            Optional('update_policy'): {
-                'update_trigger': str,
-                Optional('period'): int,
-                Optional('synch_on_start'): str,
-                Optional('dampening_period'): int,
-            },
-            Optional('encoding'): str,
-            Optional('source'): str,
-            Optional('source_vrf'): str,
-            Optional('source_address'): str,
-            Optional('notes'): str,
-            Optional('legacy_receivers'): {
-                str: {
+                Optional('type'): str,
+                'state': str,
+                Optional('stream'): str,
+                Optional('filter'): {
+                    Optional('filter_type'): str,
+                    Optional('xpath'): str,
+                },
+                Optional('state_description'): str,
+                Optional('update_policy'): {
+                    'update_trigger': str,
+                    Optional('period'): int,
+                    Optional('synch_on_start'): str,
+                    Optional('dampening_period'): int,
+                },
+                Optional('encoding'): str,
+                Optional('source'): str,
+                Optional('source_vrf'): str,
+                Optional('source_address'): str,
+                Optional('notes'): str,
+                Optional('legacy_receivers'): {
+                    str: {
                     'port': int,
-                    'protocol': str,
-                    Optional('protocol_profile'): str,
+                        'protocol': str,
+                        Optional('protocol_profile'): str,
+                    }
+                },
+                Optional('receivers'): {
+                    str: {
+                        'last_update': str,
+                        'state': str,
+                        Optional('notes'): str,
                     }
                 }
             }
         }
     }
+
 
 class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
     '''parser for:
@@ -117,7 +125,7 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
                 output = self.device.execute(self.cli_command[1].format(
                     con_idx=con_idx
                 ))
-        
+
         # 2147483659       Dynamic     Valid       xpath
         p = re.compile(r'^(?P<id>\d+) +(?P<type>\S+) +(?P<state>\S+) +(?P<filter_type>\S+)$')
 
@@ -134,12 +142,11 @@ class ShowTelemetryIETFSubscription(ShowTelemetryIETFSubscriptionSchema):
             words = output.strip().split()
             if words:
                 headerInOutput = (words[0] == "ID")
-
                 if headerInOutput:
-                    isLatestFormat = (words[4] == "Description")
-
+                    isLatestFormat = (words[3] == "Status") or (words[4] == "Description")
                     if isLatestFormat:
                         p = pNew
+
         ret_dict = dict()
 
         for line in output.splitlines():
@@ -224,7 +231,7 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
             output = self.device.execute(self.cli_command.format(
                     sub_id=sub_id
             ))
-        
+
         # Subscription ID: 2147483659
         p1 = re.compile(r'^Subscription +ID: +(?P<id>\d+)$')
 
@@ -267,6 +274,9 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
         #     10.69.35.35                                 45128    netconf
         p12 = re.compile(r'^(?P<address>\S+) +(?P<port>\d+) +(?P<protocol>\S+)( +(?P<protocol_profile>\S+))?$')
 
+        #     testrcvr                          07/30/20 10:53:39  Connected       (optional comments)
+        p13 = re.compile(r'([\S]+) +([0-9]{2}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) +([\S]+)  +([ \S]+)')
+        p14 = re.compile(r'([\S]+) +([0-9]{2}\/[0-9]{2}\/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}) +([\S]+)')
 
         ret_dict = dict()
 
@@ -387,6 +397,27 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
                     })
                 continue
 
+            m = p13.match(line)
+            if m:
+                receivers = subscription.setdefault('receivers', {})
+                receiver = receivers.setdefault(m.group(1), {})
+                receiver.update({
+                    'last_update': m.group(2),
+                    'state': m.group(3),
+                    'notes': m.group(4)
+                })
+                continue
+
+            m = p14.match(line)
+            if m:
+                receivers = subscription.setdefault('receivers', {})
+                receiver = receivers.setdefault(m.group(1), {})
+                receiver.update({
+                    'last_update': m.group(2),
+                    'state': m.group(3)
+                })
+                continue
+
         return ret_dict
 
 
@@ -456,10 +487,11 @@ class ShowTelemetryIETFSubscriptionAllReceivers(ShowTelemetryIETFSubscriptionAll
 
         ret_dict = dict()
         # 101              grpc-tcp                           0      Resolving      Resolution request in progress
-        p1 = re.compile(r'^(?P<id>\d+) +'
-                        r'(?P<name>\S+) +'
-                        r'(?P<connection>\S+) +'
-                        r'(?P<state>.\S+) *'
+        p1 = re.compile(r'^(?P<id>\d+)\s+'
+                        r'(?P<name>\S+)\s+'
+                        r'(?P<connection>\d+)\s+'
+                        r'(\d+\s+)?'
+                        r'(?P<state>\S+(?:\s\S+)?)\s*'
                         r'(?P<explanation>.*)$')
 
 
@@ -479,7 +511,7 @@ class ShowTelemetryIETFSubscriptionAllReceivers(ShowTelemetryIETFSubscriptionAll
                 name_dict.update({
                     'connection': int(group['connection']),
                     'state': group['state'],
-                    'explanation': group['explanation']
+                    'explanation': group['explanation'].rstrip()
                 })
 
                 continue
@@ -492,7 +524,7 @@ class ShowTelemetryIETFSubscriptionReceiverSchema(MetaParser):
     '''
 
     schema = {
-        'id':{
+        'id': {
             int: {
                 Optional('address'): str,
                 Optional('port'): int,
@@ -516,7 +548,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
     cli_command = [
         'show telemetry ietf subscription receiver',
         'show telemetry ietf subscription {sub_id} receiver',
-        ]
+    ]
 
     def cli(self, sub_id=None, output=None):
         if output is None:
@@ -525,7 +557,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
             else:
                 cmd = self.cli_command[0]
             output = self.device.execute(cmd)
-        
+
         # Subscription ID: 2147483659
         p1 = re.compile(r'^Subscription +ID: +(?P<id>\d+)$')
 
@@ -538,7 +570,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
         # Protocol: netconf
         p4 = re.compile(r'^Protocol: +(?P<protocol>\S+)$')
 
-        # Profile: 
+        # Profile:
         p5 = re.compile(r'^Profile: +(?P<profile>\S+)$')
 
         # Connection: 11
@@ -550,7 +582,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
         p7 = re.compile(r'^State: +(?P<state>.*)$')
 
         # Explanation:
-        p8 = re.compile(r'^Explanation: *(?P<explanation>.*)$')
+        p8 = re.compile(r'^(Explanation|Status): *(?P<explanation>.*)$')
 
         # Name: grpc-tcp
         p9 = re.compile(r'^Name: +(?P<name>\S+)$')
@@ -589,7 +621,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
                 subscription['protocol'] = group['protocol']
                 continue
 
-            # Profile: 
+            # Profile:
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -1148,7 +1180,7 @@ class ShowTelemetryReceiverName(ShowTelemetryReceiverNameSchema):
         p3 = re.compile(r"^State:\s*(?P<state>\S*)$")
 
         #State Description:
-        p4 = re.compile(r"^State Description:\s*(?P<state_description>\S*)$")
+        p4 = re.compile(r"^(State Description|Status):\s*(?P<state_description>\S*)$")
 
         #Last State Change: 10/26/21 17:55:47
         p5 = re.compile(r"^Last State Change:\s*(?P<last_change>\S* *\S*)$")
@@ -1212,7 +1244,7 @@ class ShowTelemetryReceiverName(ShowTelemetryReceiverNameSchema):
                 group = m.groupdict()
                 nameEntry["protocol"] = group["protocol"]
                 continue
-            
+
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -1224,7 +1256,7 @@ class ShowTelemetryReceiverName(ShowTelemetryReceiverNameSchema):
                 group = m.groupdict()
                 nameEntry["port"] = int(group["port"])
                 continue
-            
+
         return ret_dict
 
 class ShowTelemetryReceiverAll(ShowTelemetryReceiverNameSchema):
@@ -1240,10 +1272,15 @@ class ShowTelemetryReceiverAll(ShowTelemetryReceiverNameSchema):
 
         ret_dict = dict()
         if output:
-            header = ["Name", "Type", "Profile", "State", "Explanation"]
-            label_fields = [i.lower() for i in header]
+            headers = ["Name", "Type", "Profile", "State"]
+            label_fields = [i.lower() for i in headers]
+            label_fields.append("explanation")
+            if "Status" in output:
+                headers.append("Status")
+            else:
+                headers.append("Explanation")
 
-            ret_dict = parsergen.oper_fill_tabular(device_output=output, device_os='iosxe', header_fields=header, 
+            ret_dict = parsergen.oper_fill_tabular(device_output=output, device_os='iosxe', header_fields=headers,
                     label_fields=label_fields, index=[0]).entries
 
             for k in ret_dict:

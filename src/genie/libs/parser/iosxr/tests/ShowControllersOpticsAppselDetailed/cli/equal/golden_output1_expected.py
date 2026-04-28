@@ -1,0 +1,80 @@
+expected_output = {
+    "port": {
+        "0/0/0/8": {
+            "app_id": {
+                1: {
+                    "host_id": 29,
+                    "media_id": 1,
+                    "host_lane_count": 8,
+                    "media_lane_count": 8,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                2: {
+                    "host_id": 49,
+                    "media_id": 1,
+                    "host_lane_count": 8,
+                    "media_lane_count": 8,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                3: {
+                    "host_id": 20,
+                    "media_id": 1,
+                    "host_lane_count": 8,
+                    "media_lane_count": 8,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                4: {
+                    "host_id": 48,
+                    "media_id": 1,
+                    "host_lane_count": 8,
+                    "media_lane_count": 8,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                5: {
+                    "host_id": 0,
+                    "media_id": 0,
+                    "host_lane_count": 0,
+                    "media_lane_count": 0,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                6: {
+                    "host_id": 0,
+                    "media_id": 0,
+                    "host_lane_count": 0,
+                    "media_lane_count": 0,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                7: {
+                    "host_id": 0,
+                    "media_id": 0,
+                    "host_lane_count": 0,
+                    "media_lane_count": 0,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+                8: {
+                    "host_id": 0,
+                    "media_id": 0,
+                    "host_lane_count": 0,
+                    "media_lane_count": 0,
+                    "host_lane_assign": "0x0",
+                    "media_lane_assign": "0x0",
+                    "host_supported": "Yes",
+                },
+            },
+        }
+    }
+}

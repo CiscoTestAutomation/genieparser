@@ -1,0 +1,4 @@
+sh controllers optics 0/0/0/2 appsel detailed
+Mon Mar 16 14:03:19.410 UTC
+
+Application code information is not available on the optics

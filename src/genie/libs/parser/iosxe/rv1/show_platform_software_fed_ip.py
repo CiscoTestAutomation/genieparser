@@ -104,7 +104,8 @@ class ShowPlatformSoftwareFedSwitchActiveIpMfibVrf(ShowPlatformSoftwareFedSwitch
         p2 = re.compile(r'^Mlist Flags +: +(?P<mlist_flags>\w+)$')
 
         # Mlist_hndl (Id)         : 0x11889275ea0 ( 0xc823 )
-        p3 = re.compile(r'^Mlist_hndl \(Id\) +: +(?P<mlist_hndl_id>[\w\(\)\s]+)$')
+        # Mlist_hndl              : 0x100000000000003d
+        p3 = re.compile(r'^Mlist_hndl(?: \(Id\))? +: +(?P<mlist_hndl_id>[\w\(\)\s]+)$')
 
         # Mlist Urid              : 0x10000000003238e8
         p4 = re.compile(r'^Mlist Urid +: +(?P<mlist_urid>[\w]+)$')

@@ -1,0 +1,60 @@
+show platform hardware slot R0 {slot} sensor producer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+Vin               500  232000  mV   03:11:09
+Pin               501  232500       03:11:09
+Iin               502    1000  mA   03:11:09
+Vout              503   12001  mV   03:11:09
+Pout              504  214464       03:11:09
+Iout              505   17875  mA   03:11:09
+Temp1             506      36  C    03:11:09
+Temp2             507      33  C    03:11:09
+Temp3             508      41  C    03:11:09
+Vin               520       0  mV   03:11:09
+Pin               521       0       03:11:09
+Iin               522       0  mA   03:11:09
+Vout              523    5466  mV   03:11:09
+Pout              524       0       03:11:09
+Iout              525       0  mA   03:11:09
+Temp1             526      36  C    03:11:09
+Temp2             527      33  C    03:11:09
+Temp3             528      33  C    03:11:09
+Temp: Front       20       40  C    03:11:09
+Temp: Inlet       21       31  C    03:11:09
+Temp: Middle      22       44  C    03:11:09
+Temp: U1_P0       23       69  C    03:11:09
+Temp: Rear        24       44  C    03:11:09
+Temp: Outlet      25       38  C    03:11:09
+Temp: Middle 2    26       42  C    03:11:09
+Temp: Right B     27       56  C    03:11:09
+Temp: U1_S1_P0    28       58  C    03:11:09
+Temp: Right T     29       56  C    03:11:09
+Temp: U1_S0_P0    30       59  C    03:11:09
+VSeq1: VX1        31    11908  mV   03:11:09
+VSeq1: VX2        32    12063  mV   03:11:09
+VSeq1: VX3        33     5031  mV   03:11:09
+VSeq1: VX4        34     1799  mV   03:11:09
+VSeq1: VX5        35     3289  mV   03:11:09
+VSeq1: VX7        36     2513  mV   03:11:09
+VSeq1: VX8        37     1794  mV   03:11:09
+VSeq1: VX9        38     1781  mV   03:11:09
+VSeq1: VX10       39     1003  mV   03:11:09
+VSeq1: VX11       40      948  mV   03:11:09
+VSeq1: VX12       41      857  mV   03:11:09
+VSeq1: VX13       42     1199  mV   03:11:09
+VSeq1: VX14       43      598  mV   03:11:09
+VSeq1: VX16       44     1066  mV   03:11:09
+VSeq2: VX2        45      900  mV   03:11:09
+VSeq2: VX3        46      903  mV   03:11:09
+VSeq2: VX4        47      850  mV   03:11:09
+VSeq2: VX5        48      995  mV   03:11:09
+VSeq2: VX7        49      592  mV   03:11:09
+VSeq2: VX10       50      925  mV   03:11:09
+VSeq2: VX11       51     1498  mV   03:11:09
+VSeq2: VX12       52     1207  mV   03:11:09
+VSeq2: VX13       53     1099  mV   03:11:09
+VSeq2: VX14       54      746  mV   03:11:09
+Temp: FC FANS     55       31  C    03:11:09
+Temp: FC FAN0     56       31  C    03:11:09
+Temp: FC FAN1     57       31  C    03:11:09

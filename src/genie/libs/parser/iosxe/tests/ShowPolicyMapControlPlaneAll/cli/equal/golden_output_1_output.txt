@@ -1,0 +1,17 @@
+show policy-map control-plane all
+ Control Plane
+
+  Service-policy output: copp
+
+    Class-map: copp (match-all)
+      44266 packets, 3452858 bytes
+      5 minute offered rate 91000 bps, drop rate 0000 bps
+      Match: access-group name copp
+      QoS Set
+        ip dscp default
+          Marker statistics: Disabled
+
+    Class-map: class-default (match-any)
+      176 packets, 13800 bytes
+      5 minute offered rate 1000 bps, drop rate 0000 bps
+      Match: any

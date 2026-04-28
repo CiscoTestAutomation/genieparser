@@ -1,0 +1,66 @@
+Logging display requested on 2026/03/30 02:20:58 (IST) for Hostname: [9350-3M-PK], Model: [C9350-24HX], Version: [26.02], SN: [FVH293744XA], MD_SN: [FVH2941LD1J]
+
+executing cmd on chassis: 2; rp slot: 0;  location: local ...
+sending cmd from chassis: 2 rp slot: 0;  to chassis: 1 rp slot: 0 ...
+executing cmd on chassis: 1; rp slot: 0;  location: remote ...
+sending cmd from chassis: 2 rp slot: 0;  to chassis: 3 rp slot: 0 ...
+executing cmd on chassis: 3; rp slot: 0;  location: remote ...
+Files being merged in the background, please check [/flash/fed.log] output file
+Collecting files from chassis member 10.129.1.0.
+Collecting files from chassis member 10.131.1.0.
+Unified Decoder Library Init .. DONE
+
+unified trace decoder estimates: [4] number of files, [384038] number of messages
+	 that may be processed. Use CTRL+SHIFT+6 to break.
+Found 3 UTF Streams
+	 2026-03-30 02:21:01.918379 - unified trace decoder estimate: processed 5%
+	 2026-03-30 02:21:02.083820 - unified trace decoder estimate: processed 10%
+	 2026-03-30 02:21:02.198039 - unified trace decoder estimate: processed 15%
+	 2026-03-30 02:21:02.375548 - unified trace decoder estimate: processed 20%
+	 2026-03-30 02:21:02.589168 - unified trace decoder estimate: processed 25%
+	 2026-03-30 02:21:02.803788 - unified trace decoder estimate: processed 30%
+	 2026-03-30 02:21:03.024862 - unified trace decoder estimate: processed 35%
+	 2026-03-30 02:21:03.223766 - unified trace decoder estimate: processed 40%
+         2026-03-30 02:21:03.423144 - unified trace decoder estimate: processed 45%
+	 2026-03-30 02:21:03.631841 - unified trace decoder estimate: processed 50%
+	 2026-03-30 02:21:03.830299 - unified trace decoder estimate: processed 55%
+	 2026-03-30 02:21:03.997638 - unified trace decoder estimate: processed 60%
+	 2026-03-30 02:21:04.114775 - unified trace decoder estimate: processed 65%
+	 2026-03-30 02:21:04.231340 - unified trace decoder estimate: processed 70%
+	 2026-03-30 02:21:04.368566 - unified trace decoder estimate: processed 75%
+	 2026-03-30 02:21:04.579340 - unified trace decoder estimate: processed 80%
+	 2026-03-30 02:21:04.747785 - unified trace decoder estimate: processed 85%
+	 2026-03-30 02:21:04.923269 - unified trace decoder estimate: processed 90%
+	 2026-03-30 02:21:05.087927 - unified trace decoder estimate: processed 95%
+	 2026-03-30 02:21:05.284306 - unified trace decoder estimate: processed 100%
+	 2026-03-30 02:21:05.284340 - unified trace decoder : processing complete Result:[Success]
+
+===========================================================
+======= Unified Trace Decoder Information/Statistics ======
+===========================================================
+----------------- Decoder Input Information ---------------
+===========================================================
+ Num of Unique Streams .. 3
+ Total UTF To Process ... 4
+ Total UTM To Process ... 384038
+ UTM Process Filter ..... fed
+ MRST Filter Rules ...... 1
+===========================================================
+----------------- Decoder Output Information --------------
+===========================================================
+ First UTM TimeStamp ............... 2026/03/30 02:01:03.097510240
+ Last UTM TimeStamp ................ 2026/03/30 02:21:00.104878662
+ UTM [Skipped / Rendered / Total] .. 381920 / 2118 / 384038
+ UTM [ENCODED] ..................... 2118
+ UTM [PLAIN TEXT] .................. 0
+ UTM [DYN LIB] ..................... 0
+ UTM [MODULE ID] ................... 0
+ UTM [TDL TAN] ..................... 8
+ UTM [APP CONTEXT] ................. 0
+ UTM [MARKER] ...................... 0
+ UTM [PCAP] ........................ 0
+ UTM [LUID NOT FOUND] .............. 0
+ UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 1439
+ UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 465 / 214 / 0 / 0
+ UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+===========================================================

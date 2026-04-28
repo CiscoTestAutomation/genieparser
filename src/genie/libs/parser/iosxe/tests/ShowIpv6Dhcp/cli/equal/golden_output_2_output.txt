@@ -1,0 +1,3 @@
+show ipv6 dhcp
+This device's DHCPv6 unique identifier(DUID): 00030001504921535E80
+

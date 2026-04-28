@@ -1,0 +1,41 @@
+show platform hardware slot F0 {slot} sensor producer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+Temp: Inlet       0        47  C    03:14:30
+Temp: U1_P0       1        68  C    03:14:30
+Temp: Central     2        47  C    03:14:30
+Temp: U1_P1       3        72  C    03:14:30
+Temp: DIMM In     4        34  C    03:14:30
+Temp: DIMM Out    5        32  C    03:14:30
+Temp: TCAM Top    6        47  C    03:14:30
+Temp: TCAM Bot    7        40  C    03:14:30
+Temp: Rght Bot    8        48  C    03:14:30
+Temp: U1_S1_P1    9        52  C    03:14:30
+VSeq1: VX1        10    11951  mV   03:14:30
+VSeq1: VX2        11     6894  mV   03:14:30
+VSeq1: VX3        12     5022  mV   03:14:30
+VSeq1: VX4        13     3263  mV   03:14:30
+VSeq1: VX5        14     3316  mV   03:14:30
+VSeq1: VX6        15     3304  mV   03:14:30
+VSeq1: VX7        16     2481  mV   03:14:30
+VSeq1: VX8        17     1805  mV   03:14:30
+VSeq1: VX9        18     1790  mV   03:14:30
+VSeq1: VX10       19     1698  mV   03:14:30
+VSeq1: VX11       20     1499  mV   03:14:30
+VSeq1: VX12       21     1307  mV   03:14:30
+VSeq1: VX13       22     1214  mV   03:14:30
+VSeq1: VX14       23     1199  mV   03:14:30
+VSeq1: VX15       24     1090  mV   03:14:30
+VSeq1: VX16       25     1049  mV   03:14:30
+VSeq2: VX1        26     1230  mV   03:14:30
+VSeq2: VX2        27      896  mV   03:14:30
+VSeq2: VX3        28      897  mV   03:14:30
+VSeq2: VX4        29      846  mV   03:14:30
+VSeq2: VX5        30      748  mV   03:14:30
+VSeq2: VX6        31      605  mV   03:14:30
+VSeq2: VX7        32      597  mV   03:14:30
+VSeq2: VX8        33      599  mV   03:14:30
+VSeq2: VX9        34      848  mV   03:14:30
+VSeq2: VX10       35      876  mV   03:14:30
+VSeq2: VX11       36      925  mV   03:14:30

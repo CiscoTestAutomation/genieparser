@@ -14,6 +14,13 @@ IOSXR parsers for the following show commands:
     * show controllers optics {port} db
     * show controllers optics * db
     * show controllers optics {port} appsel active
+    * show controllers optics {port} appsel detailed
+    * show controllers optics * appsel detailed
+    * show controllers optics {port} appsel advertised
+    * show controllers optics * appsel advertised
+    * show controllers optics {port} observable-info
+    * show controllers optics * observable-info
+    * show controllers {interface}
     * show controllers fia diagshell {diagshell_unit} "diag cosq qpair egq map" location {location}
 '''
 
@@ -387,6 +394,321 @@ class ShowControllersCoherentDSP(ShowControllersCoherentDSPSchema):
                 continue
 
         return result_dict
+
+
+# ================================================
+# Schema for 'show controllers {interface}'
+# ================================================
+class ShowControllersInterfaceSchema(MetaParser):
+    '''Schema for:
+        * show controllers {interface}
+    '''
+
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('not_supported'): str,
+                Optional('state'): {
+                    Optional('administrative_state'): str,
+                    Optional('operational_state'): str,
+                    Optional('led_state'): str,
+                },
+                Optional('phy'): {
+                    Optional('media_type'): str,
+                    Optional('no_optics_present'): bool,
+                    Optional('optics'): {
+                        Optional('vendor'): str,
+                        Optional('part_number'): str,
+                        Optional('serial_number'): str,
+                        Optional('wavelength'): str,
+                    },
+                    Optional('digital_optical_monitoring'): {
+                        Optional('transceiver_temp'): str,
+                        Optional('transceiver_voltage'): str,
+                        Optional('dom_alarms'): str,
+                        Optional('lane'): {
+                            Any(): {
+                                'wavelength_nm': str,
+                                'tx_power_dbm': str,
+                                'tx_power_mw': str,
+                                'rx_power_dbm': str,
+                                'rx_power_mw': str,
+                                'laser_bias_ma': str,
+                            },
+                        },
+                        Optional('alarm_thresholds'): {
+                            Any(): {
+                                'alarm_high': str,
+                                'warning_high': str,
+                                'warning_low': str,
+                                'alarm_low': str,
+                            },
+                        },
+                    },
+                    Optional('statistics'): {
+                        Optional('fec'): {
+                            Optional('corrected_codeword_count'): int,
+                            Optional('uncorrected_codeword_count'): int,
+                        },
+                    },
+                },
+                Optional('mac_address_information'): {
+                    Optional('operational_address'): str,
+                    Optional('burnt_in_address'): str,
+                },
+                Optional('autonegotiation'): str,
+                Optional('priority_flow_control'): {
+                    Optional('total_rx_pfc_frames'): int,
+                    Optional('total_tx_pfc_frames'): int,
+                    Optional('total_rx_dropped_data_frames'): int,
+                    Optional('cos'): {
+                        Any(): {
+                            'status': str,
+                            'rx_pfc_frames': int,
+                            Optional('tx_pfc_frames'): int,
+                        },
+                    },
+                },
+                Optional('operational_values'): {
+                    Optional('speed'): str,
+                    Optional('duplex'): str,
+                    Optional('flowcontrol'): str,
+                    Optional('priority_flow_control'): str,
+                    Optional('loopback'): str,
+                    Optional('mtu'): int,
+                    Optional('mru'): int,
+                    Optional('forward_error_correction'): str,
+                },
+            },
+        }
+    }
+
+
+# ================================================
+# Parser for 'show controllers {interface}'
+# ================================================
+class ShowControllersInterface(ShowControllersInterfaceSchema):
+    '''Parser for:
+        * show controllers {interface}
+    '''
+
+    cli_command = 'show controllers {interface}'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        parsed_dict = {}
+        current_interface = interface
+        intf_dict = {}
+
+        # Operational data for interface FourHundredGigE0/0/0/2:
+        p1 = re.compile(r'^Operational +data +for +interface +(?P<intf>\S+):$')
+
+        # 0     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        p2 = re.compile(r'^(?P<lane>\d+)\s+(?P<wavelength_nm>\S+)\s+(?P<tx_power_dbm>\S+)\s+'
+                        r'(?P<tx_power_mw>\S+)\s+(?P<rx_power_dbm>\S+)\s+'
+                        r'(?P<rx_power_mw>\S+)\s+(?P<laser_bias_ma>\S+)$')
+
+        # Transceiver Temp (C):      0.000     0.000     0.000     0.000
+        # Receive Power (dBm):        -inf      -inf      -inf      -inf
+        p3 = re.compile(r'^(?P<param>[\w\s()\/-]+):\s+(?P<alarm_high>\S+)\s+'
+                        r'(?P<warning_high>\S+)\s+(?P<warning_low>\S+)\s+(?P<alarm_low>\S+)$')
+
+        # Generic key-value parser
+        p4 = re.compile(r'^(?P<key>[\w\s-]+):\s*(?P<value>.+)$')
+
+        # Command not supported on this interface
+        p5 = re.compile(r'^(?P<not_supported>Command +not +supported +on +this +interface)$', re.IGNORECASE)
+
+        # No optics present
+        p6 = re.compile(r'^No +optics +present$', re.IGNORECASE)
+
+        # CoS rows under Priority Flow Control table
+        # 0  off  0
+        # 0  off  0  0
+        p7 = re.compile(r'^(?P<cos>\d+)\s+(?P<status>\w+)\s+(?P<rx_frames>\d+)(?:\s+(?P<tx_frames>\d+))?$')
+
+        in_state = in_phy = in_optics = in_dom = in_statistics = False
+        in_mac = in_pfc = in_operational_values = False
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Command not supported on this interface
+            m = p5.match(line)
+            if m:
+                intf_dict = parsed_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                intf_dict['not_supported'] = m.groupdict()['not_supported']
+                continue
+
+            # Operational data for interface FourHundredGigE0/0/0/2:
+            m = p1.match(line)
+            if m:
+                current_interface = m.groupdict()['intf']
+                intf_dict = parsed_dict.setdefault('interface', {}).setdefault(current_interface, {})
+                continue
+
+            # Section switches
+            if line == 'State:':
+                in_state = True
+                in_phy = in_optics = in_dom = in_statistics = False
+                in_mac = in_pfc = in_operational_values = False
+                continue
+            if line == 'Phy:':
+                in_phy = True
+                in_state = in_optics = in_dom = in_statistics = False
+                in_mac = in_pfc = in_operational_values = False
+                continue
+            if line == 'Optics:':
+                in_optics = True
+                in_dom = in_statistics = False
+                continue
+            if line == 'Digital Optical Monitoring:':
+                in_dom = True
+                in_optics = in_statistics = False
+                continue
+            if line == 'Statistics:':
+                in_statistics = True
+                in_dom = False
+                continue
+            if line == 'MAC address information:':
+                in_mac = True
+                in_state = in_phy = in_optics = in_dom = in_statistics = False
+                in_pfc = in_operational_values = False
+                continue
+            if line == 'Priority Flow Control:':
+                in_pfc = True
+                in_mac = in_operational_values = False
+                continue
+            if line == 'Operational values:':
+                in_operational_values = True
+                in_pfc = False
+                continue
+
+            # Lane table rows
+            # 0     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+            m = p2.match(line)
+            if m and in_dom:
+                group = m.groupdict()
+                lane = group.pop('lane')
+                dom_dict = intf_dict.setdefault('phy', {}).setdefault('digital_optical_monitoring', {})
+                dom_dict.setdefault('lane', {})[lane] = group
+                continue
+
+            # Transceiver Temp (C):      0.000     0.000     0.000     0.000
+            # Receive Power (dBm):        -inf      -inf      -inf      -inf
+            m = p3.match(line)
+            if m and in_dom:
+                group = m.groupdict()
+                param = group.pop('param').strip()
+                dom_dict = intf_dict.setdefault('phy', {}).setdefault('digital_optical_monitoring', {})
+                dom_dict.setdefault('alarm_thresholds', {})[param] = group
+                continue
+
+            if line.lower().startswith('autonegotiation '):
+                intf_dict['autonegotiation'] = line
+                continue
+
+            # No optics present
+            m = p6.match(line)
+            if m and in_phy:
+                intf_dict.setdefault('phy', {})['no_optics_present'] = True
+                continue
+
+            # CoS rows under Priority Flow Control table
+            # 0  off  0
+            # 0  off  0  0
+            m = p7.match(line)
+            if m and in_pfc:
+                group = m.groupdict()
+                pfc_dict = intf_dict.setdefault('priority_flow_control', {})
+                cos_dict = {
+                    'status': group['status'],
+                    'rx_pfc_frames': int(group['rx_frames'])
+                }
+                if group.get('tx_frames'):
+                    cos_dict['tx_pfc_frames'] = int(group['tx_frames'])
+                pfc_dict.setdefault('cos', {})[int(group['cos'])] = cos_dict
+                continue
+
+            # Generic key-value parser
+            m = p4.match(line)
+            if not m:
+                continue
+
+            key = m.groupdict()['key'].strip().lower().replace(' ', '_').replace('-', '_')
+            value = m.groupdict()['value'].strip()
+
+            if in_state:
+                state_dict = intf_dict.setdefault('state', {})
+                if key == 'administrative_state':
+                    state_dict['administrative_state'] = value
+                elif key == 'operational_state':
+                    state_dict['operational_state'] = value
+                elif key == 'led_state':
+                    state_dict['led_state'] = value
+                continue
+
+            if in_optics:
+                optics_dict = intf_dict.setdefault('phy', {}).setdefault('optics', {})
+                if key in {'vendor', 'part_number', 'serial_number', 'wavelength'}:
+                    optics_dict[key] = value
+                continue
+
+            if in_dom:
+                dom_dict = intf_dict.setdefault('phy', {}).setdefault('digital_optical_monitoring', {})
+                if key in {'transceiver_temp', 'transceiver_voltage'}:
+                    dom_dict[key] = value
+                elif key == 'dom_alarms':
+                    dom_dict['dom_alarms'] = value
+                continue
+
+            if in_statistics:
+                fec_dict = intf_dict.setdefault('phy', {}).setdefault('statistics', {}).setdefault('fec', {})
+                if key == 'corrected_codeword_count' and value.isdigit():
+                    fec_dict['corrected_codeword_count'] = int(value)
+                elif key == 'uncorrected_codeword_count' and value.isdigit():
+                    fec_dict['uncorrected_codeword_count'] = int(value)
+                continue
+
+            if in_phy:
+                phy_dict = intf_dict.setdefault('phy', {})
+                if key == 'media_type':
+                    phy_dict['media_type'] = value
+                continue
+
+            if in_mac:
+                mac_dict = intf_dict.setdefault('mac_address_information', {})
+                if key in {'operational_address', 'burnt_in_address'}:
+                    mac_dict[key] = value
+                continue
+
+            if in_pfc:
+                pfc_dict = intf_dict.setdefault('priority_flow_control', {})
+                if key == 'total_rx_pfc_frames' and value.isdigit():
+                    pfc_dict['total_rx_pfc_frames'] = int(value)
+                elif key == 'total_tx_pfc_frames' and value.isdigit():
+                    pfc_dict['total_tx_pfc_frames'] = int(value)
+                elif key == 'total_rx_dropped_data_frames' and value.isdigit():
+                    pfc_dict['total_rx_dropped_data_frames'] = int(value)
+                continue
+
+            if in_operational_values:
+                op_dict = intf_dict.setdefault('operational_values', {})
+                if key in {'speed', 'duplex', 'flowcontrol', 'priority_flow_control',
+                           'loopback', 'forward_error_correction'}:
+                    op_dict[key] = value
+                elif key in {'mtu', 'mru'} and value.isdigit():
+                    op_dict[key] = int(value)
+                continue
+
+        return parsed_dict
 
 
 # ===========================================
@@ -1141,6 +1463,142 @@ class ShowControllersOptics(ShowControllersOpticsSchema):
         return result_dict
 
 
+# =============================================================
+# Schema for 'show controllers optics {port} observable-info'
+# =============================================================
+class ShowControllersOpticsObservableInfoSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} observable-info
+        * show controllers optics * observable-info
+    '''
+
+    schema = {
+        'port': {
+            Any(): {
+                Optional('not_available'): str,
+                Optional('observable_info'): {
+                    Any(): {
+                        'unit': str,
+                        'id': {
+                            Any(): {
+                                'value': str,
+                                'low_thresh_warn': str,
+                                'high_thresh_warn': str,
+                                'low_thresh_alarm': str,
+                                'high_thresh_alarm': str,
+                                'tca_warn_low': str,
+                                'tca_warn_high': str,
+                                'tca_alarm_low': str,
+                                'tca_alarm_high': str,
+                            }
+                        },
+                    }
+                },
+            }
+        }
+    }
+
+
+# =============================================================
+# Parser for 'show controllers optics {port} observable-info'
+# =============================================================
+class ShowControllersOpticsObservableInfo(ShowControllersOpticsObservableInfoSchema):
+    '''Parser for:
+        * show controllers optics {port} observable-info
+        * show controllers optics * observable-info
+    '''
+
+    cli_command = ['show controllers optics {port} observable-info',
+                   'show controllers optics * observable-info']
+
+    def cli(self, port=None, output=None):
+
+        if output is None:
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port:    Optics0/0/0/28
+        p1 = re.compile(r'^Port:\s+Optics(?P<port>[\d/].*)$')
+
+        # [Fault Cause Register]
+        p2 = re.compile(r'^\[(?P<section>.+)\]$')
+
+        # Unit: None
+        p3 = re.compile(r'^Unit:\s+(?P<unit>.+)$')
+
+        # Module   0   n/a   n/a   n/a   n/a   n/a n/a   n/a n/a
+        # Lane1    1   n/a   n/a   n/a   n/a   n/a n/a   n/a n/a
+        p4 = re.compile(r'^(?P<id>\S+)\s+(?P<value>\S+)\s+(?P<low_thresh_warn>\S+)\s+'
+                        r'(?P<high_thresh_warn>\S+)\s+(?P<low_thresh_alarm>\S+)\s+'
+                        r'(?P<high_thresh_alarm>\S+)\s+(?P<tca_warn_low>\S+)\s+'
+                        r'(?P<tca_warn_high>\S+)\s+(?P<tca_alarm_low>\S+)\s+'
+                        r'(?P<tca_alarm_high>\S+)$')
+
+        # Observable information is not available on the port
+        p5 = re.compile(r'^(?P<not_available>Observable\s+information\s+is\s+not\s+available\s+on\s+the\s+port)$',
+                        re.IGNORECASE)
+
+        current_port = port
+        current_section = None
+        section_dict = None
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Port:    Optics0/0/0/28
+            m = p1.match(line)
+            if m:
+                current_port = m.groupdict()['port']
+                result_dict.setdefault('port', {}).setdefault(current_port, {})
+                current_section = None
+                section_dict = None
+                continue
+
+            # Observable information is not available on the port
+            m = p5.match(line)
+            if m and current_port:
+                result_dict.setdefault('port', {}).setdefault(current_port, {})['not_available'] = m.groupdict()['not_available']
+                continue
+
+            # [Fault Cause Register]
+            m = p2.match(line)
+            if m and current_port:
+                current_section = m.groupdict()['section']
+                section_dict = result_dict.setdefault('port', {})\
+                                          .setdefault(current_port, {}) \
+                                          .setdefault('observable_info', {}) \
+                                          .setdefault(current_section, {})
+                continue
+
+            # Unit: None
+            m = p3.match(line)
+            if m and section_dict is not None:
+                section_dict['unit'] = m.groupdict()['unit']
+                continue
+
+            # Skip table headings and separators.
+            if line.startswith('Id ') or line.startswith('Low High') or line.startswith('-') or line == 'Observable Information':
+                continue
+
+            # Module/Lane data row
+            m = p4.match(line)
+            if m and section_dict is not None:
+                group = m.groupdict()
+                entry_id = group.pop('id')
+                section_dict.setdefault('id', {})[entry_id] = group
+                continue
+
+        return result_dict
+
+
 # ===========================================
 # Schema for 'show controllers optics {port} fec-thresholds'
 # ===========================================
@@ -1668,6 +2126,229 @@ class ShowControllersOpticsAppselActive(ShowControllersOpticsAppselActiveSchema)
                 result_dict['media_lane_assign'] = m.groupdict()['media_lane_assign']
 
         return result_dict
+
+
+# ===========================================================
+# Schema for 'show controllers optics {port} appsel detailed'
+# ===========================================================
+class ShowControllersOpticsAppselDetailedSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} appsel detailed
+        * show controllers optics * appsel detailed
+    '''
+
+    schema = {
+        'port': {
+            Any(): {
+                Optional('app_id'): {
+                    Any(): {
+                        'host_id': int,
+                        'media_id': int,
+                        'host_lane_count': int,
+                        'media_lane_count': int,
+                        'host_lane_assign': str,
+                        'media_lane_assign': str,
+                        'host_supported': str,
+                    }
+                },
+                Optional('not_available'): str,
+            }
+        }
+    }
+
+
+# ===========================================================
+# Parser for 'show controllers optics {port} appsel detailed'
+# ===========================================================
+class ShowControllersOpticsAppselDetailed(ShowControllersOpticsAppselDetailedSchema):
+    '''Parser for:
+        * show controllers optics {port} appsel detailed
+        * show controllers optics * appsel detailed
+    '''
+
+    cli_command = ['show controllers optics {port} appsel detailed',
+                   'show controllers optics * appsel detailed']
+
+    def cli(self, port=None, output=None):
+
+        if output is None:
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+
+        result_dict = {}
+        current_port = port
+
+        # Port:    Optics0/0/0/1
+        p0 = re.compile(r'^Port: +Optics(?P<port>[\d/].*)$')
+
+        #  1       |  28          |  1           |  4         |  4         |  0x11        |  0x0         |  Yes       |
+        p1 = re.compile(r'^(?P<app_id>\d+) +\| +(?P<host_id>\d+) +\| +(?P<media_id>\d+) +\| +'
+                        r'(?P<host_lane_count>\d+) +\| +(?P<media_lane_count>\d+) +\| +'
+                        r'(?P<host_lane_assign>\S+) +\| +(?P<media_lane_assign>\S+) +\| +'
+                        r'(?P<host_supported>\w+) +\|?$')
+
+        # Application code information is not available on the optics
+        p2 = re.compile(r'^(?P<not_available>Application +code +information +is +not +available +on +the +optics)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Port:    Optics0/0/0/1
+            m = p0.match(line)
+            if m:
+                current_port = m.groupdict()['port']
+                result_dict.setdefault('port', {}).setdefault(current_port, {})
+                continue
+
+            #  1       |  28          |  1           |  4         |  4         |  0x11        |  0x0         |  Yes       |
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                app_id = int(group.pop('app_id'))
+
+                if not current_port:
+                    continue
+
+                app_dict = result_dict.setdefault('port', {})\
+                                      .setdefault(current_port, {})\
+                                      .setdefault('app_id', {})\
+                                      .setdefault(app_id, {})
+
+                app_dict.update({
+                    'host_id': int(group['host_id']),
+                    'media_id': int(group['media_id']),
+                    'host_lane_count': int(group['host_lane_count']),
+                    'media_lane_count': int(group['media_lane_count']),
+                    'host_lane_assign': group['host_lane_assign'],
+                    'media_lane_assign': group['media_lane_assign'],
+                    'host_supported': group['host_supported'],
+                })
+                continue
+
+            # Application code information is not available on the optics
+            m = p2.match(line)
+            if m:
+                if not current_port:
+                    continue
+                port_dict = result_dict.setdefault('port', {}).setdefault(current_port, {})
+                port_dict['not_available'] = m.groupdict()['not_available']
+                continue
+
+        return result_dict
+
+
+
+# =================================================================
+# Schema for 'show controllers optics {port} appsel advertised'
+# =================================================================
+class ShowControllersOpticsAppselAdvertisedSchema(MetaParser):
+    '''Schema for:
+        * show controllers optics {port} appsel advertised
+        * show controllers optics * appsel advertised
+    '''
+
+    schema = {
+        'port': {
+            Any(): {  # port key
+                Optional('app_id'): {
+                    Any(): {  # app_id key
+                        'host_id': str,
+                        'media_id': str,
+                        'standard': str,
+                        'host_supported': str,
+                        'power_consumption': str,
+                    }
+                },
+                Optional('not_available'): str,
+            }
+        }
+    }
+
+
+# =================================================================
+# Parser for 'show controllers optics {port} appsel advertised'
+# =================================================================
+class ShowControllersOpticsAppselAdvertised(ShowControllersOpticsAppselAdvertisedSchema):
+    '''Parser for:
+        * show controllers optics {port} appsel advertised
+        * show controllers optics * appsel advertised
+    '''
+
+    cli_command = ['show controllers optics {port} appsel advertised',
+                   'show controllers optics * appsel advertised']
+
+    def cli(self, port=None, output=None):
+
+        if output is None:
+            if port:
+                out = self.device.execute(self.cli_command[0].format(port=port))
+            else:
+                out = self.device.execute(self.cli_command[1])
+        else:
+            out = output
+
+        result_dict = {}
+        current_port = port
+
+        # Port:    Optics0/0/0/1
+        p0 = re.compile(r'^Port:\s+Optics(?P<port>[\d/].*)$')
+
+        # Table row: 1 | 29 ETH 400G CR8... | 1 ETH 10GBASE-LW... | ETH | Yes | n/a |
+        # Expecting: app-id | host-id | media-id | standard | host-supported | power-consumption
+        p1 = re.compile(r'^\s*(?P<app_id>\d+)\s+\|\s+(?P<host_id>[\d\w\s().-]+?)\s+\|\s+(?P<media_id>[\d\w\s().-]+?)\s+\|\s+(?P<standard>[\w/.-]+?)\s+\|\s+(?P<host_supported>\w+)\s+\|\s+(?P<power_consumption>[\w/.-]+?)\s+\|')
+
+        # Application code information is not available on the optics
+        p2 = re.compile(r'^(?P<not_available>Application\s+code\s+information\s+is\s+not\s+available\s+on\s+the\s+optics)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Port:    Optics0/0/0/1
+            m = p0.match(line)
+            if m:
+                current_port = m.groupdict()['port']
+                result_dict.setdefault('port', {}).setdefault(current_port, {})
+                continue
+
+            # Table row: 1 | 29 ETH 400G CR8... | 1 ETH 10GBASE-LW... | ETH | Yes | n/a |
+            # Expecting: app-id | host-id | media-id | standard | host-supported | power-consumption
+            m = p1.match(line)
+            if m:
+                if current_port is None:
+                    continue
+
+                group = m.groupdict()
+                app_id = int(group['app_id'])
+                port_dict = result_dict.setdefault('port', {}).setdefault(current_port, {})
+                app_dict = port_dict.setdefault('app_id', {})
+                app_dict[app_id] = {
+                    'host_id': group['host_id'].strip(),
+                    'media_id': group['media_id'].strip(),
+                    'standard': group['standard'].strip(),
+                    'host_supported': group['host_supported'].strip(),
+                    'power_consumption': group['power_consumption'].strip(),
+                }
+                continue
+
+            # Application code information is not available on the optics
+            m = p2.match(line)
+            if m:
+                if current_port is None:
+                    continue
+                port_dict = result_dict.setdefault('port', {}).setdefault(current_port, {})
+                port_dict['not_available'] = m.groupdict()['not_available']
+                continue
+
+        return result_dict
+
 
 # ==================================================================
 # Parser for 'show controller optics {R/S/I/P} prbs-capability-info'

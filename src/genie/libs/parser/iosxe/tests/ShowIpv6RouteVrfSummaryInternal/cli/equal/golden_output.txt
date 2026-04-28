@@ -1,0 +1,32 @@
+show ipv6 route vrf demo2 summary internal
+IPv6 routing table name is demo2(1E000004) global scope - 3 entries
+IPv6 routing table default maximum-paths is 16
+Route Source    Networks    Overhead    Memory (bytes)
+connected       0           0           0
+local           3           600         648
+Total           3           600         648
+
+  Number of prefixes:
+    /8: 1, /10: 1, /127: 1
+
+show ipv6 route vrf demo3 summary internal
+IPv6 routing table name is demo3(1E000005) global scope - 3 entries
+IPv6 routing table default maximum-paths is 16
+Route Source    Networks    Overhead    Memory (bytes)
+connected       0           0           0
+local           3           600         648
+Total           3           600         648
+
+  Number of prefixes:
+    /8: 1, /10: 1, /127: 1
+
+show ipv6 route vrf Mgmt-vrf summary internal
+IPv6 routing table name is Mgmt-vrf(1E000001) global scope - 3 entries
+IPv6 routing table default maximum-paths is 16
+Route Source    Networks    Overhead    Memory (bytes)
+connected       0           0           0
+local           3           600         648
+Total           3           600         648
+
+  Number of prefixes:
+    /8: 1, /10: 1, /127: 1

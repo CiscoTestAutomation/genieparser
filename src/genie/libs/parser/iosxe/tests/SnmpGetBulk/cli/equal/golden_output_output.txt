@@ -1,0 +1,3 @@
+3M-9350-DUT1#snmp get-bulk v2c 172.23.18.83 vrf Mgmt-vrf public@3999 non-repeaters 1 max-repetitions 1 oid 1.3.6.1.2.1.17.7.1.2.2.1.2
+SNMP Response: reqid 1, errstat 0, erridx 0
+ ifMauIfIndex.1.1 = 1

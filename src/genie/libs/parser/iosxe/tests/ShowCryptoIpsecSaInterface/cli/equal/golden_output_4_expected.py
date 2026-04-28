@@ -1,0 +1,98 @@
+expected_output = {
+    'interface': {
+        'Tunnel10': {
+            'crypto_map_tag': 'Tunnel10-head-0',
+            'ident': {
+                1: {
+                    'acl': 'origin_is_acl,',
+                    'action': 'PERMIT',
+                    'current_outbound_spi': '0x2C46EF61(742846305)',
+                    'dh_group': 'none',
+                    'inbound_ah_sas': {
+                    },
+                    'inbound_esp_sas': {
+                        'spi': {
+                            '0x56BAA02D(1455071277)': {
+                                'conn_id': 2029,
+                                'crypto_map': 'Tunnel10-head-0',
+                                'flow_id': 'CAT9K',
+                                'flow_id_val': 29,
+                                'in_use_settings': 'Tunnel, esn',
+                                'initiator_flag': 'False',
+                                'iv_size': '8 bytes',
+                                'kilobyte_volume_rekey': 'disabled',
+                                'remaining_key_lifetime': '632',
+                                'replay_detection_support': 'Y',
+                                'sibling_flags': 'FFFFFFFF80000048',
+                                'status': 'ACTIVE(ACTIVE)',
+                                'transform': 'esp-gcm',
+                            },
+                        },
+                    },
+                    'inbound_pcp_sas': {
+                    },
+                    'ip_mtu': 1500,
+                    'ip_mtu_idb': 'FiveGigabitEthernet3/0/24',
+                    'local_crypto_endpt': '101.1.1.1',
+                    'local_ident': {
+                        'addr': '0.0.0.0',
+                        'mask': '0.0.0.0',
+                        'port': '0',
+                        'prot': '0',
+                    },
+                    'outbound_ah_sas': {
+                    },
+                    'outbound_esp_sas': {
+                        'spi': {
+                            '0x2C46EF61(742846305)': {
+                                'conn_id': 2030,
+                                'crypto_map': 'Tunnel10-head-0',
+                                'flow_id': 'CAT9K',
+                                'flow_id_val': 30,
+                                'in_use_settings': 'Tunnel, esn',
+                                'initiator_flag': 'False',
+                                'iv_size': '8 bytes',
+                                'kilobyte_volume_rekey': 'disabled',
+                                'remaining_key_lifetime': '632',
+                                'replay_detection_support': 'Y',
+                                'sibling_flags': 'FFFFFFFF80000048',
+                                'status': 'ACTIVE(ACTIVE)',
+                                'transform': 'esp-gcm',
+                            },
+                        },
+                    },
+                    'outbound_pcp_sas': {
+                    },
+                    'path_mtu': 1500,
+                    'peer_ip': '101.1.1.2',
+                    'pfs': 'N',
+                    'pkts_compr_failed': 0,
+                    'pkts_compressed': 0,
+                    'pkts_decaps': 191382,
+                    'pkts_decompress_failed': 0,
+                    'pkts_decompressed': 0,
+                    'pkts_decrypt': 191382,
+                    'pkts_digest': 191382,
+                    'pkts_encaps': 191382,
+                    'pkts_encrypt': 191382,
+                    'pkts_not_compressed': 0,
+                    'pkts_not_decompressed': 0,
+                    'pkts_verify': 191382,
+                    'plaintext_mtu': 1438,
+                    'port': 500,
+                    'protected_vrf': 'client1-vrf',
+                    'recv_errors': 0,
+                    'remote_crypto_endpt': '101.1.1.2',
+                    'remote_ident': {
+                        'addr': '0.0.0.0',
+                        'mask': '0.0.0.0',
+                        'port': '0',
+                        'prot': '0',
+                    },
+                    'send_errors': 0,
+                },
+            },
+            'local_addr': '101.1.1.1',
+        },
+    },
+}

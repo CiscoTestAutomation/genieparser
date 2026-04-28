@@ -936,10 +936,10 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactableSchema(MetaParser):
                         "seq": int,
                         "ecbi": int,
                         "flags": int,
-                        "machandle": str,
-                        "sihandle": str,
-                        "rihandle": str,
-                        "dihandle": str,
+                        Optional("machandle"): str,
+                        Optional("sihandle"): str,
+                        Optional("rihandle"): str,
+                        Optional("dihandle"): str,
                         "atime": int,
                         "etime": int,
                         "ports": str,
@@ -976,8 +976,12 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactable(
         # VLAN    MAC               Type      Seq#    EC_Bi    Flags    machandle         siHandle          riHandle    diHandle    *a_time    *e_time      ports    Con
         # ---------------------------------------------------------------------------------------------------------------------------------------------------------------
         # 1       7061.7bb8.c3e7    0x8002    0       0        64       0x71450c35a508    0x71450c355218    0x0         0x0          0          0           Vlan1    Yes
+
+        # Format WITHOUT handles:
+        # VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                                                         Con
+        # 100    0cd0.f83b.b781         0x1   74001      0      0        300        0  HundredGigE1/0/1                                              No
         p1 = re.compile(
-            r"^(?P<vlan>[\d\-\,]+)\s+(?P<mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})+\s+(?P<type>0x[\w]+)\s+(?P<seq>\d+)\s+(?P<ecbi>\d+)\s+(?P<flags>\d+)\s+(?P<machandle>0x[\w]+)\s+(?P<sihandle>0x[\w]+)\s+(?P<rihandle>0x[\w]+)\s+(?P<dihandle>0x[\w]+)\s+(?P<atime>\d+)\s+(?P<etime>\d+)\s+(?P<ports>[\w\/\.\-\:]+)\s+(?P<con>\w+)$"
+            r"^(?P<vlan>[\d\-\,]+)\s+(?P<mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+(?P<type>0x[\w]+)\s+(?P<seq>\d+)\s+(?P<ecbi>\d+)\s+(?P<flags>\d+)\s+(?:(?P<machandle>0x[\w]+)\s+(?P<sihandle>0x[\w]+)\s+(?P<rihandle>0x[\w]+)\s+(?P<dihandle>0x[\w]+)\s+)?(?P<atime>\d+)\s+(?P<etime>\d+)\s+(?P<ports>[\w\/\.\-\:]+)\s+(?P<con>\w+)$"
         )
 
         # Total Mac number of addresses:: 4
@@ -1025,16 +1029,21 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactable(
                         "seq": int(group["seq"]),
                         "ecbi": int(group["ecbi"]),
                         "flags": int(group["flags"]),
-                        "machandle": group["machandle"],
-                        "sihandle": group["sihandle"],
-                        "rihandle": group["rihandle"],
-                        "dihandle": group["dihandle"],
                         "atime": int(group["atime"]),
                         "etime": int(group["etime"]),
                         "ports": group["ports"],
                         "con": group["con"],
                     }
                 )
+                # Only add handle fields if they exist
+                if group["machandle"]:
+                    vlan_dict["machandle"] = group["machandle"]
+                if group["sihandle"]:
+                    vlan_dict["sihandle"] = group["sihandle"]
+                if group["rihandle"]:
+                    vlan_dict["rihandle"] = group["rihandle"]
+                if group["dihandle"]:
+                    vlan_dict["dihandle"] = group["dihandle"]
                 continue
 
             # Total Mac number of addresses:: 4

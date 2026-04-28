@@ -1,0 +1,5 @@
+LP Shield ID          Mode                  Enforcing Hits        Monitoring Hits       Total Hits            
+------------------------------------------------------------------------------------------------------------
+cve-2026-40010-v01    Monitoring            0                     12                    12                    
+cve-2026-40010-v02    Enforcement           100                   0                     100                   
+cve-2026-40010-v03    Monitoring            1                     1                     2                     

@@ -1,0 +1,9 @@
+{
+    "version": "2c",
+    "ip": "6.6.6.6",
+    "vrf": "Mgmt-vrf",
+    "community_str": "public@100",
+    "non_repeaters": "0",
+    "max_repetitions": "2",
+    "oid": "dot1qTpFdbPort"
+}

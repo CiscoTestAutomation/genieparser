@@ -1,0 +1,5 @@
+Router#show ip ssh pubkey server all
+Configured Entries:
+192.168.1.10 ssh-rsa c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2e3f4a5b6c1d2
+
+Learned TOFU Entries:

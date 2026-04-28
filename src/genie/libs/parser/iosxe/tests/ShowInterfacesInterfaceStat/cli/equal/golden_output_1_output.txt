@@ -1,0 +1,7 @@
+show interfaces GigabitEthernet0/1/1 {interface} stat
+GigabitEthernet0/1/1
+          Switching path    Pkts In   Chars In   Pkts Out  Chars Out
+               Processor       1773    1168407          0          0
+             Route cache          0          0          0          0
+       Distributed cache       1772    1167748          0          0
+                   Total       3545    2336155          0          0

@@ -1,0 +1,11 @@
+show platform
+Mon Jan 20 14:14:13.310 UTC
+Node              Type                     State                    Config state
+--------------------------------------------------------------------------------
+0/RP0/CPU0        8202-32FH-M(Active)      IOS XR RUN               NSHUT
+0/FB0             8202-32FH-M[FB]          OPERATIONAL              NSHUT
+0/PM0             PSU2KW-ACPI              OPERATIONAL              NSHUT
+0/PM1             PSU2KW-ACPI              OPERATIONAL              NSHUT
+0/FT1             FAN-2RU-PI-V3            OPERATIONAL              NSHUT
+0/FT2             FAN-2RU-PI-V3            OPERATIONAL              NSHUT
+0/FT3             FAN-2RU-PI-V3            OPERATIONAL              NSHUT

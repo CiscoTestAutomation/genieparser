@@ -1,0 +1,112 @@
+show platform hardware slot R0 {slot} sensor consumer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+Vin               500  232000  mV   07:17:13
+Pin               501   -9024       07:17:13
+Iin               502    1687  mA   07:17:13
+Vout              503   11994  mV   07:17:13
+Pout              504  -28504       07:17:13
+Iout              505   27625  mA   07:17:13
+Temp1             506      28  C    07:17:13
+Temp2             507      33  C    07:17:13
+Temp3             508      36  C    07:17:13
+Vin               520  232250  mV   07:17:13
+Pin               521  339549       07:17:13
+Iin               522    1458  mA   07:17:13
+Vout              523   12023  mV   07:17:13
+Pout              524  -24557       07:17:13
+Iout              525   26375  mA   07:17:13
+Temp1             526      29  C    07:17:13
+Temp2             527      36  C    07:17:13
+Temp3             528      27  C    07:17:13
+Vin               540       0  mV   07:17:13
+Pin               541       0       07:17:13
+Iin               542       0  mA   07:17:13
+Vout              543    5271  mV   07:17:13
+Pout              544       0       07:17:13
+Iout              545       0  mA   07:17:13
+Temp1             546      28  C    07:17:13
+Temp2             547      28  C    07:17:13
+Temp3             548      28  C    07:17:13
+Vin               560       0  mV   07:17:13
+Pin               561       0       07:17:13
+Iin               562       0  mA   07:17:13
+Vout              563    5259  mV   07:17:13
+Pout              564       0       07:17:13
+Iout              565       0  mA   07:17:13
+Temp1             566      28  C    07:17:13
+Temp2             567      28  C    07:17:13
+Temp3             568      28  C    07:17:13
+VAMB1: VX1        20    11989  mV   07:17:13
+VAMB1: VX2        21     6945  mV   07:17:13
+VAMB1: VX3        22     5058  mV   07:17:13
+VAMB1: VX4        23     3263  mV   07:17:13
+VAMB1: VX5        24     3292  mV   07:17:13
+VAMB1: VX6        25     1879  mV   07:17:13
+VAMB1: VX7        26     2490  mV   07:17:13
+VAMB1: VX8        27     1798  mV   07:17:13
+VAMB1: VX9        28     1783  mV   07:17:13
+VAMB1: VX10       29     1704  mV   07:17:13
+VAMB1: VX11       30     1501  mV   07:17:13
+VAMB1: VX12       31     1306  mV   07:17:13
+VAMB1: VX13       32     1200  mV   07:17:13
+VAMB1: VX14       33     1201  mV   07:17:13
+VAMB1: VX15       34     1097  mV   07:17:13
+VAMB1: VX16       35     1050  mV   07:17:13
+VAMB2: VX17       36     1228  mV   07:17:13
+VAMB2: VX18       37      896  mV   07:17:13
+VAMB2: VX19       38      895  mV   07:17:13
+VAMB2: VX20       39      845  mV   07:17:13
+VAMB2: VX21       40      748  mV   07:17:13
+VAMB2: VX22       41      596  mV   07:17:13
+VAMB2: VX23       42      597  mV   07:17:13
+VAMB2: VX24       43      595  mV   07:17:13
+VAMB2: VX25       44      845  mV   07:17:13
+VAMB2: VX26       45      923  mV   07:17:13
+VAMB2: VX27       46      948  mV   07:17:13
+VAMB2: VX28       47      997  mV   07:17:13
+VAMB2: VX29       48     1051  mV   07:17:13
+VAMB2: VX30       49     3283  mV   07:17:13
+VAMB2: VX32       50      899  mV   07:17:13
+VEUC1: VX33       51    11977  mV   07:17:13
+VEUC1: VX34       52     6969  mV   07:17:13
+VEUC1: VX35       53     5067  mV   07:17:13
+VEUC1: VX36       54     3366  mV   07:17:13
+VEUC1: VX37       55     3335  mV   07:17:13
+VEUC1: VX38       56     2499  mV   07:17:13
+VEUC1: VX39       57     1094  mV   07:17:13
+VEUC1: VX40       58      924  mV   07:17:13
+VEUC1: VX41       59      951  mV   07:17:13
+VEUC1: VX42       60     1498  mV   07:17:13
+VEUC1: VX43       61      846  mV   07:17:13
+VEUC1: VX44       62      899  mV   07:17:13
+VEUC1: VX45       63      896  mV   07:17:13
+VEUC1: VX46       64     1797  mV   07:17:13
+VEUC1: VX47       65     1198  mV   07:17:13
+VEUC1: VX48       66      996  mV   07:17:13
+VFPC1: VX49       67    11957  mV   07:17:13
+VFPC1: VX50       68     3248  mV   07:17:13
+VFPC1: VX52       69      843  mV   07:17:13
+VFPC1: VX53       70      841  mV   07:17:13
+VFPC1: VX54       71      846  mV   07:17:13
+VFPC1: VX55       72      848  mV   07:17:13
+VFPC1: VX56       73      895  mV   07:17:13
+VFPC1: VX57       74     1002  mV   07:17:13
+VFPC1: VX58       75     1213  mV   07:17:13
+VFPC1: VX59       76     1200  mV   07:17:13
+VFPC1: VX60       77     1803  mV   07:17:13
+VFPC1: VX61       78     1800  mV   07:17:13
+VFPC1: VX62       79     2496  mV   07:17:13
+VFPC1: VX63       80     3303  mV   07:17:13
+VFPC1: VX64       81     6993  mV   07:17:13
+Temp: AMB IN      82       28  C    07:17:13
+Temp: AMB OUT     83       44  C    07:17:13
+Temp: AMB MID     84       33  C    07:17:13
+Temp: PCYN 0      85       52  C    07:17:13
+Temp: PCYN 1      86       60  C    07:17:13
+Temp: PCYN 2      87       53  C    07:17:13
+Temp: PCYN 3      88       58  C    07:17:13
+Temp: CPU Die     89       49  C    07:17:13
+Temp: FC FANS     90       73  C    07:17:13
+

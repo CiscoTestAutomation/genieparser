@@ -4608,3 +4608,44 @@ class ShowCtsSxpExportImportGroupDetailed(ShowCtsSxpExportImportGroupDetailedSch
 
         return ret_dict
 
+class ShowCtsKeyStoreSchema(MetaParser):
+    schema = {
+        'keystore': {
+            Any(): {
+                'index': int,
+                'type': str,
+                'name': str
+            }
+        }
+    }
+
+class ShowCtsKeyStore(ShowCtsKeyStoreSchema):
+    """Parser for:
+      show cts keystore
+    """
+
+    cli_command = 'show cts keystore'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # 0 S CTS-password
+        p1 = re.compile(r'^(?P<index>\d+)\s+(?P<type>\S+)\s+(?P<name>.+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 0 S CTS-password   
+            m = p1.match(line)       
+            if m:
+                group = m.groupdict()
+                keystore_dict = ret_dict.setdefault('keystore', {}).setdefault(group['index'], {})
+                keystore_dict['index'] = int(group['index'])
+                keystore_dict['type'] = group['type']
+                keystore_dict['name'] = group['name']
+                continue
+        
+        return ret_dict

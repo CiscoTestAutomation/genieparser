@@ -1,0 +1,35 @@
+show platform hardware slot 0 {slot} sensor producer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+VDEV0: VX1        0      1045  mV   03:12:39
+VDEV0: VX2        1      7035  mV   03:12:39
+VDEV0: VX3        2       746  mV   03:12:39
+VDEV0: VP1        3      1496  mV   03:12:39
+VDEV0: VP2        4      3288  mV   03:12:39
+VDEV0: VP3        5      2498  mV   03:12:39
+VDEV0: VH         6     11961  mV   03:12:39
+VDEV1: VP1        7      1803  mV   03:12:39
+VDEV1: VP2        8      1499  mV   03:12:39
+VDEV1: VP3        9      3277  mV   03:12:39
+VDEV1: VH         10    11956  mV   03:12:39
+VDEV2: VX1        11      996  mV   03:12:39
+VDEV2: VX2        12      988  mV   03:12:39
+VDEV2: VX3        13      744  mV   03:12:39
+VDEV2: VP1        14     1195  mV   03:12:39
+VDEV2: VP2        15     1495  mV   03:12:39
+VDEV2: VP3        16     1806  mV   03:12:39
+VDEV2: VH         17    11961  mV   03:12:39
+VDEV3: VX1        18      745  mV   03:12:39
+VDEV3: VX2        19      989  mV   03:12:39
+VDEV3: VX3        20      903  mV   03:12:39
+VDEV3: VP1        21     3283  mV   03:12:39
+VDEV3: VP2        22     1496  mV   03:12:39
+VDEV3: VP3        23      997  mV   03:12:39
+VDEV3: VH         24    11951  mV   03:12:39
+Temp: Inlet Lf    25       29  C    03:12:39
+Temp: Inlet Ct    26       36  C    03:12:39
+Temp: Inlet Rt    27       29  C    03:12:39
+Iin               28     7183  mA   03:12:39
+E0I               29      994  mA   03:12:39
+E1I               30        0  mA   03:12:39

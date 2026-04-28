@@ -687,3 +687,251 @@ class ShowSystemIntegrityAllTrustChainNonce(ShowSystemIntegrityAllTrustChainNonc
                                             sign_dict.update({'version': int(sub_child2.text)})
         return ret_dict
 
+class ShowSystemSecurityModeSchema(MetaParser):
+    """Schema for show system security mode"""
+
+    schema = {
+        "system_security_mode": str,
+    }
+
+class ShowSystemSecurityMode(ShowSystemSecurityModeSchema):
+    """Parser for show system security mode"""
+
+    cli_command = "show system security mode"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        
+        # System Security Mode : Insecure
+        p1 = re.compile(r"^System Security Mode\s*:\s*(?P<mode>\S+)$")
+        
+        for line in output.splitlines():
+            line = line.strip()
+
+            # System Security Mode : Insecure
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({"system_security_mode": group["mode"]})
+                continue
+        
+        return ret_dict
+
+class ShowSystemInsecureConfigurationSchema(MetaParser):
+    """Schema for show system insecure configuration"""
+
+    schema = {
+        "total_active_insecure_commands": int,
+        "database_type": str,
+        "scan_status": str,
+        "database_state": str,
+        Optional("insecure_entries"): {
+            Any(): {
+                Optional("module"): str,
+                Optional("parent_command"): str,
+                Optional("cli_command"): str,
+                Optional("description"): str,
+                Optional("reason"): str,
+                Optional("remediation"): str,
+                Optional("config_mode"): str,
+                Optional("status"): str,
+                Optional("severity"): str,
+            },
+        },
+        "database_summary": {
+            "total_active_entries_processed": int,
+            "queue_status": str,
+            "memory_status": str,
+            "database_integrity": str,
+        }
+    }
+
+class ShowSystemInsecureConfiguration(ShowSystemInsecureConfigurationSchema):
+    """Parser for show system insecure configuration"""
+
+    cli_command = "show system insecure configuration"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        
+        # Total Active Insecure Commands: 9
+        p1 = re.compile(r"^Total Active Insecure Commands:\s+(?P<total>\d+)$")
+
+        # Database Type: Active (Current State)
+        p2 = re.compile(r"^Database Type:\s+(?P<type>.+)$")
+
+        # Scan Status: Complete
+        p3 = re.compile(r"^Scan Status:\s+(?P<status>\S+)$")
+
+        # Database State: Stable
+        p4 = re.compile(r"^Database State:\s+(?P<state>\S+)$")
+
+        # | ACTIVE INSECURE CONFIGURATION ENTRY [1/9]
+        p5 = re.compile(r"^\|\s+ACTIVE INSECURE CONFIGURATION ENTRY\s+\[(?P<entry_number>\d+)/\d+\]")
+
+        # |               Module: TFTP
+        p6 = re.compile(r"^\|\s+Module:\s+(?P<module>\S+)$")
+
+        # |       Parent Command: NA
+        p7 = re.compile(r"^\|\s+Parent Command:\s+(?P<parent>.+)$")
+
+        # |          CLI Command: ip tftp source-interface GigabitEthernet0/0
+        p8 = re.compile(r"^\|\s+CLI Command:\s+(?P<command>.+)$")
+
+        # |          Description: TFTP service enabled...
+        p9 = re.compile(r"^\|\s+Description:\s+(?P<description>.+)$")
+
+        # |               Reason: Legacy protocol...
+        p10 = re.compile(r"^\|\s+Reason:\s+(?P<reason>.+)$")
+
+        # |          Remediation: Transition to secure...
+        p11 = re.compile(r"^\|\s+Remediation:\s+(?P<remediation>.+)$")
+
+        # |          Config Mode: configure
+        p12 = re.compile(r"^\|\s+Config Mode:\s+(?P<config_mode>\S+)$")
+
+        # |               Status: ACTIVE
+        p13 = re.compile(r"^\|\s+Status:\s+(?P<status>\S+)$")
+
+        # |             Severity: HIGH
+        p14 = re.compile(r"^\|\s+Severity:\s+(?P<severity>\S+)$")
+        
+        # DATABASE SUMMARY
+        p15 = re.compile(r"^DATABASE SUMMARY$")
+
+        # Total Active Entries Processed: 2
+        p16 = re.compile(r"^Total Active Entries Processed:\s+(?P<total_active_entries_processed>\d+)$")
+
+        # Queue Status: Preserved (read-only traversal)
+        p17 = re.compile(r"^Queue Status:\s+(?P<queue_status>.+)$")
+
+        # Memory Status: Allocated and stable
+        p18 = re.compile(r"^Memory Status:\s+(?P<memory_status>.+)$")
+
+        # Database Integrity: Verified
+        p19 = re.compile(r"^Database Integrity:\s+(?P<database_integrity>\S+)$")
+        
+        for line in output.splitlines():
+            line = line.strip()
+         
+            # Total Active Insecure Commands: 9
+            m = p1.match(line)
+            if m:
+                ret_dict["total_active_insecure_commands"] = int(m.group("total"))
+                continue
+            
+            # Database Type: Active (Current State)
+            m = p2.match(line)
+            if m:
+                ret_dict["database_type"] = m.group("type")
+                continue
+            
+            # Scan Status: Complete
+            m = p3.match(line)
+            if m:
+                ret_dict["scan_status"] = m.group("status")
+                continue
+            
+            # Database State: Stable
+            m = p4.match(line)
+            if m:
+                ret_dict["database_state"] = m.group("state")
+                continue
+            
+            # | ACTIVE INSECURE CONFIGURATION ENTRY [1/9]
+            m = p5.match(line)
+            if m:
+                insecure_dict = ret_dict.setdefault("insecure_entries", {}).setdefault(int(m.group("entry_number")), {})
+                continue
+            
+            # |               Module: TFTP
+            m = p6.match(line)
+            if m:
+                insecure_dict["module"] = m.group("module")
+                continue
+            
+            # |       Parent Command: NA
+            m = p7.match(line)
+            if m:
+                insecure_dict["parent_command"] = m.group("parent")
+                continue
+            
+            # |          CLI Command: ip tftp source-interface GigabitEthernet0/0
+            m = p8.match(line)
+            if m:
+                insecure_dict["cli_command"] = m.group("command")
+                continue
+            
+            # |          Description: TFTP service enabled...
+            m = p9.match(line)
+            if m:
+                insecure_dict["description"] = m.group("description")
+                continue
+            
+            # |               Reason: Legacy protocol...
+            m = p10.match(line)
+            if m:
+                insecure_dict["reason"] = m.group("reason")
+                continue
+            
+            # |          Remediation: Transition to secure...
+            m = p11.match(line)
+            if m:
+                insecure_dict["remediation"] = m.group("remediation")
+                continue
+
+            # |          Config Mode: configure
+            m = p12.match(line)
+            if m:
+                insecure_dict["config_mode"] = m.group("config_mode")
+                continue
+            
+            # |          Status: Active
+            m = p13.match(line)
+            if m:
+                insecure_dict["status"] = m.group("status")
+                continue
+            
+            # |             Severity: HIGH
+            m = p14.match(line)
+            if m:
+                insecure_dict["severity"] = m.group("severity")
+                continue
+        
+            # DATABASE SUMMARY
+            m = p15.match(line)
+            if m:
+                data_dict = ret_dict.setdefault("database_summary", {})
+                continue
+            
+            # Total Active Entries Processed: 2
+            m = p16.match(line)
+            if m:
+                data_dict["total_active_entries_processed"] = int(m.group("total_active_entries_processed"))
+                continue
+            
+            # Queue Status: Preserved (read-only traversal)
+            m = p17.match(line)
+            if m:
+                data_dict["queue_status"] = m.group("queue_status")
+                continue
+            
+            # Memory Status: Allocated and stable
+            m = p18.match(line)
+            if m:
+                data_dict["memory_status"] = m.group("memory_status")
+                continue
+            
+            # Database Integrity: OK
+            m = p19.match(line)
+            if m:
+                data_dict["database_integrity"] = m.group("database_integrity")
+                continue
+
+        return ret_dict

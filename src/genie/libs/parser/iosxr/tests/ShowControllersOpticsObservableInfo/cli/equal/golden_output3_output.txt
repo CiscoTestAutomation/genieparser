@@ -1,0 +1,48 @@
+show controller optics * observable-info
+Mon Mar 16 23:13:45.402 UTC
+ Port:    Optics0/0/0/28
+
+Observable Information
+
+[eSNR Media Input]
+ Unit: dB
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+
+[PAM4 Level Transition Parameter Media Input]
+ Unit: dB
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+
+-----------------------------------------------
+ Port:    Optics0/0/0/29
+
+Observable Information
+
+[eSNR Media Input]
+ Unit: dB
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+
+[PAM4 Level Transition Parameter Media Input]
+ Unit: dB
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane0    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane1    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane2    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+ Lane3    0.00                0.00                256.00              0.00                256.00              n   n     n   n
+
+-----------------------------------------------
