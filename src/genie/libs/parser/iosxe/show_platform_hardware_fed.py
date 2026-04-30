@@ -28,6 +28,7 @@
     * 'show platform hardware fed switch {type} fwd-asic insight npl_summary_diff{files_compare}'
     * 'show platform hardware fed switch {switch} fwd-asic drops asic {asic}'
     * 'show platform hardware fed switch active vlan {num} ingress'
+    * 'show platform hardware fed switch active vlan {num} egress'
     * 'show platform hardware fed switch standby vlan {num} ingress'
     * 'show platform hardware fed switch {sw_number} qos queue config interface {interface} queue {queue_id} | include {match}'
     * 'show platform hardware fed switch {sw_number} qos scheduler interface {interface} | include {match}'
@@ -4448,27 +4449,35 @@ class ShowPlatformHardwareFedSwitchActiveVlanIngress(
 
     ShowPlatformHardwareFedSwitchActiveVlanIngressSchema):
 
-    """Parser for show platform hardware fed switch active vlan {num} ingress"""
+    """Parser for show platform hardware fed switch active vlan {num} ingress/egress"""
 
-    cli_command = 'show platform hardware fed switch active vlan {num} ingress'
+    cli_command = [
+        'show platform hardware fed switch active vlan {num} ingress',
+        'show platform hardware fed switch active vlan {num} egress',
+    ]
 
-    def cli(self, num, output=None):
+    def cli(self, num, traffic_direction='ingress', output=None):
 
         if output is None:
-            output = self.device.execute(self.cli_command.format(num=num))
+            if traffic_direction == 'ingress':
+                output = self.device.execute(self.cli_command[0].format(num=num))
+            elif traffic_direction == 'egress':
+                output = self.device.execute(self.cli_command[1].format(num=num))
+            else:
+                raise ValueError("traffic_direction must be 'ingress' or 'egress'")
         ret_dict = {}
 
         # vlan id is:: 1
         p1 = re.compile(r'^vlan\s+id\s+is::\s* (?P<vlan_id>\d+)')
 
         # Interfaces in forwarding state: : Gi1/0/15(Tagged), Fo5/0/9(Untagged)
-        p2 = re.compile(r'^Interfaces\s+in\s+forwarding state\s*:\s*:\s*(?P<forwarding_state>[\w\/\.\s\(\w\)\,]+)$')
+        p2 = re.compile(r'^Interfaces\s+in\s+forwarding state\s*:\s*:\s*(?P<forwarding_state>[\w\/\.\s\(\w\)\,\-]+)$')
 
         # flood list: : Gi1/0/15, Fo5/0/9
-        p3 = re.compile(r'^flood\s+list\s*:\s+:\s+(?P<flood_list>([\w\/\.\s\,]+)$)')
+        p3 = re.compile(r'^flood\s+list\s*:\s+:\s+(?P<flood_list>([\w\/\.\s\,\-]+)$)')
 
         # Gi1/0/15
-        p4 = re.compile(r'^(?P<intf>([\w\/\.\s]+))')
+        p4 = re.compile(r'^(?P<intf>[\w\/\.\-]+)')
 
         for line in output.splitlines():
             line = line.strip()
@@ -4484,23 +4493,26 @@ class ShowPlatformHardwareFedSwitchActiveVlanIngress(
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
-                for intf in group['forwarding_state'].split(', '):
-                    intf_match = p4.match(intf)
-                    ret_dict.setdefault('forwarding_state', {}).setdefault('tagged_list',[])
-                    ret_dict['forwarding_state'].setdefault('untagged_list',[])
+                forwarding = ret_dict.setdefault('forwarding_state', {})
+                forwarding.setdefault('tagged_list', [])
+                forwarding.setdefault('untagged_list', [])
 
-                    ret_dict['forwarding_state'].setdefault('untagged_list',[])
-                    if ('Tagged' in intf) and (intf_match):
-                        ret_dict['forwarding_state']['tagged_list'].append(Common.convert_intf_name(intf_match["intf"]))
-                    if ('Untagged' in intf) and (intf_match):
-                        ret_dict['forwarding_state']['untagged_list'].append(Common.convert_intf_name(intf_match["intf"]))
+                for intf in re.split(r'\s*,\s*', group['forwarding_state']):
+                    intf_match = p4.match(intf)
+                    if not intf_match:
+                        continue
+                    normalized = Common.convert_intf_name(intf_match["intf"])
+                    if 'Tagged' in intf:
+                        forwarding['tagged_list'].append(normalized)
+                    if 'Untagged' in intf:
+                        forwarding['untagged_list'].append(normalized)
                 continue
 
             # flood list: : Gi1/0/15, Fo5/0/9
             m3 = p3.match(line)
             if m3:
                 flood_list_group = m3.groupdict()
-                for interface in flood_list_group['flood_list'].split(', '):
+                for interface in re.split(r'\s*,\s*', flood_list_group['flood_list']):
                     intf_match = p4.match(interface)
                     ret_dict.setdefault('flood_list',[])
                     if intf_match:

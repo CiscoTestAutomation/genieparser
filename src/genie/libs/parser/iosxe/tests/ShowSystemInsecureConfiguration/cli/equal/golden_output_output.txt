@@ -1,0 +1,176 @@
+9300_L2_DUT#show system insecure configuration
+=============================================================
+          ACTIVE INSECURE CONFIGURATION DATABASE
+=============================================================
+Generated: Active Configuration Analysis
+Total Active Insecure Commands: 9
+Database Type: Active (Current State)
+Scan Status: Complete
+Next Update: No pending updates
+Database State: Stable
+=============================================================
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processing 9 active insecure CLI entries
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [1/9]
++-------------------------------------------------------------
+|               Module: TFTP
+|       Parent Command: NA
+|          CLI Command: ip tftp source-interface GigabitEthernet0/0
+|          Description: TFTP service enabled - unencrypted file transfer protocol vulnerable to eavesdropping and tampering
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Transition to secure file transfer methods using SCP, SFTP, HTTPS protocols
+|          Config Mode: configure
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 1: ip tftp source-interface GigabitEthernet0/0
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [2/9]
++-------------------------------------------------------------
+|               Module: SNMP
+|       Parent Command: NA
+|          CLI Command: snmp-server community campus RW
+|          Description: SNMP Community string configured - uses insecure SNMPv1/v2c protocol vulnerable to eavesdropping
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure SNMP v3 User
+|          Config Mode: configure
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 2: snmp-server community campus RW
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [3/9]
++-------------------------------------------------------------
+|               Module: SNMP
+|       Parent Command: NA
+|          CLI Command: snmp-server community public RW
+|          Description: SNMP Community string configured - uses insecure SNMPv1/v2c protocol vulnerable to eavesdropping
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure SNMP v3 User
+|          Config Mode: configure
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 3: snmp-server community public RW
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [4/9]
++-------------------------------------------------------------
+|               Module: SNMP
+|       Parent Command: NA
+|          CLI Command: snmp-server community RW RO
+|          Description: SNMP Community string configured - uses insecure SNMPv1/v2c protocol vulnerable to eavesdropping
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure SNMP v3 User
+|          Config Mode: configure
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 4: snmp-server community RW RO
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [5/9]
++-------------------------------------------------------------
+|               Module: SNMP
+|       Parent Command: NA
+|          CLI Command: snmp-server host 172.19.48.220 vrf Mgmt-vrf version 2c public
+|          Description: SNMP Host configured with insecure version 1 or 2c - transmits data without encryption
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Configure SNMP v3 User
+|          Config Mode: configure
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 5: snmp-server host 172.19.48.220 vrf Mgmt-vrf version 2c public
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [6/9]
++-------------------------------------------------------------
+|               Module: LINE
+|       Parent Command: line vty 0 4
+|          CLI Command: transport input all
+|          Description: Line transport configured with unencrypted protocols - allows plaintext transmission of sensitive data
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Migrate to secure SSH-based remote access
+|          Config Mode: line
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 6: transport input all
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [7/9]
++-------------------------------------------------------------
+|               Module: LINE
+|       Parent Command: line vty 0 4
+|          CLI Command: transport output all
+|          Description: Line transport configured with unencrypted protocols - allows plaintext transmission of sensitive data
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Migrate to secure SSH-based remote access
+|          Config Mode: line
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 7: transport output all
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [8/9]
++-------------------------------------------------------------
+|               Module: LINE
+|       Parent Command: line vty 5 31
+|          CLI Command: transport input all
+|          Description: Line transport configured with unencrypted protocols - allows plaintext transmission of sensitive data
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Migrate to secure SSH-based remote access
+|          Config Mode: line
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 8: transport input all
+
++-------------------------------------------------------------
+| ACTIVE INSECURE CONFIGURATION ENTRY [9/9]
++-------------------------------------------------------------
+|               Module: LINE
+|       Parent Command: line vty 5 31
+|          CLI Command: transport output all
+|          Description: Line transport configured with unencrypted protocols - allows plaintext transmission of sensitive data
+|               Reason: Legacy protocol poses data confidentiality and integrity risks due to lack of encryption and authentication
+|          Remediation: Migrate to secure SSH-based remote access
+|          Config Mode: line
+|               Status: ACTIVE
+|             Severity: HIGH
++-------------------------------------------------------------
+SECURE_CONFIG_ACTIVE_INSECURE_CONFIG_DB_WALK: Processed entry 9: transport output all
+
+=============================================================
+                    DATABASE SUMMARY
+=============================================================
+Total Active Entries Processed: 9
+Queue Status: Preserved (read-only traversal)
+Memory Status: Allocated and stable
+Database Integrity: Verified
+
+=============================================================
+                 SECURITY RECOMMENDATIONS
+=============================================================
+1. IMMEDIATE ACTION REQUIRED:
+   - Review all 9 insecure configurations above
+   - Follow remediation steps for each entry
+   - Prioritize HIGH severity configurations
+
+2. ONGOING MONITORING:
+   - Monitor active configuration changes
+   - Implement automated security scanning
+   - Regular security configuration audits
+
+3. COMPLIANCE REQUIREMENTS:
+   - Document all remediation actions
+   - Maintain security configuration baseline
+   - Schedule periodic security reviews
+=============================================================
+display_insecure_config_summary: Successfully displayed active database with 9 entries
+display_insecure_config_summary: Active insecure configuration database walk completed

@@ -1,0 +1,24 @@
+show hw-module subslot 2/0 {subslot} transceiver 0 {transceiver} status
+The Transceiver in slot 2 subslot 0 port 0 is enabled.
+  Module temperature                        = +31.824 C
+  Transceiver Tx supply voltage             = 003.2309 Volts
+  Transceiver Tx power                      =  5.9 dBm (003.8899 mW)
+  Transceiver Rx optical power              =  6.1 dBm (004.1111 mW)
+
+
+  Tx power Network Lane[00]                 =  0.0 dBm (000.9951 mW)
+  Tx power Network Lane[01]                 = -0.1 dBm (000.9702 mW)
+  Tx power Network Lane[02]                 = -0.2 dBm (000.9480 mW)
+  Tx power Network Lane[03]                 = -0.1 dBm (000.9766 mW)
+
+
+  Rx power Network Lane[00]                 = -0.5 dBm ( 000.8964 mW)
+  Rx power Network Lane[01]                 =  0.1 dBm ( 001.0316 mW)
+  Rx power Network Lane[02]                 =  0.4 dBm ( 001.0943 mW)
+  Rx power Network Lane[03]                 =  0.4 dBm ( 001.0888 mW)
+
+
+  Bias Current Network Lane[00]             = 007.0494 mA
+  Bias Current Network Lane[01]             = 007.0494 mA
+  Bias Current Network Lane[02]             = 007.0494 mA
+  Bias Current Network Lane[03]             = 007.0494 mA

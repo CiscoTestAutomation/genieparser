@@ -35,6 +35,7 @@ IOSXE parsers for the following show commands:
     * 'show diagnostics status'
     * 'test platform software database get-n all ios_oper/platform_component'
     * 'test platform software database get-n all ios_oper/transceiver'
+    * 'show rep topology'
     * 'show rep topology detail'
     * 'show xdr linecard'
     * 'show zone-pair security'
@@ -9815,6 +9816,89 @@ class ShowPlatformSoftwareFedSwitchAclUsageIncludeAcl(ShowPlatformSoftwareFedSwi
 
         return ret_dict
 
+class ShowRepTopologySchema(MetaParser):
+    """Schema for show rep topology"""
+
+    schema = {
+        'segment': {
+            Any(): {
+                'interfaces': {
+                    Any(): {
+                        'port': str,
+                        'bridge': str,
+                        Optional('edge'): str,
+                        'role': str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowRepTopology(ShowRepTopologySchema):
+    """
+    show rep topology
+    """
+
+    cli_command = 'show rep topology'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        current_segment = None
+
+        # REP Segment 1
+        p1 = re.compile(r'^REP Segment (?P<segment>\d+)$')
+
+        # C9200_DUT                        Gi1/0/1    Pri* Open
+        # C9200_DUT                        Gi1/0/2    Sec* Alt
+        # IE34001                          Gi1/2           Open
+        p2 = re.compile(
+            r'^(?P<bridge>\S+)\s+'
+            r'(?P<interface>[A-Za-z][A-Za-z0-9-]*\d+(?:/\d+)*(?:\.\d+)?)\s+'
+            r'((?P<edge>\S+)\s+)?'
+            r'(?P<role>\S+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # REP Segment 1
+            m = p1.match(line)
+            if m:
+                current_segment = int(m.groupdict()['segment'])
+                ret_dict.setdefault('segment', {}).setdefault(current_segment, {})
+                continue
+
+            # BridgeName                       PortName   Edge Role
+            # -------------------------------- ---------- ---- ----
+            if line.startswith('BridgeName') or line.startswith('-'):
+                continue
+
+            # C9200_DUT                        Gi1/0/1    Pri* Open
+            m = p2.match(line)
+            if m and current_segment is not None:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group.pop('interface'))
+                intf_dict = (
+                    ret_dict
+                    .setdefault('segment', {})
+                    .setdefault(current_segment, {})
+                    .setdefault('interfaces', {})
+                    .setdefault(interface, {})
+                )
+                intf_dict['port'] = interface
+                intf_dict['bridge'] = group['bridge']
+                intf_dict['role'] = group['role']
+                if group.get('edge'):
+                    intf_dict['edge'] = group['edge']
+        
+        return ret_dict
 
 # ====================================================
 #  Schema for :
@@ -13475,3 +13559,57 @@ class ShowPlatformHardwareCppActiveFeatureNatDatapathSessDump(ShowPlatformHardwa
                         }
 
         return result
+        
+# ==========================================================================
+# Schema for :
+#   * 'show platform software fed {switch} {mode} ipv6 route summary | include {match}'
+# ===========================================================================
+
+class ShowPlatformSoftwareFedIpv6RouteSummaryIncludeSchema(MetaParser):
+    """Schema for show platform software fed {switch} {mode} ipv6 route summary | include {match}"""
+    schema = {
+        'asic': {
+            Any(): {
+                'total_entries': int,
+            }
+        }
+    }
+# =====================================================================
+# Parser for:
+#   * 'show platform software fed {switch} {mode} ipv6 route summary | include {match}'
+# =====================================================================
+class ShowPlatformSoftwareFedIpv6RouteSummaryInclude(ShowPlatformSoftwareFedIpv6RouteSummaryIncludeSchema):
+    """Parser for show platform software fed {switch} {mode} ipv6 route summary | include {match}"""
+
+    cli_command = [
+        'show platform software fed {switch} {mode} ipv6 route summary | include {match}',
+        'show platform software fed {mode} ipv6 route summary | include {match}',
+    ]
+
+    def cli(self, mode, match, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(mode=mode, match=match, switch=switch)
+            else:
+                cmd = self.cli_command[1].format(mode=mode, match=match)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        #Total number of v6 fib EM hw entries for device:0 = 2
+        p1 = re.compile(r'^Total number of v6 fib EM hw entries for device:(?P<asic>\d+) = (?P<total_entries>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Total number of v6 fib EM hw entries for device:0 = 2
+            m = p1.match(line)
+            if m:
+                asic = m.group('asic')
+                asic = int(asic)
+                total_entries = int(m.group('total_entries'))
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                asic_dict['total_entries'] = total_entries
+                continue
+
+        return ret_dict

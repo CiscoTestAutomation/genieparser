@@ -87,10 +87,13 @@
     * 'show platform hardware cpp active feature nat datapath stats'
     * 'show platform hardware cpp active feature nat datapath bind'
     * 'show platform hardware qfp active feature nat datapath time'
+    * 'show platform hardware qfp active interface all statistics'
     * show platform hardware qfp active feature tunnel interface {tunnel}
     * 'show platform hardware qfp active datapath infrastructure sw-pktmem'
     * 'show platform hardware qfp active interface all statistics drop_summary subinterface clear_drop'
     * show platform hardware qfp active feature nat64 datapath statistics
+    * show platform hardware slot {slot} sensor producer all
+    * show platform hardware slot {slot} sensor consumer all
 """
 import re
 import logging
@@ -18872,7 +18875,6 @@ class ShowPlatformHardwareCppActiveFeatureNatDatapathStats(ShowPlatformHardwareC
 
         return parsed_dict
 
-
 class ShowPlatformHardwareQfpActiveFeatureTunnelInterfaceTunnelSchema(MetaParser):
     """Schema for show platform hardware qfp active feature tunnel interface {tunnel}"""
 
@@ -19791,5 +19793,603 @@ class ShowPlatformHardwareQfpActiveInterfaceAllStatisticsDropSummarySubinterface
             if m:
                 ret_dict.setdefault("drop_stats_summary", {})
                 ret_dict["drop_stats_summary"] = {"interfaces": {"NA": {"rx_pkts": 0, "tx_pkts": 0}}}
+
+        return ret_dict
+
+class ShowPlatformHardwareQfpActiveInterfaceAllStatisticsSchema(MetaParser):
+    """Schema for show platform hardware qfp active interface all statistics"""
+    schema = {
+        'receive_stats': {
+            'ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'tag': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'other': {
+                'packets': int,
+                'octets': int,
+            },
+        },
+        'transmit_stats': {
+            'ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'tag': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'other': {
+                'packets': int,
+                'octets': int,
+            },
+        },
+        Optional('input_drop_stats'): {
+            Any(): {
+                'packets': int,
+                'octets': int,
+            }
+        },
+        Optional('output_drop_stats'): {
+            Any(): {
+                'packets': int,
+                'octets': int,
+            }
+        },
+        Optional('drop_stats_summary'): {
+            'interfaces': {
+                str: {
+                    'rx_pkts': int,
+                    'tx_pkts': int,
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareQfpActiveInterfaceAllStatistics(ShowPlatformHardwareQfpActiveInterfaceAllStatisticsSchema):
+    """Parser for show platform hardware qfp active interface all statistics"""
+
+    cli_command = 'show platform hardware qfp active interface all statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+        current_section = None
+
+        # Receive Stats                             Packets        Octets
+        p1 = re.compile(r'^Receive Stats\s+Packets\s+Octets$')
+
+        # Transmit Stats                            Packets        Octets
+        p2 = re.compile(r'^Transmit Stats\s+Packets\s+Octets$')
+
+        # Input Drop Stats                          Packets        Octets
+        p3 = re.compile(r'^Input Drop Stats\s+Packets\s+Octets$')
+
+        # Output Drop Stats                         Packets        Octets
+        p4 = re.compile(r'^Output Drop Stats\s+Packets\s+Octets$')
+
+        # Drop Stats Summary:
+        p5 = re.compile(r'^Drop Stats Summary:$')
+
+        # Interface                                       Rx Pkts             Tx Pkts
+        p6 = re.compile(r'^Interface\s+Rx Pkts\s+Tx Pkts$')
+
+        # Stats data lines - flexible pattern for stats entries
+        # Ipv4                                       9             810
+        # Ipv4NoRoute                                182         22996
+        p7 = re.compile(r'^(?P<stat_name>\S+)\s+(?P<packets>\d+)\s+(?P<octets>\d+)$')
+
+        # Interface data line
+        # GigabitEthernet0/0/0.775                           3209                  20
+        p8 = re.compile(r'^(?P<interface>\S+)\s+(?P<rx_pkts>\d+)\s+(?P<tx_pkts>\d+)$')
+
+        # Iterate over each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines and separator lines
+            if not line or line.startswith('-') or line.startswith('note:'):
+                continue
+
+            # Receive Stats                             Packets        Octets
+            m = p1.match(line)
+            if m:
+                current_section = 'receive_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Transmit Stats                            Packets        Octets
+            m = p2.match(line)
+            if m:
+                current_section = 'transmit_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Input Drop Stats                          Packets        Octets
+            m = p3.match(line)
+            if m:
+                current_section = 'input_drop_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Output Drop Stats                         Packets        Octets
+            m = p4.match(line)
+            if m:
+                current_section = 'output_drop_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Drop Stats Summary:
+            m = p5.match(line)
+            if m:
+                current_section = 'drop_stats_summary'
+                continue
+
+            # Interface                                       Rx Pkts             Tx Pkts
+            m = p6.match(line)
+            if m and current_section == 'drop_stats_summary':
+                parsed_dict[current_section] = {'interfaces': {}}
+                continue
+
+            # Stats data lines - flexible pattern for stats entries
+            # Ipv4                                       9             810
+            # Ipv4NoRoute                                182         22996
+            m = p7.match(line)
+            if m and current_section in ['receive_stats', 'transmit_stats', 'input_drop_stats', 'output_drop_stats']:
+                group = m.groupdict()
+                stat_name = group['stat_name'].lower()
+
+                # Map stat names to schema keys
+                if stat_name == 'mcastipv4':
+                    stat_name = 'mcast_ipv4'
+                elif stat_name == 'mcastipv6':
+                    stat_name = 'mcast_ipv6'
+                elif stat_name.startswith('ipv4') and current_section in ['input_drop_stats', 'output_drop_stats']:
+                    # For drop stats, keep original name
+                    stat_name = group['stat_name']
+                elif stat_name.startswith('mplsipv6') and current_section in ['input_drop_stats', 'output_drop_stats']:
+                    # For drop stats, keep original name
+                    stat_name = group['stat_name']
+                elif stat_name.startswith('unconfigured') and current_section in ['input_drop_stats', 'output_drop_stats']:
+                    # For drop stats, keep original name
+                    stat_name = group['stat_name']
+
+                if current_section in ['receive_stats', 'transmit_stats']:
+                    parsed_dict[current_section][stat_name] = {
+                        'packets': int(group['packets']),
+                        'octets': int(group['octets'])
+                    }
+                else:  # drop stats
+                    parsed_dict[current_section][stat_name] = {
+
+                        'packets': int(group['packets']),
+                        'octets': int(group['octets'])
+                    }
+                continue
+
+            # Interface data line
+            # GigabitEthernet0/0/0.775                           3209                  20
+            m = p8.match(line)
+            if m and current_section == 'drop_stats_summary':
+                group = m.groupdict()
+                interface = group['interface']
+                parsed_dict[current_section]['interfaces'][interface] = {
+                    'rx_pkts': int(group['rx_pkts']),
+                    'tx_pkts': int(group['tx_pkts'])
+                }
+                continue
+
+        return parsed_dict
+
+class ShowPlatformHardwareQfpActiveInterfaceAllStatisticsSchema(MetaParser):
+    """Schema for show platform hardware qfp active interface all statistics"""
+    schema = {
+        'receive_stats': {
+            'ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'tag': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'other': {
+                'packets': int,
+                'octets': int,
+            },
+        },
+        'transmit_stats': {
+            'ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'tag': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv4': {
+                'packets': int,
+                'octets': int,
+            },
+            'mcast_ipv6': {
+                'packets': int,
+                'octets': int,
+            },
+            'other': {
+                'packets': int,
+                'octets': int,
+            },
+        },
+        Optional('input_drop_stats'): {
+            Any(): {
+                'packets': int,
+                'octets': int,
+            }
+        },
+        Optional('output_drop_stats'): {
+            Any(): {
+                'packets': int,
+                'octets': int,
+            }
+        },
+        Optional('drop_stats_summary'): {
+            'interfaces': {
+                str: {
+                    'rx_pkts': int,
+                    'tx_pkts': int,
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareQfpActiveInterfaceAllStatistics(ShowPlatformHardwareQfpActiveInterfaceAllStatisticsSchema):
+    """Parser for show platform hardware qfp active interface all statistics"""
+
+    cli_command = 'show platform hardware qfp active interface all statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize the parsed dictionary
+        parsed_dict = {}
+        current_section = None
+
+        # Receive Stats                             Packets        Octets
+        p1 = re.compile(r'^Receive Stats\s+Packets\s+Octets$')
+
+        # Transmit Stats                            Packets        Octets
+        p2 = re.compile(r'^Transmit Stats\s+Packets\s+Octets$')
+
+        # Input Drop Stats                          Packets        Octets
+        p3 = re.compile(r'^Input Drop Stats\s+Packets\s+Octets$')
+
+        # Output Drop Stats                         Packets        Octets
+        p4 = re.compile(r'^Output Drop Stats\s+Packets\s+Octets$')
+
+        # Drop Stats Summary:
+        p5 = re.compile(r'^Drop Stats Summary:$')
+
+        # Interface                                       Rx Pkts             Tx Pkts
+        p6 = re.compile(r'^Interface\s+Rx Pkts\s+Tx Pkts$')
+
+        # Stats data lines - flexible pattern for stats entries
+        # Ipv4                                       9             810
+        # Ipv4NoRoute                                182         22996
+        p7 = re.compile(r'^(?P<stat_name>\S+)\s+(?P<packets>\d+)\s+(?P<octets>\d+)$')
+
+        # Interface data line
+        # GigabitEthernet0/0/0.775                           3209                  20
+        p8 = re.compile(r'^(?P<interface>\S+)\s+(?P<rx_pkts>\d+)\s+(?P<tx_pkts>\d+)$')
+
+        # Iterate over each line of the output
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip empty lines and separator lines
+            if not line or line.startswith('-') or line.startswith('note:'):
+                continue
+
+            # Receive Stats                             Packets        Octets
+            m = p1.match(line)
+            if m:
+                current_section = 'receive_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Transmit Stats                            Packets        Octets
+            m = p2.match(line)
+            if m:
+                current_section = 'transmit_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Input Drop Stats                          Packets        Octets
+            m = p3.match(line)
+            if m:
+                current_section = 'input_drop_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Output Drop Stats                         Packets        Octets
+            m = p4.match(line)
+            if m:
+                current_section = 'output_drop_stats'
+                parsed_dict[current_section] = {}
+                continue
+
+            # Drop Stats Summary:
+            m = p5.match(line)
+            if m:
+                current_section = 'drop_stats_summary'
+                continue
+
+            # Interface                                       Rx Pkts             Tx Pkts
+            m = p6.match(line)
+            if m and current_section == 'drop_stats_summary':
+                parsed_dict[current_section] = {'interfaces': {}}
+                continue
+
+            # Stats data lines - flexible pattern for stats entries
+            # Ipv4                                       9             810
+            # Ipv4NoRoute                                182         22996
+            m = p7.match(line)
+            if m and current_section in ['receive_stats', 'transmit_stats', 'input_drop_stats', 'output_drop_stats']:
+                group = m.groupdict()
+                stat_name = group['stat_name'].lower()
+
+                # Map stat names to schema keys
+                if stat_name == 'mcastipv4':
+                    stat_name = 'mcast_ipv4'
+                elif stat_name == 'mcastipv6':
+                    stat_name = 'mcast_ipv6'
+                elif stat_name.startswith('ipv4') and current_section in ['input_drop_stats', 'output_drop_stats']:
+                    # For drop stats, keep original name
+                    stat_name = group['stat_name']
+                elif stat_name.startswith('mplsipv6') and current_section in ['input_drop_stats', 'output_drop_stats']:
+                    # For drop stats, keep original name
+                    stat_name = group['stat_name']
+                elif stat_name.startswith('unconfigured') and current_section in ['input_drop_stats', 'output_drop_stats']:
+                    # For drop stats, keep original name
+                    stat_name = group['stat_name']
+
+                if current_section in ['receive_stats', 'transmit_stats']:
+                    parsed_dict[current_section][stat_name] = {
+                        'packets': int(group['packets']),
+                        'octets': int(group['octets'])
+                    }
+                else:  # drop stats
+                    parsed_dict[current_section][stat_name] = {
+
+                        'packets': int(group['packets']),
+                        'octets': int(group['octets'])
+                    }
+                continue
+
+            # Interface data line
+            # GigabitEthernet0/0/0.775                           3209                  20
+            m = p8.match(line)
+            if m and current_section == 'drop_stats_summary':
+                group = m.groupdict()
+                interface = group['interface']
+                parsed_dict[current_section]['interfaces'][interface] = {
+                    'rx_pkts': int(group['rx_pkts']),
+                    'tx_pkts': int(group['tx_pkts'])
+                }
+                continue
+
+        return parsed_dict
+
+class ShowPlatformHardwareSlotSlotSensorProducerAllSchema(MetaParser):
+    """Schema for show platform hardware slot {slot} sensor producer all"""
+
+    schema = {
+        "slot": {
+            Any(): {
+                "registration": str,
+                "sensors": {
+                    Any(): {
+                        "name": str,
+                        "data": int,
+                        "unit": str,
+                        "last_poll": str,
+                    }
+                },
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareSlotSlotSensorProducerAll(ShowPlatformHardwareSlotSlotSensorProducerAllSchema):
+    """Parser for show platform hardware slot {slot} sensor producer all"""
+
+    cli_command = "show platform hardware slot {slot} sensor producer all"
+
+    def cli(self, slot="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        slot_key = slot if slot else "{slot}"
+
+        # Registration: Registered
+        p1 = re.compile(r"^Registration\s*:\s*(?P<registration>\S+)$")
+
+        # Temp: Front       0        40  C    03:10:18
+        p2 = re.compile(
+            r"^(?P<name>.+?)\s+(?P<id>\d+)\s+(?P<data>-?\d+)(?:\s+(?P<unit>\S+))?\s+(?P<last_poll>\d{2}:\d{2}:\d{2})$"
+        )
+        # Initialize slot dict early
+        slot_dict = ret_dict.setdefault("slot", {}).setdefault(slot_key, {})
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Registration: Registered
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("slot", {}).setdefault(slot_key, {})
+                ret_dict["slot"][slot_key]["registration"] = group["registration"]
+                continue
+
+            # Temp: Front       0        40  C    03:10:18
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("slot", {}).setdefault(slot_key, {})
+                ret_dict["slot"][slot_key].setdefault("sensors", {})
+                sid = int(group["id"])
+                unit = group["unit"] if group["unit"] else ""
+                ret_dict["slot"][slot_key]["sensors"][sid] = {
+                    "name": group["name"].strip(),
+                    "data": int(group["data"]),
+                    "unit": unit,
+                    "last_poll": group["last_poll"],
+                }
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareSlotSlotSensorConsumerAllSchema(MetaParser):
+    """Schema for show platform hardware slot {slot} sensor consumer all"""
+
+    schema = {
+        "slot": {
+            "registration": str,
+            "sensors": {
+                Any(): {
+                    "name": str,
+                    "data": int,
+                    "unit": str,
+                    "last_poll": str,
+                }
+            },
+        }
+    }
+
+
+class ShowPlatformHardwareSlotSlotSensorConsumerAll(ShowPlatformHardwareSlotSlotSensorConsumerAllSchema):
+    """Parser for show platform hardware slot {slot} sensor consumer all"""
+
+    cli_command = "show platform hardware slot {slot} sensor consumer all"
+
+    def cli(self, slot=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(slot=slot)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+
+        # Registration: Registered
+        p1 = re.compile(r"^\s*Registration\s*:\s*(?P<registration>.+?)\s*$")
+
+        # Name              Id     Data       Last Poll
+        p2 = re.compile(r"^\s*Name\s+Id\s+Data\s+Last\s+Poll\s*$")
+
+        # ----------------------------------------------
+        p3 = re.compile(r"^-{6,}\s*$")
+
+        # Vin               500  232000  mV   13:01:06
+        p4 = re.compile(
+            r"^(?P<name>.+?)\s+(?P<id>\d+)\s+(?P<data>-?\d+)(?:\s+(?P<unit>\S+))?\s+(?P<last_poll>\d{2}:\d{2}:\d{2})$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Registration: Registered
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault("slot", {})
+                ret_dict["slot"]["registration"] = group["registration"]
+                continue
+
+            # Name              Id     Data       Last Poll
+            m = p2.match(line)
+            if m:
+                # header line, nothing to store
+                continue
+
+            # ----------------------------------------------
+            m = p3.match(line)
+            if m:
+                # separator line, nothing to store
+                continue
+
+            # Vin               500  232000  mV   13:01:06
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                sensor_id = int(group["id"])
+                data_val = int(group["data"])
+                unit_val = group["unit"] if group["unit"] else ""
+                slot_dict = ret_dict.setdefault("slot", {}).setdefault("sensors", {})
+                slot_dict[sensor_id] = {
+                    "name": group["name"],
+                    "data": data_val,
+                    "unit": unit_val,
+                    "last_poll": group["last_poll"],
+                }
+                continue
 
         return ret_dict

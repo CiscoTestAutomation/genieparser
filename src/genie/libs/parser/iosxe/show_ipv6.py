@@ -2466,12 +2466,14 @@ class ShowIpv6cefExactRoute(ShowIpv6cefExactRouteSchema):
             output = self.device.execute(self.cli_command.format(source=source, destination=destination))
 
         # 11:1:0:1::1 -> 11:0:0:2::2 => IP adj out of Port-channel1, addr 11:0:0:2::2
-        p1 = re.compile(r'^(?P<source>[\d\:]+) +-> +(?P<destination>[\d\:]+) +=> IP adj out of +(?P<ip_adj>[\w\-\.\/]+), +addr +(?P<ip_addr>[\d\:]+)$')
+        # 1::1 -> 2::1 =>IPV6 adj out of HundredGigE1/0/51, addr FE80::42B5:C1FF:FEFF:D902
+        p1 = re.compile(r"(?P<source>[a-fA-F0-9:]+)\s*->\s*(?P<destination>[a-fA-F0-9:]+)\s*=>\s*IPV?6?\s*adj out of\s+(?P<ip_adj>[\w\-/.]+),\s+addr\s+(?P<ip_addr>[a-fA-F0-9:]+)")
 
         ret_dict = {}
         for line in output.splitlines():
             line = line.strip()
             # 11:1:0:1::1 -> 11:0:0:2::2 => IP adj out of Port-channel1, addr 11:0:0:2::2
+            # 1::1 -> 2::1 =>IPV6 adj out of HundredGigE1/0/51, addr FE80::42B5:C1FF:FEFF:D902
             m = p1.match(line)
             if m:
                 group = m.groupdict()

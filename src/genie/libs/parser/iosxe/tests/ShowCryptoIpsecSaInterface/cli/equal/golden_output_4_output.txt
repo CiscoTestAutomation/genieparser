@@ -1,0 +1,49 @@
+interface: Tunnel10
+    Crypto map tag: Tunnel10-head-0, local addr 101.1.1.1
+
+   protected vrf: client1-vrf
+   local  ident (addr/mask/prot/port): (0.0.0.0/0.0.0.0/0/0)
+   remote ident (addr/mask/prot/port): (0.0.0.0/0.0.0.0/0/0)
+   current_peer 101.1.1.2 port 500
+     PERMIT, flags={origin_is_acl,}
+    #pkts encaps: 191382, #pkts encrypt: 191382, #pkts digest: 191382
+    #pkts decaps: 191382, #pkts decrypt: 191382, #pkts verify: 191382
+    #pkts compressed: 0, #pkts decompressed: 0
+    #pkts not compressed: 0, #pkts compr. failed: 0
+    #pkts not decompressed: 0, #pkts decompress failed: 0
+    #send errors 0, #recv errors 0
+
+     local crypto endpt.: 101.1.1.1, remote crypto endpt.: 101.1.1.2
+     plaintext mtu 1438, path mtu 1500, ip mtu 1500, ip mtu idb FiveGigabitEthernet3/0/24
+     current outbound spi: 0x2C46EF61(742846305)
+     PFS (Y/N): N, DH group: none
+
+     inbound esp sas:
+      spi: 0x56BAA02D(1455071277)
+        transform: esp-gcm 256 ,
+        in use settings ={Tunnel, esn}
+        conn id: 2029, flow_id: CAT9K:29, sibling_flags FFFFFFFF80000048, crypto map: Tunnel10-head-0, initiator : False
+        sa timing: remaining key lifetime (sec): 632
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     inbound ah sas:
+
+     inbound pcp sas:
+
+     outbound esp sas:
+      spi: 0x2C46EF61(742846305)
+        transform: esp-gcm 256 ,
+        in use settings ={Tunnel, esn}
+        conn id: 2030, flow_id: CAT9K:30, sibling_flags FFFFFFFF80000048, crypto map: Tunnel10-head-0, initiator : False
+        sa timing: remaining key lifetime (sec): 632
+        Kilobyte Volume Rekey has been disabled
+        IV size: 8 bytes
+        replay detection support: Y
+        Status: ACTIVE(ACTIVE)
+
+     outbound ah sas:
+
+     outbound pcp sas:

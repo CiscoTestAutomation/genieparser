@@ -1,0 +1,68 @@
+expected_output = {
+    "slot": {
+        "registration": "Registered",
+        "sensors": {
+            500: {"name": "Vin", "data": 228500, "unit": "mV", "last_poll": "08:52:43"},
+            501: {"name": "Pin", "data": 221188, "unit": "", "last_poll": "08:52:43"},
+            502: {"name": "Iin", "data": 968, "unit": "mA", "last_poll": "08:52:43"},
+            503: {"name": "Vout", "data": 11994, "unit": "mV", "last_poll": "08:52:43"},
+            504: {"name": "Pout", "data": 199400, "unit": "", "last_poll": "08:52:43"},
+            505: {"name": "Iout", "data": 16625, "unit": "mA", "last_poll": "08:52:43"},
+            506: {"name": "Temp1", "data": 29, "unit": "C", "last_poll": "08:52:43"},
+            507: {"name": "Temp2", "data": 26, "unit": "C", "last_poll": "08:52:43"},
+            508: {"name": "Temp3", "data": 33, "unit": "C", "last_poll": "08:52:43"},
+
+            520: {"name": "Vin", "data": 0, "unit": "mV", "last_poll": "08:52:43"},
+            521: {"name": "Pin", "data": 0, "unit": "", "last_poll": "08:52:43"},
+            522: {"name": "Iin", "data": 0, "unit": "mA", "last_poll": "08:52:43"},
+            523: {"name": "Vout", "data": 5589, "unit": "mV", "last_poll": "08:52:43"},
+            524: {"name": "Pout", "data": 0, "unit": "", "last_poll": "08:52:43"},
+            525: {"name": "Iout", "data": 0, "unit": "mA", "last_poll": "08:52:43"},
+            526: {"name": "Temp1", "data": 30, "unit": "C", "last_poll": "08:52:43"},
+            527: {"name": "Temp2", "data": 27, "unit": "C", "last_poll": "08:52:43"},
+            528: {"name": "Temp3", "data": 26, "unit": "C", "last_poll": "08:52:43"},
+
+            20: {"name": "Temp: Front", "data": 31, "unit": "C", "last_poll": "08:52:43"},
+            21: {"name": "Temp: Inlet", "data": 22, "unit": "C", "last_poll": "08:52:43"},
+            22: {"name": "Temp: Middle", "data": 34, "unit": "C", "last_poll": "08:52:43"},
+            23: {"name": "Temp: U1_P0", "data": 55, "unit": "C", "last_poll": "08:52:43"},
+            24: {"name": "Temp: Rear", "data": 34, "unit": "C", "last_poll": "08:52:43"},
+            25: {"name": "Temp: Outlet", "data": 31, "unit": "C", "last_poll": "08:52:43"},
+            26: {"name": "Temp: Middle 2", "data": 37, "unit": "C", "last_poll": "08:52:43"},
+            27: {"name": "Temp: Right B", "data": 46, "unit": "C", "last_poll": "08:52:43"},
+            28: {"name": "Temp: U1_S1_P0", "data": 46, "unit": "C", "last_poll": "08:52:43"},
+            29: {"name": "Temp: Right T", "data": 45, "unit": "C", "last_poll": "08:52:43"},
+            30: {"name": "Temp: U1_S0_P0", "data": 49, "unit": "C", "last_poll": "08:52:43"},
+
+            31: {"name": "VSeq1: VX1", "data": 11927, "unit": "mV", "last_poll": "08:52:43"},
+            32: {"name": "VSeq1: VX2", "data": 6955, "unit": "mV", "last_poll": "08:52:43"},
+            33: {"name": "VSeq1: VX3", "data": 5065, "unit": "mV", "last_poll": "08:52:43"},
+            34: {"name": "VSeq1: VX5", "data": 3298, "unit": "mV", "last_poll": "08:52:43"},
+            35: {"name": "VSeq1: VX6", "data": 3321, "unit": "mV", "last_poll": "08:52:43"},
+            36: {"name": "VSeq1: VX7", "data": 2496, "unit": "mV", "last_poll": "08:52:43"},
+            37: {"name": "VSeq1: VX8", "data": 1800, "unit": "mV", "last_poll": "08:52:43"},
+            38: {"name": "VSeq1: VX9", "data": 1789, "unit": "mV", "last_poll": "08:52:43"},
+            39: {"name": "VSeq1: VX10", "data": 1701, "unit": "mV", "last_poll": "08:52:43"},
+            40: {"name": "VSeq1: VX11", "data": 1501, "unit": "mV", "last_poll": "08:52:43"},
+            41: {"name": "VSeq1: VX12", "data": 1308, "unit": "mV", "last_poll": "08:52:43"},
+            42: {"name": "VSeq1: VX13", "data": 1218, "unit": "mV", "last_poll": "08:52:43"},
+            43: {"name": "VSeq1: VX14", "data": 1198, "unit": "mV", "last_poll": "08:52:43"},
+            44: {"name": "VSeq1: VX15", "data": 1100, "unit": "mV", "last_poll": "08:52:43"},
+            45: {"name": "VSeq1: VX16", "data": 1052, "unit": "mV", "last_poll": "08:52:43"},
+
+            46: {"name": "VSeq2: VX1", "data": 1002, "unit": "mV", "last_poll": "08:52:43"},
+            47: {"name": "VSeq2: VX2", "data": 899, "unit": "mV", "last_poll": "08:52:43"},
+            48: {"name": "VSeq2: VX3", "data": 897, "unit": "mV", "last_poll": "08:52:43"},
+            49: {"name": "VSeq2: VX4", "data": 848, "unit": "mV", "last_poll": "08:52:43"},
+            50: {"name": "VSeq2: VX5", "data": 998, "unit": "mV", "last_poll": "08:52:43"},
+            51: {"name": "VSeq2: VX6", "data": 606, "unit": "mV", "last_poll": "08:52:43"},
+            52: {"name": "VSeq2: VX7", "data": 589, "unit": "mV", "last_poll": "08:52:43"},
+            53: {"name": "VSeq2: VX10", "data": 873, "unit": "mV", "last_poll": "08:52:43"},
+            54: {"name": "VSeq2: VX14", "data": 747, "unit": "mV", "last_poll": "08:52:43"},
+
+            55: {"name": "Temp: FC FANS", "data": 22, "unit": "C", "last_poll": "08:52:43"},
+            56: {"name": "Temp: FC FAN0", "data": 22, "unit": "C", "last_poll": "08:52:43"},
+            57: {"name": "Temp: FC FAN1", "data": 22, "unit": "C", "last_poll": "08:52:43"}
+        }
+    }
+}

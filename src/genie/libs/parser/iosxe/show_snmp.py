@@ -12,6 +12,7 @@ from urllib.parse import non_hierarchical
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.utils.common import Common
 
 # ==========================
@@ -1380,5 +1381,140 @@ class SnmpGetIfIndex(SnmpGetIfIndexSchema):
                 ret_dict['reqid'] = int(group['reqid'])
                 ret_dict['errstat'] = int(group['errstat'])
                 ret_dict['erridx'] = int(group['erridx'])
+
+        return ret_dict
+
+
+# ==========================================================================================
+# Parser Schema for 'snmp get-bulk'
+# ==========================================================================================
+
+class SnmpGetBulkSchema(MetaParser):
+    """
+    Schema for
+        * 'snmp get-bulk'
+    """
+
+    schema = {
+        'status': str,
+        Optional('reqid'): int,
+        Optional('errstat'): int,
+        Optional('erridx'): int,
+        Optional('mib'): {
+            Any(): {
+                'oid': str,
+                Optional('type'): str,
+                'value': str,
+            },
+        },
+    }
+
+
+# ==========================================================================================
+# Parser for 'snmp get-bulk'
+# ==========================================================================================
+
+class SnmpGetBulk(SnmpGetBulkSchema):
+    """
+    Parser for
+        * 'snmp get-bulk'
+    """
+
+    cli_command = [
+        'snmp get-bulk v{version} {ip} vrf {vrf} {community_str} non-repeaters {non_repeaters} max-repetitions {max_repetitions} oid {oid}',
+        'snmp get-bulk v{version} {ip} {community_str} non-repeaters {non_repeaters} max-repetitions {max_repetitions} oid {oid}',
+    ]
+
+    def cli(self, version, ip, community_str, non_repeaters,
+            max_repetitions, oid, vrf=None, output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(
+                version=version,
+                ip=ip,
+                vrf=vrf,
+                community_str=community_str,
+                non_repeaters=non_repeaters,
+                max_repetitions=max_repetitions,
+                oid=oid,
+            )
+        else:
+            cmd = self.cli_command[1].format(
+                version=version,
+                ip=ip,
+                community_str=community_str,
+                non_repeaters=non_repeaters,
+                max_repetitions=max_repetitions,
+                oid=oid,
+            )
+
+        if output is None:
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # ifMauIfIndex.1.1 = 1
+        # cefPrefixForwardingInfo.1000.2.16... =
+        p1 = re.compile(
+            r'^(?:[\w\-]+::)?(?P<oid>[\w\-.]+)\s*=\s*(?:(?P<type>[\w\-]+):\s*)?(?P<value>.*)$'
+        )
+
+        # SNMP Response: reqid 10, errstat 0, erridx 0
+        p2 = re.compile(
+            r'^SNMP Response: reqid (?P<reqid>\d+), errstat (?P<errstat>\d+), erridx (?P<erridx>\d+)$'
+        )
+
+        # Timeout
+        p3 = re.compile(r'^Timeout$', re.IGNORECASE)
+
+        # 01 02  10 FE   80 00  00 00
+        p4 = re.compile(r'^(?:[0-9A-Fa-f]{2})(?:\s+[0-9A-Fa-f]{2})+\s*$')
+
+        last_oid = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # ifMauIfIndex.1.1 = 1
+            # cefPrefixForwardingInfo.1000.2.16... =
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mib_dict = ret_dict.setdefault('mib', {}).setdefault(group['oid'], {})
+                mib_dict['oid'] = group['oid']
+                mib_dict['value'] = group['value'].strip()
+                if group['type']:
+                    mib_dict['type'] = group['type']
+                last_oid = group['oid']
+                continue
+
+            # SNMP Response: reqid 10, errstat 0, erridx 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['reqid'] = int(group['reqid'])
+                ret_dict['errstat'] = int(group['errstat'])
+                ret_dict['erridx'] = int(group['erridx'])
+                last_oid = None
+                continue
+
+            # Timeout
+            m = p3.match(line)
+            ret_dict['status'] = 'success'
+            if m:
+                ret_dict['status'] = 'timeout'
+                last_oid = None
+                continue
+
+            # 01 02  10 FE   80 00  00 00
+            m = p4.match(line)
+            if m and last_oid and ret_dict.get('mib', {}).get(last_oid):
+                hex_line = ' '.join(line.split())
+                existing_value = ret_dict['mib'][last_oid].get('value', '')
+                ret_dict['mib'][last_oid]['value'] = (
+                    '{} {}'.format(existing_value, hex_line).strip()
+                )
+
+        if not ret_dict:
+            raise SchemaEmptyParserError('Parser Output is empty')
 
         return ret_dict

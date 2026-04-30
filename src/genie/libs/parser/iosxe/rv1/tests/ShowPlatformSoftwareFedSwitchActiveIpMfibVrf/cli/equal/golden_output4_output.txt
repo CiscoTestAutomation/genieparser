@@ -1,0 +1,19 @@
+  Mvrf: 2  ( 2000:149:1:1:1::2, ff35::1 ) Attrs:
+    Hw Flag                 : InHw
+    Mlist Flags             : None
+    Mlist_hndl              : 0x100000000000003d
+    Mlist Urid              : 0x100000000000003d
+    Fset Urid (Hash)        : 0x3000000000000007 ( cc65ce7d )
+    RPF Adjacency ID        : 0xf8004ef2
+    CPU Credit              : 0
+    Total Packets[StatsMode]: 0 ( 0 pps approx.)[ Ingress ]
+    OIF Count               : 2
+    OIF Details:
+      AdjID          Interface          ParentIf        HwFlag      Flags
+      0xf8004ee2     Vl369              --------         ---        F NS
+      0xf8004ef2     Vl379              --------         ---        A
+    GID                   : 8208
+    MCID OID Asic[0]      : 2080
+    MCID OID Asic[1]      : 2291
+    MCID OID Asic[2]      : 2279
+    MCID OID Asic[3]      : 2069

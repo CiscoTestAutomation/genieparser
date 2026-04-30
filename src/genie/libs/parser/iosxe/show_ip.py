@@ -105,6 +105,7 @@ IOSXE parsers for the following show commands:
     * show ip nat bpa
     * show ip pim rp
     * show ip ssh
+    * show ip ssh pubkey server all
     '''
 
 # Python
@@ -11586,8 +11587,7 @@ class ShowIpSsh(ShowIpSshSchema):
                     ssh_dict = parsed_dict.setdefault('ssh', {})
                 methods = [method.strip() for method in m.groupdict()['methods'].split(',')]
                 ssh_dict['authentication_methods'] = methods
-                continue
-                
+                continue    
             # Authentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256,ssh-rsa
             m = p3.match(line)
             if m:
@@ -11716,6 +11716,128 @@ class ShowIpSsh(ShowIpSshSchema):
                 ssh_dict.setdefault('ecdsa_key', {})['key_data'] = key_data
                     
         return parsed_dict
+
+
+# ==========================================
+# Schema for 'show ip ssh pubkey server all'
+# ==========================================
+class ShowIpSshPubkeyServerAllSchema(MetaParser):
+    """Schema for show ip ssh pubkey server all"""
+
+    schema = {
+        Optional('configured_entries'): {
+            Any(): {
+                'key_type': str,
+                'key_hash': str,
+            },
+        },
+        Optional('learned_tofu_entries'): {
+            Any(): {
+                'key_type': str,
+                'key_hash': str,
+            },
+        },
+    }
+
+
+# ==========================================
+# Parser for 'show ip ssh pubkey server all'
+# ==========================================
+class ShowIpSshPubkeyServerAll(ShowIpSshPubkeyServerAllSchema):
+    """Parser for:
+        show ip ssh pubkey server all
+    """
+
+    cli_command = 'show ip ssh pubkey server all'
+
+    def cli(self, output=None):
+        """parsing mechanism: cli"""
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Configured Entries:
+        p1 = re.compile(r'^Configured\s+Entries:\s*$')
+
+        # Learned TOFU Entries:
+        p2 = re.compile(r'^Learned\s+TOFU\s+Entries:\s*$')
+
+        # Alternate heading seen on some platforms
+        # Learned SSH server public keys:
+        p2_alt = re.compile(r'^Learned\s+SSH\s+server\s+public\s+keys:\s*$')
+
+        # Alternate configured heading (platform variation)
+        # Configured SSH server public keys:
+        p1_alt = re.compile(r'^Configured\s+SSH\s+server\s+public\s+keys:\s*$')
+
+        # One-line format example:
+        # 11.19.159.63 ssh-rsa b8eb4444f3c86b1834884dc462bf0559d596b1343475202f262454516cf94025
+        p3 = re.compile(r'^(?P<server_ip>\S+)\s+(?P<key_type>\S+)\s+(?P<key_hash>\S+)$')
+
+        # server 11.19.159.63
+        p4 = re.compile(r'^server\s+(?P<server_ip>\S+)$')
+        # key-hash ssh-rsa b8eb...
+        p5 = re.compile(r'^key-hash\s+(?P<key_type>\S+)\s+(?P<key_hash>\S+)$')
+
+        ret_dict = {}
+        current_section = None
+        pending_server_ip = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+
+            # Ignore prompt/echo lines
+            if line.endswith('#') or 'show ip ssh pubkey server all' in line:
+                continue
+
+            # Configured Entries:
+            m = p1.match(line) or p1_alt.match(line)
+            if m:
+                current_section = 'configured_entries'
+                ret_dict.setdefault(current_section, {})
+                pending_server_ip = None
+                continue
+
+            # Learned TOFU Entries:
+            m = p2.match(line) or p2_alt.match(line)
+            if m:
+                current_section = 'learned_tofu_entries'
+                ret_dict.setdefault(current_section, {})
+                pending_server_ip = None
+                continue
+            
+            # server 11.19.159.63
+            m = p4.match(line)
+            if m and current_section:
+                pending_server_ip = m.groupdict()['server_ip']
+                continue
+            
+            # Configured Entries:
+            # 11.19.159.63 ssh-rsa b8eb4444f3c86b1834...
+            m = p5.match(line)
+            if m and current_section and pending_server_ip:
+                groups = m.groupdict()
+                entry_dict = ret_dict.setdefault(current_section, {}).setdefault(pending_server_ip, {})
+                entry_dict['key_type'] = groups['key_type']
+                entry_dict['key_hash'] = groups['key_hash']
+                pending_server_ip = None
+                continue
+
+            # Learned TOFU Entries:
+            # 11.19.159.64 ssh-rsa b8eb4444f3c86b1834...
+            m = p3.match(line)
+            if m and current_section:
+                groups = m.groupdict()
+                entry_dict = ret_dict.setdefault(current_section, {}).setdefault(groups['server_ip'], {})
+                entry_dict['key_type'] = groups['key_type']
+                entry_dict['key_hash'] = groups['key_hash']
+                pending_server_ip = None
+                continue
+
+        return ret_dict
         
 class ShowIpRibVrfDatabaseDetailSchema(MetaParser):
     """Schema for show ip rib vrf {vrf} database detail"""
@@ -12000,3 +12122,156 @@ class ShowIpRibVrfDatabaseDetail(ShowIpRibVrfDatabaseDetailSchema):
         
         return ret_dict
 
+class ShowIpv6RouteVrfSummaryInternalSchema(MetaParser):
+    """Schema for show ipv6 route vrf {vrf} summary internal"""
+    
+    schema = {
+        'vrf': {
+            Any(): {
+                'ipv6_routing_table_name': str,
+                'table_id': str,
+                'global_scope': str,
+                'total_entries': int,
+                'default_maximum_paths': int,
+                'route_sources': {
+                    Any(): {  # Route source name
+                        'networks': int,
+                        'overhead': int,
+                        'memory_bytes': int
+                    }
+                },
+                'total': {
+                    'networks': int,
+                    'overhead': int,
+                    'memory_bytes': int
+                },
+                Optional('prefix_counts'): {
+                    Any(): int  # prefix length -> count
+                }
+            }
+        }
+    }
+
+
+class ShowIpv6RouteVrfSummaryInternal(ShowIpv6RouteVrfSummaryInternalSchema):
+    """Parser for show ipv6 route vrf {vrf} summary internal"""
+    
+    cli_command = ['show ipv6 route vrf {vrf} summary internal',
+                   'show ipv6 route summary internal']
+    
+    def cli(self, vrf="", output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = 'show ipv6 route summary internal'
+            output = self.device.execute(cmd)
+        
+        # Initialize return dictionary
+        ret_dict = {}
+        
+        # Regex patterns
+        # IPv6 routing table name is demo2(1E000004) global scope - 3 entries
+        p1 = re.compile(r'^IPv6 routing table name is\s+(?P<vrf_name>\S+)\((?P<table_id>\S+)\)\s+(?P<scope>\S+)\s+scope\s+-\s+(?P<entries>\d+)\s+entries$')
+        # IPv6 routing table default maximum-paths is 16
+        p2 = re.compile(r'^IPv6 routing table default maximum-paths is\s+(?P<max_paths>\d+)$')
+        # connected     0        0        0
+        p3 = re.compile(r'^(?P<source>\S+)\s+(?P<networks>\d+)\s+(?P<overhead>\d+)\s+(?P<memory>\d+)$')
+        # Total         3      600      648
+        p4 = re.compile(r'^Total\s+(?P<networks>\d+)\s+(?P<overhead>\d+)\s+(?P<memory>\d+)$')
+        # /8: 1, /10: 1, /127: 1
+        p5 = re.compile(r'^/(?P<prefix>\d+):\s+(?P<count>\d+)')
+        
+        current_vrf = None
+        in_route_sources_section = False
+        in_prefixes_section = False
+        
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Skip header lines
+            if 'Route Source' in line and 'Networks' in line and 'Overhead' in line:
+                in_route_sources_section = True
+                continue
+            
+            if 'Number of prefixes:' in line:
+                in_prefixes_section = True
+                continue
+            
+            # IPv6 routing table name with VRF and table ID
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                current_vrf = groups['vrf_name']
+                
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(current_vrf, {})
+                
+                vrf_dict['ipv6_routing_table_name'] = current_vrf
+                vrf_dict['table_id'] = groups['table_id']
+                vrf_dict['global_scope'] = groups['scope']
+                vrf_dict['total_entries'] = int(groups['entries'])
+                in_route_sources_section = False
+                in_prefixes_section = False
+                continue
+            
+            if current_vrf is None:
+                continue
+            
+            # Default maximum paths
+            m = p2.match(line)
+            if m:
+                # Use existing vrf_dict from when current_vrf was set
+                vrf_dict = ret_dict['vrf'][current_vrf]
+                vrf_dict['default_maximum_paths'] = int(m.groupdict()['max_paths'])
+                continue
+            
+            # Route source entries (including Total)
+            if in_route_sources_section:
+                # Use existing vrf_dict
+                vrf_dict = ret_dict['vrf'][current_vrf]
+                
+                # Check for Total line first
+                m = p4.match(line)
+                if m:
+                    groups = m.groupdict()
+                    vrf_dict['total'] = {
+                        'networks': int(groups['networks']),
+                        'overhead': int(groups['overhead']),
+                        'memory_bytes': int(groups['memory'])
+                    }
+                    in_route_sources_section = False  # End of route sources section
+                    continue
+                
+                # Regular route sources
+                m = p3.match(line)
+                if m:
+                    groups = m.groupdict()
+                    source = groups['source']
+                    
+                    route_sources_dict = vrf_dict.setdefault('route_sources', {})
+                    
+                    route_sources_dict[source] = {
+                        'networks': int(groups['networks']),
+                        'overhead': int(groups['overhead']),
+                        'memory_bytes': int(groups['memory'])
+                    }
+                    continue
+            
+            # Prefix counts
+            if in_prefixes_section:
+                # Use existing vrf_dict
+                vrf_dict = ret_dict['vrf'][current_vrf]
+                
+                # Handle multiple prefixes on one line (e.g., "/8: 1, /10: 1, /127: 1")
+                prefix_matches = re.findall(r'/(\d+):\s+(\d+)', line)
+                if prefix_matches:
+                    prefix_counts_dict = vrf_dict.setdefault('prefix_counts', {})
+                    
+                    for prefix_len, count in prefix_matches:
+                        prefix = "/{0}".format(prefix_len)
+                        prefix_counts_dict[prefix] = int(count)
+                    continue
+        
+        return ret_dict

@@ -1,0 +1,68 @@
+Logging display requested on 2026/03/30 02:28:05 (IST) for Hostname: [9350-3M-PK], Model: [C9350-24HX], Version: [26.02], SN: [FVH293744XA], MD_SN: [FVH2941LD1J]
+
+Displaying logs from the last 2 days, 12 hours, 57 minutes, 5 seconds
+executing cmd on chassis: 2; rp slot: 0;  location: local ...
+sending cmd from chassis: 2 rp slot: 0;  to chassis: 1 rp slot: 0 ...
+executing cmd on chassis: 1; rp slot: 0;  location: remote ...
+sending cmd from chassis: 2 rp slot: 0;  to chassis: 3 rp slot: 0 ...
+executing cmd on chassis: 3; rp slot: 0;  location: remote ...
+Files being merged in the background, please check [/flash/fed.log] output file
+Collecting files from chassis member 10.129.1.0.
+Collecting files from chassis member 10.131.1.0.
+Unified Decoder Library Init .. DONE
+
+unified trace decoder estimates: [584] number of files, [78704721] number of messages
+	 that may be processed. Use CTRL+SHIFT+6 to break.
+Found 4 UTF Streams
+	 2026-03-30 02:28:45.370971 - unified trace decoder estimate: processed 5%
+	 2026-03-30 02:29:21.736877 - unified trace decoder estimate: processed 10%
+	 2026-03-30 02:29:57.250639 - unified trace decoder estimate: processed 15%
+	 2026-03-30 02:30:33.978538 - unified trace decoder estimate: processed 20%
+	 2026-03-30 02:31:11.546113 - unified trace decoder estimate: processed 25%
+	 2026-03-30 02:31:48.115392 - unified trace decoder estimate: processed 30%
+	 2026-03-30 02:32:25.599454 - unified trace decoder estimate: processed 35%
+         2026-03-30 02:33:04.379778 - unified trace decoder estimate: processed 40%
+	 2026-03-30 02:33:43.513298 - unified trace decoder estimate: processed 45%
+	 2026-03-30 02:34:18.323183 - unified trace decoder estimate: processed 50%
+	 2026-03-30 02:34:54.742152 - unified trace decoder estimate: processed 55%
+	 2026-03-30 02:35:29.884919 - unified trace decoder estimate: processed 60%
+	 2026-03-30 02:36:10.553980 - unified trace decoder estimate: processed 65%
+	 2026-03-30 02:36:49.145750 - unified trace decoder estimate: processed 70%
+	 2026-03-30 02:37:25.997749 - unified trace decoder estimate: processed 75%
+	 2026-03-30 02:38:04.887196 - unified trace decoder estimate: processed 80%
+	 2026-03-30 02:38:45.288357 - unified trace decoder estimate: processed 85%
+	 2026-03-30 02:39:25.158817 - unified trace decoder estimate: processed 90%
+	 2026-03-30 02:40:02.638958 - unified trace decoder estimate: processed 95%
+	 2026-03-30 02:40:40.019264 - unified trace decoder estimate: processed 100%
+	 2026-03-30 02:40:40.019332 - unified trace decoder : processing complete Result:[Success]
+
+===========================================================
+======= Unified Trace Decoder Information/Statistics ======
+===========================================================
+----------------- Decoder Input Information ---------------
+===========================================================
+ Num of Unique Streams .. 4
+ Total UTF To Process ... 584
+ Total UTM To Process ... 78704721
+ UTM Process Filter ..... fed
+ MRST Filter Rules ...... 1
+===========================================================
+----------------- Decoder Output Information --------------
+===========================================================
+ First UTM TimeStamp ............... 2026/03/27 13:30:51.815420053
+ Last UTM TimeStamp ................ 2026/03/30 02:28:07.874232326
+ UTM [Skipped / Rendered / Total] .. 73934327 / 4770394 / 78704721
+ UTM [ENCODED] ..................... 4770394
+ UTM [PLAIN TEXT] .................. 0
+ UTM [DYN LIB] ..................... 0
+ UTM [MODULE ID] ................... 0
+ UTM [TDL TAN] ..................... 1680
+ UTM [APP CONTEXT] ................. 0
+ UTM [MARKER] ...................... 0
+ UTM [PCAP] ........................ 0
+ UTM [LUID NOT FOUND] .............. 0
+ UTM Level [EMERGENCY / ALERT / CRITICAL / ERROR] .. 0 / 0 / 0 / 1119948
+ UTM Level [WARNING / NOTICE / INFO / DEBUG] ....... 442476 / 150970 / 691 / 3056309
+ UTM Level [VERBOSE / NOISE / INVALID] ............. 0 / 0 / 0
+===========================================================
+

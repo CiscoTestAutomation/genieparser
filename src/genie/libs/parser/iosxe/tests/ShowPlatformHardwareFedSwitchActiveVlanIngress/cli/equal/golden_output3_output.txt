@@ -1,0 +1,5 @@
+VLAN STP State in hardware
+
+vlan id is:: 40
+
+Interfaces in forwarding state: : Gi1/0/1(Untagged), Gi1/0/11(Untagged)

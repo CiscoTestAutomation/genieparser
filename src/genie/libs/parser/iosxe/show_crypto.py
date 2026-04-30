@@ -9421,7 +9421,8 @@ class ShowCryptoIpsecSaInterface(ShowCryptoIpsecSaInterfaceSchema):
         p2 = re.compile(r'^Crypto map tag: (?P<crypto_map_tag>[\w\d\-\/]+), +local addr +(?P<local_addr>[\w\.\:]+)$')
 
         # protected vrf: (none)
-        p3 = re.compile(r'^protected vrf: +\((?P<protected_vrf>[\w]+)\)$')
+        # protected vrf: client1-vrf
+        p3 = re.compile(r'^protected vrf: +\(?(?P<protected_vrf>[\w\-]+)\)?$')
 
         # local ident (addr/mask/prot/port): (20.20.20.0/255.255.255.0/0/0)
         p4 = re.compile(r'^local.*: +\((?P<addr>[\w\.\:]+)\/(?P<mask>[0-9\.]+)\/(?P<prot>[\d]+)\/(?P<port>[\d]+)\)$')
@@ -9502,7 +9503,8 @@ class ShowCryptoIpsecSaInterface(ShowCryptoIpsecSaInterfaceSchema):
         p29 = re.compile(r'^conn id: +(?P<conn_id>\d+), +flow_id: +(?P<flow_id>\w+):(?P<flow_id_val>\d+), +sibling_flags +(?P<sibling_flags>[\w\d]+), +crypto map: +(?P<crypto_map>[\w\-\d\/]+),+ initiator : +(?P<initiator_flag>[\w]+)$')
 
         # sa timing: remaining key lifetime (k/sec): (4607999/83191) 
-        p30 = re.compile(r'^sa timing: remaining key lifetime \(sec\): +(?P<remaining_key_lifetime>\S+)$')
+        # sa timing: remaining key lifetime (sec): 632
+        p30 = re.compile(r'^sa timing: remaining key lifetime \((k/)?sec\): +\(?(?P<remaining_key_lifetime>[\/\d]+)\)?$')
 
         # Kilobyte Volume Rekey has been disabled
         p31 = re.compile(r'^Kilobyte Volume Rekey has been +(?P<kilobyte_volume_rekey>[disabled|enabled]+)$')

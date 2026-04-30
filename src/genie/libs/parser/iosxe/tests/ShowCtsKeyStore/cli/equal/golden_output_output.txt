@@ -1,0 +1,8 @@
+Using software keystore emulation.
+Keystore contains the following records (S=Simple Secret, P=PAC, R=RSA):
+
+Index Type Name
+----- ---- ----
+0 S CTS-password
+1 S CTS-passwd-type
+

@@ -737,3 +737,100 @@ class ShowPlatformSoftwareFedSwitchFnfProfileMapsDump(ShowPlatformSoftwareFedSwi
                 continue
 
         return ret_dict
+    
+# ======================================================================
+# Schema for 'show platform software fed switch {switch} fnf flow-table mon-id {mon_id} asic {asic} start-index {start_index} num-flows {num_flows}'
+# ======================================================================
+
+class ShowPlatformSoftwareFedSwitchFnfFlowTableMonIdSchema(MetaParser):
+    """Schema for:
+        * show platform software fed switch {switch} fnf flow-table
+          mon-id {mon_id} asic {asic} start-index {start_index} {num_flows}
+    """
+    schema = {
+        'monitor_id': str,
+        'asic': int,
+        Optional('range'): {
+            'start': int,
+            'end': int,
+            'start_index': int,
+            'num_flows': int,
+        },
+        Optional('no_flow_entries'): bool,
+    }
+
+# ======================================================================
+# Parser for 'show platform software fed switch {switch} fnf flow-table mon-id {mon_id} asic {asic} start-index {start_index} num-flows {num_flows}'
+# ======================================================================
+
+class ShowPlatformSoftwareFedSwitchFnfFlowTableMonId(
+        ShowPlatformSoftwareFedSwitchFnfFlowTableMonIdSchema):
+    """Parser for:
+        * show platform software fed switch {switch} fnf flow-table
+          mon-id {mon_id} asic {asic} start-index {start_index} {num_flows}
+    """
+
+    cli_command = (
+        'show platform software fed switch {switch} fnf flow-table '
+        'mon-id {mon_id} asic {asic} start-index {start_index} num-flows {num_flows}'
+    )
+
+    def cli(self, switch, mon_id, asic, start_index, num_flows, output=None):
+        if output is None:
+            cmd = self.cli_command.format(
+                switch=switch,
+                mon_id=mon_id,
+                asic=asic,
+                start_index=start_index,
+                num_flows=num_flows,
+            )
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Internal Flow Monitors for AVC - Monitor ID: 5764607523034234881, ASIC: 1
+        p1 = re.compile(
+            r'Internal\s+Flow\s+Monitors\s+for\s+AVC\s+-\s+Monitor\s+ID:\s+'
+            r'(?P<monitor_id>\d+),\s+ASIC:\s+(?P<asic>\d+)'
+        )
+
+        # Range: 0 to 10 (start_index: 0, num_flows: 10)
+        p2 = re.compile(
+            r'Range:\s+(?P<start>\d+)\s+to\s+(?P<end>\d+)\s+'
+            r'\(start_index:\s+(?P<start_index>\d+),\s+num_flows:\s+(?P<num_flows>\d+)\)'
+        )
+
+        # No flow entries found for ASIC 1
+        p3 = re.compile(
+            r'No\s+(?:flow\s+entries|internal\s+flow\s+monitors)\s+found\s+for\s+ASIC\s+\d+'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Internal Flow Monitors for AVC - Monitor ID: 5764607523034234881, ASIC: 1
+            m = p1.match(line)
+            if m:
+                ret_dict['monitor_id'] = m.group('monitor_id')
+                ret_dict['asic'] = int(m.group('asic'))
+                continue
+
+            # Range: 0 to 10 (start_index: 0, num_flows: 10)
+            m = p2.match(line)
+            if m:
+                ret_dict.setdefault('range', {})
+                ret_dict['range']['start'] = int(m.group('start'))
+                ret_dict['range']['end'] = int(m.group('end'))
+                ret_dict['range']['start_index'] = int(m.group('start_index'))
+                ret_dict['range']['num_flows'] = int(m.group('num_flows'))
+                continue
+
+            # No flow entries found for ASIC 1
+            m = p3.match(line)
+            if m:
+                ret_dict['no_flow_entries'] = True
+                continue
+
+        return ret_dict 

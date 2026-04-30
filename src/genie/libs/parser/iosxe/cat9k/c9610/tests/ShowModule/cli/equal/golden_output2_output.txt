@@ -1,0 +1,57 @@
+show module
+Chassis Type: C9610R
+
+Switch Number 1 
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   32   30x40/100GE + 2x40/100/400GE                C9600X-LC-32CD   FDO281001K7
+2   48   48-Port 10GE and MGIG COPPER                C9600-LC-48TX    FDO28500AU6
+3   0    Blank Module                                C9610-BLANK      N/A        
+4   0    Blank Module                                C9610-BLANK      N/A        
+5   0    Supervisor 3 Module                         C9610-SUP-3      FDO28160V75
+7   0    Blank Module                                C9610-BLANK      N/A        
+8   0    Blank Module                                C9610-BLANK      N/A        
+9   0    Blank Module                                C9610-BLANK      N/A        
+10  0    Blank Module                                C9610-BLANK      N/A        
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   B08D.57C1.2B80 to B08D.57C1.2B9F 1.0  17.18.1r      17.18.03prd1       ok         
+2   48A1.704F.B380 to 48A1.704F.B3FF 1.3  17.18.1r      17.18.03prd1       ok         
+5   8C44.A586.6C00 to 8C44.A586.6C7F 0.9  17.18.1r      17.18.03prd1       ok         
+
+Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+---+-------------------+-------------------------+---------------------------
+5   Active              sso                       sso                       
+
+Switch Number 2 
+
+Mod Ports Card Type                                   Model          Serial No.
+---+-----+--------------------------------------+--------------+--------------
+1   32   30x40/100GE + 2x40/100/400GE                C9600X-LC-32CD   FDO281001KA
+2   0    Blank Module                                C9610-BLANK      N/A        
+3   0    Blank Module                                C9610-BLANK      N/A        
+4   0    Blank Module                                C9610-BLANK      N/A        
+5   0    Supervisor 3 Module                         C9610-SUP-3      FDO282714BF
+6   0    Blank Module                                C9610-S-BLANK    N/A        
+7   0    Blank Module                                C9610-BLANK      N/A        
+8   0    Blank Module                                C9610-BLANK      N/A        
+9   0    Blank Module                                C9610-BLANK      N/A        
+10  44   40x1/10/25/50GE + 2x200GE + 2x400GE         C9600-LC-40YL4CD FDO2809067T
+
+Mod MAC addresses                    Hw   Fw           Sw                 Status
+---+--------------------------------+----+------------+------------------+--------
+1   B08D.57C1.2680 to B08D.57C1.269F 1.0  17.18.1r      17.18.03prd1       ok         
+5   D47F.35A3.6D00 to D47F.35A3.6D7F 0.9  17.18.1r      17.18.03prd1       ok         
+10  4880.024D.8400 to 4880.024D.847F 1.0  17.18.1r      17.18.03prd1       ok         
+
+Mod Redundancy Role     Operating Redundancy Mode Configured Redundancy Mode
+---+-------------------+-------------------------+---------------------------
+5   Standby             sso                       sso                       
+
+Chassis 1 MAC address range: 64 addresses from 8c44.a5a8.b800 to 8c44.a5a8.b83f 
+
+Chassis 2 MAC address range: 64 addresses from b08d.57ac.c000 to b08d.57ac.c03f 
+
+epcot-1#

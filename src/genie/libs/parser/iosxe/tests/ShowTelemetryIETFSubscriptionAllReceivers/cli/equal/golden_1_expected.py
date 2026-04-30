@@ -8,7 +8,7 @@ expected_output = {
         'grpc-tls': {
             'connection': 0,
             'explanation': 'Receiver invalid',
-            'state': 'Disconnected'
+            'state': 'Transport requested'
         }
     },
     102: {

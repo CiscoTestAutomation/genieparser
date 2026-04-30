@@ -1,0 +1,38 @@
+show platform hardware qfp active interface all statistics
+
+----------------------------------------------------------------
+Receive Stats                             Packets        Octets 
+----------------------------------------------------------------
+  Ipv4                                       9             810
+  Ipv6                                       0               0
+  Tag                                        0               0
+  McastIpv4                                  0               0
+  McastIpv6                                  0               0
+  Other                                      2             136
+----------------------------------------------------------------
+Transmit Stats                            Packets        Octets 
+----------------------------------------------------------------
+  Ipv4                                       0               0
+  Ipv6                                       1             154
+  Tag                                        0               0
+  McastIpv4                                  0               0
+  McastIpv6                                  0               0
+  Other                                      0               0
+----------------------------------------------------------------
+Input Drop Stats                          Packets        Octets  
+---------------------------------------------------------------
+Ipv4NoRoute                                   182         22996  
+MplsIpv6FragReq                                 1          1515  
+UnconfiguredIpv4Fia                           550         49120  
+----------------------------------------------------------------
+Output Drop Stats                         Packets        Octets  
+---------------------------------------------------------------
+Ipv4NoRoute                                    13          3721  
+----------------------------------------------------------------
+Drop Stats Summary:
+note: 1) these drop stats are only updated when PAL reads the interface stats.
+      2) the interface stats include the subinterface
+Interface                                       Rx Pkts             Tx Pkts
+---------------------------------------------------------------------------
+GigabitEthernet0/0/0.775                           3209                  20
+

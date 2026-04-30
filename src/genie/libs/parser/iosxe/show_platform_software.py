@@ -65,6 +65,7 @@
     * show platform software ip FP active cef summary
     * show platform software adjacency nexthop-ipfrr
     * show platform software adj fp active
+    * 'show platform software selinux'
 """
 
 # Python
@@ -555,7 +556,84 @@ class ShowPlatformSoftwareYangManagementProcessMonitor(
 
         return ret_dict
 
+# Show Platform Software Selinux
+class ShowPlatformSoftwareSelinuxSchema(MetaParser):
+    """Schema for 'show platform software selinux'"""
 
+    schema = {
+        'selinux_status': {
+            Any(): {  # location: e.g., "ACTIVE" or "chassis 1 route-processor 0"
+                'status': str,
+                'current_mode': str,
+                'system_default': str,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareSelinux(ShowPlatformSoftwareSelinuxSchema):
+    """Parser for 'show platform software selinux'"""
+
+    cli_command = 'show platform software selinux'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        # Initialize parsed dictionary
+        ret_dict = {}
+
+        # Current location being parsed
+        current_location = None
+
+        # SELINUX STATUS ON ACTIVE
+        # SELINUX STATUS ON chassis 1 route-processor 0
+        p1 = re.compile(r'^SELINUX\s+STATUS\s+ON\s+(?P<location>.+)$')
+
+        # SElinux Status   : Enabled
+        p2 = re.compile(r'^SElinux\s+Status\s*:\s*(?P<status>\w+)$')
+
+        # Current Mode     : Enforcing
+        # Current Mode     : Permissive
+        p3 = re.compile(r'^Current\s+Mode\s*:\s*(?P<current_mode>\w+)$')
+
+        # System Default   : Enforcing
+        p4 = re.compile(r'^System\s+Default\s*:\s*(?P<system_default>\w+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Skip separator lines
+            if line.startswith('===') or line.startswith('---'):
+                continue
+
+            # SELINUX STATUS ON ACTIVE
+            # SELINUX STATUS ON chassis 1 route-processor 0
+            m = p1.match(line)
+            if m:
+                current_location = m.groupdict()['location']
+                ret_dict.setdefault('selinux_status', {}).setdefault(current_location, {})
+                continue
+
+            # SElinux Status   : Enabled
+            m = p2.match(line)
+            if m and current_location:
+                ret_dict['selinux_status'][current_location]['status'] = m.groupdict()['status']
+                continue
+
+            # Current Mode     : Enforcing
+            m = p3.match(line)
+            if m and current_location:
+                ret_dict['selinux_status'][current_location]['current_mode'] = m.groupdict()['current_mode']
+                continue
+
+            # System Default   : Enforcing
+            m = p4.match(line)
+            if m and current_location:
+                ret_dict['selinux_status'][current_location]['system_default'] = m.groupdict()['system_default']
+                continue
+
+        return ret_dict
 class ShowPlatformSoftwareYangManagementProcessStateSchema(MetaParser):
     """schema for
     * show platform software yang-management process state

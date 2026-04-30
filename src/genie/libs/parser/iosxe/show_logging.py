@@ -2150,3 +2150,73 @@ class ShowLoggingProcessFedInternalStartLastClearSwitchActive(ShowLoggingProcess
                 continue
 
         return ret_dict
+
+
+class ShowLoggingProcessAnyInternalStartLastAnySchema(MetaParser):
+    """Schema for show logging process {process_name} internal start last {start_option} to-file {location}"""
+    
+    schema = {
+        'date_time': str,
+        'hostname': str,
+        'model': str,
+        'version': str,
+        'sn': str,
+        'md_sn': str,
+        Optional('file_info'): {
+            'output_file': str,
+            'collecting_files': bool
+        }
+    }
+
+
+class ShowLoggingProcessAnyInternalStartLastAny(ShowLoggingProcessAnyInternalStartLastAnySchema):
+    """Parser for show logging process {process_name} internal start last {start_option} to-file {location}"""
+    
+    cli_command = 'show logging process {process_name} internal start last {start_option} to-file {location}'
+    
+    def cli(self, process_name='smd', start_option='clear', location='flash:{process_name}.log', output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(
+                process_name=process_name,
+                start_option=start_option,
+                location=location
+            ))
+        
+        ret_dict = {}
+        
+        # Logging display requested on 2026/03/29 23:04:39 (IST) for Hostname: [9350-3M-PK], Model: [C9350-24HX], Version: [26.02], SN: [FVH293744XA], MD_SN: [FVH2941LD1J]
+        p1 = re.compile(r'^Logging +display +requested +on +'
+                        r'(?P<date_time>\d+\/\d+\/\d+ +\d+\:\d+\:\d+ +\(\w+\)) +for +'
+                        r'Hostname\: +\[(?P<hostname>[\w\-]+)\]\, +'
+                        r'Model\: +\[(?P<model>\S+)\]\, +'
+                        r'Version\: +\[(?P<version>\d+\.\d+)\]\, +'
+                        r'SN\: +\[(?P<sn>\S+)\]\, +MD_SN\: +\[(?P<md_sn>\S+)\]$')
+        
+        # Files being merged in the background, please check [/flash/smd.log] output file
+        p2 = re.compile(r'^Files +being +merged +in +the +background\, +please +check +\[(?P<output_file>[^\]]+)\] +output +file')
+        
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # Logging display requested on 2026/03/29 23:04:39 (IST) for Hostname: [9350-3M-PK], Model: [C9350-24HX], Version: [26.02], SN: [FVH293744XA], MD_SN: [FVH2941LD1J]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['date_time'] = group['date_time']
+                ret_dict['hostname'] = group['hostname']
+                ret_dict['model'] = group['model']
+                ret_dict['version'] = group['version']
+                ret_dict['sn'] = group['sn']
+                ret_dict['md_sn'] = group['md_sn']
+                continue
+            
+            # Files being merged in the background, please check [/flash/smd.log] output file
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                file_dict = ret_dict.setdefault('file_info', {})
+                file_dict['output_file'] = group['output_file']
+                file_dict['collecting_files'] = True
+                continue
+        
+        return ret_dict

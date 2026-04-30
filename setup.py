@@ -122,8 +122,8 @@ setup(
     extras_require = {
         'dev': ['coverage',
                 'restview',
-                'Sphinx',
-                'sphinx-rtd-theme'],
+                'Sphinx==7.4.7',
+                'sphinx-rtd-theme==3.1.0'],
     },
 
     # external modules

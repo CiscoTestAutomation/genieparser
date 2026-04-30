@@ -411,9 +411,10 @@ class ShowPlatform(ShowPlatformSchema):
         # 0/0/CPU0          ASR-9903-LC                IOS XR RUN        NSHUT
         # 0/0/1             A9903-20HG-PEC             OK
         # 0/PT0             ASR-9900-DC-PEM            OPERATIONAL       NSHUT
+        # 0/FB0             8202-32FH-M[FB]            OPERATIONAL       NSHUT
 
         p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
-                            r'\s+(?P<name>[a-zA-Z0-9\-\.]+)'
+                            r'\s+(?P<name>[a-zA-Z0-9\-\.\[\]]+)'
                             r'(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                             r'(?:\s+(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
                             r'\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'

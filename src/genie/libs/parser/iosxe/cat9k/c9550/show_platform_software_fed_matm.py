@@ -24,6 +24,10 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactableSchema(MetaParser):
                         "seq": int,
                         "ecbi": int,
                         "flags": int,
+                        Optional("machandle"): str,
+                        Optional("sihandle"): str,
+                        Optional("rihandle"): str,
+                        Optional("dihandle"): str,
                         "atime": int,
                         "etime": int,
                         "ports": str,
@@ -57,11 +61,23 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactable(
 
         ret_dict = {}
 
-        # VLAN    MAC               Type      Seq#    EC_Bi    Flags    *a_time    *e_time      ports    Con
-        # ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # 1       7061.7bb8.c3e7    0x8002    0       0        64        0          0           Vlan1    Yes
+        # VLAN   MAC                   Type  Seq#    EC_Bi  Flags  *a_time  *e_time  ports  Con
+        # 1      c860.8fe7.a503       0x101    3673      0      0        300        0  FiftyGigE2/0/3  No
         p1 = re.compile(
-            r"^(?P<vlan>[\d\-\,]+)\s+(?P<mac>([a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})+\s+(?P<type>0x[\w]+)\s+(?P<seq>\d+)\s+(?P<ecbi>\d+)\s+(?P<flags>\d+)\s+(?P<atime>\d+)\s+(?P<etime>\d+)\s+(?P<ports>[\w\/\.\-\:]+)\s+(?P<con>\w+)$"
+            r"^(?P<vlan>[\d\-,]+)\s+"
+            r"(?P<mac>(?:[a-fA-F\d]{4}\.){2}[a-fA-F\d]{4})\s+"
+            r"(?P<type>0x[\w]+)\s+"
+            r"(?P<seq>\d+)\s+"
+            r"(?P<ecbi>\d+)\s+"
+            r"(?P<flags>\d+)\s+"
+            r"(?:(?P<machandle>0x[\w]+)\s+"
+            r"(?P<sihandle>0x[\w]+)\s+"
+            r"(?P<rihandle>0x[\w]+)\s+"
+            r"(?P<dihandle>0x[\w]+)\s+)?"
+            r"(?P<atime>\d+)\s+"
+            r"(?P<etime>\d+)\s+"
+            r"(?P<ports>[\w\/\.\-\:]+)\s+"
+            r"(?P<con>\w+)$"
         )
 
         # Total Mac number of addresses:: 4
@@ -115,6 +131,9 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMactable(
                         "con": group["con"],
                     }
                 )
+                for handle_key in ["machandle", "sihandle", "rihandle", "dihandle"]:
+                    if group.get(handle_key) is not None:
+                        vlan_dict[handle_key] = group[handle_key]
                 continue
 
             # Total Mac number of addresses:: 4

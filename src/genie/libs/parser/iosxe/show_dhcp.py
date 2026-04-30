@@ -9,6 +9,7 @@ IOSXE parsers for the following show commands:
     * 'show ip dhcp snooping track server'
     * 'show ip dhcp snooping statistics detail'
     * show ip dhcp sip session detail
+    * show ipv6 dhcp
 """
 # Python
 import re
@@ -1072,6 +1073,42 @@ class ShowIpDhcpSipSessionDetail(ShowIpDhcpSipSessionDetailSchema):
             m = p29.match(line)
             if m and current_session is not None:
                 current_session["dynamic_sync"] = True if m.groupdict()["val"].strip().lower() == "true" else False
+                continue
+
+        return ret_dict
+
+class ShowIpv6DhcpSchema(MetaParser):
+    """Schema for show ipv6 dhcp"""
+
+    schema = {
+        "duid": str
+    }
+
+
+class ShowIpv6Dhcp(ShowIpv6DhcpSchema):
+    """Parser for show ipv6 dhcp"""
+
+    cli_command = "show ipv6 dhcp"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # This device's DHCPv6 unique identifier(DUID): 00030001504921535E80
+        p1 = re.compile(r"^\s*This device's DHCPv6 unique identifier\(DUID\)\s*:\s*(?P<duid>\S+)\s*$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # This device's DHCPv6 unique identifier(DUID): 00030001504921535E80
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict["duid"] = groups["duid"]
                 continue
 
         return ret_dict

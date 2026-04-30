@@ -1,0 +1,123 @@
+sh controllers FourHundredGigE0/0/0/2
+Thu Jul  3 22:43:32.502 UTC
+Operational data for interface FourHundredGigE0/0/0/2:
+
+State:
+    Administrative state: disabled
+    Operational state: Down (Reason: Link is shutdown)
+    LED state: Off
+
+Phy:
+    Media type: 2x200G over 8 lane passive copper
+    Optics:
+        Vendor: CISCO-LUXSHARE
+        Part number: L0FDD013-SD-R
+        Serial number: SNL2750F020
+        Wavelength: 0 nm
+    Digital Optical Monitoring:
+        Transceiver Temp: 0.000 C
+        Transceiver Voltage: 0.000 V
+
+        Alarms key: (H) Alarm high, (h) Warning high
+                    (L) Alarm low, (l) Warning low
+           Wavelength    Tx Power          Rx Power      Laser Bias
+        Lane  (nm)    (dBm)    (mW)     (dBm)     (mW)      (mA)
+        --   -----   ------   ------    ------   ------    ------
+        0     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        1     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        2     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        3     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        4     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        5     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        6     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+        7     n/a     -40.0   0.0001     -40.0   0.0001     0.000
+
+        DOM alarms:
+            No alarms
+
+        Alarm                     Alarm    Warning   Warning    Alarm
+        Thresholds                High      High       Low       Low
+                                 -------   -------   -------   -------
+        Transceiver Temp (C):      0.000     0.000     0.000     0.000
+        Transceiver Voltage (V):   0.000     0.000     0.000     0.000
+        Laser Bias (mA):           0.000     0.000     0.000     0.000
+        Transmit Power (mW):       0.000     0.000     0.000     0.000
+        Transmit Power (dBm):       -inf      -inf      -inf      -inf
+        Receive Power (mW):        0.000     0.000     0.000     0.000
+        Receive Power (dBm):        -inf      -inf      -inf      -inf
+    Statistics:
+        FEC:
+            Corrected Codeword Count: 0
+            Uncorrected Codeword Count: 0
+
+MAC address information:
+    Operational address: fc58.9a14.a010
+    Burnt-in address: fc58.9a14.a010
+
+Autonegotiation disabled.
+Priority flow control information for interface FourHundredGigE0/0/0/2:
+
+
+Priority Flow Control:
+    Total Rx PFC Frames   : 0
+    Total Tx PFC Frames   : 0
+    Total Rx Dropped Data Frames: 0
+    CoS  Status  Rx PFC Frames
+    ---  ------  -------------
+      0  off                  0
+      1  off                  0
+      2  off                  0
+      3  off                  0
+      4  off                  0
+      5  off                  0
+      6  off                  0
+      7  off                  0
+
+
+Priority flow control watchdog configuration:
+(D) : Default value
+U : Unconfigured
+--------------------------------------------------------------------------------
+       Configuration Item           Global  Interface Effective
+--------------------------------------------------------------------------------
+    PFC watchdog state           :        U        U  Enabled(D)
+    Poll interval                :        U        U      100(D)
+    Shutdown multiplier          :        U        U        1(D)
+    Auto-restore multiplier      :        U        U       10(D)
+
+
+Priority flow control watchdog statistics:
+SAR: Auto restore and shutdown
+-------------------------------------------------------------------------------------------------
+Traffic Class            :       0        1        2        3        4        5        6        7
+-------------------------------------------------------------------------------------------------
+Watchdog Events          :       0        0        0        0        0        0        0        0
+Shutdown Events          :       0        0        0        0        0        0        0        0
+Auto Restore Events      :       0        0        0        0        0        0        0        0
+SAR Events               :       0        0        0        0        0        0        0        0
+SAR Instantaneous Events :       0        0        0        0        0        0        0        0
+Total Dropped Packets    :       0        0        0        0        0        0        0        0
+Dropped Packets          :       0        0        0        0        0        0        0        0
+
+
+Priority flow control watchdog state machine state:
+D - Disabled
+M - Monitoring
+S - Waiting For Shutdown
+R - Waiting to Restore
+--------------------------------------------------------------
+PFC Watchdog      : Enabled
+Watchdog SM state :  Traffic Class
+                    7 6 5 4 3 2 1 0
+                    - - - - - - - -
+
+
+Operational values:
+    Speed: 400Gbps
+    Duplex: Full Duplex
+    Flowcontrol: None
+    Priority flow control: None
+    Loopback: None (or external)
+    MTU: 1514
+    MRU: 1518
+    Forward error correction: Standard (Reed-Solomon)

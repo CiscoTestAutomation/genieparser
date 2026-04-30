@@ -1,0 +1,15 @@
+Output 1: 
+===================================
+SELINUX STATUS ON ACTIVE
+-----------------------------------
+  SElinux Status   : Enabled
+  Current Mode     : Enforcing
+  System Default   : Enforcing  
+
+Output 2:
+===================================
+SELINUX STATUS ON chassis 1 route-processor 0
+-----------------------------------
+  SElinux Status   : Enabled
+  Current Mode     : Permissive
+  System Default   : Enforcing

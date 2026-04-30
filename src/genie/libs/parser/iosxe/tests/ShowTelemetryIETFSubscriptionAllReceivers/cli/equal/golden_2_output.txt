@@ -1,0 +1,8 @@
+Telemetry subscription receivers:
+
+Subscription ID  Name                           Index  Attempts  State          Status
+----------------------------------------------------------------------------------------------------------------------------
+101              grpc-tcp                       65535  335       Timeout backoff Receiver active
+101              grpc-tls                       65535  0         Disconnected   Receiver invalid
+102              grpc-tcp                       65535  0         Disconnected   Subscription invalid
+102              grpc-tls                       65535  0         Disconnected   Subscription invalid

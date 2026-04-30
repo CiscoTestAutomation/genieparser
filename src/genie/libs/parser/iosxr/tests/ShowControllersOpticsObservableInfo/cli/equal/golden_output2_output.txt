@@ -1,0 +1,64 @@
+show controller optics 0/0/0/2 observable-info
+Tue May  6 15:25:41.069 UTC
+
+Observable Information
+
+[Fault Cause Register]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Stepped Config Only]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Module   0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Rx Output Status Changed Mask]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    1                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[DP Init Pending]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Config Command Result Status]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Rx Output Signal Valid]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Tx Output Signal Valid]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Latched Rx Output Status Changed Flag]
+ Unit: None
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Datapath Tx Latency Host]
+ Unit: ns
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a
+
+[Datapath Rx Latency Host]
+ Unit: ns
+ Id       Value               LowThreshWarn       HighThresWarn       LowThreshAlarm      HighThreshAlarm     TCAWarn   TCAAlarm
+                                                                                                              Low High  Low High
+ Lane1    0                   n/a                 n/a                 n/a                 n/a                 n/a n/a   n/a n/a

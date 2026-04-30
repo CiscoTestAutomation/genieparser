@@ -1,0 +1,11 @@
+REP Segment 1
+BridgeName                       PortName   Edge Role
+-------------------------------- ---------- ---- ----
+C9200_DUT                        Gi1/0/1    Pri* Open
+C9200_DUT                        Gi1/0/2    Sec* Alt
+
+REP Segment 3
+BridgeName                       PortName   Edge Role
+-------------------------------- ---------- ---- ----
+C9200_DUT                        Gi1/0/3    Pri* Alt
+C9200_DUT                        Gi1/0/4    Sec* Open

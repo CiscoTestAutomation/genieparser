@@ -1,0 +1,20 @@
+Telemetry subscription detail:
+
+  Subscription ID: 101
+  State: Invalid
+  Stream: NETCONF
+  Filter:
+    Filter type: not specified
+    <none>
+  Update policy:
+    Update Trigger: not specified
+    <none>
+  Encoding: encode-xml
+  Source VRF:
+  Source Address:
+  Status: Stream not supported
+
+  Named Receivers:
+    Name                                              Last State Change  State                 Status
+    -------------------------------------------------------------------------------------------------------------------------------------------------------
+    grpc-tcp://169.254.0.1:20006                      04/22/26 12:09:14  Disconnected          Subscription invalid

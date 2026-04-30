@@ -1,0 +1,6 @@
+Switch#show ip ssh pubkey server all
+Configured SSH server public keys:
+10.10.20.30 ssh-rsa f1e2d3c4b5a6f1e2d3c4b5a6f1e2d3c4b5a6f1e2d3c4b5a6f1e2d3c4b5a6f1e2
+
+Learned SSH server public keys:
+10.10.20.40 ssh-rsa a9b8c7d6e5f4a9b8c7d6e5f4a9b8c7d6e5f4a9b8c7d6e5f4a9b8c7d6e5f4a9b8

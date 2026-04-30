@@ -1,0 +1,61 @@
+sh controllers optics * appsel advertised
+Mon Mar 16 20:54:53.180 UTC
+ Port:    Optics0/0/0/1
+------------------------------------------------------------------------------------------------------------------------------------------
+  App-ID  |  Host-ID                        |  Media-ID                       |  Standard                 |  Host     |  Power           |
+          |                                 |                                 |                           |  Supported|  Consumption(W)  |
+------------------------------------------------------------------------------------------------------------------------------------------
+  1       |  29    ETH 400G CR8 (Ethernet T |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  2       |  49    Unknown                  |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  3       |  20    ETH 25GBASE-CR CA-25G-L  |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  4       |  48    Unknown                  |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  5       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  6       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  7       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  8       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+------------------------------------------------------------------------------------------------------------------------------------------
+
+ Port:    Optics0/0/0/3
+------------------------------------------------------------------------------------------------------------------------------------------
+  App-ID  |  Host-ID                        |  Media-ID                       |  Standard                 |  Host     |  Power           |
+          |                                 |                                 |                           |  Supported|  Consumption(W)  |
+------------------------------------------------------------------------------------------------------------------------------------------
+  1       |  29    ETH 400G CR8 (Ethernet T |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  2       |  28    ETH 200GBASE-CR4 (Clause |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  3       |  27    ETH 100GBASE-CR2 (Clause |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  4       |  26    ETH 100GBASE-CR4 (Clause |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  5       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  6       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  7       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  8       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+------------------------------------------------------------------------------------------------------------------------------------------
+
+ Port:    Optics0/0/0/8
+------------------------------------------------------------------------------------------------------------------------------------------
+  App-ID  |  Host-ID                        |  Media-ID                       |  Standard                 |  Host     |  Power           |
+          |                                 |                                 |                           |  Supported|  Consumption(W)  |
+------------------------------------------------------------------------------------------------------------------------------------------
+  1       |  29    ETH 400G CR8 (Ethernet T |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  2       |  49    Unknown                  |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  3       |  20    ETH 25GBASE-CR CA-25G-L  |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  4       |  48    Unknown                  |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  5       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  6       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  7       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  8       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+------------------------------------------------------------------------------------------------------------------------------------------
+
+ Port:    Optics0/2/0/4
+------------------------------------------------------------------------------------------------------------------------------------------
+  App-ID  |  Host-ID                        |  Media-ID                       |  Standard                 |  Host     |  Power           |
+          |                                 |                                 |                           |  Supported|  Consumption(W)  |
+------------------------------------------------------------------------------------------------------------------------------------------
+  1       |  29    ETH 400G CR8 (Ethernet T |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  2       |  28    ETH 200GBASE-CR4 (Clause |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  3       |  27    ETH 100GBASE-CR2 (Clause |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  4       |  26    ETH 100GBASE-CR4 (Clause |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+  5       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  6       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  7       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+  8       |  0     Unknown                  |  0     Unknown                  |  Unknown                  |  Yes      |  n/a             |
+------------------------------------------------------------------------------------------------------------------------------------------

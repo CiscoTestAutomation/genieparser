@@ -1,0 +1,3 @@
+ID         Type       State      Status
+101        Configured Valid      Subscription validated
+102        Configured Invalid    Value 'unknown' not supported for parameter 'filter-type' (supported values include 'xpath,sensor-group').

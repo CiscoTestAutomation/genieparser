@@ -1,0 +1,14 @@
+Redundancy Group 4294967295 (0xFFFFFFFF)
+  Applications connected: mLACP, Pseudo-mLACP
+  Monitor mode: BFD
+  member ip: 88.1.1.2 "Router", CONNECTED
+    BFD neighbor: TenGigabitEthernet0/0/1, next hop 80.1.3.2, UP
+    mLACP state: CONNECTED
+    Pseudo-mLACP state: CONNECTED
+  backbone int TenGigabitEthernet0/0/2: UP (IP)
+
+ICRM fast-failure detection neighbor table
+  IP Address       Status Type Next-hop IP      Interface
+  ==========       ====== ==== ===========      =========
+  88.1.1.2         UP     BFD  80.1.3.2         TenGigabitEthernet0/0/1
+  

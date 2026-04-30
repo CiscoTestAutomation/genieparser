@@ -1,0 +1,29 @@
+show platform hardware slot R1 {slot} sensor consumer all
+Registration: Registered
+Name              Id     Data       Last Poll
+----------------------------------------------
+VVM 0: VX1        20      607  mV   14:45:59
+VVM 0: VX2        21     1212  mV   14:45:59
+VVM 0: VX3        22     1199  mV   14:45:59
+VVM 0: VX4        23      994  mV   14:45:59
+VVM 0: VP1        24     3312  mV   14:45:59
+VVM 0: VP2        25     3320  mV   14:45:59
+VVM 0: VP3        26     5009  mV   14:45:59
+VVM 0: VP4        27     1505  mV   14:45:59
+VVM 0: VH         28    11940  mV   14:45:59
+VVM 1: VX3        29     1055  mV   14:45:59
+VVM 1: VP1        30     1705  mV   14:45:59
+VVM 1: VP2        31     1803  mV   14:45:59
+VVM 1: VP3        32     2526  mV   14:45:59
+VVM 1: VP4        33     3290  mV   14:45:59
+VVM 1: VH         34    11951  mV   14:45:59
+VVM 2: VX1        35      997  mV   14:45:59
+VVM 2: VP1        36     1195  mV   14:45:59
+VVM 2: VP2        37     1809  mV   14:45:59
+VVM 2: VH         38    11956  mV   14:45:59
+Temp: CPU-IN      39       35  C    14:45:59
+Temp: Outlet      40       38  C    14:45:59
+Temp: Center      41       26  C    14:45:59
+Temp: Inlet       42       37  C    14:45:59
+Temp: DDR4 In     43       35  C    14:45:59
+Temp: DDR4 Out    44       30  C    14:45:59
