@@ -1,0 +1,9 @@
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                                          |                                      IOT COUNTERS                                                
+AP Name                          Radio MAC       Coex Admin  Coex Oper    |   Tx pkts    Rx pkts        CRC    Low Pri   High Pri    Low Pri   High Pri    Low Pri   High Pri
+                                                 State       State        |                          errors   requests   requests     denied     denied   Tx abort   Tx abort
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AP3C57.31C5.983C                 4ca6.4d23.0f60  Disabled    Not supported
+APCC6E.2AFC.B8F0                 c418.fcbe.3fe0  Enabled     Enabled              149        145          0         29         29          2          1          1          0
+APCC6E.2AFC.B310                 c418.fcbe.41e0  Enabled     Enabled               46         45          0          9          9          0          0          0          0
+APCC9C.3EE7.4F50                 ecf4.0c0e.46e0  Enabled     Enabled             1358       1337          0        142        142         14          7          4          2

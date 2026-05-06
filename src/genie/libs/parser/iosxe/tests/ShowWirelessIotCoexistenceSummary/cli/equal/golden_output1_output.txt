@@ -1,0 +1,5 @@
+AP Name           Radio MAC        Admin State  Oper State   Tx Pkts  Rx Pkts  CRC Errors  Low Pri Requests  High Pri Requests  Low Pri Denied  High Pri Denied  Low Pri Tx Abort  High Pri Tx Abort
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+APCC6E.2AFC.B310  c418.fcbe.41e0   Enabled      Enabled      11546    11490    0           386               386                38              19               14                11
+AP3C57.31C5.983C  4ca6.4d23.0f60   Disabled     Disabled
+APCC9C.3EE7.4F50  00df.1d87.6d60   Enabled      Not Supported
