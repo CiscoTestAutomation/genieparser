@@ -28,7 +28,7 @@ class ShowFrequencySynchronizationInterfacesSchema(MetaParser):
                 'interface': str,
                 'interface_status': str,
                 Optional('selection'): str,
-                'wait_to_restore_time': int,
+                Optional('wait_to_restore_time'): int,
                 'ssm': {
                     'status': str,
                     Optional('peer_time'): str,
@@ -49,7 +49,7 @@ class ShowFrequencySynchronizationInterfacesSchema(MetaParser):
                     }
                 },
                 'input': {
-                    'status': str,
+                    Optional('status'): str,
                     Optional('selection'): str,
                     Optional('restore'): str,
                     Optional('last_received_ql'): str,
