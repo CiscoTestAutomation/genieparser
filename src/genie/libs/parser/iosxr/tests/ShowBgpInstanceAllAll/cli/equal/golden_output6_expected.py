@@ -74,10 +74,52 @@ expected_output = {
                         "weight": "0"
                         }
                     }
+                    },
+                    "80.244.17.144/29": {
+                    "index": {
+                        1: {
+                        "metric": "120",
+                        "locprf": "100",
+                        "next_hop": "80.244.17.126",
+                        "origin_codes": "?",
+                        "path": "(64622)",
+                        "status_codes": "*>",
+                        "weight": "0"
+                        },
+                        2: {
+                        "metric": "100",
+                        "locprf": "100",
+                        "next_hop": "213.140.196.36",
+                        "origin_codes": "?",
+                        "path": "(64630 64615 64622)",
+                        "status_codes": "*",
+                        "weight": "0"
+                        }
+                    }
+                    },
+                    "80.244.96.160/27": {
+                    "index": {
+                        1: {
+                        "locprf": "100",
+                        "next_hop": "213.140.196.20",
+                        "origin_codes": "?",
+                        "path": "(64630 64609) 6762 4445 3209 21334",
+                        "status_codes": "*>",
+                        "weight": "0"
+                        },
+                        2: {
+                        "locprf": "100",
+                        "next_hop": "213.140.196.20",
+                        "origin_codes": "?",
+                        "path": "(64629 64601 64630 64609) 6762 4445 3209 21334",
+                        "status_codes": "*",
+                        "weight": "0"
+                        }
+                    }
                     }
                 },
-                "processed_paths": 6,
-                "processed_prefix": 4,
+                "processed_paths": 10,
+                "processed_prefix": 6,
                 "rd_version": 16,
                 "router_identifier": "10.10.10.108",
                 "scan_interval": 60,
@@ -161,10 +203,65 @@ expected_output = {
                         "weight": "32768"
                         }
                     }
+                    },
+                    "2400:cb00:203::/48": {
+                    "index": {
+                        1: {
+                        "locprf": "120",
+                        "next_hop": "2a02:540:5::1",
+                        "origin_codes": "i",
+                        "path": "(64605 64628 64630) 13335",
+                        "status_codes": "*",
+                        "weight": "0"
+                        },
+                        2: {
+                        "locprf": "120",
+                        "next_hop": "2a02:540:13::1",
+                        "origin_codes": "i",
+                        "path": "(64630) 13335",
+                        "status_codes": "*>",
+                        "weight": "500"
+                        }
+                    }
+                    },
+                    "2a02:540::/32": {
+                    "index": {
+                        1: {
+                        "metric": "0",
+                        "locprf": "120",
+                        "next_hop": "2a02:540:13::1",
+                        "origin_codes": "i",
+                        "path": "(64630)",
+                        "status_codes": "*>",
+                        "weight": "500"
+                        }
+                    }
+                    },
+                    "2a0c:5cc0::/29": {
+                    "index": {
+                        1: {
+                        "metric": "0",
+                        "locprf": "120",
+                        "next_hop": "2a02:540:5::1",
+                        "origin_codes": "i",
+                        "path": "(64605 64628 64603) 197648",
+                        "status_codes": "*",
+                        "weight": "0"
+                        },
+                        2: {
+                        "metric": "0",
+                        "locprf": "120",
+                        "next_hop": "2a02:540:13::1",
+                        "origin_codes": "i",
+                        "path": "(64630 64601 64629 64628 64603) 197648",
+                        "status_codes": "*>",
+                        "weight": "500"
+                        }
+                    }
                     }
                 },
-                "processed_paths": 7,
-                "processed_prefix": 6,
+                "processed_paths": 12,
+                "processed_prefix": 9,
                 "rd_version": 15,
                 "router_identifier": "10.10.10.108",
                 "scan_interval": 60,
