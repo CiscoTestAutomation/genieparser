@@ -1,0 +1,9 @@
+VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                 Con
+-------------------------------------------------------------------------------------------------------
+100    0011.2233.4455       0x202    4341      0      0          0        0  GigabitEthernet1/0/12  No
+
+======platform hardware details ======
+
+Asic: 0
+ SI = 0xad RI = 0x2 DI = 0x5415
+ DI = 0x5415 pmap = 0x00000000 0x00000000

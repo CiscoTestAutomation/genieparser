@@ -1,0 +1,14 @@
+show subscriber session uid 642 feature l4redirect
+--------------------------------------------------
+Type: IPv4/IPv6, UID: 642, State: unauthen, Identity: 11.11.11.2
+IPv4 Address: 11.11.11.2
+IPv6 Address: 5001:0:0:1::
+Session Up-time: 00:00:28, Last Changed: 00:00:11
+Switch-ID: 31205
+
+Features:
+
+L4 Redirect:
+Class-id   Rule cfg  Definition                               Source
+184        #1   SVC  to group V6_DASHBOARD                    L4_REDIRECT_V6
+186        #1   SVC  to group V4_DASHBOARD                    L4_REDIRECT_V4

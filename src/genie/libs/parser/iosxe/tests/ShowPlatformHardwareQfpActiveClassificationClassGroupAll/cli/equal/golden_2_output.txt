@@ -1,0 +1,16 @@
+QFP classification class all group
+  class-group [EVTMON:1]
+  class-group [EVTMON:2]
+  class-group [ACL:35] ACL_IN_INTERNET1
+  class-group [ACL:36] ACL_OUT_INTERNET1
+  class-group [ACL:37] IPv6_IN_INTERNET1
+  class-group [ACL:38] IPv6_OUT_INTERNET1
+  class-group [CWS:2100]
+  class-group [ACL:82] sisf v6acl 0001839F
+  class-group [ACL:83] ACL_IN_INTERNET11
+  class-group [ACL:84] ACL_OUT_INTERNET11
+  class-group [IDENTITY:2200]
+  class-group [FPM:2300]
+  class-group [FW-PAM:2000]
+  class-group [NAT:1001]
+  class-group [NAT64:1001]

@@ -44,6 +44,10 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware qfp active feature nat datapath map'
     * 'show platform hardware qfp active feature nat datapath esp'
     * 'show platform hardware subslot {subslot} module host-if statistics'
+    * 'show platform hardware fed {switch} active fwd-asic resource rewrite utilization'
+    * 'show platform hardware fed active fwd-asic resource rewrite utilization'
+    * 'show platform hardware fed {switch} {switch_var} fwd-asic resource rewrite utilization'
+    * 'show platform hardware fed {switch_var} fwd-asic resource rewrite utilization'
     '''
 
 # Python
@@ -8425,14 +8429,22 @@ class ShowPlatformRewriteUtilizationSchema(MetaParser):
 class ShowPlatformRewriteUtilization(ShowPlatformRewriteUtilizationSchema):
     """Parser for show platform hardware fed sw active fwd-asic resource rewrite utilization """
 
-    cli_command = ['show platform hardware fed {switch} active fwd-asic resource rewrite utilization','show platform hardware fed active fwd-asic resource rewrite utilization']
+    cli_command = ['show platform hardware fed {switch} active fwd-asic resource rewrite utilization',
+                   'show platform hardware fed active fwd-asic resource rewrite utilization',
+                   'show platform hardware fed {switch} {switch_var} fwd-asic resource rewrite utilization',
+                   'show platform hardware fed {switch_var} fwd-asic resource rewrite utilization']
 
-    def cli(self, output=None, switch=''):
+    def cli(self, output=None, switch=None, switch_var=None):
         if output is None:
-            if switch:
+            if switch and switch_var:
+                cmd = self.cli_command[2].format(switch=switch, switch_var=switch_var)
+            elif switch:
                 cmd = self.cli_command[0].format(switch=switch)
+            elif switch_var:
+                cmd = self.cli_command[3].format(switch_var=switch_var)
             else:
                 cmd = self.cli_command[1]
+
             output = self.device.execute(cmd)
 
         # initial return dictionary

@@ -1,0 +1,27 @@
+expected_output = {
+    'log_dropped_packet': 'off',
+    'log_flow': 'off',
+    'icmp_unreachable': 'drop',
+    'alert': 'off',
+    'lisp_inner_packet_inspection': 'on',
+    'multi_tenancy': 'off',
+    'number_of_packet_per_flow': 'default',
+    'global_vrf_configuration': {
+        'total_session': 'unlimited',
+        'number_of_packet_per_flow': 'default',
+        'aggressive_aging': 'disabled',
+        'syn_flood_limit': 'unlimited',
+        'max_incomplete': 'unlimited',
+        'max_incomplete_tcp': 'unlimited',
+        'max_incomplete_udp': 'unlimited',
+        'max_incomplete_icmp': 'unlimited',
+    },
+    'per_box_configuration': {
+        'aggressive_aging': 'disabled',
+        'syn_flood_limit': 'unlimited',
+        'max_incomplete': 'unlimited',
+        'max_incomplete_tcp': 'unlimited',
+        'max_incomplete_udp': 'unlimited',
+        'max_incomplete_icmp': 'unlimited',
+    },
+}

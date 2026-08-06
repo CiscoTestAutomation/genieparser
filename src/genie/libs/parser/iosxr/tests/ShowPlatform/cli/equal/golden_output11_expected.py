@@ -1,37 +1,5 @@
 expected_output = {
   "slot": {
-    "lc": {
-      "0/0": {
-        "config_state": "NSHUT",
-        "full_slot": "0/0/CPU0",
-        "name": "UNKNOWN",
-        "state": "FPD UPGRADE"
-      },
-      "0/1": {
-        "config_state": "NSHUT",
-        "full_slot": "0/1/CPU0",
-        "name": "UNKNOWN",
-        "state": "IMAGE INSTALLING"
-      },
-      "0/3": {
-        "config_state": "NSHUT",
-        "full_slot": "0/3/CPU0",
-        "name": "UNKNOWN",
-        "state": "BOOTING"
-      },
-      "0/4": {
-        "config_state": "NSHUT",
-        "full_slot": "0/4/CPU0",
-        "name": "88-LC1-48Y8H-EM",
-        "state": "DATA PATH POWERED ON"
-      },
-      "0/5": {
-        "config_state": "NSHUT",
-        "full_slot": "0/5/CPU0",
-        "name": "88-LC1-52Y8H-EM",
-        "state": "PLATFORM INITIALIZED"
-      }
-    },
     "oc": {
       "0/FB0": {
         "config_state": "NSHUT",

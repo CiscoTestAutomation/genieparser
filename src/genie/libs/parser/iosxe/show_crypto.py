@@ -43,6 +43,7 @@ IOSXE parsers for the following show commands:
    * show crypto ikev2 count
    * show crypto autovpn session
    * show crypto autovpn session peerno {peerno}
+   * show crypto ikev2 profile {profile_name}
 """
 
 # Python
@@ -12732,6 +12733,352 @@ class TestCryptoMasterKeyPresent(TestCryptoMasterKeyPresentSchema):
             m = p1.match(line)
             if m:
                 ret_dict['master_key_present'] = int(m.group('master_key_present'))
+                continue
+
+        return ret_dict
+
+# =================================================
+#  Schema for 'show crypto ikev2 profile {profile_name}'
+# =================================================
+class ShowCryptoIkev2ProfileSchema(MetaParser):
+    """Schema for show crypto ikev2 profile"""
+    schema = {
+        'ikev2_profile': {
+            Any(): {
+                'shutdown': str,
+                'ref_count': int,
+                'match_criteria': {
+                    'fvrf': str,
+                    'local_address_interface': str,
+                    'identities': ListOf(str),
+                    'certificate_maps': str,
+                    Optional('application_type'): str,
+                },
+                'local_identity': str,
+                'remote_identity': str,
+                'local_authentication_method': str,
+                'remote_authentication_methods': str,
+                'eap_options': str,
+                'keyring': str,
+                'trustpoints': str,
+                'lifetime': int,
+                'dpd': {
+                    'interval': int,
+                    'retry_interval': int,
+                    'type': str,
+                },
+                'nat_keepalive': str,
+                'ivrf': str,
+                'virtual_template': str,
+                'mode_auto': str,
+                'aaa_anyconnect_eap_authentication_mlist': str,
+                'aaa_eap_authentication_mlist': str,
+                'aaa_authentication_mlist': str,
+                'aaa_accounting': str,
+                'aaa_group_authorization': str,
+                'aaa_user_authorization': str,
+            }
+        }
+    }
+
+# =================================================
+#  Parser for 'show crypto ikev2 profile {profile_name}'
+# =================================================
+class ShowCryptoIkev2Profile(ShowCryptoIkev2ProfileSchema):
+    """Parser for show crypto ikev2 profile"""
+
+    cli_command = 'show crypto ikev2 profile {profile_name}'
+
+    def cli(self, profile_name, output=None):
+        if output is None:
+            cmd = self.cli_command.format(profile_name=profile_name)
+            output = self.device.execute(cmd)
+
+        # IKEv2 profile: ikev2_prof
+        p1 = re.compile(r'^IKEv2 profile:\s+(?P<profile_name>\S+)$')
+
+        # Shutdown : No
+        p2 = re.compile(r'^Shutdown\s*:\s+(?P<shutdown>\w+)$')
+
+        # Ref Count: 5
+        p3 = re.compile(r'^Ref Count:\s+(?P<ref_count>\d+)$')
+
+        # Match criteria:
+        p4 = re.compile(r'^Match criteria:\s*$')
+
+        # Fvrf: global
+        p4_1 = re.compile(r'^Fvrf:\s+(?P<fvrf>\S+)$')
+
+        # Local address/interface: none
+        p5 = re.compile(r'^Local address/interface:\s+(?P<local_address_interface>\S+)$')
+
+        # Identities:
+        p6 = re.compile(r'^Identities:\s*$')
+
+        # address 110.0.1.2 255.255.255.255
+        p6_1 = re.compile(r'^address\s+(?P<identity>[\S\s]+)$')
+
+        # Certificate maps: none
+        p7 = re.compile(r'^Certificate maps:\s+(?P<certificate_maps>\S+)$')
+
+        # Application type: none
+        p8 = re.compile(r'^Application type:\s+(?P<application_type>\S+)$')
+
+        # Local identity: none
+        p9 = re.compile(r'^Local identity:\s+(?P<local_identity>\S+)$')
+
+        # Remote identity: none
+        p10 = re.compile(r'^Remote identity:\s+(?P<remote_identity>\S+)$')
+
+        # Local authentication method: pre-share
+        p11 = re.compile(r'^Local authentication method:\s+(?P<local_auth_method>[\w\-]+)$')
+
+        # Remote authentication method(s): pre-share
+        p12 = re.compile(r'^Remote authentication method\(s\):\s+(?P<remote_auth_methods>[\w\-]+)$')
+
+        # EAP options: none
+        p13 = re.compile(r'^EAP options:\s+(?P<eap_options>\S+)$')
+
+        # Keyring: ikev2_key
+        p14 = re.compile(r'^Keyring:\s+(?P<keyring>\S+)$')
+
+        # Trustpoint(s): none
+        p15 = re.compile(r'^Trustpoint\(s\):\s+(?P<trustpoints>\S+)$')
+
+        # Lifetime: 86400 seconds
+        p16 = re.compile(r'^Lifetime:\s+(?P<lifetime>\d+)\s+seconds$')
+
+        # DPD: interval 10, retry-interval 2, periodic
+        p17 = re.compile(r'^DPD:\s+interval\s+(?P<interval>\d+),\s+retry-interval\s+(?P<retry_interval>\d+),\s+(?P<dpd_type>\w+)$')
+
+        # NAT-keepalive: disabled
+        p18 = re.compile(r'^NAT-keepalive:\s+(?P<nat_keepalive>\w+)$')
+
+        # Ivrf: none
+        p19 = re.compile(r'^Ivrf:\s+(?P<ivrf>\S+)$')
+
+        # Virtual-template: none
+        p20 = re.compile(r'^Virtual-template:\s+(?P<virtual_template>\S+)$')
+
+        # mode auto: none
+        p21 = re.compile(r'^mode auto:\s+(?P<mode_auto>\S+)$')
+
+        # AAA AnyConnect EAP authentication mlist: none
+        p22 = re.compile(r'^AAA AnyConnect EAP authentication mlist:\s+(?P<aaa_anyconnect_eap_auth_mlist>\S+)$')
+
+        # AAA EAP authentication mlist: none
+        p23 = re.compile(r'^AAA EAP authentication mlist:\s+(?P<aaa_eap_auth_mlist>\S+)$')
+
+        # AAA authentication mlist: none
+        p24 = re.compile(r'^AAA authentication mlist:\s+(?P<aaa_auth_mlist>\S+)$')
+
+        # AAA Accounting: none
+        p25 = re.compile(r'^AAA Accounting:\s+(?P<aaa_accounting>\S+)$')
+
+        # AAA group authorization: none
+        p26 = re.compile(r'^AAA group authorization:\s+(?P<aaa_group_auth>\S+)$')
+
+        # AAA user authorization: none
+        p27 = re.compile(r'^AAA user authorization:\s+(?P<aaa_user_auth>\S+)$')
+
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IKEv2 profile: ikev2_prof
+            m = p1.match(line)
+            if m:
+                profile_dict = ret_dict.setdefault(
+                    'ikev2_profile', {}
+                ).setdefault(m.group('profile_name'), {})
+                continue
+
+            # Shutdown : No
+            m = p2.match(line)
+            if m:
+                profile_dict['shutdown'] = m.group('shutdown')
+                continue
+
+            # Ref Count: 5
+            m = p3.match(line)
+            if m:
+                profile_dict['ref_count'] = int(m.group('ref_count'))
+                continue
+
+            # Match criteria:
+            m = p4.match(line)
+            if m:
+                match_criteria = profile_dict.setdefault('match_criteria', {})
+                continue
+
+            # Fvrf: global
+            m = p4_1.match(line)
+            if m:
+                match_criteria['fvrf'] = m.group('fvrf')
+                continue
+
+            # Local address/interface: none
+            m = p5.match(line)
+            if m:
+                match_criteria['local_address_interface'] = (
+                    m.group('local_address_interface')
+                )
+                continue
+
+            # Identities:
+            m = p6.match(line)
+            if m:
+                match_criteria['identities'] = []
+                continue
+
+            # address 110.0.1.2 255.255.255.255
+            m = p6_1.match(line)
+            if m:
+                identities = m.group('identity').strip().rstrip(' ')
+                if identities:
+                    match_criteria['identities'] = (
+                        [x.strip() for x in identities.split(' ')]
+                    )
+                else:
+                    match_criteria['identities'] = []
+                continue
+
+            # Certificate maps: none
+            m = p7.match(line)
+            if m:
+                match_criteria['certificate_maps'] = m.group('certificate_maps')
+                continue
+
+            # Application type: none
+            m = p8.match(line)
+            if m:
+                match_criteria['application_type'] = m.group('application_type')
+                continue
+
+            # Local identity: none
+            m = p9.match(line)
+            if m:
+                profile_dict['local_identity'] = m.group('local_identity')
+                continue
+
+            # Remote identity: none
+            m = p10.match(line)
+            if m:
+                profile_dict['remote_identity'] = m.group('remote_identity')
+                continue
+
+            # Local authentication method: pre-share
+            m = p11.match(line)
+            if m:
+                profile_dict['local_authentication_method'] = (
+                    m.group('local_auth_method')
+                )
+                continue
+
+            # Remote authentication method(s): pre-share
+            m = p12.match(line)
+            if m:
+                profile_dict['remote_authentication_methods'] = (
+                    m.group('remote_auth_methods')
+                )
+                continue
+
+            # EAP options: none
+            m = p13.match(line)
+            if m:
+                profile_dict['eap_options'] = m.group('eap_options')
+                continue
+
+            # Keyring: ikev2_key
+            m = p14.match(line)
+            if m:
+                profile_dict['keyring'] = m.group('keyring')
+                continue
+
+            # Trustpoint(s): none
+            m = p15.match(line)
+            if m:
+                profile_dict['trustpoints'] = m.group('trustpoints')
+                continue
+
+            # Lifetime: 86400 seconds
+            m = p16.match(line)
+            if m:
+                profile_dict['lifetime'] = int(m.group('lifetime'))
+                continue
+
+            # DPD: interval 10, retry-interval 2, periodic
+            m = p17.match(line)
+            if m:
+                dpd_dict = profile_dict.setdefault('dpd', {})
+                dpd_dict['interval'] = int(m.group('interval'))
+                dpd_dict['retry_interval'] = int(m.group('retry_interval'))
+                dpd_dict['type'] = m.group('dpd_type')
+                continue
+
+            # NAT-keepalive: disabled
+            m = p18.match(line)
+            if m:
+                profile_dict['nat_keepalive'] = m.group('nat_keepalive')
+                continue
+
+            # Ivrf: none
+            m = p19.match(line)
+            if m:
+                profile_dict['ivrf'] = m.group('ivrf')
+                continue
+
+            # Virtual-template: none
+            m = p20.match(line)
+            if m:
+                profile_dict['virtual_template'] = m.group('virtual_template')
+                continue
+
+            # mode auto: none
+            m = p21.match(line)
+            if m:
+                profile_dict['mode_auto'] = m.group('mode_auto')
+                continue
+
+            # AAA AnyConnect EAP authentication mlist: none
+            m = p22.match(line)
+            if m:
+                profile_dict['aaa_anyconnect_eap_authentication_mlist'] = (
+                    m.group('aaa_anyconnect_eap_auth_mlist')
+                )
+                continue
+
+            # AAA EAP authentication mlist: none
+            m = p23.match(line)
+            if m:
+                profile_dict['aaa_eap_authentication_mlist'] = (
+                    m.group('aaa_eap_auth_mlist')
+                )
+                continue
+
+            # AAA authentication mlist: none
+            m = p24.match(line)
+            if m:
+                profile_dict['aaa_authentication_mlist'] = m.group('aaa_auth_mlist')
+                continue
+
+            # AAA Accounting: none
+            m = p25.match(line)
+            if m:
+                profile_dict['aaa_accounting'] = m.group('aaa_accounting')
+                continue
+
+            # AAA group authorization: none
+            m = p26.match(line)
+            if m:
+                profile_dict['aaa_group_authorization'] = m.group('aaa_group_auth')
+                continue
+
+            # AAA user authorization: none
+            m = p27.match(line)
+            if m:
+                profile_dict['aaa_user_authorization'] = m.group('aaa_user_auth')
                 continue
 
         return ret_dict

@@ -1,0 +1,12 @@
+Topology: Foo
+  Address-family: ipv6
+  Associated VPN VRF is Foo-VRF-123
+  Topology state is DOWN
+  Topology CEF forwarding is enabled
+  Event queue is not empty, topology has events(0xab)
+  Topology internal lock count = 2
+  Associated interfaces:
+    GigabitEthernet1, operation state: DOWN
+    GigabitEthernet2, operation state: UP
+    Loopback20, operation state: UP
+  Topology total user lock count: 55

@@ -1,0 +1,30 @@
+Topology: base
+  Address-family: ipv4 multicast
+  Associated VPN VRF is default
+  Topology state is DOWN
+  Topology CEF forwarding is disabled
+  Topology internal lock count = 4
+  Multicast multi-topology mode is enabled.
+  Use topology: ipv4 topology t1
+  Associated interfaces:
+  Topology total user lock count: 0
+
+Topology: bar
+  Address-family: ipv4 multicast
+  Associated VPN VRF is default
+  Topology state is DOWN
+  Topology CEF forwarding is disabled
+  Topology internal lock count = 2
+  Use topology: ipv4 topology t1
+  Associated interfaces:
+  Topology total user lock count: 0
+
+Topology: test
+  Address-family: ipv4 multicast
+  Associated VPN VRF is default
+  Topology state is DOWN
+  Topology CEF forwarding is disabled
+  Topology internal lock count = 2
+  Use topology: ipv4 topology t1
+  Associated interfaces:
+  Topology total user lock count: 0

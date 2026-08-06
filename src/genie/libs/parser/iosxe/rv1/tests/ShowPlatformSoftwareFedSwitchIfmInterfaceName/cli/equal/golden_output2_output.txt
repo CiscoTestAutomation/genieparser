@@ -1,0 +1,103 @@
+show platform software fed switch standby ifm interface_name HundredGigE2/1/3
+Interface IF_ID         : 0x0000000000000481
+Interface Name          : HundredGigE2/1/3
+Interface Block Pointer : 0x7efb30500928
+Interface Block State   : Ready
+Interface State         : Enabled
+Interface Admin mode    : Admin Up
+Interface Status        : STP-BLOCK-SET
+Interface Ref-Cnt       : 1
+Interface Type          : ETHER
+	Port Type         : SWITCH PORT
+	Port Location     : LOCAL
+	Slot              : 5
+	Unit              : 0
+	Slot Unit         : 55
+	SNMP IF Index     : 117
+	GPN               : 247
+	EC Channel        : 0
+	EC Index          : 0
+	MTU               : 1500
+	QoS Trust Type    : 3 (DSCP)
+Ref Count : 1 (feature Ref Counts + 1)
+No Feature Reference count Present
+IFM Feature Sub block information
+	Port Physical Subblock
+		Affinity .......... [local]
+		LPN ............... [55]
+		GPN ............... [247]
+		Speed ............. [100GB ]
+		type .............. [IFM_PORT_TYPE_L2]
+		MTU ............... [1518]
+		ac profile ........ [IFM_AC_PROFILE_L2_DEFAULT]
+	Port Subblock [0]
+		Mac port oid................... [0x8b1(2225)]
+		System port oid................ [0x8b6(2230)]
+		System port gid................ [353]
+		Ethernet port oid.............. [0x8bc(2236)]
+		Port mode...................... [Dense Mode]
+		Dense mode service port gid.... [0x1e035(122933)]
+		Dense mode service port oid.... [0x8c6(2246)]
+		Dense mode port vid............ [50]
+		Voq oid........................ [0x8b4(2228)]
+        Port Subblock [1]
+		Mac port oid................... [0x890(2192)]
+		System port oid................ [0x891(2193)]
+		System port gid................ [353]
+		Ethernet port oid.............. [0x892(2194)]
+		Port mode...................... [Dense Mode]
+		Dense mode service port gid.... [0x1e035(122933)]
+		Dense mode service port oid.... [0x894(2196)]
+		Dense mode port vid............ [50]
+		Voq oid........................ [0x0(0)]
+	Platform Subblock
+		Asic.............. [0]
+		Core.............. [0]
+		Asic Port......... [0]
+		Asic Sub Port..... [65535]
+		Ifg Id............ [0]
+		Mac Num........... [247]
+		First Serdes...... [40]
+		Last Serdes....... [41]
+		FC Mode........... [0]
+		FEC Mode.......... [0]
+		Context Id........ [0]
+	Port L2 Subblock
+		L2 Port Mode ................ [port_mode_access]
+		L2 Port Mode set............. [Yes]
+		Ethertype.................... [8100]
+		Port vlan  .................. [50]
+			Native vlan (trunk) .............. [0]
+			Untagged port bd vlan (access) ... [50]
+			Default vlan (dot1q tunnel) ...... [0]
+		Native Vlan Tagging.......... [Native Vlan UnTagged]
+		status....................... [0]
+		ac profile .................. [IFM_AC_PROFILE_L2_DEFAULT]
+		DNS punt client count........ [0]
+	Port CTS Subblock is NULL if_id = 0x481
+	Port CTS Subblock
+		Disable SGACL .................... [0x0]
+		Trust ............................ [0x0]
+		Propagate ........................ [0x0]
+		Port SGT ......................... [0xffff]
+Events Log
+[2026/07/16 20:16:07.116] Mode Access
+[2026/07/16 20:16:07.117] Mode Access
+[2026/07/16 20:16:07.117] Mode Access
+[2026/07/16 20:16:07.449] Storm Control ratelimit added
+[2026/07/16 20:18:27.666] Storm Control ratelimit destroyed
+[2026/07/16 20:18:27.672] Mode Access
+[2026/07/16 20:18:27.672] Mode Access
+[2026/07/16 20:22:13.428] Mode None
+[2026/07/16 20:22:13.428] Mode None
+[2026/07/16 20:22:13.434] Mode Access
+[2026/07/16 20:22:13.434] Mode Access
+[2026/07/16 20:22:13.435] Mode Access
+[2026/07/16 20:22:13.435] Mode Access
+[2026/07/16 20:22:13.762] Storm Control ratelimit added
+[2026/07/16 20:31:47.913] Storm Control ratelimit destroyed
+[2026/07/16 20:31:47.920] Mode Access
+[2026/07/16 20:31:47.920] Mode Access
+[2026/07/16 20:35:38.796] Mode Access
+[2026/07/16 20:35:38.796] Mode Access
+[2026/07/16 20:35:39.123] Storm Control ratelimit added

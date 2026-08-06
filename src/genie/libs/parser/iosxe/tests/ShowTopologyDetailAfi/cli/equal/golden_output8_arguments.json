@@ -1,0 +1,5 @@
+{
+    "address_family": "ipv4",
+    "multicast": "multicast",
+    "topo_name": "test"
+}

@@ -28,6 +28,7 @@ Security Group Name Table:
     68-10:North
     5016-00:Quarantine
     8000-00:TEST_8000
+Transport type = CTS_TRANSPORT_IP_UDP
 Environment Data Lifetime = 86400 secs
 Last update time = 20:04:42 PDT Tue Jul 21 2020
 Env-data expires in   0:00:46:51 (dd:hr:mm:sec)

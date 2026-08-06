@@ -1,0 +1,37 @@
+expected_output = {
+    'ikev2_profile': {
+        'ikev2_prof': {
+            'aaa_accounting': 'none',
+            'aaa_anyconnect_eap_authentication_mlist': 'none',
+            'aaa_authentication_mlist': 'none',
+            'aaa_eap_authentication_mlist': 'none',
+            'aaa_group_authorization': 'none',
+            'aaa_user_authorization': 'none',
+            'dpd': {
+                'interval': 10,
+                'retry_interval': 2,
+                'type': 'periodic',
+            },
+            'eap_options': 'none',
+            'ivrf': 'none',
+            'keyring': 'ikev2_key',
+            'lifetime': 86400,
+            'local_authentication_method': 'pre-share',
+            'local_identity': 'none',
+            'match_criteria': {
+                'certificate_maps': 'none',
+                'fvrf': 'global',
+                'identities': ['110.0.1.2', '255.255.255.255'],
+                'local_address_interface': 'none',
+            },
+            'mode_auto': 'none',
+            'nat_keepalive': 'disabled',
+            'ref_count': 5,
+            'remote_authentication_methods': 'pre-share',
+            'remote_identity': 'none',
+            'shutdown': 'No',
+            'trustpoints': 'none',
+            'virtual_template': 'none',
+        },
+    },
+}

@@ -1,0 +1,5 @@
+{
+    "address_family": "ipv6",
+    "vrf": "Foo-VRF-123",
+    "topo_name": "Foo"
+}

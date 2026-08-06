@@ -98,6 +98,7 @@
     * show platform hardware qfp active interface if-name GigabitEthernet0/0/0 statistics
     * show platform hardware qfp active interface if-name GigabitEthernet0/0/0 path
     * show platform hardware qfp active feature l2bd datapath system
+    * 'show platform hardware qfp active classification class-group-manager class-group all'
 """
 import re
 import logging
@@ -8335,8 +8336,7 @@ class ShowPlatformHardwareQfpActiveClassification(ShowPlatformHardwareQfpActiveC
                 class_group_dict[cce_id] = {'name': class_group_name}
 
         return parsed_dict
-    
-   
+
 
 class ShowPlatformHardwareQfpActiveClassificationCceInterfaceBriefSchema(MetaParser):
     """Schema for show platform hardware qfp active classification feature class-group ce_data cce {cce_id} interface {interface} input brief"""
@@ -20912,7 +20912,7 @@ class ShowPlatformHardwareQfpActiveInterfaceIfNamePathSchema(MetaParser):
     """Schema for show platform hardware qfp active interface if-name {interface} path"""
 
     schema = {
-        "interface": {
+        Optional("interface"): {
             Any(): {
                 "interface_index": int,
                 "qfp_interface": str,
@@ -20935,7 +20935,12 @@ class ShowPlatformHardwareQfpActiveInterfaceIfNamePathSchema(MetaParser):
                     "packets_dropped": int,
                 },
             }
-        }
+        },
+        Optional("valid_flag"): int,
+        Optional("baf_port"): int,
+        Optional("input_uIDB"): int,
+        Optional("esi_channel"): str,
+        Optional("baf_header"): str,
     }
 
 
@@ -20954,6 +20959,11 @@ class ShowPlatformHardwareQfpActiveInterfaceIfNamePath(ShowPlatformHardwareQfpAc
         if not out:
             return ret_dict
 
+        compact_ret = ShowPlatformHardwareQfpInterfaceIfnamepath(
+            device=self.device
+        ).cli(status="active", interface=interface, output=out)
+        if compact_ret:
+            return compact_ret
         # Interface Name : GigabitEthernet0/0/0
         p1 = re.compile(r"^\s*Interface Name\s*:\s*(?P<interface>\S+)\s*$")
 
@@ -21285,3 +21295,53 @@ class ShowPlatformHardwareQfpActiveFeatureL2bdDatapathSystem(ShowPlatformHardwar
                 continue
 
         return ret_dict
+
+
+class ShowPlatformHardwareQfpActiveClassificationClassGroupAllSchema(MetaParser):
+    """Schema for 'show platform hardware qfp active classification class-group-manager class-group all'"""
+
+    schema = {
+        'class_groups': {
+            Any(): {
+                'group_type': str,
+                'group_id': int,
+                Optional('name'): str,
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveClassificationClassGroupAll(ShowPlatformHardwareQfpActiveClassificationClassGroupAllSchema):
+    """Parser for show platform hardware qfp active classification class-group-manager class-group all"""
+
+    cli_command = 'show platform hardware qfp active classification class-group-manager class-group all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+
+        # class-group [ACL:84] ACL_OUT_INTERNET11
+        # class-group [NAT64:1001]
+        p1 = re.compile(r'^class-group \[(?P<group_type>[\w-]+):(?P<group_id>\d+)\](?:\s+(?P<name>.+))?$')
+
+        index = 1
+        for line in output.splitlines():
+            line = line.strip()
+
+            # class-group [ACL:84] ACL_OUT_INTERNET11
+            match = p1.match(line)
+            if match:
+                group = match.groupdict()
+                class_group = {
+                    'group_type': group['group_type'],
+                    'group_id': int(group['group_id']),
+                }
+                if group.get('name'):
+                    class_group['name'] = group['name'].strip()
+
+                parsed_dict.setdefault('class_groups', {})[index] = class_group
+                index += 1
+
+        return parsed_dict

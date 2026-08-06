@@ -8,11 +8,18 @@ IOSXE parsers for the following show commands:
     * 'show subscriber lite-session'
     * 'show subscriber statistics'
     * show subscriber session detailed
+    * show subscriber session uid <uid> detailed
+    * show subscriber session feature l4redirect
+    * show subscriber session uid <uid> feature l4redirect
+    * show subscriber session feature access-list
+    * show subscriber session uid <uid> feature access-list
     * show subscriber service
+    * 'show subscriber default-session'
 """
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, ListOf, Optional, Or, Schema, Use
+from genie.libs.parser.utils.common import Common
 
 class ShowSubscriberSessionSchema(MetaParser):
 
@@ -805,11 +812,15 @@ class ShowSubscriberSessionDetailedSchema(MetaParser):
 
 class ShowSubscriberSessionDetailed(ShowSubscriberSessionDetailedSchema):
 
-    cli_command = "show subscriber session detailed"
+    cli_command = ["show subscriber session detailed",
+                   "show subscriber session uid {uid} detailed"]
 
-    def cli(self, output=None):
+    def cli(self, uid=None, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command[0]
+            if uid:
+                cmd = self.cli_command[1].format(uid=uid)
+            output = self.device.execute(cmd)
 
         ret_dict = {}
         if not output:
@@ -865,7 +876,9 @@ class ShowSubscriberSessionDetailed(ShowSubscriberSessionDetailedSchema):
         p15 = re.compile(r"^\s*Config\s+history\s+for\s+session\s+\(recent\s+to\s+oldest\):")
 
         #     Access-type: IP Client: SM
-        p16 = re.compile(r"^\s{4}Access\-type\s*:\s*(?P<access_type>\S+)\s+Client\s*:\s*(?P<client>\S+)$")
+        p16 = re.compile(
+            r"^\s{4}Access\-type\s*:\s*(?P<access_type>.+?)\s+Client\s*:\s*(?P<client>.+)$"
+        )
 
         #      Policy event: Service Selection Request
         p17 = re.compile(r"^\s{5,}Policy\s+event\s*:\s*(?P<policy_event>.+)$")
@@ -1063,8 +1076,8 @@ class ShowSubscriberSessionDetailed(ShowSubscriberSessionDetailedSchema):
                 group = m.groupdict()
                 policy_info = current_session.setdefault("policy_information", {})
                 ch = policy_info.setdefault("config_history", {})
-                ch["access_type"] = group["access_type"]
-                ch["client"] = group["client"]
+                ch["access_type"] = group["access_type"].strip()
+                ch["client"] = group["client"].strip()
                 continue
 
             #      Policy event: Service Selection Request
@@ -2645,3 +2658,377 @@ class ShowSubscriberService(ShowSubscriberServiceSchema):
                 continue
 
         return parsed_dict
+
+
+class ShowSubscriberSessionFeatureL4RedirectSchema(MetaParser):
+    """Schema for show subscriber session feature l4redirect"""
+
+    schema = {
+        Optional('total_sessions'): int,
+        Optional('sessions'): {
+            Any(): {
+                'type': str,
+                'uid': int,
+                'state': str,
+                'identity': str,
+                Optional('ipv4_address'): str,
+                Optional('ipv6_address'): str,
+                'session_up_time': str,
+                'last_changed': str,
+                'switch_id': int,
+                Optional('features'): {
+                    'l4_redirect': {
+                        Any(): {
+                            'class_id': int,
+                            'rule_cfg': str,
+                            'definition': str,
+                            'source': str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowSubscriberSessionFeatureL4Redirect(ShowSubscriberSessionFeatureL4RedirectSchema):
+    """Parser for show subscriber session feature l4redirect and uid variant"""
+
+    cli_command = "show subscriber session feature l4redirect"
+    cli_command_uid = "show subscriber session uid {uid} feature l4redirect"
+
+    def cli(self, uid=None, output=None):
+        if output is None:
+            uid_value = str(uid).strip() if uid is not None else ""
+            command = (
+                self.cli_command_uid.format(uid=uid_value)
+                if uid_value
+                else self.cli_command
+            )
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        sessions = ret_dict.setdefault('sessions', {})
+        current_uid = None
+        current_session = None
+        in_l4_redirect = False
+
+        # Current Subscriber Information: Total sessions 1
+        p1 = re.compile(r'^Current\s+Subscriber\s+Information:\s+Total\s+sessions\s+(?P<total>\d+)$')
+
+        # Type: DHCPv4, UID: 48, State: unauthen, Identity: 11.11.11.4
+        p2 = re.compile(r'^Type\s*:\s*(?P<type>[^,]+),\s*UID\s*:\s*(?P<uid>\d+),\s*State\s*:\s*(?P<state>[^,]+),\s*Identity\s*:\s*(?P<identity>.+)$')
+
+        # IPv4 Address: 11.11.11.4
+        # IPv6 Address: 5001:0:0:1::
+        p3 = re.compile(r'^(?P<addr_type>IPv4|IPv6)\s+Address\s*:\s*(?P<address>\S+)$')
+
+        # Session Up-time: 00:00:07, Last Changed: 00:00:09
+        p4 = re.compile(r'^Session\s+Up\-time\s*:\s*(?P<uptime>\d+:\d+:\d+),\s*Last\s+Changed\s*:\s*(?P<last_changed>\d+:\d+:\d+)$')
+
+        # Switch-ID: 4335
+        p5 = re.compile(r'^Switch\-ID\s*:\s*(?P<switch_id>\d+)$')
+
+        # Features:
+        p6 = re.compile(r'^Features\s*:$')
+
+        # L4 Redirect:
+        p7 = re.compile(r'^L4\s+Redirect\s*:$')
+
+        # Class-id   Rule cfg  Definition                               Source
+        p8 = re.compile(r'^Class\-id\s+Rule\s+cfg\s+Definition\s+Source$')
+
+        # 98         #1   SVC  to group V4_DASHBOARD                    L4_REDIRECT_V4
+        p9 = re.compile(r'^(?P<class_id>\d+)\s+(?P<rule_cfg>\S+)\s+(?P<rule_type>\S+)\s+(?P<definition>.+?)\s{2,}(?P<source>\S+)$')
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # Current Subscriber Information: Total sessions 1
+            m = p1.match(line)
+            if m:
+                ret_dict['total_sessions'] = int(m.group('total'))
+                continue
+
+            # Type: DHCPv4, UID: 48, State: unauthen, Identity: 11.11.11.4
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                current_uid = int(group['uid'])
+                current_session = sessions.setdefault(current_uid, {})
+                current_session['type'] = group['type'].strip()
+                current_session['uid'] = current_uid
+                current_session['state'] = group['state'].strip()
+                current_session['identity'] = group['identity'].strip()
+                in_l4_redirect = False
+                continue
+
+            if current_session is None:
+                continue
+
+            # IPv4 Address: 11.11.11.4
+            # IPv6 Address: 5001:0:0:1::
+            m = p3.match(line)
+            if m:
+                addr_type = m.group('addr_type').lower()
+                current_session[f'{addr_type}_address'] = m.group('address')
+                continue
+
+            # Session Up-time: 00:00:07, Last Changed: 00:00:09
+            m = p4.match(line)
+            if m:
+                current_session['session_up_time'] = m.group('uptime')
+                current_session['last_changed'] = m.group('last_changed')
+                continue
+
+            # Switch-ID: 4335
+            m = p5.match(line)
+            if m:
+                current_session['switch_id'] = int(m.group('switch_id'))
+                continue
+
+            # Features:
+            m = p6.match(line)
+            if m:
+                current_session.setdefault('features', {})
+                in_l4_redirect = False
+                continue
+
+            # L4 Redirect:
+            m = p7.match(line)
+            if m:
+                features = current_session.setdefault('features', {})
+                features.setdefault('l4_redirect', {})
+                in_l4_redirect = True
+                continue
+
+            # Class-id   Rule cfg  Definition                               Source
+            m = p8.match(line)
+            if m and in_l4_redirect:
+                # header line - skip
+                continue
+
+            # 98         #1   SVC  to group V4_DASHBOARD                    L4_REDIRECT_V4
+            m = p9.match(line)
+            if m and in_l4_redirect:
+                group = m.groupdict()
+                class_id = int(group['class_id'])
+                l4r = current_session['features']['l4_redirect']
+                l4r[class_id] = {
+                    'class_id': class_id,
+                    'rule_cfg': group['rule_cfg'],
+                    'definition': f"{group['rule_type']}  {group['definition'].strip()}",
+                    'source': group['source'].strip()
+                }
+                continue
+
+        return ret_dict
+class ShowSubscriberSessionFeatureAccessListSchema(MetaParser):
+
+    """Schema for show subscriber session feature access-list"""
+
+    schema = {
+        Optional("sessions"): {
+            Any(): {
+                "type": str,
+                "uid": int,
+                "state": str,
+                "identity": str,
+                Optional("ipv4_address"): str,
+                Optional("ipv6_address"): str,
+                "session_up_time": str,
+                "last_changed": str,
+                "switch_id": int,
+                Optional("features"): {
+                    "per_user_acl": {
+                        Any(): {
+                            "direction": str,
+                            "protocol": str,
+                            "acl_name": str,
+                            "source": str,
+                        }
+                    }
+                },
+            }
+        }
+    }
+
+
+class ShowSubscriberSessionFeatureAccessList(ShowSubscriberSessionFeatureAccessListSchema):
+
+    """Parser for show subscriber session feature access-list and uid variant"""
+
+    cli_command = ["show subscriber session feature access-list",
+                   "show subscriber session uid {uid} feature access-list"]
+
+    def cli(self, uid=None, output=None):
+        if output is None:
+            cmd = self.cli_command[0]
+            if uid:
+                cmd = self.cli_command[1].format(uid=uid)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        sessions = ret_dict.setdefault("sessions", {})
+        current_session = None
+        in_per_user_acl = False
+
+        # Type: DHCPv4, UID: 61, State: authen, Identity: aaaa.bbbb.1111
+        p1 = re.compile(r"^Type\s*:\s*(?P<type>[^,]+),\s*UID\s*:\s*(?P<uid>\d+),\s*State\s*:\s*(?P<state>[^,]+),\s*Identity\s*:\s*(?P<identity>.+)$")
+
+        # IPv4 Address: 11.11.11.4
+        # IPv6 Address: 5001:0:0:1::
+        p2 = re.compile(r"^(?P<addr_type>IPv4|IPv6)\s+Address\s*:\s*(?P<address>\S+)$")
+
+        # Session Up-time: 00:00:05, Last Changed: 00:00:07
+        p3 = re.compile(r"^Session\s+Up\-time\s*:\s*(?P<up_time>\d+:\d+:\d+),\s*Last\s+Changed\s*:\s*(?P<last_changed>\d+:\d+:\d+)$")
+
+        # Switch-ID: 4328
+        p4 = re.compile(r"^Switch\-ID\s*:\s*(?P<switch_id>\d+)$")
+
+        # Features:
+        p5 = re.compile(r"^Features\s*:$")
+
+        # Per-User ACL:
+        p6 = re.compile(r"^Per\-User\s+ACL\s*:$")
+
+        # Class-id   Dir  Protocol  ACL Name                            Source
+        p7 = re.compile(r"^Class\-id\s+Dir\s+Protocol\s+ACL\s+Name\s+Source$")
+
+        # 0          In   IP        ACL_IN_INTERNET11                   Peruser
+        p8 = re.compile(r"^(?P<class_id>\d+)\s+(?P<direction>\S+)\s+(?P<protocol>\S+)\s+(?P<acl_name>.+?)\s{2,}(?P<source>\S+)$")
+
+        for line in output.splitlines():
+            line = line.rstrip()
+            if not line:
+                continue
+
+            # Type: DHCPv4, UID: 61, State: authen, Identity: aaaa.bbbb.1111
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                uid_key = int(group["uid"])
+                current_session = sessions.setdefault(uid_key, {})
+                current_session["type"] = group["type"].strip()
+                current_session["uid"] = uid_key
+                current_session["state"] = group["state"].strip()
+                current_session["identity"] = group["identity"].strip()
+                in_per_user_acl = False
+                continue
+
+            if current_session is None:
+                continue
+
+            # IPv4 Address: 11.11.11.4
+            # IPv6 Address: 5001:0:0:1::
+            m = p2.match(line)
+            if m:
+                addr_type = m.group("addr_type").lower()
+                current_session["{}_address".format(addr_type)] = m.group("address")
+                continue
+
+            # Session Up-time: 00:00:05, Last Changed: 00:00:07
+            m = p3.match(line)
+            if m:
+                current_session["session_up_time"] = m.group("up_time")
+                current_session["last_changed"] = m.group("last_changed")
+                continue
+
+            # Switch-ID: 4328
+            m = p4.match(line)
+            if m:
+                current_session["switch_id"] = int(m.group("switch_id"))
+                continue
+
+            # Features:
+            m = p5.match(line)
+            if m:
+                current_session.setdefault("features", {})
+                in_per_user_acl = False
+                continue
+
+            # Per-User ACL:
+            m = p6.match(line)
+            if m:
+                features = current_session.setdefault("features", {})
+                features.setdefault("per_user_acl", {})
+                in_per_user_acl = True
+                continue
+
+            # Class-id   Dir  Protocol  ACL Name                            Source
+            m = p7.match(line)
+            if m and in_per_user_acl:
+                # header line - skip
+                continue
+
+            # 0          In   IP        ACL_IN_INTERNET11                   Peruser
+            m = p8.match(line)
+            if m and in_per_user_acl:
+                group = m.groupdict()
+                class_id = int(group["class_id"])
+                acl_table = current_session["features"]["per_user_acl"]
+                acl_table[class_id] = {
+                    "direction": group["direction"],
+                    "protocol": group["protocol"],
+                    "acl_name": group["acl_name"].strip(),
+                    "source": group["source"],
+                }
+                continue
+
+        return ret_dict
+
+
+class ShowSubscriberDefaultSessionSchema(MetaParser):
+
+    """Schema for show subscriber default-session"""
+
+    schema = {
+        Optional('uid'): {
+            Any(): {
+                'lite_sessions': int,
+                'interface': str,
+            }
+        }
+    }
+
+
+class ShowSubscriberDefaultSession(ShowSubscriberDefaultSessionSchema):
+
+    """Parser for 'show subscriber default-session'"""
+
+    cli_command = 'show subscriber default-session'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # 50      0              GigabitEthernet0/3/0
+        p1 = re.compile(
+            r'^(?P<uid>\d+)\s+(?P<lite_sessions>\d+)\s+(?P<interface>\S+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 50      0              GigabitEthernet0/3/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                uid = int(group['uid'])
+                uid_dict = ret_dict.setdefault('uid', {}).setdefault(uid, {})
+                uid_dict['lite_sessions'] = int(group['lite_sessions'])
+                uid_dict['interface'] = Common.convert_intf_name(group['interface'])
+                continue
+
+        return ret_dict
+

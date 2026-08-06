@@ -1,0 +1,25 @@
+expected_output = {
+    'curr_flows': 1,
+    'watermark': 1,
+    'index': {
+        1: {
+            'allow_bp': True,
+            'app_name': 'dhcp',
+            'bypass_pkt': 2,
+            'clients': '0x01',
+            'final': True,
+            'flow_type': 'Real Flow',
+            'ip1': '0.0.0.0',
+            'ip2': '255.255.255.255',
+            'l3_proto': 1,
+            'l4_proto': 17,
+            'pkts': 2,
+            'port1': 68,
+            'port2': 67,
+            'swapped': 'Yes',
+            'timeout_sec': 60,
+            'tuple_type': 'Full',
+            'vrf_vlan': 0,
+        },
+    },
+}

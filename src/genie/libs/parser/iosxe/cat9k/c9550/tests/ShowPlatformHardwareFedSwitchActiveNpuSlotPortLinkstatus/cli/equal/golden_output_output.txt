@@ -1,0 +1,62 @@
+show platform hardware fed switch active npu slot 1 port 41 link_status
+******* LINK STATUS ************
+
+        MAC PORT DETAILS
+
+        link_state: 0 pcs_status: 0  high_ber: 0
+        am_lock       = {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F}
+        mac_pcs_lanes = {0}
+
+        get_link_management_enabled = TRUE
+        get_serdes_continuous_tuning_enabled = TRUE
+        get_tune_status = FALSE
+        get_an_enabled = FALSE
+        get_loopback_mode = NONE
+        get_state = TUNING
+        get_speed = 10G
+        INACTIVE(2), garbage(4), ACTIVE(8), WAITING_FOR_PEER(6), TUNING(6), TUNED(5), PCS_LOCK(3), garbage(85), PCS_STABLE(86), LINK_UP(1), 
+
+        MIB counters
+
+                                         TX legal frames counter :                   1
+                                          TX legal bytes counter :                  68
+                                   TX legal frames with 64 bytes :                   0
+                               TX legal frames with 65-127 bytes :                   1
+                              TX legal frames with 128-255 bytes :                   0
+                              TX legal frames with 256-511 bytes :                   0
+                             TX legal frames with 512-1023 bytes :                   0
+                            TX legal frames with 1024-1518 bytes :                   0
+                            TX legal frames with 1519-2500 bytes :                   0
+                            TX legal frames with 2501-9000 bytes :                   0
+                                        TX frames with CRC error :                   0
+            TX internal error: packets missing the end-of-packet :                   0
+                            TX internal error: under run packets :                   0
+                                   TX legal flow control packets :                   0
+                              TX out-of-band packets transmitted :                   0
+           TX internal error: out-of-band packets with CRC error :                   0
+                                                 RX legal frames :                   1
+                                                  RX legal bytes :                  68
+                                   RX legal frames with 64 bytes :                   0
+                               RX legal frames with 65-127 bytes :                   1
+                              RX legal frames with 128-255 bytes :                   0
+                              RX legal frames with 256-511 bytes :                   0
+                             RX legal frames with 511-1023 bytes :                   0
+                            RX legal frames with 1024-1518 bytes :                   0
+                            RX legal frames with 1519-2500 bytes :                   0
+                            RX legal frames with 2501-9000 bytes :                   0
+                            RX received frames with inverted CRC :                   0
+                             RX packets received with CRC errors :                   0
+                  RX packet received larger from max packet size :                   0
+                 RX packet received smaller from min packet size :                   0
+                                      RX packets with code error :                   0
+                                   RX legal flow control packets :                   0
+                                 RX out-of-band packets received :                   0
+                           RX packets received with inverted CRC :                   0
+                           RX out-of-band packets with CRC error :                   0
+                          RX out-of-band packets with code error :                   0
+
+
+        link_state: 0 pcs_status: 0  high_ber: 0
+        am_lock = {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,}
+
+Port = 41 Slot = 1 cmd = (port_diag unit 0 port 40 slot 0) rc = 0x0 reason = success

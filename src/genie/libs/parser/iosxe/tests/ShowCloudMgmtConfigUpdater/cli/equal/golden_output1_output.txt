@@ -1,1 +1,1 @@
-service meraki connect is disabled
+service cloud-mgmt connect is disabled

@@ -1,5 +1,14 @@
 expected_output = {
     'protocols': {
+        "connected": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "ipv6": {}
+                    }
+                }
+            }
+        },
         'isis': {
             'vrf': {
                 'default': {

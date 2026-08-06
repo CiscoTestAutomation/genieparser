@@ -1,0 +1,23 @@
+show vpdn group-select default
+
+example 1:
+Default VPDN group: L2TP_GROUP
+
+example 2:
+Default VPDN group information:
+
+Group Name      : L2TP_GROUP
+Protocol        : l2tp
+Domain Handling : Enabled
+Priority        : 1
+
+example 3:
+VPDN Default Group Selection
+----------------------------
+Current Default Group : DEFAULT_L2TP
+State                 : Active
+
+example 4:
+Default VPDN Group      Protocol
+vgdefault               l2tp
+None                    pptp

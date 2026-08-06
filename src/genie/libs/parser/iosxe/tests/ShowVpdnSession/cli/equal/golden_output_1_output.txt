@@ -1,0 +1,20 @@
+show vpdn session
+
+example 1:
+L2TP Session Information Total tunnels X sessions Y
+LocID RemID TunID Intf          Username             State    Last Chg Uniq ID
+4     691   13695 Se0/0         user@domain.com      est      00:06:00  4
+
+example 2:
+L2F Session Information Total tunnels X sessions Y
+CLID   MID    Username                   Intf          State   Uniq ID
+1      2      user@domain.com            SSS Circuit   open    10
+
+example 3:
+PPPoE Session Information Total tunnels X sessions Y
+UID    SID    RemMAC         OIntf          Intf      Session
+              LocMAC                        VASt      state
+3      1      0030.949b.b4a0 Fa2/0          N/A       CNCT_FWDED
+              0010.7b90.0840
+6      2      0030.949b.b4a0 Fa2/0          Vi1.1     CNCT_PTA
+              0010.7b90.0840               UP

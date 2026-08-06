@@ -1,0 +1,9 @@
+               Secure Mac Address Table
+-------------------------------------------------------------------------------
+Vlan    Mac Address       Type                          Ports   Remaining Age
+                                                                   (mins)
+----    -----------       ----                          -----   -------------
+100     0011.2233.4455    SecureConfigured              V
+-------------------------------------------------------------------------------
+Total Addresses in System (excluding one mac per port)     : 1
+Max Addresses limit in System (excluding one mac per port) : 4096

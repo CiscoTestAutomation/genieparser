@@ -147,7 +147,14 @@ expected_output = {
                                             "nexthop": {
                                                 "10.13.90.3": {
                                                     "outgoing_interface": {
-                                                        "GigabitEthernet3.90": {}
+                                                        "GigabitEthernet3.90": {
+                                                            "ip_adj": {
+                                                                "GigabitEthernet3.90": {
+                                                                    "addr": "10.13.90.3",
+                                                                    "addr_info": "7FEE874C9FE8",
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             },

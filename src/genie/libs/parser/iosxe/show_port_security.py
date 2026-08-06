@@ -358,7 +358,7 @@ class ShowPortSecurityAddress(ShowPortSecurityAddressSchema):
                         r'(?P<mac>(?:[0-9a-fA-F]{4}\.){2}[0-9a-fA-F]{4}|'
                         r'(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})\s+'
                         r'(?P<type>Secure\w+|\w+)\s+'
-                        r'(?P<port>[A-Za-z][\w\/\.\-]+)'
+                        r'(?P<port>[A-Za-z][\w\/\.\-]*)'
                         r'(?:\s+(?P<remaining_age>.*\S))?\s*$')
 
         # Total Addresses in System (excluding one mac per port)     : 0

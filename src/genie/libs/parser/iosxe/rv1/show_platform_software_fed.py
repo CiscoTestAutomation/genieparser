@@ -368,6 +368,7 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceNameSchema(MetaParser):
         Optional('port_subblock'): {
             int : {
                 Optional('mac_port_oid'): str,
+                Optional('mpp_port_oid'): str,
                 'system_port_oid': str,
                 'system_port_gid': int,
                 'ethernet_port_oid': str,
@@ -564,7 +565,8 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceName(ShowPlatformSoftwareFedSwitc
         p24 = re.compile(r'^GPN\s+\.+\s+\[(?P<gpn>\d+)\]$')
 
         # Speed ............. [10GB]
-        p25 = re.compile(r'^Speed\s+\.+\s+\[(?P<speed>\S+)\]$')
+        # Speed ............. [100GB ]
+        p25 = re.compile(r'^Speed\s+\.+\s+\[(?P<speed>\S+)\s*\]$')
 
         # type .............. [IFM_PORT_TYPE_L2]
         p26 = re.compile(r'^type\s+\.+\s+\[(?P<type>\S+)\]$')
@@ -577,6 +579,9 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceName(ShowPlatformSoftwareFedSwitc
 
         # Mac port oid................... [0xba8(2984)]
         p29 = re.compile(r'^Mac port oid[\s+]?\.+\s+\[(?P<mac_port_oid>\S+)\]$')
+
+        # Mpp port oid................... [0x761(1889)]
+        p29_1 = re.compile(r'^Mpp port oid[\s+]?\.+\s+\[(?P<mpp_port_oid>\S+)\]$')
 
         # System port oid................ [0xbac(2988)]
         p30 = re.compile(r'^System port oid[\s+]?\.+\s+\[(?P<system_port_oid>\S+)\]$')
@@ -1082,6 +1087,12 @@ class ShowPlatformSoftwareFedSwitchIfmInterfaceName(ShowPlatformSoftwareFedSwitc
                 m = p29.match(line)
                 if m:
                     port_block_dict['mac_port_oid'] = m.group('mac_port_oid')
+                    continue
+
+                # Mpp port oid................... [0x761(1889)]
+                m = p29_1.match(line)
+                if m:
+                    port_block_dict['mpp_port_oid'] = m.group('mpp_port_oid')
                     continue
 
                 # System port oid................ [0xbac(2988)]
