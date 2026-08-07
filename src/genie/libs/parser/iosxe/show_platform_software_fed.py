@@ -50,7 +50,9 @@
     * 'show platform software fed active ifm interfaces ethernet'
     * 'show platform software fed switch active ifm interfaces loopback'
     * 'show platform software fed active ifm interfaces loopback'
-    * 'show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui' 
+    * 'show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui'
+    * 'show platform software fed {switch} {switch_var} ifm interfaces tunnel'
+    * 'show platform software fed {switch_var} ifm interfaces tunnel'
 """
 # Python
 import re
@@ -7751,8 +7753,9 @@ class ShowPlatformSoftwareFedActiveAclBindDbSummary(
         # Gi1/0/25    Racl          IPv4          Ingress     17           Success
         # Gi1/0/26.11  Racl          IPv4          Egress      13           Success
         # Gi1/0/25    Racl          IPv4          Ingress     17           Success
+        # Vl50        Racl          IPv4          Ingress     30           No Resource
         p1 = re.compile(
-            r"^(?P<interface>[\w\-\.\/]+)\s+(?P<feature>\w+)\s+(?P<protocol>\w+)?\s+(?P<direction>\w+)\s+(?P<cg_id>\d+)\s+(?P<status>\w+)$"
+            r"^(?P<interface>[\w\-\.\/]+)\s+(?P<feature>\w+)\s+(?P<protocol>\w+)?\s+(?P<direction>\w+)\s+(?P<cg_id>\d+)\s+(?P<status>.+)$"
         )
 
         for line in output.splitlines():
@@ -7762,6 +7765,7 @@ class ShowPlatformSoftwareFedActiveAclBindDbSummary(
             # Gi1/0/25    Racl          IPv4          Ingress     17           Success
             # Gi1/0/26.11  Racl          IPv4          Egress      13           Success
             # Gi1/0/25    Racl          IPv4          Ingress     17           Success
+            # Vl50        Racl          IPv4          Ingress     30           No Resource
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -7941,8 +7945,8 @@ class ShowPlatformSoftwareFedSwitchActiveStpVlanSchema(MetaParser):
                 Optional("stp_state_hw"): str,
                 "vtp_pruned": str,
                 "untagged": str,
-                "ingress": str,
-                "egress": str,
+                Optional("ingress"): str,
+                Optional("egress"): str,
                 Optional("gid"): int,
                 Optional("mac_learn"): str,
             }
@@ -7980,6 +7984,10 @@ class ShowPlatformSoftwareFedSwitchActiveStpVlan(
         )
         # FiftyGigE1/0/11         none    disabled         Blocking          No         Yes         Blocking         Blocking         850        Enable
         p1_1 = re.compile(r"^(?P<interface>\S+) +(?P<pvlan_mode>\S+) +(?P<stp_state>\S+) +(?P<stp_state_hw>\S+) +(?P<vtp_pruned>\S+) +(?P<untagged>\w+) +(?P<ingress>\w+) +(?P<egress>\w+) +(?P<gid>\d+) +(?P<mac_learn>\S+)$")
+        # TenGigabitEthernet5/0/23         none    disabled                           No         Yes                                        123011
+        p1_2 = re.compile(
+            r"^(?P<interface>\S+) +(?P<pvlan_mode>\S+) +(?P<stp_state>\S+) +(?P<vtp_pruned>\S+) +(?P<untagged>\w+) +(?P<gid>\d+)$")
+        
         # HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1
         p2 = re.compile(r"^HW flood list\:\s+:(?P<hw_flood_list>[\w\s\,/\.]*)$")
 
@@ -8021,6 +8029,21 @@ class ShowPlatformSoftwareFedSwitchActiveStpVlan(
                 key_chain_dict["gid"] = int(dict_val["gid"])
                 key_chain_dict["mac_learn"] = dict_val["mac_learn"]
                 continue
+
+            # TenGigabitEthernet5/0/23  none  disabled        No   Yes              123011
+            m = p1_2.match(line)
+            if m:
+                dict_val = m.groupdict()
+                key_chain_dict = ret_dict.setdefault("interface", {}).setdefault(
+                    Common.convert_intf_name(dict_val["interface"]), {}
+                )
+                key_chain_dict["pvlan_mode"] = dict_val["pvlan_mode"]
+                key_chain_dict["stp_state"] = dict_val["stp_state"]
+                key_chain_dict["vtp_pruned"] = dict_val["vtp_pruned"]
+                key_chain_dict["untagged"] = dict_val["untagged"]
+                key_chain_dict["gid"] = int(dict_val["gid"])
+                continue
+                
                 
                 
             # HW flood list: : Gi2/0/23, Gi2/0/10, Gi2/0/12, Gi2/0/14, Gi2/0/16, Ap2/0/1
@@ -9099,16 +9122,22 @@ class ShowPlatformSoftwareFedIfmSchema(MetaParser):
 
 class ShowPlatformSoftwareFedIfm(ShowPlatformSoftwareFedIfmSchema):
     cli_command = [
+        "show platform software fed {switch} {switch_var} ifm interfaces tunnel",
+        "show platform software fed {switch_var} ifm interfaces tunnel",
         "show platform software fed {switch} active ifm interfaces tunnel",
         "show platform software fed active ifm interfaces tunnel",
     ]
 
-    def cli(self, switch=None, output=None):
+    def cli(self, switch=None, output=None, switch_var=None):
         if output is None:
-            if switch is None:
-                cmd = self.cli_command[1]
+            if switch and switch_var:
+                cmd = self.cli_command[0].format(switch=switch, switch_var=switch_var)
+            elif switch_var:
+                cmd = self.cli_command[1].format(switch_var=switch_var)
+            elif switch:
+                cmd = self.cli_command[2].format(switch=switch)
             else:
-                cmd = self.cli_command[0].format(switch=switch)
+                cmd = self.cli_command[3]
 
             output = self.device.execute(cmd)
         parsed_dict = {}
@@ -11902,7 +11931,8 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetail(ShowPlatformSoftwareFe
         p6 = re.compile(r'^Pol Hdl\s+:\s+(?P<pol_hdl>\S+)$')
 
         # ACL (OID: 0x81E, No of ACEs: 1)
-        p7 = re.compile(r'^ACL\s+\(OID:\s+(?P<oid>\S+),\s+No\s+of\s+ACEs:\s+(?P<no_of_ace>\d+)\)$')
+        # ACL (asic: 0, OID: 0xD8D, No of ACEs: 8)
+        p7 = re.compile(r'^ACL\s+\((?:asic:\s+\d+,\s+)?OID:\s+(?P<oid>\S+),\s+No\s+of\s+ACEs:\s+(?P<no_of_ace>\d+)\)$')
 
         # IPV4 ACE Key/Mask
         p8 = re.compile(r'^IPV4 ACE Key/Mask$')
@@ -18713,7 +18743,7 @@ class ShowPlatformSoftwareFedSwitchWdavcFlows(ShowPlatformSoftwareFedSwitchWdavc
         #---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         #1   |10.10.1.166                             |66.220.146.224                          |52059|80   |1    |6    |0   |360  HW|facebook                        |Full    |Real Flow|No      |0x01   |True  |True  |69    |21    |
         
-        p1 = re.compile(r'^(?P<ix>\d+)\s+\|(?P<ip1>[^\|]+)\|(?P<ip2>[^\|]+)\|(?P<port1>[^\|]+)\|(?P<port2>[^\|]+)\|(?P<l3_proto>[^\|]+)\|(?P<l4_proto>[^\|]+)\|(?P<vrf_vlan>[^\|]+)\|(?P<timeout_sec>\d+)\s+HW\|(?P<app_name>[^\|]+)\|(?P<tuple_type>[^\|]+)\|(?P<flow_type>[^\|]+)\|(?P<swapped>[^\|]+)\|(?P<clients>[^\|]+)\|(?P<allow_bp>[^\|]+)\|(?P<final>[^\|]+)\|(?P<pkts>[^\|]+)\|(?P<bypass_pkt>[^\|]+)\|$')
+        p1 = re.compile(r'^(?P<ix>\d+)\s+\|(?P<ip1>[^\|]+)\|(?P<ip2>[^\|]+)\|(?P<port1>[^\|]+)\|(?P<port2>[^\|]+)\|(?P<l3_proto>[^\|]+)\|(?P<l4_proto>[^\|]+)\|(?P<vrf_vlan>[^\|]+)\|(?P<timeout_sec>\d+)\s+(?:HW|SW)\|(?P<app_name>[^\|]+)\|(?P<tuple_type>[^\|]+)\|(?P<flow_type>[^\|]+)\|(?P<swapped>[^\|]+)\|(?P<clients>[^\|]+)\|(?P<allow_bp>[^\|]+)\|(?P<final>[^\|]+)\|(?P<pkts>[^\|]+)\|(?P<bypass_pkt>[^\|]+)\|$')
 
         # CurrFlows=5000, Watermark=5000
         p2 = re.compile(r'^CurrFlows=(?P<curr_flows>\d+),\s+Watermark=(?P<watermark>\d+)$')
@@ -21187,6 +21217,255 @@ class ShowPlatformSoftwareFedSwitchPuntAclStatistics(ShowPlatformSoftwareFedSwit
                 name_dict['acl_oid'] = group['acl_oid']
                 name_dict['counter_oid'] = group['counter_oid']
                 name_dict['packets_hits'] = int(group['packets_hits'])
+                continue
+
+        return ret_dict
+        
+# ===========================================================
+# Parser for show platform software fed active ip route summary
+# ===========================================================
+class ShowPlatformSoftwareFedIpRouteSummarySchema(MetaParser):
+    """Schema for show platform software fed active ip route summary"""
+
+    schema = {
+        "total_v4_fib_entries": int,
+        "total_succeeded_in_hardware": int,
+        "total_entries_in_retry_queue": int,
+        Optional("mask_len"): {
+            Any(): {  # mask length as string key e.g. "0", "4", "8"
+                "total_count": int,
+                "hw_installed_count": int,
+            }
+        },
+        Optional("mpls_info"): {
+            "number_prefixes_with_label_oce": int,
+            "number_mpls_lspa_prefixes_in_hardware": int,
+            "number_mpls_swenh_ecr_prefixes_in_hardware": int,
+        },
+        Optional("number_of_ecr_entries"): {
+            "ipv4": int,
+            "ipv6": int,
+        },
+        Optional("ecr_msgs"): {
+            "create": int,
+            "modify": int,
+            "delete": int,
+        },
+        Optional("ecr_nested_backwalks_ignore"): int,
+        Optional("ecr_oor_retry_queue_size"): int,
+        Optional("aal_l3_ecr_summary"): {
+            Optional("ecr_add"): int,
+            Optional("ecr_modify"): int,
+            Optional("ecr_delete"): int,
+            Optional("modify_from_level1_to_level2"): int,
+            Optional("modify_from_level2_to_level1"): int,
+            Optional("ecr_delete_errs"): int,
+            Optional("ecr_create_skip_refcnt"): int,
+            Optional("ecr_modify_inuse"): int,
+            Optional("ecr_modify_nochange"): int,
+            Optional("ecr_modify_inplace"): int,
+            Optional("ecr_oor_retry_queue_size"): int,
+        },
+    }
+
+class ShowPlatformSoftwareFedIpRouteSummary(ShowPlatformSoftwareFedIpRouteSummarySchema):
+    """Parser for show platform software fed active ip route summary"""
+
+    cli_command = "show platform software fed {switch_var} {state} ip route summary"
+
+    def cli(self, state="", switch_var="", output=None):
+        if output is None:
+            cmd = self.cli_command.format(switch_var=switch_var, state=state)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        in_aal_section = False
+
+        # Total number of v4 fib entries = 20018
+        p1 = re.compile(r'^Total\s+number\s+of\s+v4\s+fib\s+entries\s*=\s*(?P<val>\d+)$')
+
+        # Total number succeeded in hardware = 8189
+        p2 = re.compile(r'^Total\s+number\s+succeeded\s+in\s+hardware\s*=\s*(?P<val>\d+)$')
+
+        # Total entries in retry queue = 11829
+        p3 = re.compile(r'^Total\s+entries\s+in\s+retry\s+queue\s*=\s*(?P<val>\d+)$')
+
+        # Mask-Len 0 :-  Total-count 1  hw-installed count 1
+        p4 = re.compile(
+            r'^Mask-Len\s+(?P<mask>\d+)\s*:-\s*Total-count\s+(?P<total>\d+)\s+'
+            r'hw-installed\s+count\s+(?P<hw>\d+)$'
+        )
+
+        # Number prefixes with label OCE: 0
+        p5 = re.compile(r'^Number\s+prefixes\s+with\s+label\s+OCE:\s*(?P<val>\d+)$')
+
+        # Number MPLS LSPA prefixes in hardware: 0
+        p6 = re.compile(r'^Number\s+MPLS\s+LSPA\s+prefixes\s+in\s+hardware:\s*(?P<val>\d+)$')
+
+        # Number MPLS Swenh ECR prefixes in hardware: 0
+        p7 = re.compile(r'^Number\s+MPLS\s+Swenh\s+ECR\s+prefixes\s+in\s+hardware:\s*(?P<val>\d+)$')
+
+        # Number of ECR entries: ipv4/ipv6: 0/0
+        p8 = re.compile(r'^Number\s+of\s+ECR\s+entries:\s*ipv4/ipv6:\s*(?P<v4>\d+)/(?P<v6>\d+)$')
+
+        # # of create/modify/delete msgs: 46/0/46
+        p9 = re.compile(r'^#\s+of\s+create/modify/delete\s+msgs:\s*(?P<c>\d+)/(?P<m>\d+)/(?P<d>\d+)$')
+
+        # # of ECR nested backwalks ignore:0
+        p10 = re.compile(r'^#\s+of\s+ECR\s+nested\s+backwalks\s+ignore:\s*(?P<val>\d+)$')
+
+        # ECR OOR Retry queue size:0
+        p11 = re.compile(r'^ECR\s+OOR\s+Retry\s+queue\s+size:\s*(?P<val>\d+)$')
+
+        # # of ecr add/modify/delete ::20/5/20
+        p12 = re.compile(r'^#\s+of\s+ecr\s+add/modify/delete\s*::?\s*(?P<a>\d+)/(?P<m>\d+)/(?P<d>\d+)$')
+
+        # # of modify from level-1 to level-2:0
+        p13 = re.compile(r'^#\s+of\s+modify\s+from\s+level-1\s+to\s+level-2:\s*(?P<val>\d+)$')
+
+        # # of modify from level-2 to level-1:0
+        p14 = re.compile(r'^#\s+of\s+modify\s+from\s+level-2\s+to\s+level-1:\s*(?P<val>\d+)$')
+
+        # # of ecr delete errs::0
+        p15 = re.compile(r'^#\s+of\s+ecr\s+delete\s+errs::\s*(?P<val>\d+)$')
+
+        # # of ecr create skip refcnt::0
+        p16 = re.compile(r'^#\s+of\s+ecr\s+create\s+skip\s+refcnt::\s*(?P<val>\d+)$')
+
+        # # of ecr modify inuse: 0 nochange:0 inplace:5 ECR OOR Retry queue size:0
+        p17 = re.compile(
+            r'^#\s+of\s+ecr\s+modify\s+inuse:\s*(?P<inuse>\d+)\s+'
+            r'nochange:\s*(?P<nochange>\d+)\s+'
+            r'inplace:\s*(?P<inplace>\d+)\s+'
+            r'ECR\s+OOR\s+Retry\s+queue\s+size:\s*(?P<oor>\d+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # AAL L3 ECR summary:
+            if re.match(r'^AAL\s+L3\s+ECR\s+summary', line):
+                in_aal_section = True
+                continue
+
+            # MPLS info:
+            if re.match(r'^MPLS\s+info', line):
+                continue
+
+            m = p1.match(line)
+            if m:
+                ret_dict['total_v4_fib_entries'] = int(m.group('val'))
+                continue
+
+            m = p2.match(line)
+            if m:
+                ret_dict['total_succeeded_in_hardware'] = int(m.group('val'))
+                continue
+
+            m = p3.match(line)
+            if m:
+                ret_dict['total_entries_in_retry_queue'] = int(m.group('val'))
+                continue
+
+            m = p4.match(line)
+            if m:
+                mask_dict = ret_dict.setdefault('mask_len', {})
+                mask_dict[m.group('mask')] = {
+                    'total_count': int(m.group('total')),
+                    'hw_installed_count': int(m.group('hw')),
+                }
+                continue
+
+            m = p5.match(line)
+            if m:
+                mpls = ret_dict.setdefault('mpls_info', {})
+                mpls['number_prefixes_with_label_oce'] = int(m.group('val'))
+                continue
+
+            m = p6.match(line)
+            if m:
+                mpls = ret_dict.setdefault('mpls_info', {})
+                mpls['number_mpls_lspa_prefixes_in_hardware'] = int(m.group('val'))
+                continue
+
+            m = p7.match(line)
+            if m:
+                mpls = ret_dict.setdefault('mpls_info', {})
+                mpls['number_mpls_swenh_ecr_prefixes_in_hardware'] = int(m.group('val'))
+                continue
+
+            m = p8.match(line)
+            if m:
+                ret_dict['number_of_ecr_entries'] = {
+                    'ipv4': int(m.group('v4')),
+                    'ipv6': int(m.group('v6')),
+                }
+                continue
+
+            m = p9.match(line)
+            if m:
+                ret_dict['ecr_msgs'] = {
+                    'create': int(m.group('c')),
+                    'modify': int(m.group('m')),
+                    'delete': int(m.group('d')),
+                }
+                continue
+
+            m = p10.match(line)
+            if m:
+                ret_dict['ecr_nested_backwalks_ignore'] = int(m.group('val'))
+                continue
+
+            m = p11.match(line)
+            if m:
+                if not in_aal_section:
+                    ret_dict['ecr_oor_retry_queue_size'] = int(m.group('val'))
+                else:
+                    aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                    aal['ecr_oor_retry_queue_size'] = int(m.group('val'))
+                continue
+
+            m = p12.match(line)
+            if m:
+                aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                aal['ecr_add'] = int(m.group('a'))
+                aal['ecr_modify'] = int(m.group('m'))
+                aal['ecr_delete'] = int(m.group('d'))
+                continue
+
+            m = p13.match(line)
+            if m:
+                aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                aal['modify_from_level1_to_level2'] = int(m.group('val'))
+                continue
+
+            m = p14.match(line)
+            if m:
+                aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                aal['modify_from_level2_to_level1'] = int(m.group('val'))
+                continue
+
+            m = p15.match(line)
+            if m:
+                aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                aal['ecr_delete_errs'] = int(m.group('val'))
+                continue
+
+            m = p16.match(line)
+            if m:
+                aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                aal['ecr_create_skip_refcnt'] = int(m.group('val'))
+                continue
+
+            m = p17.match(line)
+            if m:
+                aal = ret_dict.setdefault('aal_l3_ecr_summary', {})
+                aal['ecr_modify_inuse'] = int(m.group('inuse'))
+                aal['ecr_modify_nochange'] = int(m.group('nochange'))
+                aal['ecr_modify_inplace'] = int(m.group('inplace'))
+                aal['ecr_oor_retry_queue_size'] = int(m.group('oor'))
                 continue
 
         return ret_dict

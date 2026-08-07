@@ -1,0 +1,7 @@
+{
+    "switch": "switch",
+    "mode": "active",
+    "vrf_name": "green",
+    "ip_add": "10.10.1.0/24",
+    "detail": "detail"
+}

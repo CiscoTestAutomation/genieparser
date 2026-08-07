@@ -1,0 +1,8 @@
+Topology: test
+  Address-family: ipv4 multicast
+  Associated VPN VRF is default
+  Topology state is DOWN
+  Topology CEF forwarding is disabled
+  Topology internal lock count = 1
+  Associated interfaces:
+  Topology total user lock count: 0

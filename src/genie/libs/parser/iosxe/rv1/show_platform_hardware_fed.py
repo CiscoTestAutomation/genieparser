@@ -696,8 +696,14 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHa
         # | 20015    | 309 |          | IP   : fe80::200:ff:fe11:1111                  | Mac  : 00:00:00:11:11:11 | 100  |          |       |       |      |             | 0         | 3770        |
         p2 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+\|\s+IP\s*:\s*(?P<ipv6_sip>[a-fA-F0-9\:]+)\s+\|\s+Mac\s*:\s*(?P<source_mac>[\w:]+)\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
 
+        # | 20015    | 52  |          | IP   : 2001:db8:100:1::                       |                          | 200  |          |       |       |      |             | 0         | 2592        |
+        p2_no_mac = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+\|\s+IP\s*:\s*(?P<ipv6_sip>[a-fA-F0-9\:]+)\s+\|\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
+
         # |          |     |          | Mask : ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
         p3 = re.compile(r'^\|\s+\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv6_sip_mask>[a-fA-F0-9\:]+)\s+\|\s+Mask\s*:\s*(?P<source_mac_mask>[\w:]+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
+
+        # |          |     |          | Mask : ffff:ffff:ffff:ffff::                   |                          |      |          |       |       |      |             |           |             |
+        p3_no_mac = re.compile(r'^\|\s+\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv6_sip_mask>[a-fA-F0-9\:]+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
 
         # | 7        |     |          |                                                |                          |      |          |       |       |      | 134         | 0         | 1493        |
         p4 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<icmp_v6_type>\d+)\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
@@ -708,8 +714,14 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHa
         # | 15       | 565 | IP   : 100.200.0.4     |                                                | Mac  : 00:00:00:22:22:22 | 200  |          |       |       |      |             | 15        | 3161        |
         p6 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+(?P<ssp>\d+)\s+\|\s+IP\s*:\s*(?P<ipv4_sip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+Mac\s*:\s*(?P<source_mac>[\w:]+)\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
 
+        # | 20016    |     | IP   : 0.0.0.0         |                              |                    | 0    |          |       |       | true |             | 0         |             |
+        p6_no_mac = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+IP\s*:\s*(?P<ipv4_sip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+\|\s+(?P<vlan>\d+)\s+\|\s+\|\s+\|\s+\|\s+(?P<drop>\S+)\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+\|$')
+
         # |          |     | Mask : 255.255.255.255 |                                                | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
         p7 = re.compile(r'^\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv4_sip_mask>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+Mask\s*:\s*(?P<source_mac_mask>[\w:]+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
+
+        # |          |     | Mask : 255.255.255.255 |                              |                    |      |          |       |       |      |             |           |             |
+        p7_no_mac = re.compile(r'^\|\s+\|\s+\|\s+Mask\s*:\s*(?P<ipv4_sip_mask>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|\s+\|$')
 
         # | 0        |     |          |            |      | 17       | 67    | 68    |      | 0         | 1374        |
         p8 = re.compile(r'^\|\s+(?P<priority>\d+)\s+\|\s+\|\s+\|\s+\|\s+\|\s+(?P<protocol>\d+)\s+\|\s+(?P<dport>\d+)\s+\|\s+(?P<sport>\d+)\s+\|\s+\|\s+(?P<hit_count>\d+)\s+\|\s+(?P<counter_oid>\d+)\s+\|$')
@@ -753,12 +765,34 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHa
                 result_dict['counter_oid'] = int(group['counter_oid'])
                 continue
 
+            # | 20015    | 52  |          | IP   : 2001:db8:100:1::                       |                          | 200  |          |       |       |      |             | 0         | 2592        |
+            m = p2_no_mac.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = (ret_dict.setdefault("acl_entries", {})
+                               .setdefault("priority", {})
+                               .setdefault(current_priority, {}))
+                result_dict['ssp'] = int(group['ssp'])
+                result_dict['ipv6_sip'] = group['ipv6_sip']
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['hit_count'] = int(group['hit_count'])
+                result_dict['counter_oid'] = int(group['counter_oid'])
+                continue
+
             # |          |     |          | Mask : ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff | Mask : ff:ff:ff:ff:ff:ff |      |          |       |       |      |             |           |             |
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 result_dict['ipv6_sip_mask'] = group['ipv6_sip_mask']
                 result_dict['source_mac_mask'] = group['source_mac_mask']
+                continue
+
+            # |          |     |          | Mask : ffff:ffff:ffff:ffff::                   |                          |      |          |       |       |      |             |           |             |
+            m = p3_no_mac.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict['ipv6_sip_mask'] = group['ipv6_sip_mask']
                 continue
 
             # | 7        |     |          |                                                |                          |      |          |       |       |      | 134         | 0         | 1493        |
@@ -804,6 +838,27 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpSourceGuardAcl(ShowPlatformHa
                 group = m.groupdict()
                 result_dict['ipv4_sip_mask'] = group['ipv4_sip_mask']   
                 result_dict['source_mac_mask'] = group['source_mac_mask']
+                continue
+
+            # | 20016    |     | IP   : 0.0.0.0         |                              |                    | 0    |          |       |       | true |             | 0         |             |
+            m = p6_no_mac.match(line)
+            if m:
+                group = m.groupdict()
+                current_priority = int(group["priority"])
+                result_dict = (ret_dict.setdefault("acl_entries", {})
+                               .setdefault("priority", {})
+                               .setdefault(current_priority, {}))
+                result_dict['ipv4_sip'] = group['ipv4_sip']
+                result_dict['vlan'] = int(group['vlan'])
+                result_dict['drop'] = group['drop']
+                result_dict['hit_count'] = int(group['hit_count'])
+                continue
+
+            # |          |     | Mask : 255.255.255.255 |                              |                    |      |          |       |       |      |             |           |             |
+            m = p7_no_mac.match(line)
+            if m:
+                group = m.groupdict()
+                result_dict['ipv4_sip_mask'] = group['ipv4_sip_mask']
                 continue
 
             # | 0        |     |          |            |      | 17       | 67    | 68    |      | 0         | 1374        |

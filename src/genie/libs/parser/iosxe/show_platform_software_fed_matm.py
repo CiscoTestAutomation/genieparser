@@ -100,6 +100,16 @@ class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSch
             r"(?P<port>[\w\.\_\/\s\s]+) + (?P<con>[\s\w\s]+)$"
         )
 
+        # VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                                                         Con
+        # 100    0011.2233.4455       0x202    4341      0      0          0        0  GigabitEthernet1/0/12                                         No
+        p_short = re.compile(
+            r"(?P<vlanport>\d+) +(?P<mac>[\w\.]+) +"
+            r"(?P<type>\w+) +(?P<sequence>\d+) +"
+            r"(?P<ecbi>\d+) +(?P<flag>\d+) +"
+            r"(?P<atime>\d+) +(?P<etime>\d+) +"
+            r"(?P<port>[\w\.\_\/\s\s]+) + (?P<con>[\s\w\s]+)$"
+        )
+
         # Total Mac number of addresses:: 5
         p1 = re.compile(r"Total Mac number of addresses::\s+(?P<total_mac>\d+)")
 
@@ -121,6 +131,8 @@ class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSch
         for line in output.splitlines():
             line = line.strip()
             m = p.match(line)
+            if not m:
+                m = p_short.match(line)
             if m:
                 mac = m.groupdict()["mac"]
                 mac_dict = platform_dict.setdefault("mac", {}).setdefault(mac, {})
@@ -138,6 +150,7 @@ class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSch
                     {
                         k: v.replace(" ", "") if k in value else int(v)
                         for (k, v) in m.groupdict().items()
+                        if v is not None
                     }
                 )
 
@@ -771,10 +784,10 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMacTableVlanMacSchema(MetaParser):
                 "seq": int,
                 "ec_bi": int,
                 "flags": int,
-                "machandle": str,
-                "siHandle": str,
-                "riHandle": str,
-                "diHandle": str,
+                Optional("machandle"): str,
+                Optional("siHandle"): str,
+                Optional("riHandle"): str,
+                Optional("diHandle"): str,
                 "a_time": int,
                 "e_time": int,
                 "port": str,
@@ -828,6 +841,14 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMacTableVlanMac(
             r"^(?P<vlan>\d+)\s+(?P<mac>\S+)\s+(?P<type>\S+)\s+(?P<seq>\d+)\s+(?P<ec_bi>\d+)\s+(?P<flags>\d+)\s+(?P<machandle>\S+)\s+(?P<siHandle>\S+)\s+(?P<riHandle>\S+)\s+(?P<diHandle>\S+)\s+(?P<a_time>\d+)\s+(?P<e_time>\d+)\s+(?P<port>\S+)\s+(?P<con>\w+)$"
         )
 
+        # VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                 Con
+        # 100    0011.2233.4455       0x202    4341      0      0          0        0  GigabitEthernet1/0/12  No
+        p1_short = re.compile(
+            r"^(?P<vlan>\d+)\s+(?P<mac>\S+)\s+(?P<type>\S+)\s+"
+            r"(?P<seq>\d+)\s+(?P<ec_bi>\d+)\s+(?P<flags>\d+)\s+"
+            r"(?P<a_time>\d+)\s+(?P<e_time>\d+)\s+(?P<port>\S+)\s+(?P<con>\w+)$"
+        )
+
         # Asic: 0
         p2 = re.compile(r"^Asic\:\s+(?P<asic>\S+)$")
 
@@ -854,27 +875,27 @@ class ShowPlatformSoftwareFedSwitchActiveMatmMacTableVlanMac(
             # ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             # 1      2200.0000.0001        0x1  125648      0      0  0x7429b62dc7c8      0x742904fc2428      0x0                 0x7429b53219d8            300       90  TwoGigabitEthernet1/0/13                                      Yes
             m = p1.match(line)
+            if not m:
+                m = p1_short.match(line)
             if m:
                 group = m.groupdict()
                 vlan_id = group["vlan"]
                 vlan_dict = ret_dict.setdefault("vlan", {}).setdefault(vlan_id, {})
-                vlan_dict.update(
-                    {
-                        "mac": group["mac"],
-                        "type": group["type"],
-                        "seq": int(group["seq"]),
-                        "ec_bi": int(group["ec_bi"]),
-                        "flags": int(group["flags"]),
-                        "machandle": group["machandle"],
-                        "siHandle": group["siHandle"],
-                        "riHandle": group["riHandle"],
-                        "diHandle": group["diHandle"],
-                        "a_time": int(group["a_time"]),
-                        "e_time": int(group["e_time"]),
-                        "port": Common.convert_intf_name(group["port"]),
-                        "con": group["con"],
-                    }
-                )
+                entry = {
+                    "mac": group["mac"],
+                    "type": group["type"],
+                    "seq": int(group["seq"]),
+                    "ec_bi": int(group["ec_bi"]),
+                    "flags": int(group["flags"]),
+                    "a_time": int(group["a_time"]),
+                    "e_time": int(group["e_time"]),
+                    "port": Common.convert_intf_name(group["port"]),
+                    "con": group["con"],
+                }
+                for key in ("machandle", "siHandle", "riHandle", "diHandle"):
+                    if group.get(key) is not None:
+                        entry[key] = group[key]
+                vlan_dict.update(entry)
                 continue
 
             # Asic: 0

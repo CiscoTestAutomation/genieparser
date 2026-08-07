@@ -1,0 +1,652 @@
+
+<config xmlns="http://tail-f.com/ns/config/1.0">
+	<audit-cfg-data xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-audit-cfg">
+		<audit-cfg></audit-cfg>
+	</audit-cfg-data>
+	<cloud-services-cfg-data xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-cloud-services-cfg">
+		<cloudm-config></cloudm-config>
+	</cloud-services-cfg-data>
+	<native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
+		<system>
+			<mtu xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+				<size>9216</size>
+			</mtu>
+		</system>
+		<version>26.2</version>
+		<boot>
+			<system>
+				<bootfile>
+					<filename-list-ordered-by-user>
+						<filename>bootflash:cat9k_iosxe.BLD_V262_THROTTLE_LATEST_20260707_003334.SSA.bin</filename>
+					</filename-list-ordered-by-user>
+					<filename-list-ordered-by-user>
+						<filename>bootflash:cat9k_iosxe.BLD_V261_THROTTLE_LATEST_20260703_183732.SSA.bin</filename>
+					</filename-list-ordered-by-user>
+				</bootfile>
+			</system>
+			<enable-break-per-switch xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+				<enable-break>
+					<switch>1</switch>
+				</enable-break>
+			</enable-break-per-switch>
+		</boot>
+		<memory>
+			<free>
+				<low-watermark>
+					<processor>262330</processor>
+				</low-watermark>
+			</free>
+		</memory>
+		<hw-module>
+			<slot>
+				<name>1</name>
+				<logging>
+					<onboard>
+						<counter></counter>
+						<environment></environment>
+						<message></message>
+						<temperature></temperature>
+						<voltage></voltage>
+						<clilog></clilog>
+					</onboard>
+				</logging>
+			</slot>
+		</hw-module>
+		<service>
+			<internal></internal>
+			<timestamps>
+				<debug-config>
+					<datetime>
+						<msec></msec>
+					</datetime>
+				</debug-config>
+				<log-config>
+					<datetime>
+						<msec></msec>
+					</datetime>
+				</log-config>
+			</timestamps>
+		</service>
+		<hostname>REDACTED</hostname>
+		<username>
+			<name>REDACTED</name>
+			<password>
+				<encryption>REDACTED</encryption>
+				<password>REDACTED</password>
+			</password>
+		</username>
+		<vrf>
+			<definition>
+				<name>Mgmt-vrf</name>
+				<address-family>
+					<ipv4></ipv4>
+					<ipv6></ipv6>
+				</address-family>
+			</definition>
+		</vrf>
+		<ip>
+			<rcmd>
+				<domain-lookup>true</domain-lookup>
+			</rcmd>
+			<forward-protocol-v2>
+				<nd>true</nd>
+				<udp>
+					<tftp>true</tftp>
+				</udp>
+			</forward-protocol-v2>
+			<ftp>
+				<passive-enable>true</passive-enable>
+			</ftp>
+			<telnet>
+				<comport>
+					<disconnect>
+						<delay>0</delay>
+					</disconnect>
+					<flow>
+						<level>16</level>
+					</flow>
+					<receive>
+						<window>4128</window>
+					</receive>
+					<enable>true</enable>
+				</comport>
+			</telnet>
+			<route>
+				<vrf>
+					<name>Mgmt-vrf</name>
+					<ip-route-interface-forwarding-list>
+						<prefix>192.0.2.1</prefix>
+						<mask>192.0.2.1</mask>
+						<fwd-list>
+							<fwd>192.0.2.2</fwd>
+						</fwd-list>
+					</ip-route-interface-forwarding-list>
+				</vrf>
+			</route>
+			<routing-conf>
+				<routing>true</routing>
+			</routing-conf>
+			<ssh>
+				<bulk-mode>
+					<window-size>131072</window-size>
+				</bulk-mode>
+				<stricthostkeycheck>
+					<accept-new></accept-new>
+				</stricthostkeycheck>
+			</ssh>
+			<tcp>
+				<RST-config>
+					<RST-count>10</RST-count>
+					<RST-window>5000</RST-window>
+				</RST-config>
+			</tcp>
+			<tftp>
+				<blocksize>8192</blocksize>
+			</tftp>
+			<http xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-http">
+				<server>true</server>
+				<secure-server>true</secure-server>
+			</http>
+		</ip>
+		<vlan>
+			<vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
+				<id>10</id>
+			</vlan-list>
+			<vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
+				<id>50</id>
+			</vlan-list>
+			<vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
+				<id>60</id>
+			</vlan-list>
+			<vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
+				<id>101</id>
+			</vlan-list>
+			<vlan-list xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vlan">
+				<id>600</id>
+			</vlan-list>
+		</vlan>
+		<policy>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>non-client-nrt-class</name>
+				<prematch>match-any</prematch>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-default</name>
+				<prematch>match-any</prematch>
+				<description>EWLC Data, Inter FED Traffic</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-data</name>
+				<prematch>match-any</prematch>
+				<description>ICMP redirect, ICMP_GEN and BROADCAST</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-dhcp-snooping</name>
+				<prematch>match-any</prematch>
+				<description>DHCP snooping</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-dot1x-auth</name>
+				<prematch>match-any</prematch>
+				<description>DOT1X Auth</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-ewlc-control</name>
+				<prematch>match-any</prematch>
+				<description>EWLC Control</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-forus</name>
+				<prematch>match-any</prematch>
+				<description>Forus traffic</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-forus-addr-resolution</name>
+				<prematch>match-any</prematch>
+				<description>Forus Address resolution</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-high-rate-app</name>
+				<prematch>match-any</prematch>
+				<description>High Rate Applications</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-ios-feature</name>
+				<prematch>match-any</prematch>
+				<description>REDACTED</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-ios-routing</name>
+				<prematch>match-any</prematch>
+				<description>L2 control, Topology control, Routing control, Low Latency</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-l2-control</name>
+				<prematch>match-any</prematch>
+				<description>L2 control</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-l2lvx-control</name>
+				<prematch>match-any</prematch>
+				<description>L2 LVX control packets</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-meraki-next-tunnel</name>
+				<prematch>match-any</prematch>
+				<description>Meraki Next tunnel</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-multicast</name>
+				<prematch>match-any</prematch>
+				<description>MCAST Data</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-multicast-end-station</name>
+				<prematch>match-any</prematch>
+				<description>MCAST END STATION</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-protocol-snooping</name>
+				<prematch>match-any</prematch>
+				<description>Protocol snooping</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-punt-webauth</name>
+				<prematch>match-any</prematch>
+				<description>Punt Webauth</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-routing-control</name>
+				<prematch>match-any</prematch>
+				<description>Routing control and Low Latency</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-stackwise-virt-control</name>
+				<prematch>match-any</prematch>
+				<description>Stackwise Virtual OOB</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-sw-forward</name>
+				<prematch>match-any</prematch>
+				<description>Sw forwarding, L2 LVX data packets, LOGGING, Transit Traffic</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-sys-data</name>
+				<prematch>match-any</prematch>
+				<description>Openflow, Exception, EGR Exception, NFL Sampled Data, RPF Failed</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-system-critical</name>
+				<prematch>match-any</prematch>
+				<description>System Critical and Gold Pkt</description>
+			</class-map>
+			<class-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-police-topology-control</name>
+				<prematch>match-any</prematch>
+				<description>Topology control</description>
+			</class-map>
+			<policy-map xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<name>system-cpp-policy</name>
+				<class>
+					<name>system-cpp-police-meraki-next-tunnel</name>
+					<action-list>
+						<action-type>police</action-type>
+						<police-rate-unit>
+							<police>
+								<rate>
+									<units>750</units>
+									<xps>pps</xps>
+								</rate>
+							</police>
+						</police-rate-unit>
+					</action-list>
+				</class>
+			</policy-map>
+		</policy>
+		<interface>
+			<GigabitEthernet>
+				<name>0/0</name>
+				<vrf>
+					<forwarding>Mgmt-vrf</forwarding>
+				</vrf>
+				<ip>
+					<address>
+						<primary>
+							<address>192.0.2.3</address>
+							<mask>192.0.2.4</mask>
+						</primary>
+					</address>
+					<proxy-arp>true</proxy-arp>
+				</ip>
+				<port-settings xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
+					<auto-negotiation>enable</auto-negotiation>
+				</port-settings>
+				<negotiation xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
+					<auto>false</auto>
+				</negotiation>
+			</GigabitEthernet>
+			<HundredGigE>
+				<name>1/0/1</name>
+				<switchport-config>
+					<switchport>
+						<access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<vlan>
+								<vlan>600</vlan>
+							</vlan>
+						</access>
+						<mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<access></access>
+						</mode>
+					</switchport>
+				</switchport-config>
+				<keepalive-config>
+					<keepalive>false</keepalive>
+				</keepalive-config>
+				<cdp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-cdp">
+					<enable>false</enable>
+				</cdp>
+				<lldp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-lldp">
+					<receive>false</receive>
+					<transmit>false</transmit>
+				</lldp>
+				<spanning-tree xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-spanning-tree">
+					<bpdufilter>enable</bpdufilter>
+				</spanning-tree>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/10</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/11</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/12</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/13</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/14</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/15</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/16</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/17</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/18</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/19</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/2</name>
+				<switchport-config>
+					<switchport>
+						<access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<vlan>
+								<vlan>600</vlan>
+							</vlan>
+						</access>
+						<mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<access></access>
+						</mode>
+					</switchport>
+				</switchport-config>
+				<keepalive-config>
+					<keepalive>false</keepalive>
+				</keepalive-config>
+				<cdp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-cdp">
+					<enable>false</enable>
+				</cdp>
+				<lldp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-lldp">
+					<receive>false</receive>
+					<transmit>false</transmit>
+				</lldp>
+				<spanning-tree xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-spanning-tree">
+					<bpdufilter>enable</bpdufilter>
+				</spanning-tree>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/20</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/21</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/22</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/23</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/24</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/25</name>
+				<switchport-config>
+					<switchport>
+						<access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<vlan>
+								<vlan>101</vlan>
+							</vlan>
+						</access>
+						<mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<access></access>
+						</mode>
+					</switchport>
+				</switchport-config>
+				<shutdown></shutdown>
+				<keepalive-config>
+					<keepalive>false</keepalive>
+				</keepalive-config>
+				<cdp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-cdp">
+					<enable>false</enable>
+				</cdp>
+				<lldp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-lldp">
+					<receive>false</receive>
+					<transmit>false</transmit>
+				</lldp>
+				<spanning-tree xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-spanning-tree">
+					<bpdufilter>enable</bpdufilter>
+				</spanning-tree>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/26</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/27</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/28</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/29</name>
+				<switchport-config>
+					<switchport>
+						<access xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<vlan>
+								<vlan>101</vlan>
+							</vlan>
+						</access>
+						<mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-switch">
+							<access></access>
+						</mode>
+					</switchport>
+				</switchport-config>
+				<shutdown></shutdown>
+				<keepalive-config>
+					<keepalive>false</keepalive>
+				</keepalive-config>
+				<cdp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-cdp">
+					<enable>false</enable>
+				</cdp>
+				<lldp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-lldp">
+					<receive>false</receive>
+					<transmit>false</transmit>
+				</lldp>
+				<spanning-tree xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-spanning-tree">
+					<bpdufilter>enable</bpdufilter>
+				</spanning-tree>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/3</name>
+				<port-settings xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
+					<speed>
+						<speed-value>100000</speed-value>
+					</speed>
+				</port-settings>
+				<speed xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ethernet">
+					<value-100000></value-100000>
+				</speed>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/30</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/31</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/32</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/4</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/5</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/6</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/7</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/8</name>
+			</HundredGigE>
+			<HundredGigE>
+				<name>1/0/9</name>
+			</HundredGigE>
+			<Vlan>
+				<name>1</name>
+				<ip>
+					<proxy-arp>true</proxy-arp>
+				</ip>
+			</Vlan>
+		</interface>
+		<control-plane>
+			<service-policy xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-policy">
+				<input>system-cpp-policy</input>
+			</service-policy>
+		</control-plane>
+		<logging>
+			<console-config>
+				<console>false</console>
+			</console-config>
+		</logging>
+		<login>
+			<on-success>
+				<log></log>
+			</on-success>
+		</login>
+		<redundancy></redundancy>
+		<spanning-tree>
+			<extend xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-spanning-tree">
+				<system-id></system-id>
+			</extend>
+			<mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-spanning-tree">rapid-pvst</mode>
+		</spanning-tree>
+		<vtp>
+			<mode xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-vtp">
+				<server></server>
+			</mode>
+		</vtp>
+		<crypto>
+			<engine xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-crypto">
+				<compliance>
+					<shield>
+						<disable></disable>
+					</shield>
+				</compliance>
+			</engine>
+		</crypto>
+		<license>
+			<boot>
+				<level>
+					<network-advantage>
+						<addon>REDACTED</addon>
+					</network-advantage>
+				</level>
+			</boot>
+		</license>
+		<transceivers>
+			<type>
+				<all>
+					<monitoring-enable>
+						<monitoring></monitoring>
+					</monitoring-enable>
+				</all>
+			</type>
+		</transceivers>
+		<line>
+			<aux>
+				<first>0</first>
+			</aux>
+			<console>
+				<first>0</first>
+				<exec-timeout>
+					<minutes>0</minutes>
+					<seconds>0</seconds>
+				</exec-timeout>
+				<speed>115200</speed>
+				<stopbits>1</stopbits>
+			</console>
+			<vty>
+				<first>0</first>
+				<last>4</last>
+				<exec-timeout>
+					<minutes>0</minutes>
+					<seconds>0</seconds>
+				</exec-timeout>
+				<transport>
+					<input>
+						<input>ssh</input>
+					</input>
+				</transport>
+			</vty>
+			<vty>
+				<first>5</first>
+				<last>15</last>
+				<transport>
+					<input>
+						<input>ssh</input>
+					</input>
+				</transport>
+			</vty>
+		</line>
+		<ntp>
+			<allow xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-ntp">
+				<mode>
+					<control>
+						<delay>3</delay>
+					</control>
+				</mode>
+			</allow>
+		</ntp>
+		<diagnostic xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-diagnostics">
+			<bootup>
+				<level>minimal</level>
+			</bootup>
+		</diagnostic>
+		<lldp xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-lldp">
+			<run></run>
+		</lldp>
+	</native>
+	<yang-interfaces-cfg-data xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-yang-interfaces-cfg">
+		<ssh-server></ssh-server>
+	</yang-interfaces-cfg-data>
+</config>

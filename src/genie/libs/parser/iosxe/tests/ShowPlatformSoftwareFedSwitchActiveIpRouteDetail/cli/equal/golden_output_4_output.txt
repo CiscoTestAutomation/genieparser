@@ -1,0 +1,20 @@
+IPV4ROUTE_ID:id:0x574a415e21e8 nobj:(LOOKUP,0x3a) 10.10.1.0/24 tblid:0 DA:0
+    State:(0) success, Flags:0x800
+   NPD: device:0 lspa_rec:0 api_type:route(3)
+   State:(0) success Flags:0x0
+   SDK: is_host:0 l3_dest:0x787c93851a40 l3_dest:la_next_hop_base(oid=3989) vrf(gid/oid):0/0x3b2
+
+ SDK Object Details:
+   NPD: SDK oid 0xf95, devid:1, asic:0
+
+   	Next Hop Object:
+   	sdk nexthop oid:0xf95,dev:1, gid:0xb
+   	macaddr:4e41.5000.0114, nh_type:normal(0)
+   	sdk outgoing port oid 0xdad, porttype:l3ac(70)
+
+   Events Log
+   [2026/07/20 10:36:50.409] NPI IPROUTE CREATE
+   [2026/07/20 10:36:50.411] NPD IPROUTE EV ADD IPV4 ROUTE
+
+LOOKUP:obj_id:58 table_id:4 proto:0
+State:(0) success

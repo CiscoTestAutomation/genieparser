@@ -1,0 +1,13 @@
+show subscriber session feature access-list
+--------------------------------------------------
+Type: DHCPv4, UID: 138, State: authen, Identity: aaaa.bbbb.1111
+IPv4 Address: 11.11.11.4
+Session Up-time: 00:00:12, Last Changed: 00:00:12
+Switch-ID: 5730
+
+Features:
+
+Per-User ACL:
+Class-id   Dir  Protocol  ACL Name                            Source
+0          In   IP        subscriber_feature#285212685949     Peruser
+1          Out  IP        subscriber_feature#285212685950     Peruser

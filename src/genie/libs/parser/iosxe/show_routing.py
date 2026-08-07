@@ -1814,6 +1814,18 @@ class ShowIpCefSchema(MetaParser):
                                 Optional('per_destination_sharing'): bool,
                                 Optional('sr_local_label_info'): str,
                                 Optional('flags'): list,
+                                Optional('lisp'): {
+                                    Optional('remote_eid'): {
+                                        Optional('packet_count'): int,
+	                                Optional('byte_count'): int,
+                                        Optional('fwd_action'): str
+                                    },
+                                    Optional('src_paths'): {
+                                        Any(): {
+                                            Optional('outgoing_interface'): str
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -1878,6 +1890,7 @@ class ShowIpCef(ShowIpCefSchema):
         #     nexthop 10.2.3.3 FastEthernet1/0/0 label 17 24
         #     nexthop 10.1.2.2 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
         #     nexthop 10.169.196.213 GigabitEthernet0/3/6 label 16051-(local:16051) 453955
+        #     nexthop 100.88.88.88 LISP0.4100
         p2 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+)'
                         r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
                         r'(-\(local:(?P<local_label>\w+)\))?)?( +(?P<sid>\d+))?(-\(local:(?P<local_sid>\d+)\))?$')
@@ -1909,8 +1922,27 @@ class ShowIpCef(ShowIpCefSchema):
         # 0.0.0.0/0, epoch 3, flags [default route handler, default route]
         p7 = re.compile(r'(?P<prefix>\S+)\,\s*epoch\s*(?P<epoch>\d+)\,\s*flags\s*\[(?P<flags>[\w\s\,]+)\]')
 
+        # LISP remote EID: 1 packets 100 bytes fwd action signal-fwd, cfg as EID space
+        p8 = re.compile(r'^LISP +remote +EID: +(?P<packet_count>\d+) +packets +(?P<byte_count>\d+) +bytes +fwd +action +(?P<fwd_action>[\w\-]+).*$')
+
+        # LISP source path list
+        p9 = re.compile(r'^LISP +source +path +list$')
+
+        lisp_source_path_list = False
+
         for line in out.splitlines():
             line = line.strip()
+
+            if lisp_source_path_list:
+                m = p2.match(line)
+                if m:
+                    group = m.groupdict()
+                    source_path_dict = prefix_dict.setdefault('lisp', {}).\
+                                                  setdefault('src_paths', {}).\
+                                                  setdefault(group['nexthop'], {})
+                    source_path_dict['outgoing_interface'] = group['interface']
+                    continue
+                lisp_source_path_list = False
 
             # 10.169.197.104/30
             # 2001:DB8:1:3::/64
@@ -2061,6 +2093,21 @@ class ShowIpCef(ShowIpCefSchema):
 
                 continue
 
+	    # LISP remote EID: 1 packets 100 bytes fwd action signal-fwd, cfg as EID space
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                lisp_dict = prefix_dict.setdefault('lisp', {}).setdefault('remote_eid', {})
+                lisp_dict['packet_count'] = int(group['packet_count'])
+                lisp_dict['byte_count'] = int(group['byte_count'])
+                lisp_dict['fwd_action'] = group['fwd_action']
+                continue
+
+                # LISP source path list
+            m = p9.match(line)
+            if m:
+                lisp_source_path_list = True
+                continue
         return result_dict
 
 
@@ -2105,16 +2152,22 @@ class ShowIpCefDetail(ShowIpCef):
         * 'show ip cef <prefix> detail'
     '''
 
-    cli_command = 'show ip cef {prefix} detail'
+    cli_command = ['show ip cef {prefix} detail',
+                   'show ip cef vrf {vrf} {prefix} detail']
 
-    def cli(self, prefix, output=None):
+    def cli(self, prefix, output=None, vrf=""):
 
         if output is None:
-            output = self.device.execute(self.cli_command.format(prefix=prefix))
+            if vrf:
+                output = self.device.execute(
+                    self.cli_command[1].format(vrf=vrf, prefix=prefix))
+            else:
+                output = self.device.execute(
+                    self.cli_command[0].format(prefix=prefix))
         else:
             output = output
 
-        return super().cli(prefix=prefix, output=output)
+        return super().cli(prefix=prefix, output=output, vrf=vrf)
 
 
 # ====================================================
@@ -2511,6 +2564,10 @@ class ShowIpCefInternalSchema(MetaParser):
                                     }
                                 },
                                 'output_chain': {
+                                    Optional('lookup'): {
+                                        'address_family': str,
+                                        'table': str,
+                                    },
                                     Optional('label'): list,
                                     Optional('tag_midchain'): {
                                         Any(): { # tag_midchain_dict
@@ -2664,6 +2721,12 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                           r'( +label +(?P<outgoing_label>[\w\-\ ]+)(\((?P<outgoing_label_info>\w+)\))?'
                           r'(-\(local:(?P<local_label>\w+)\))?)?,.*$')
 
+        # nexthop 172.16.254.1 Vlan200, IP adj out of Vlan200, addr 172.16.254.1 763A04330C68
+        # nexthop 172.16.254.1 Vlan200, IPV6 adj out of Vlan200, addr 172.16.254.1 763A0B04D0B0
+        p7_2 = re.compile(r'^nexthop +(?P<nexthop>\S+) +(?P<interface>\S+), '
+                          r'+(?P<ip_adj>IP(?:V6)? adj) +out +of +(?P<interface2>\S+), '
+                          r'+addr +(?P<addr>\S+) +(?P<addr_info>\S+)$')
+
         # FRR Primary (0x80007F0FF094DD88)
         p8_0 = re.compile(r'^FRR +Primary +\((?P<info>\S+)\)$')
 
@@ -2730,6 +2793,10 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
 
         #  SC owned,sourced: LISP generalised SMR - [disabled, not inheriting, 0x7F0119709CF0 locks: 1]
         p19 = re.compile(r'^.+LISP generalised SMR - \[(?P<smr_enabled>enabled|disabled)\, .+]')
+
+        # Lookup in table IPv4:green
+        # Lookup in table IPv6:green
+        p20 = re.compile(r'^Lookup +in +table +(?P<address_family>IPv4|IPv6):(?P<table>\S+)$')
 
         label_list = []
         label_list2 = []
@@ -2892,6 +2959,16 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                 smr['smr_enabled'] = group['smr_enabled'] == 'enabled'
                 continue
 
+            # Lookup in table IPv4:green
+            # Lookup in table IPv6:green
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                output_chain_dict.setdefault('lookup', {})
+                output_chain_dict['lookup']['address_family'] = group['address_family']
+                output_chain_dict['lookup']['table'] = group['table']
+                continue
+
             # path list 7F0FEC884768, 19 locks, per-destination, flags 0x4D [shble, hvsh, rif, hwcn]
             m5 = p5.match(line)
             if m5:
@@ -2923,9 +3000,13 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
             m7 = p7.match(line)
             # nexthop 10.169.14.241 MPLS-SR-Tunnel1 label 16073-(local:16073), repair, IP midchain out of MPLS-SR-Tunnel1 7F0FF0AFAE98
             m7_1 = p7_1.match(line)
-            if m7 or m7_1:
+            # nexthop 172.16.254.1 Vlan200, IP adj out of Vlan200, addr 172.16.254.1 763A04330C68
+            m7_2 = p7_2.match(line)
+            if m7 or m7_1 or m7_2:
                 if m7:
                     group = m7.groupdict()
+                elif m7_2:
+                    group = m7_2.groupdict()
                 elif m7_1:
                     group = m7_1.groupdict()
                 nexthop_dict = path_dict.setdefault('nexthop', {}). \
@@ -2933,7 +3014,7 @@ class ShowIpCefInternal(ShowIpCefInternalSchema):
                     setdefault('outgoing_interface', {}). \
                     setdefault(group['interface'], {})
 
-                if group['local_label']:
+                if group.get('local_label'):
                     nexthop_dict['local_label'] = int(group['local_label'])
 
                 if 'outgoing_label' in group and group['outgoing_label']:

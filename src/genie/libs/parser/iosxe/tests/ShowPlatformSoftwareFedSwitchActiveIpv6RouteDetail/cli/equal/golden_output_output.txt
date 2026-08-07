@@ -1,0 +1,35 @@
+IPV6ROUTE_ID:id:0x574a415e2438 nobj:(IPNEXTHOP_ID,0x99) 2001:10:10:1::/64 table_id:7
+DA:0 last_act:0 last_rc:0
+    State:(0) success, Flags:0x840
+   NPD: device:0 lspa_rec:0 api_type:route(3)
+   State:(0) success Flags:0x0
+   SDK: is_host:0 l3_dest:0x787bd9bf8420 l3_dest:la_vxlan_next_hop_base(oid=3994) vrf(gid/oid):7/0xdaa
+
+ SDK Object Details:
+   NPD: SDK oid 0xf9a, devid:1, asic:0
+   object type: vxlan_next_hop
+
+   Events Log
+   [2026/07/20 16:12:31.072] NPD IPROUTE EV LISP EVPN HANDLING
+   [2026/07/20 16:12:31.073] NPD IPROUTE EV ADD IPV6 ROUTE
+
+   ====== NPL Hardware Information for 2001:10:10:1:: vrf gid 7======
+   Destination type = DESTINATION_L2_DLP, Destination id = 7
+
+   Slice = 0 Destination IP = 172.16.254.1, Source IP = 172.16.254.2
+
+
+ADJ:objid:0x99 iif_id:0x519 encap_type:VXLAN vrf:0 link_type:IPv6
+State:(0) success
+   NPD: device:0 underlay_vrf:0 overlay_vrf:7 vxlan_tunnel_gid:7 vxlan_port_oid:3987 vxlan_nh_oid:3994
+       vni:10100 SIP:172.16.254.2 DIP:172.16.254.1
+   NPD: SDK oid 0xf9a, devid:1, asic:0
+   object type: vxlan_next_hop
+      ====== NPL Hardware Information for vrf gid 7 profile gid 1======
+   per-vrf VNI 10100
+   Events Log
+   [2026/07/20 16:12:31.070] NPI ADJ MIDCHAIN CREATE
+   [2026/07/20 16:12:31.070] NPD VXLAN CREATE RECEIVED
+   [2026/07/20 16:12:31.070] NPD ADJ_NORMAL
+   [2026/07/20 16:12:31.070] NPD VXLAN TUNNEL CREATED
+   [2026/07/20 16:12:31.070] NPD VXLAN NHOP CREATED

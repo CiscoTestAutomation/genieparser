@@ -1,0 +1,5 @@
+{
+    "vrf": "v1",
+    "address_family": "ipv6",
+    "multicast": "multicast"
+}

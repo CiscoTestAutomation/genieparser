@@ -1,0 +1,44 @@
+show platform software ipsec policy statistics
+
+                  PAL CMD    REQUEST   REPLY OK  REPLY ERR      ABORT
+          SADB_INIT_START         42         42          0          0
+      SADB_INIT_COMPLETED         42         42          0          0
+              SADB_DELETE         41         41          0          0
+         SADB_ATTR_UPDATE         43         43          0          0
+         SADB_INTF_ATTACH         42         42          0          0
+         SADB_INTF_UPDATE          0          0          0          0
+         SADB_INTF_DETACH         41         41          0          0
+               ACL_INSERT         42         42          0          0
+               ACL_MODIFY          0          0          0          0
+               ACL_DELETE         41         41          0          0
+              PEER_INSERT         32         32          0          0
+              PEER_DELETE         31         31          0          0
+               SPI_INSERT         71         71          0          0
+               SPI_DELETE         70         70          0          0
+             CFLOW_INSERT         32         32          0          0
+             CFLOW_MODIFY         52         52          0          0
+             CFLOW_DELETE         31         31          0          0
+          IPSEC_SA_DELETE        140        140          0          0
+              TBAR_CREATE          0          0          0          0
+              TBAR_UPDATE          0          0          0          0
+              TBAR_REMOVE          0          0          0          0
+                                   0          0          0          0
+
+               PAL NOTIFY    RECEIVE   COMPLETE   PROC ERR     IGNORE
+                NOTIFY_RP          0          0          0          0
+                  SA_DEAD          0          0          0          0
+             SA_SOFT_LIFE          0          0          0          0
+               IDLE_TIMER          0          0          0          0
+                DPD_TIMER          0          0          0          0
+
+IPSec PAL database summary:
+                       DB NAME    ENT ADD    ENT DEL      ABORT
+                      PAL_SADB         42         41          0
+                   PAL_SADB_ID         42         41          0
+                      PAL_INTF         42         41          0
+                     PAL_SA_ID        142        140          0
+                       PAL_ACL          0          0          0
+                      PAL_PEER         32         31          0
+                       PAL_SPI         71         70          0
+                     PAL_CFLOW         32         31          0
+                      PAL_TBAR          0          0          0

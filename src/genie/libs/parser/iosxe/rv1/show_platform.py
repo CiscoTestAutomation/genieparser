@@ -271,6 +271,7 @@ class ShowInventory(ShowInventorySchema):
         # Init vars
         ret_dict = {}
         name = descr = slot = subslot = pid = ""
+        slot_dict = None
         asr900_rp = False
 
         # NAME: "Switch 1", DESCR: "WS-C3850-24P-E"
@@ -311,7 +312,9 @@ class ShowInventory(ShowInventorySchema):
 
         # Slot 2 Linecard
         # Slot 3 Supervisor
-        p1_8 = re.compile(r"^Slot \d Linecard|Slot \d Supervisor|Slot \d Router$")
+        # Switch 1 Slot 1 Linecard
+        # Switch 2 Slot 4 Supervisor
+        p1_8 = re.compile(r"^(?:Switch +\d+ +)?Slot +\d+ +(?:Linecard|Supervisor|Router)$")
 
         # Supervisor
         p1_9 = re.compile(r"^Supervisor$")
@@ -520,7 +523,10 @@ class ShowInventory(ShowInventorySchema):
                 except Exception:
                     iface_name = None
 
-                if iface_name:
+                # slot_dict may still be unset if no slot-defining inventory
+                # name preceded this pluggable entry; skip rather than raise
+                # UnboundLocalError.
+                if iface_name and slot_dict is not None:
                     for interface in interface_names:
                         if interface in iface_name:
                             other_dict = (

@@ -1,3 +1,3 @@
 expected_output = {
-    'err_msg': "service meraki connect is disabled"
+    'err_msg': 'service cloud-mgmt connect is disabled'
 }

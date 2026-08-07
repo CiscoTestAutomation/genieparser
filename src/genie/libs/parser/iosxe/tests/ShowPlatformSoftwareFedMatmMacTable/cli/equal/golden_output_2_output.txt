@@ -1,0 +1,11 @@
+VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                                                         Con
+-----------------------------------------------------------------------------------------------------------------------------------------------
+100    0011.2233.4455       0x202    4341      0      0          0        0  GigabitEthernet1/0/12                                         No
+
+Total Mac number of addresses:: 1
+Summary:
+Total number of secure addresses:: 1
+Total number of drop addresses:: 0
+Total number of lisp local addresses:: 0
+Total number of lisp remote addresses:: 0
+*a_time=aging_time(secs)  *e_time=total_elapsed_time(secs)

@@ -9,8 +9,3 @@ Node              Type                     State                    Config state
 0/FT1             FAN-2RU-PI-V3            OPERATIONAL              NSHUT
 0/FT2             FAN-2RU-PI-V3            OPERATIONAL              NSHUT
 0/FT3             FAN-2RU-PI-V3            OPERATIONAL              NSHUT
-0/0/CPU0          UNKNOWN                  FPD UPGRADE              NSHUT
-0/1/CPU0          UNKNOWN                  IMAGE INSTALLING         NSHUT
-0/3/CPU0          UNKNOWN                  BOOTING                  NSHUT
-0/4/CPU0          88-LC1-48Y8H-EM          DATA PATH POWERED ON     NSHUT
-0/5/CPU0          88-LC1-52Y8H-EM          PLATFORM INITIALIZED     NSHUT

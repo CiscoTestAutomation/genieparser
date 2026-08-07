@@ -393,14 +393,14 @@ class ShowPlatform(ShowPlatformSchema):
             out = output
 
 
-        # 0/RSP0/CPU0       A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
-        # 0/0/CPU0          RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
-        # 0/0/CPU0          RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
-        # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-        # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
-        # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-        # 1/3/3             MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON
-        # 1/10/CPU0         FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
+        # 0/RSP0/CPU0       A9K-RSP440-TR(Active)                      IOS XR RUN       PWR,NSHUT,MON
+        # 0/0/CPU0          RP(Active)                 N/A             IOS XR RUN       PWR,NSHUT,MON
+        # 0/0/CPU0          RP(Active)                 N/A             OPERATIONAL      PWR,NSHUT,MON
+        # 0/0               NCS1K4-OTN-XP                              POWERED_ON       NSHUT
+        # 0/1               NCS1K4-1.2T-K9                             OPERATIONAL      NSHUT
+        # 0/0               NCS1K4-OTN-XP                              POWERED_ON       NSHUT
+        # 1/3/3             MSC(SPA)                   OC192RPR-XFP    DISABLED         NPWR,SHUT,MON
+        # 1/10/CPU0         FP-X                       N/A             UNPOWERED        NPWR,NSHUT,MON
         
         # 0/RP0/CPU0        A99-RP-F(Active)           IOS XR RUN        NSHUT
         # 0/RP1/CPU0        A99-RP-F(Standby)          IOS XR RUN        NSHUT
@@ -419,12 +419,65 @@ class ShowPlatform(ShowPlatformSchema):
         # 0/4/CPU0          88-LC1-48Y8H-EM            DATA PATH POWERED ON     NSHUT
         # 0/5/CPU0          88-LC1-52Y8H-EM            PLATFORM INITIALIZED     NSHUT
 
-        p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
-                            r'\s+(?P<name>[a-zA-Z0-9\-\.\[\]]+)'
-                            r'(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
-                            r'(?:\s+(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                            r'\s+(?P<state>(SW_INACTIVE|IN-RESET|UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON|FPD UPGRADE|IMAGE INSTALLING|BOOTING|DATA PATH POWERED ON|PLATFORM INITIALIZED))'
-                            r'(?:\s+(?P<config_state>[a-zA-Z\,]+))?$')
+        p1_common = (
+            r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
+            r'\s+(?P<name>[a-zA-Z0-9\-\.\[\]]+)'
+            r'(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
+        )
+        p1_state = (
+            r'(?P<state>(SW_INACTIVE'
+            r'|IN-RESET'
+            r'|UNPOWERED'
+            r'|DISABLED'
+            r'|OK'
+            r'|POWERED_ON'
+            r'|IDLE'
+            r'|DISCOVERED'
+            r'|POWERED ON'
+            r'|POWERED OFF'
+            r'|DEVICE OFFLINE'
+            r'|BIOS READY'
+            r'|IMAGE INSTALLING'
+            r'|BOOTING'
+            r'|INSTALL BOOTHOLD'
+            r'|IOS XR INITIALIZING'
+            r'|PLATFORM INITIALIZED'
+            r'|INITIALIZING CHILD CARDS'
+            r'|DATA PATH POWERED ON'
+            r'|DATA PATH POWERED OFF'
+            r'|IOS XR RUN'
+            r'|CPU_CATERR'
+            r'|CATERR_DUMP_IN_PROGRESS'
+            r'|WAITING FOR RESET'
+            r'|WAITING FOR SHUTDOWN'
+            r'|RESET'
+            r'|SHUTTING DOWN'
+            r'|DISK ERASE IN PROG'
+            r'|DISK ERASE DONE'
+            r'|SHUT DOWN'
+            r'|ONLINE'
+            r'|OPERATIONAL'
+            r'|CARD FAILED'
+            r'|KERNEL DUMP IN PROGRESS'
+            r'|SHUTTING REMOTE CARDS'
+            r'|WDOG STAGE1 TIMEOUT'
+            r'|WDOG STAGE2 TIMEOUT'
+            r'|FPD UPGRADE'
+            r'|CARD ACCESS DOWN'
+            r'|START BOARD SHUT DOWN'
+            r'|POWER STATE UNKNOWN'
+            r'|CURRENT STATE UNKNOWN'
+            r'|EJECTOR OPEN'
+            r'|UNKNOWN))'
+            r'(?:\s+(?P<config_state>[a-zA-Z\,]+))?$'
+        )
+        # 4-column format: Node, Type, State, Config state
+        p1_no_plim = re.compile(p1_common + r'\s+' + p1_state)
+        # 5-column format: Node, Type, PLIM, State, Config state
+        p1_with_plim = re.compile(
+            p1_common +
+            r'\s+(?P<plim>[a-zA-Z0-9(\/|\-| )]+)'
+            r'\s+' + p1_state)
 
         # Init vars
         show_platform = {}
@@ -435,13 +488,16 @@ class ShowPlatform(ShowPlatformSchema):
             line = line.rstrip()
 
 
-            m = p1.match(line)
+            m = p1_no_plim.match(line)
+            if not m:
+                m = p1_with_plim.match(line)
             if m:
                 # Parse regexp
                 node = str(m.groupdict()['node']).strip()
                 name = str(m.groupdict()['name']).strip()
                 redundancy_state = str(m.groupdict()['redundancy_state']).strip()
-                plim = str(m.groupdict()['plim']).strip()
+                plim_group = m.groupdict().get('plim')
+                plim = str(plim_group).strip() if plim_group is not None else 'None'
                 state = str(m.groupdict()['state']).strip()
                 config_state = str(m.groupdict()['config_state']).strip()
 
@@ -3325,6 +3381,7 @@ class ShowProcessesMemoryDetailSchema(MetaParser):
                 'index': {
                     int: {
                         'jid': int,
+                        Optional('pid'): int,
                         'text': str,
                         'data': str,
                         'stack': str,
@@ -3366,8 +3423,18 @@ class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
 
         #  1078           2M      1021M       136K        39M     14894M        23M        62M bgp
         #  1257          60K       261M       136K         1M  unlimited         6M         9M bgp_epe
+        #  358   6817   888K      1394M       132K       906M     22528M       373M      1351M npu_drvr
         p1 = re.compile(
-            r'^(\s+)?(?P<jid>\d+)\s+(?P<text>\S+)\s+(?P<data>\S+)\s+(?P<stack>\S+)\s+(?P<dynamic>\S+)\s+(?P<dyn_limit>\S+)\s+(?P<shm_tot>\S+)\s+(?P<phy_tot>\S+)\s+(?P<process>\S+)'
+            r'^(?:\s+)?(?P<jid>\d+)\s+'
+            r'(?:(?P<pid>\d+)\s+)?'
+            r'(?P<text>\S+)\s+'
+            r'(?P<data>\S+)\s+'
+            r'(?P<stack>\S+)\s+'
+            r'(?P<dynamic>\S+)\s+'
+            r'(?P<dyn_limit>\S+)\s+'
+            r'(?P<shm_tot>\S+)\s+'
+            r'(?P<phy_tot>\S+)\s+'
+            r'(?P<process>\S+)$'
         )
 
         for line in out.splitlines():
@@ -3375,6 +3442,7 @@ class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
 
             #  1078           2M      1021M       136K        39M     14894M        23M        62M bgp
             #  1257          60K       261M       136K         1M  unlimited         6M         9M bgp_epe
+            #  358   6817   888K      1394M       132K       906M     22528M       373M      1351M npu_drvr
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -3389,7 +3457,9 @@ class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
                 jid_dict.update({
                     k: int(v) if v.isdigit() else v
                     for k, v in group.items()
+                    if v is not None
                 })
+                continue
 
         return ret_dict
 

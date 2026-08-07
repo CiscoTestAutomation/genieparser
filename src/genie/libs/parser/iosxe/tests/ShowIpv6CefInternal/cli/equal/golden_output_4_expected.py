@@ -40,7 +40,14 @@ expected_output = {
                                             'nexthop': {
                                                 '2001:192:168:1::2': {
                                                     'outgoing_interface': {
-                                                        'Vlan101': {}
+                                                        'Vlan101': {
+                                                            'ip_adj': {
+                                                                'Vlan101': {
+                                                                    'addr': '2001:192:168:1::2',
+                                                                    'addr_info': '7F80D5EF0960'
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }

@@ -1,0 +1,8 @@
+Cloud-Mgmt Cloud Monitoring: Incompatible
+Cloud-Mgmt Cloud Management
+------------------------------------
+  Boot Mode        Incompatible
+
+Switch# SKU - Status           Bootloader Version - Status  Expansion Modules
+--------------------------------------------------------------------------------------------
+1   IE-9320-24T4X   - Compatible    26.1.1r     - Compatible    N/A

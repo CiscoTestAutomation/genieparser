@@ -1,0 +1,21 @@
+show platform hardware qfp active interface if-name TenGigabitEthernet0/0/0 path
+
+Hardware Path Information:
+
+ESI Layer:
+
+	Ingress Path Information:
+
+		Remap table entry:
+
+		  Valid flag 1
+
+		  BAF Port 5
+
+		  Input uIDB 63
+
+	Egress Path Information:
+
+		ESI channel 0x5000007
+
+		BAF header 0x0

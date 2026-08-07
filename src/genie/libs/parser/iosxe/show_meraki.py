@@ -456,6 +456,8 @@ class ShowMerakiConfigUpdaterSchema(MetaParser):
         Optional('err_msg'): str,
         Optional('config_updater'): {
             'current_state': str,
+            Optional('pending_local_changes'): bool,
+            Optional('pending_local_changes_reason'): str,
             Optional('last_save_time'): str,
             Optional('next_save_scheduled'): bool,
             Optional('next_save_time'): str
@@ -545,6 +547,11 @@ class ShowMerakiConfigUpdater(ShowMerakiConfigUpdaterSchema):
 
         #   Current state:                Ready
         p2 = re.compile(r"^Current state:\s+([A-Za-z].*)$")
+
+        #   Pending local changes:        Yes (next upload will trigger consilience)
+        p2a = re.compile(
+            r"^(?:\*\*)?Pending local changes:\s+(Yes|No)(?:\s+\((.*)\))?(?:\*\*)?$"
+        )
 
         # Last config save time(UTC): 2025-03-18 22:19:16
         p3 = re.compile(r"^Last config save time\(UTC\):\s+(.*)$")
@@ -644,6 +651,14 @@ class ShowMerakiConfigUpdater(ShowMerakiConfigUpdaterSchema):
             m = p2.match(line)
             if m:
                 config_updater_dict['current_state'] = m.group(1)
+                continue
+
+            #   Pending local changes:        Yes (next upload will trigger consilience)
+            m = p2a.match(line)
+            if m:
+                config_updater_dict['pending_local_changes'] = m.group(1) == 'Yes'
+                if m.group(2):
+                    config_updater_dict['pending_local_changes_reason'] = m.group(2)
                 continue
 
             # Last config save time(UTC): 2025-03-18 22:19:16

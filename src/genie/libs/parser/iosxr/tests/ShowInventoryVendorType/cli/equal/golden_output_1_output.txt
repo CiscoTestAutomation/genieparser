@@ -1,0 +1,118 @@
+sh inventory vendor-type
+Fri Jul  3 19:09:00.802 UTC
+
+NAME: "Rack 0", DESCR: "Cisco P200 64x800G OSFP 3RU Chassis"
+PID: 8223-64EF-M       , VID: V00, SN: FLM300334LN
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.3.2753
+
+NAME: "0/RP0/CPU0", DESCR: "Cisco P200 64x800G OSFP 3RU Chassis"
+PID: 8223-64EF-M       , VID: V00, SN: FLM30023KW8
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.2.882
+
+NAME: "0/FT0", DESCR: "2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-PI-V4         , VID: V01 , SN: DCH2929T3ZR
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.387
+
+NAME: "0/FT1", DESCR: "2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-PI-V4         , VID: V01 , SN: DCH2929T3ZN
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.387
+
+NAME: "0/FT2", DESCR: "2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-PI-V4         , VID: V01 , SN: DCH2929T3Z7
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.387
+
+NAME: "0/FT3", DESCR: "2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-PI-V4         , VID: V01 , SN: DCH2929T3Z1
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.387
+
+NAME: "0/FT4", DESCR: "2RU Fan with Port-side Air Intake Ver3"
+PID: FAN-PI-V4         , VID: V01 , SN: DCH2929T407
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.387
+
+NAME: "0/FT5", DESCR: "1RU Fan with Port-side Air Intake Ver 2"
+PID: FAN-1RU-PI-V2     , VID: V02 , SN: DCH2938S1F7
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.428
+
+NAME: "0/FT6", DESCR: "1RU Fan with Port-side Air Intake Ver 2"
+PID: FAN-1RU-PI-V2     , VID: V02 , SN: DCH2938S1ER
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.7.428
+
+NAME: "0/PM0", DESCR: "3000W AC/HVAC/HVDC Power Module with Port-side Air Intake"
+PID: PSU3KW-HVPI       , VID: V01, SN: DTM292901TM
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.6.811
+
+NAME: "0/PM1", DESCR: "3000W AC/HVAC/HVDC Power Module with Port-side Air Intake"
+PID: PSU3KW-HVPI       , VID: V01, SN: DTM2929021C
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.6.811
+
+NAME: "0/PM2", DESCR: "3000W AC/HVAC/HVDC Power Module with Port-side Air Intake"
+PID: PSU3KW-HVPI       , VID: V01, SN: DTM292901TW
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.6.811
+
+NAME: "0/PM3", DESCR: "3000W AC/HVAC/HVDC Power Module with Port-side Air Intake"
+PID: PSU3KW-HVPI       , VID: V01, SN: DTM2929025J
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.6.811
+
+NAME: "0/FB0", DESCR: "Cisco 8000 Series Fan Controller Board on 8223-64EF-M"
+PID: 8223-64EF-M[FB]   , VID: N/A, SN: FLM29430CU9
+Vendor Type: N/A
+
+NAME: "Optics0/0/0/1", DESCR: "Non-Cisco OSFP 800G ZR Pluggable Optics Module"
+PID: LDO-080-DZ-GO1    , VID: 7D, SN: V8O25270012
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.139.153
+
+NAME: "EightHundredGigE0/0/0/4", DESCR: "Cisco OSFP 800G DR8 Pluggable Optics Module"
+PID: OSFP-800G-DR8     , VID: V01 , SN: CGC2913000A
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.5
+
+NAME: "EightHundredGigE0/0/0/5", DESCR: "Cisco OSFP 800G DR8 Pluggable Optics Module"
+PID: OSFP-800G-DR8     , VID: V01 , SN: CGC29300682
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.5
+
+NAME: "EightHundredGigE0/0/0/6", DESCR: "Non-Cisco OSFP 2x400G FR4 Pluggable Optics Module"
+PID: EOLO-168HG-02-1T  , VID: 02, SN: UR4F270015
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "EightHundredGigE0/0/0/7", DESCR: "Non-Cisco OSFP 2x400G FR4 Pluggable Optics Module"
+PID: EOLO-168HG-02-1T  , VID: 02, SN: UR4F270016
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "Optics0/0/0/8", DESCR: "Cisco OSFP 800G ZRP Pluggable Optics Module"
+PID: BASIC-OSFP-800G-FR4, VID: A, SN: 252953940
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "Optics0/0/0/9", DESCR: "Cisco OSFP 800G ZRP Pluggable Optics Module"
+PID: BASIC-OSFP-800G-FR4, VID: A, SN: 252953859
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "Optics0/0/0/11", DESCR: "Non-Cisco OSFP 800G ZR Pluggable Optics Module"
+PID: LDO-080-DZ-GO1    , VID: 7D, SN: V8O25280016
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.139.153
+
+NAME: "EightHundredGigE0/0/0/32", DESCR: "Cisco OSFP 800G DR8 Pluggable Optics Module"
+PID: OSFP-800G-DR8     , VID: V01 , SN: CGC29300694
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.5
+
+NAME: "EightHundredGigE0/0/0/33", DESCR: "Cisco OSFP 800G DR8 Pluggable Optics Module"
+PID: OSFP-800G-DR8     , VID: V01 , SN: CGC29300681
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.5
+
+NAME: "Optics0/0/0/44", DESCR: "Cisco OSFP 800G ZRP Pluggable Optics Module"
+PID: N/A               , VID: 01, SN: 251850062
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155
+
+NAME: "EightHundredGigE0/0/0/58", DESCR: "Non-Cisco OSFP 2x400G FR4 Pluggable Optics Module"
+PID: FTCE4717E1PCB-FB  , VID: AE, SN: UDJBL19
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "EightHundredGigE0/0/0/59", DESCR: "Non-Cisco OSFP 2x400G FR4 Pluggable Optics Module"
+PID: FTCE4717E1PCB-FB  , VID: AE, SN: UDLA8Q0
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "EightHundredGigE0/0/0/62", DESCR: "Non-Cisco OSFP 2x400G FR4 Pluggable Optics Module"
+PID: T-OL8CNT-NFL      , VID: 1A, SN: IDOBYC082644
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1
+
+NAME: "EightHundredGigE0/0/0/63", DESCR: "Non-Cisco OSFP 2x400G FR4 Pluggable Optics Module"
+PID: T-OL8CNT-NFL      , VID: 1A, SN: IDOBXC020566
+Vendor Type: 1.3.6.1.4.1.9.12.3.1.9.155.1

@@ -28,6 +28,8 @@
     * 'show platform software fed {switch} {state} ip igmp snooping groups count'
     * 'show platform software fed {state} ip igmp snooping groups count'
     * 'show platform software fed switch {mode} ipv6 route'
+    * 'show platform software fed switch {mode} ipv6 route {ip_add} detail'
+    * 'show platform software fed switch {mode} ipv6 route vrf {vrf_name} {ip_add} detail'
     *'show platform software fed {switch} {module} ip igmp snooping group vlan {vlan_id} {group}',
     *'show platform software fed {switch} {module} ip igmp snooping group vlan {vlan_id} {group} detail'
 """
@@ -553,6 +555,45 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetailSchema(MetaParser):
                 Optional("lspa_rec"): int,
                 Optional("api_type"): int,
                 Optional("state"): str,
+                Optional("flags"): str,
+                Optional("sdk"): {
+                    Optional("is_host"): int,
+                    Optional("l3_dest"): str,
+                    Optional("l3_dest_type"): str,
+                    Optional("l3_dest_oid"): int,
+                    Optional("vrf_gid"): int,
+                    Optional("vrf_oid"): str,
+                },
+                Optional("sdk_object"): {
+                    Optional("sdk_oid"): str,
+                    Optional("devid"): int,
+                    Optional("asic"): int,
+                    Optional("object_type"): str,
+                    Optional("nexthop_oid"): str,
+                    Optional("nexthop_dev"): int,
+                    Optional("nexthop_gid"): int,
+                    Optional("macaddr"): str,
+                    Optional("nh_type"): str,
+                    Optional("sdk_outgoing_port_oid"): str,
+                    Optional("porttype"): str,
+                },
+                Optional("npl_hardware"): {
+                    Optional("prefix"): str,
+                    Optional("vrf_gid"): int,
+                    Optional("destination_type"): str,
+                    Optional("destination_id"): int,
+                    Optional("slice"): int,
+                    Optional("destination_ip"): str,
+                    Optional("source_ip"): str,
+                    Optional("profile_gid"): int,
+                    Optional("per_vrf_vni"): int,
+                },
+                Optional("lookup"): {
+                    Optional("obj_id"): int,
+                    Optional("table_id"): int,
+                    Optional("proto"): int,
+                    Optional("state"): str,
+                },
                 Optional("mac_addr"): str,
                 Optional("l3port_oid"): str,
                 Optional("adj"): {
@@ -563,6 +604,23 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetailSchema(MetaParser):
                     Optional("ether_type"): str,
                     Optional("srcmac"): str,
                     Optional("dstmac"): str,
+                    Optional("encap_type"): str,
+                    Optional("vrf"): int,
+                    Optional("link_type"): str,
+                    Optional("state"): str,
+                    Optional("device"): int,
+                    Optional("underlay_vrf"): int,
+                    Optional("overlay_vrf"): int,
+                    Optional("vxlan_tunnel_gid"): int,
+                    Optional("vxlan_port_oid"): int,
+                    Optional("vxlan_nh_oid"): int,
+                    Optional("vni"): int,
+                    Optional("sip"): str,
+                    Optional("dip"): str,
+                    Optional("sdk_oid"): str,
+                    Optional("devid"): int,
+                    Optional("asic"): int,
+                    Optional("object_type"): str,
                 },
                 Optional("npd"): {
                     Optional("fec_oid"): int,
@@ -594,11 +652,19 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetail(
     cli_command = [
         "show platform software fed {switch} {mode} ip route {ip_add}",
         "show platform software fed {switch} {mode} ip route {ip_add} {detail}",
+        "show platform software fed {switch} {mode} ip route vrf {vrf_name} {ip_add} {detail}",
     ]
 
-    def cli(self, switch="", mode="", ip_add="", detail="", output=None):
+    def cli(self, switch="", mode="", ip_add="", detail="", vrf_name="", output=None):
         if output is None:
-            if ip_add and detail:
+            if vrf_name and ip_add and detail:
+                output = self.device.execute(
+                    self.cli_command[2].format(
+                        switch=switch, mode=mode, vrf_name=vrf_name,
+                        ip_add=ip_add, detail=detail
+                    )
+                )
+            elif ip_add and detail:
                 output = self.device.execute(
                     self.cli_command[1].format(
                         switch=switch, mode=mode, ip_add=ip_add, detail=detail
@@ -620,8 +686,10 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetail(
             r"(?:\s+)tblid:(?P<tblid>\d+)(?:\s+)DA:(?P<da>\d+)$"
         )
 
+        # State:(0) success, Flags:0x840
+        # State:(0) success Flags:0x0
         # State:(0) success
-        p1 = re.compile(r"^State:\(0\)\s+(?P<state>\w+)$")
+        p1 = re.compile(r"^State:\(0\)\s+(?P<state>\w+)(?:,? +Flags:(?P<flags>\S+))?$")
 
         # NPD: device:0 lspa_rec:0 api_type:host(1)
         p2 = re.compile(r'NPD:\sdevice:(?P<device>\d+)\slspa_rec:(?P<lspa_rec>\d+)\sapi_type:route\((?P<api_type>\d+)\)$')
@@ -656,6 +724,64 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetail(
         #      SDK: cla_nhtype:0
         p9 = re.compile(r'SDK:\s+cla_nhtype:(?P<cla_nhtype>\d+)$')
 
+        # SDK: is_host:0 l3_dest:0x64a20dd5c7f0 l3_dest:la_vxlan_next_hop_base(oid=3988) vrf(gid/oid):4/0xdac
+        p10 = re.compile(
+            r"^SDK: +is_host:(?P<is_host>\d+) +l3_dest:(?P<l3_dest>\S+) +"
+            r"l3_dest:(?P<l3_dest_type>\w+)\(oid=(?P<l3_dest_oid>\d+)\) +"
+            r"vrf\(gid/oid\):(?P<vrf_gid>\d+)\/(?P<vrf_oid>\S+)$"
+        )
+
+        # NPD: SDK oid 0xf94, devid:1, asic:0
+        p11 = re.compile(r"^NPD: +SDK +oid +(?P<sdk_oid>\S+), +devid:(?P<devid>\d+), +asic:(?P<asic>\d+)$")
+
+        # object type: vxlan_next_hop
+        p12 = re.compile(r"^object +type: +(?P<object_type>\S+)$")
+
+        # ====== NPL Hardware Information for 10.10.1.0 vrf gid 4======
+        p13 = re.compile(r"^====== +NPL +Hardware +Information +for +(?P<prefix>\S+) +vrf +gid +(?P<vrf_gid>\d+)======$")
+
+        # ====== NPL Hardware Information for vrf gid 4 profile gid 1======
+        p13_1 = re.compile(r"^====== +NPL +Hardware +Information +for +vrf +gid +(?P<vrf_gid>\d+) +profile +gid +(?P<profile_gid>\d+)======$")
+
+        # Destination type = DESTINATION_L2_DLP, Destination id = 7
+        p14 = re.compile(r"^Destination +type += +(?P<destination_type>\S+), +Destination +id += +(?P<destination_id>\d+)$")
+
+        # Slice = 0 Destination IP = 172.16.254.1, Source IP = 172.16.254.2
+        p15 = re.compile(r"^Slice += +(?P<slice>\d+) +Destination +IP += +(?P<destination_ip>\S+), +Source +IP += +(?P<source_ip>\S+)$")
+
+        # ADJ:objid:0xe iif_id:0x519 encap_type:VXLAN vrf:0 link_type:IPv4
+        p16 = re.compile(
+            r"^ADJ:objid:(?P<objid>\S+) +iif_id:(?P<iif_id>\S+) +"
+            r"encap_type:(?P<encap_type>\S+) +vrf:(?P<vrf>\d+) +link_type:(?P<link_type>\S+)$"
+        )
+
+        # NPD: device:0 underlay_vrf:0 overlay_vrf:4 vxlan_tunnel_gid:7 vxlan_port_oid:1594 vxlan_nh_oid:3988
+        p17 = re.compile(
+            r"^NPD: +device:(?P<device>\d+) +underlay_vrf:(?P<underlay_vrf>\d+) +"
+            r"overlay_vrf:(?P<overlay_vrf>\d+) +vxlan_tunnel_gid:(?P<vxlan_tunnel_gid>\d+) +"
+            r"vxlan_port_oid:(?P<vxlan_port_oid>\d+) +vxlan_nh_oid:(?P<vxlan_nh_oid>\d+)$"
+        )
+
+        # vni:10100 SIP:172.16.254.2 DIP:172.16.254.1
+        p18 = re.compile(r"^vni:(?P<vni>\d+) +SIP:(?P<sip>\S+) +DIP:(?P<dip>\S+)$")
+
+        # per-vrf VNI 10100
+        p19 = re.compile(r"^per-vrf +VNI +(?P<per_vrf_vni>\d+)$")
+
+        # LOOKUP:obj_id:58 table_id:4 proto:0
+        p20 = re.compile(r"^LOOKUP:obj_id:(?P<obj_id>\d+) +table_id:(?P<table_id>\d+) +proto:(?P<proto>\d+)$")
+
+        # sdk nexthop oid:0xf95,dev:1, gid:0xb
+        p21 = re.compile(r"^sdk +nexthop +oid:(?P<nexthop_oid>\S+),dev:(?P<nexthop_dev>\d+), +gid:(?P<nexthop_gid>\S+)$")
+
+        # macaddr:4e41.5000.0114, nh_type:normal(0)
+        p22 = re.compile(r"^macaddr:(?P<macaddr>\S+), +nh_type:(?P<nh_type>\S+)$")
+
+        # sdk outgoing port oid 0xdad, porttype:l3ac(70)
+        p23 = re.compile(r"^sdk +outgoing +port +oid +(?P<sdk_outgoing_port_oid>\S+), +porttype:(?P<porttype>\S+)$")
+
+        current_context = None
+        parse_extended_sdk_object = False
 
         for line in output.splitlines():
             line = line.strip()
@@ -682,11 +808,20 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetail(
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
-                ipv4_add_dict.update(
-                    {
-                        "state": str(groups["state"]),
-                    }
-                )
+                if current_context == "adj":
+                    adj_dict = ipv4_add_dict.setdefault("adj", {})
+                    adj_dict["state"] = str(groups["state"])
+                elif current_context == "lookup":
+                    lookup_dict = ipv4_add_dict.setdefault("lookup", {})
+                    lookup_dict["state"] = str(groups["state"])
+                else:
+                    ipv4_add_dict.update(
+                        {
+                            "state": str(groups["state"]),
+                        }
+                    )
+                    if groups["flags"] and "flags" not in ipv4_add_dict:
+                        ipv4_add_dict["flags"] = str(groups["flags"])
                 continue
 
             # NPD: device:0 lspa_rec:0 api_type:host(1)
@@ -785,6 +920,200 @@ class ShowPlatformSoftwareFedSwitchActiveIpRouteDetail(
             if m:
                 groups = m.groupdict()
                 ipv4_add_dict["cla_nhtype"] = int(groups["cla_nhtype"])
+                continue
+
+            # SDK: is_host:0 l3_dest:0x64a20dd5c7f0 l3_dest:la_vxlan_next_hop_base(oid=3988) vrf(gid/oid):4/0xdac
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                parse_extended_sdk_object = True
+                sdk_dict = ipv4_add_dict.setdefault("sdk", {})
+                sdk_dict.update({
+                    "is_host": int(groups["is_host"]),
+                    "l3_dest": groups["l3_dest"],
+                    "l3_dest_type": groups["l3_dest_type"],
+                    "l3_dest_oid": int(groups["l3_dest_oid"]),
+                    "vrf_gid": int(groups["vrf_gid"]),
+                    "vrf_oid": groups["vrf_oid"],
+                })
+                continue
+
+            # NPD: SDK oid 0xf94, devid:1, asic:0
+            m = p11.match(line)
+            if m:
+                if not parse_extended_sdk_object and current_context != "adj":
+                    continue
+                groups = m.groupdict()
+                if current_context == "adj":
+                    sdk_dict = ipv4_add_dict.setdefault("adj", {})
+                else:
+                    sdk_dict = ipv4_add_dict.setdefault("sdk_object", {})
+                sdk_dict.update({
+                    "sdk_oid": groups["sdk_oid"],
+                    "devid": int(groups["devid"]),
+                    "asic": int(groups["asic"]),
+                })
+                continue
+
+            # object type: vxlan_next_hop
+            m = p12.match(line)
+            if m:
+                if not parse_extended_sdk_object and current_context != "adj":
+                    continue
+                groups = m.groupdict()
+                if current_context == "adj":
+                    ipv4_add_dict.setdefault("adj", {})["object_type"] = groups["object_type"]
+                else:
+                    ipv4_add_dict.setdefault("sdk_object", {})["object_type"] = groups["object_type"]
+                continue
+
+            # ====== NPL Hardware Information for 10.10.1.0 vrf gid 4======
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                current_context = "npl"
+                npl_dict = ipv4_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "prefix": groups["prefix"],
+                    "vrf_gid": int(groups["vrf_gid"]),
+                })
+                continue
+
+            # ====== NPL Hardware Information for vrf gid 4 profile gid 1======
+            m = p13_1.match(line)
+            if m:
+                groups = m.groupdict()
+                npl_dict = ipv4_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "vrf_gid": int(groups["vrf_gid"]),
+                    "profile_gid": int(groups["profile_gid"]),
+                })
+                continue
+
+            # Destination type = DESTINATION_L2_DLP, Destination id = 7
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                npl_dict = ipv4_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "destination_type": groups["destination_type"],
+                    "destination_id": int(groups["destination_id"]),
+                })
+                continue
+
+            # Slice = 0 Destination IP = 172.16.254.1, Source IP = 172.16.254.2
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                npl_dict = ipv4_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "slice": int(groups["slice"]),
+                    "destination_ip": groups["destination_ip"],
+                    "source_ip": groups["source_ip"],
+                })
+                continue
+
+            # ADJ:objid:0xe iif_id:0x519 encap_type:VXLAN vrf:0 link_type:IPv4
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                current_context = "adj"
+                adj_dict = ipv4_add_dict.setdefault("adj", {})
+                adj_dict.update({
+                    "objid": groups["objid"],
+                    "iif_id": groups["iif_id"],
+                    "encap_type": groups["encap_type"],
+                    "vrf": int(groups["vrf"]),
+                    "link_type": groups["link_type"],
+                })
+                continue
+
+            # NPD: device:0 underlay_vrf:0 overlay_vrf:4 vxlan_tunnel_gid:7 vxlan_port_oid:1594 vxlan_nh_oid:3988
+            m = p17.match(line)
+            if m:
+                groups = m.groupdict()
+                adj_dict = ipv4_add_dict.setdefault("adj", {})
+                adj_dict.update({
+                    "device": int(groups["device"]),
+                    "underlay_vrf": int(groups["underlay_vrf"]),
+                    "overlay_vrf": int(groups["overlay_vrf"]),
+                    "vxlan_tunnel_gid": int(groups["vxlan_tunnel_gid"]),
+                    "vxlan_port_oid": int(groups["vxlan_port_oid"]),
+                    "vxlan_nh_oid": int(groups["vxlan_nh_oid"]),
+                })
+                continue
+
+            # vni:10100 SIP:172.16.254.2 DIP:172.16.254.1
+            m = p18.match(line)
+            if m:
+                groups = m.groupdict()
+                adj_dict = ipv4_add_dict.setdefault("adj", {})
+                adj_dict.update({
+                    "vni": int(groups["vni"]),
+                    "sip": groups["sip"],
+                    "dip": groups["dip"],
+                })
+                continue
+
+            # per-vrf VNI 10100
+            m = p19.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv4_add_dict.setdefault("npl_hardware", {})["per_vrf_vni"] = int(groups["per_vrf_vni"])
+                continue
+
+            # LOOKUP:obj_id:58 table_id:4 proto:0
+            m = p20.match(line)
+            if m:
+                groups = m.groupdict()
+                current_context = "lookup"
+                lookup_dict = ipv4_add_dict.setdefault("lookup", {})
+                lookup_dict.update({
+                    "obj_id": int(groups["obj_id"]),
+                    "table_id": int(groups["table_id"]),
+                    "proto": int(groups["proto"]),
+                })
+                continue
+
+            # sdk nexthop oid:0xf95,dev:1, gid:0xb
+            m = p21.match(line)
+            if m:
+                if not parse_extended_sdk_object:
+                    continue
+                groups = m.groupdict()
+                sdk_object_dict = ipv4_add_dict.setdefault("sdk_object", {})
+                sdk_object_dict.update({
+                    "nexthop_oid": groups["nexthop_oid"],
+                    "nexthop_dev": int(groups["nexthop_dev"]),
+                    "nexthop_gid": int(groups["nexthop_gid"], 0),
+                })
+                continue
+
+            # macaddr:4e41.5000.0114, nh_type:normal(0)
+            m = p22.match(line)
+            if m:
+                if not parse_extended_sdk_object:
+                    continue
+                groups = m.groupdict()
+                sdk_object_dict = ipv4_add_dict.setdefault("sdk_object", {})
+                sdk_object_dict.update({
+                    "macaddr": groups["macaddr"],
+                    "nh_type": groups["nh_type"],
+                })
+                continue
+
+            # sdk outgoing port oid 0xdad, porttype:l3ac(70)
+            m = p23.match(line)
+            if m:
+                if not parse_extended_sdk_object:
+                    continue
+                groups = m.groupdict()
+                sdk_object_dict = ipv4_add_dict.setdefault("sdk_object", {})
+                sdk_object_dict.update({
+                    "sdk_outgoing_port_oid": groups["sdk_outgoing_port_oid"],
+                    "porttype": groups["porttype"],
+                })
+                continue
 
         return ret_dict
 
@@ -1686,14 +2015,17 @@ class ShowPlatformSoftwareFedIpv6MldSnoopingSummarySchema(MetaParser):
     """Schema for show platform software fed switch active ipv6 mld snooping summary"""
     schema = {
         'mld_snooping_summary': {
-            'group_current_count': int,
-            'group_max_count': int,
-            'last_used_group_urid': str,
-            'last_used_vlan_urid': str,
-            'port_current_count': int,
-            'port_max_count': int,
-            'vlan_current_count': int,
-            'vlan_max_count': int
+            Optional('vlan_current_count'): int,
+            Optional('vlan_max_count'): int,
+            Optional('group_current_count'): int,
+            Optional('group_max_count'): int,
+            Optional('snoop_group_current_count'): int,
+            Optional('snoop_group_max_count'): int,
+            Optional('port_current_count'): int,
+            Optional('port_max_count'): int,
+            Optional('last_cleared_timestamp_ipv6'): str,
+            Optional('last_used_vlan_urid'): str,
+            Optional('last_used_group_urid'): str,
         }
     }
 
@@ -1713,25 +2045,54 @@ class ShowPlatformSoftwareFedIpv6MldSnoopingSummary(ShowPlatformSoftwareFedIpv6M
 
         ret_dict = {}
 
-        # Vlan Current Count/Max Reached    : 3/3
-        p0 = re.compile(r'(Vlan Current Count/Max Reached +\: +(?P<vlan_current_count>\d+)\/+(?P<vlan_max_count>\d+))')
+        # op1: Vlan Current Count/Max Reached       : 3/3
+        # op2: Total Vlan Current Count/Max Reached : 2/3
+        p0 = re.compile(
+            r'^(?:Total\s+)?Vlan\s+Current\s+Count/Max\s+Reached\s*:\s*'
+            r'(?P<vlan_current_count>\d+)\s*/\s*(?P<vlan_max_count>\d+)\s*$'
+        )
 
-        # Group Current Count/Max Reached   : 0/0
-        p1 = re.compile(r'(Group Current Count/Max Reached +\: +(?P<group_current_count>\d+)\/+(?P<group_max_count>\d+))')
+        # op1: Group Current Count/Max Reached        : 8000/8000
+        # op2: Total Group Current Count/Max Reached  : 0/0
+        p1 = re.compile(
+            r'^(?:Total\s+)?Group\s+Current\s+Count/Max\s+Reached\s*:\s*'
+            r'(?P<group_current_count>\d+)\s*/\s*(?P<group_max_count>\d+)\s*$'
+        )
 
-        # Port Current Count/Max Reached    : 2001/2057
-        p2 = re.compile(r'(Port Current Count/Max Reached +\: +(?P<port_current_count>\d+)\/+(?P<port_max_count>\d+))')
+        # op2 only: Snoop Group Current Count/Max Reached : 0/0
+        p1a = re.compile(
+            r'^Snoop\s+Group\s+Current\s+Count/Max\s+Reached\s*:\s*'
+            r'(?P<snoop_group_current_count>\d+)\s*/\s*(?P<snoop_group_max_count>\d+)\s*$'
+        )
 
-        # Last used Vlan Urid               : 0x4000000000000006
-        p3 = re.compile(r'(Last used Vlan Urid +\: +(?P<last_used_vlan_urid>\S+))')
+        # op1 & op2: Port Current Count/Max Reached : 4001/4001
+        p2 = re.compile(
+            r'^Port\s+Current\s+Count/Max\s+Reached\s*:\s*'
+            r'(?P<port_current_count>\d+)\s*/\s*(?P<port_max_count>\d+)\s*$'
+        )
 
-        # Last Used Group Urid              : 0x600000000000575c
-        p4 = re.compile(r'(Last Used Group Urid  +\: +(?P<last_used_group_urid>\S+))')
+        # op2 only: Last cleared timestamp for IPv6 : N/A
+        p2a = re.compile(
+            r'^Last\s+cleared\s+timestamp\s+for\s+IPv6\s*:\s*'
+            r'(?P<last_cleared_timestamp_ipv6>.+?)\s*$'
+        )
+
+        # op1 & op2: Last used Vlan Urid : 0x4000000000000006
+        p3 = re.compile(
+            r'^Last\s+used\s+Vlan\s+Urid\s*:\s*(?P<last_used_vlan_urid>\S+)\s*$'
+        )
+
+        # op1 & op2: Last Used Group Urid : 0x60000000000109a0
+        p4 = re.compile(
+            r'^Last\s+Used\s+Group\s+Urid\s*:\s*(?P<last_used_group_urid>\S+)\s*$'
+        )
 
         for line in output.splitlines():
             line = line.strip()
+            if not line:
+                continue
 
-            # Vlan Current Count/Max Reached    : 3/3             : 2
+            # Vlan / Total Vlan Current Count/Max Reached
             m = p0.match(line)
             if m:
                 group = m.groupdict()
@@ -1740,33 +2101,54 @@ class ShowPlatformSoftwareFedIpv6MldSnoopingSummary(ShowPlatformSoftwareFedIpv6M
                 id_dict['vlan_max_count'] = int(group['vlan_max_count'])
                 continue
 
-            # Group Current Count/Max Reached   : 0/0
+            # Group / Total Group Current Count/Max Reached
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('mld_snooping_summary', {})
                 id_dict['group_current_count'] = int(group['group_current_count'])
                 id_dict['group_max_count'] = int(group['group_max_count'])
                 continue
 
-            # Port Current Count/Max Reached    : 2001/2057
+            # Snoop Group Current Count/Max Reached (op2 only)
+            m = p1a.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('mld_snooping_summary', {})
+                id_dict['snoop_group_current_count'] = int(group['snoop_group_current_count'])
+                id_dict['snoop_group_max_count'] = int(group['snoop_group_max_count'])
+                continue
+
+            # Port Current Count/Max Reached
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('mld_snooping_summary', {})
                 id_dict['port_current_count'] = int(group['port_current_count'])
                 id_dict['port_max_count'] = int(group['port_max_count'])
                 continue
 
-            # Last used Vlan Urid               : 0x4000000000000006
+            # Last cleared timestamp for IPv6 (op2 only)
+            m = p2a.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('mld_snooping_summary', {})
+                id_dict['last_cleared_timestamp_ipv6'] = group['last_cleared_timestamp_ipv6']
+                continue
+
+            # Last used Vlan Urid
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('mld_snooping_summary', {})
                 id_dict['last_used_vlan_urid'] = group['last_used_vlan_urid']
                 continue
 
-            # Last Used Group Urid              : 0x600000000000575c                    : 0
+            # Last Used Group Urid
             m = p4.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('mld_snooping_summary', {})
                 id_dict['last_used_group_urid'] = group['last_used_group_urid']
                 continue
 
@@ -2060,14 +2442,17 @@ class ShowPlatformSoftwareFedIpIgmpSnoopingSummarySchema(MetaParser):
     """Schema for show platform software fed switch active ip igmp snooping summary"""
     schema = {
         'igmp_snooping_summary': {
-            'group_current_count': int,
-            'group_max_count': int,
-            'last_used_group_urid': str,
-            'last_used_vlan_urid': str,
-            'port_current_count': int,
-            'port_max_count': int,
-            'vlan_current_count': int,
-            'vlan_max_count': int
+            Optional('group_current_count'): int,
+            Optional('group_max_count'): int,
+            Optional('last_used_group_urid'): str,
+            Optional('last_used_vlan_urid'): str,
+            Optional('port_current_count'): int,
+            Optional('port_max_count'): int,
+            Optional('vlan_current_count'): int,
+            Optional('vlan_max_count'): int,
+            Optional('snoop_group_current_count'): int,
+            Optional('snoop_group_max_count'): int,
+            Optional('last_cleared_timestamp_ipv4'): str,
         }
     }
 
@@ -2088,24 +2473,40 @@ class ShowPlatformSoftwareFedIpIgmpSnoopingSummary(ShowPlatformSoftwareFedIpIgmp
         ret_dict = {}
 
         # Vlan Current Count/Max Reached    : 3/3
-        p0 = re.compile(r'(Vlan Current Count/Max Reached +\: +(?P<vlan_current_count>\d+)\/+(?P<vlan_max_count>\d+))')
+        # Total Vlan Current Count/Max Reached      : 3/4
+        p0 = re.compile(r'^(?:Total\s+)?Vlan\s+Current\s+Count\/Max\s+Reached\s*:\s*'
+                        r'(?P<vlan_current_count>\d+)\/(?P<vlan_max_count>\d+)$')
+
+        # Snoop Group Current Count/Max Reached     : 16001/20001
+        p1 = re.compile(r'^Snoop\s+Group\s+Current\s+Count\/Max\s+Reached\s*:\s*'
+                        r'(?P<snoop_group_current_count>\d+)\/(?P<snoop_group_max_count>\d+)$')
 
         # Group Current Count/Max Reached   : 0/0
-        p1 = re.compile(r'(Group Current Count/Max Reached +\: +(?P<group_current_count>\d+)\/+(?P<group_max_count>\d+))')
+        # Total Group Current Count/Max Reached     : 16001/20001
+        p2 = re.compile(r'^(?:Total\s+)?Group\s+Current\s+Count\/Max\s+Reached\s*:\s*'
+                        r'(?P<group_current_count>\d+)\/(?P<group_max_count>\d+)$')
 
         # Port Current Count/Max Reached    : 2001/2057
-        p2 = re.compile(r'(Port Current Count/Max Reached +\: +(?P<port_current_count>\d+)\/+(?P<port_max_count>\d+))')
+        p3 = re.compile(r'^Port\s+Current\s+Count\/Max\s+Reached\s*:\s*'
+                        r'(?P<port_current_count>\d+)\/(?P<port_max_count>\d+)$')
+
+        # Last cleared timestamp for IPv4           : N/A
+        p4 = re.compile(r'^Last\s+cleared\s+timestamp\s+for\s+IPv4\s*:\s*'
+                        r'(?P<last_cleared_timestamp_ipv4>\S+)$')
 
         # Last used Vlan Urid               : 0x4000000000000006
-        p3 = re.compile(r'(Last used Vlan Urid +\: +(?P<last_used_vlan_urid>\S+))')
+        p5 = re.compile(r'^Last\s+used\s+Vlan\s+Urid\s*:\s*'
+                        r'(?P<last_used_vlan_urid>\S+)$')
 
         # Last Used Group Urid              : 0x600000000000575c
-        p4 = re.compile(r'(Last Used Group Urid  +\: +(?P<last_used_group_urid>\S+))')
+        p6 = re.compile(r'^Last\s+Used\s+Group\s+Urid\s*:\s*'
+                        r'(?P<last_used_group_urid>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
 
-            # Vlan Current Count/Max Reached    : 3/3             : 2
+            # Vlan Current Count/Max Reached    : 3/3
+            # Total Vlan Current Count/Max Reached      : 3/4
             m = p0.match(line)
             if m:
                 group = m.groupdict()
@@ -2114,33 +2515,55 @@ class ShowPlatformSoftwareFedIpIgmpSnoopingSummary(ShowPlatformSoftwareFedIpIgmp
                 id_dict['vlan_max_count'] = int(group['vlan_max_count'])
                 continue
 
-            # Group Current Count/Max Reached   : 0/0
+            # Snoop Group Current Count/Max Reached     : 16001/20001
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
+                id_dict['snoop_group_current_count'] = int(group['snoop_group_current_count'])
+                id_dict['snoop_group_max_count'] = int(group['snoop_group_max_count'])
+                continue
+
+            # Group Current Count/Max Reached   : 0/0
+            # Total Group Current Count/Max Reached     : 16001/20001
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
                 id_dict['group_current_count'] = int(group['group_current_count'])
                 id_dict['group_max_count'] = int(group['group_max_count'])
                 continue
 
             # Port Current Count/Max Reached    : 2001/2057
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
                 id_dict['port_current_count'] = int(group['port_current_count'])
                 id_dict['port_max_count'] = int(group['port_max_count'])
                 continue
 
-            # Last used Vlan Urid               : 0x4000000000000006
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                id_dict['last_used_vlan_urid'] = group['last_used_vlan_urid']
-                continue
-
-            # Last Used Group Urid              : 0x600000000000575c                    : 0
+            # Last cleared timestamp for IPv4           : N/A
             m = p4.match(line)
             if m:
                 group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
+                id_dict['last_cleared_timestamp_ipv4'] = group['last_cleared_timestamp_ipv4']
+                continue
+
+            # Last used Vlan Urid               : 0x4000000000000006
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
+                id_dict['last_used_vlan_urid'] = group['last_used_vlan_urid']
+                continue
+
+            # Last Used Group Urid              : 0x600000000000575c
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                id_dict = ret_dict.setdefault('igmp_snooping_summary', {})
                 id_dict['last_used_group_urid'] = group['last_used_group_urid']
                 continue
 
@@ -2345,6 +2768,449 @@ class ShowPlatformSoftwareFedSwitchActiveIpv6Route(
                 continue
 
         return ret_dict
+
+
+class ShowPlatformSoftwareFedSwitchActiveIpv6RouteDetailSchema(MetaParser):
+    """
+    Schema for
+    show platform software fed switch active ipv6 route {ip_add} detail
+    show platform software fed switch active ipv6 route vrf {vrf_name} {ip_add} detail
+    """
+
+    schema = {
+        "ipv6_add": {
+            Any(): {
+                Optional("ipv6route_id"): str,
+                Optional("obj_name"): str,
+                Optional("obj_id"): str,
+                Optional("table_id"): int,
+                Optional("da"): int,
+                Optional("last_act"): int,
+                Optional("last_rc"): int,
+                Optional("device"): int,
+                Optional("lspa_rec"): int,
+                Optional("api_type"): int,
+                Optional("state"): str,
+                Optional("flags"): str,
+                Optional("sdk"): {
+                    Optional("is_host"): int,
+                    Optional("l3_dest"): str,
+                    Optional("l3_dest_type"): str,
+                    Optional("l3_dest_oid"): int,
+                    Optional("vrf_gid"): int,
+                    Optional("vrf_oid"): str,
+                },
+                Optional("sdk_object"): {
+                    Optional("sdk_oid"): str,
+                    Optional("devid"): int,
+                    Optional("asic"): int,
+                    Optional("object_type"): str,
+                    Optional("nexthop_oid"): str,
+                    Optional("nexthop_dev"): int,
+                    Optional("nexthop_gid"): int,
+                    Optional("macaddr"): str,
+                    Optional("nh_type"): str,
+                    Optional("sdk_outgoing_port_oid"): str,
+                    Optional("porttype"): str,
+                },
+                Optional("npl_hardware"): {
+                    Optional("prefix"): str,
+                    Optional("vrf_gid"): int,
+                    Optional("destination_type"): str,
+                    Optional("destination_id"): int,
+                    Optional("slice"): int,
+                    Optional("destination_ip"): str,
+                    Optional("source_ip"): str,
+                    Optional("profile_gid"): int,
+                    Optional("per_vrf_vni"): int,
+                },
+                Optional("lookup"): {
+                    Optional("obj_id"): int,
+                    Optional("table_id"): int,
+                    Optional("proto"): int,
+                    Optional("state"): str,
+                },
+                Optional("adj"): {
+                    Optional("objid"): str,
+                    Optional("iif_id"): str,
+                    Optional("encap_type"): str,
+                    Optional("vrf"): int,
+                    Optional("link_type"): str,
+                    Optional("state"): str,
+                    Optional("device"): int,
+                    Optional("underlay_vrf"): int,
+                    Optional("overlay_vrf"): int,
+                    Optional("vxlan_tunnel_gid"): int,
+                    Optional("vxlan_port_oid"): int,
+                    Optional("vxlan_nh_oid"): int,
+                    Optional("vni"): int,
+                    Optional("sip"): str,
+                    Optional("dip"): str,
+                    Optional("sdk_oid"): str,
+                    Optional("devid"): int,
+                    Optional("asic"): int,
+                    Optional("object_type"): str,
+                },
+            },
+        },
+    }
+
+
+class ShowPlatformSoftwareFedSwitchActiveIpv6RouteDetail(
+    ShowPlatformSoftwareFedSwitchActiveIpv6RouteDetailSchema
+):
+    """
+    Parser for
+    show platform software fed switch active ipv6 route {ip_add} detail
+    show platform software fed switch active ipv6 route vrf {vrf_name} {ip_add} detail
+    """
+
+    cli_command = [
+        "show platform software fed switch {mode} ipv6 route {ip_add} detail",
+        "show platform software fed switch {mode} ipv6 route vrf {vrf_name} {ip_add} detail",
+    ]
+
+    def cli(self, mode="", ip_add="", vrf_name="", output=None):
+        if output is None:
+            if vrf_name:
+                cmd = self.cli_command[1].format(
+                    mode=mode, vrf_name=vrf_name, ip_add=ip_add
+                )
+            else:
+                cmd = self.cli_command[0].format(mode=mode, ip_add=ip_add)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+        ipv6_add_dict = {}
+        current_context = None
+
+        # IPV6ROUTE_ID:id:0x574a415e2438 nobj:(IPNEXTHOP_ID,0x99) 2001:10:10:1::/64 table_id:7
+        p0 = re.compile(
+            r"^IPV6ROUTE_ID:id:(?P<ipv6route_id>\w+) +nobj:\((?P<obj_name>\w+),"
+            r"(?P<obj_id>\w+)\) +(?P<ipv6_add>[0-9a-fA-F:]+\/\d{1,3}) +"
+            r"table_id:(?P<table_id>\d+)$"
+        )
+
+        # DA:0 last_act:0 last_rc:0
+        p0_1 = re.compile(
+            r"^DA:(?P<da>\d+) +last_act:(?P<last_act>\d+) +last_rc:(?P<last_rc>\d+)$"
+        )
+
+        # State:(0) success, Flags:0x840
+        # State:(0) success Flags:0x0
+        # State:(0) success
+        p1 = re.compile(r"^State:\(0\)\s+(?P<state>\w+)(?:,? +Flags:(?P<flags>\S+))?$")
+
+        # NPD: device:0 lspa_rec:0 api_type:route(3)
+        p2 = re.compile(
+            r"^NPD: +device:(?P<device>\d+) +lspa_rec:(?P<lspa_rec>\d+) +"
+            r"api_type:route\((?P<api_type>\d+)\)$"
+        )
+
+        # SDK: is_host:0 l3_dest:0x787bd9bf8420 l3_dest:la_vxlan_next_hop_base(oid=3994) vrf(gid/oid):7/0xdaa
+        p3 = re.compile(
+            r"^SDK: +is_host:(?P<is_host>\d+) +l3_dest:(?P<l3_dest>\S+) +"
+            r"l3_dest:(?P<l3_dest_type>\w+)\(oid=(?P<l3_dest_oid>\d+)\) +"
+            r"vrf\(gid/oid\):(?P<vrf_gid>\d+)\/(?P<vrf_oid>\S+)$"
+        )
+
+        # NPD: SDK oid 0xf9a, devid:1, asic:0
+        p4 = re.compile(r"^NPD: +SDK +oid +(?P<sdk_oid>\S+), +devid:(?P<devid>\d+), +asic:(?P<asic>\d+)$")
+
+        # object type: vxlan_next_hop
+        p5 = re.compile(r"^object +type: +(?P<object_type>\S+)$")
+
+        # ====== NPL Hardware Information for 2001:10:10:1:: vrf gid 7======
+        p6 = re.compile(
+            r"^====== +NPL +Hardware +Information +for +(?P<prefix>\S+) +"
+            r"vrf +gid +(?P<vrf_gid>\d+)======$"
+        )
+
+        # ====== NPL Hardware Information for vrf gid 7 profile gid 1======
+        p6_1 = re.compile(
+            r"^====== +NPL +Hardware +Information +for +vrf +gid +(?P<vrf_gid>\d+) +"
+            r"profile +gid +(?P<profile_gid>\d+)======$"
+        )
+
+        # Destination type = DESTINATION_L2_DLP, Destination id = 7
+        p7 = re.compile(r"^Destination +type += +(?P<destination_type>\S+), +Destination +id += +(?P<destination_id>\d+)$")
+
+        # Slice = 0 Destination IP = 172.16.254.1, Source IP = 172.16.254.2
+        p8 = re.compile(
+            r"^Slice += +(?P<slice>\d+) +Destination +IP += +(?P<destination_ip>\S+), +"
+            r"Source +IP += +(?P<source_ip>\S+)$"
+        )
+
+        # ADJ:objid:0x99 iif_id:0x519 encap_type:VXLAN vrf:0 link_type:IPv6
+        p9 = re.compile(
+            r"^ADJ:objid:(?P<objid>\S+) +iif_id:(?P<iif_id>\S+) +"
+            r"encap_type:(?P<encap_type>\S+) +vrf:(?P<vrf>\d+) +link_type:(?P<link_type>\S+)$"
+        )
+
+        # NPD: device:0 underlay_vrf:0 overlay_vrf:7 vxlan_tunnel_gid:7 vxlan_port_oid:3987 vxlan_nh_oid:3994
+        p10 = re.compile(
+            r"^NPD: +device:(?P<device>\d+) +underlay_vrf:(?P<underlay_vrf>\d+) +"
+            r"overlay_vrf:(?P<overlay_vrf>\d+) +vxlan_tunnel_gid:(?P<vxlan_tunnel_gid>\d+) +"
+            r"vxlan_port_oid:(?P<vxlan_port_oid>\d+) +vxlan_nh_oid:(?P<vxlan_nh_oid>\d+)$"
+        )
+
+        # vni:10100 SIP:172.16.254.2 DIP:172.16.254.1
+        p11 = re.compile(r"^vni:(?P<vni>\d+) +SIP:(?P<sip>\S+) +DIP:(?P<dip>\S+)$")
+
+        # per-vrf VNI 10100
+        p12 = re.compile(r"^per-vrf +VNI +(?P<per_vrf_vni>\d+)$")
+
+        # LOOKUP:obj_id:48 table_id:2 proto:1
+        p13 = re.compile(r"^LOOKUP:obj_id:(?P<obj_id>\d+) +table_id:(?P<table_id>\d+) +proto:(?P<proto>\d+)$")
+
+        # sdk nexthop oid:0xf9b,dev:1, gid:0xc
+        p14 = re.compile(r"^sdk +nexthop +oid:(?P<nexthop_oid>\S+),dev:(?P<nexthop_dev>\d+), +gid:(?P<nexthop_gid>\S+)$")
+
+        # macaddr:4e41.5000.0114, nh_type:normal(0)
+        p15 = re.compile(r"^macaddr:(?P<macaddr>\S+), +nh_type:(?P<nh_type>\S+)$")
+
+        # sdk outgoing port oid 0xdab, porttype:l3ac(70)
+        p16 = re.compile(r"^sdk +outgoing +port +oid +(?P<sdk_outgoing_port_oid>\S+), +porttype:(?P<porttype>\S+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # IPV6ROUTE_ID:id:0x574a415e2438 nobj:(IPNEXTHOP_ID,0x99) 2001:10:10:1::/64 table_id:7
+            m = p0.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv6_add = groups["ipv6_add"]
+                ipv6_add_dict = ret_dict.setdefault("ipv6_add", {}).setdefault(
+                    ipv6_add, {}
+                )
+                ipv6_add_dict.update({
+                    "ipv6route_id": groups["ipv6route_id"],
+                    "obj_name": groups["obj_name"],
+                    "obj_id": groups["obj_id"],
+                    "table_id": int(groups["table_id"]),
+                })
+                continue
+
+            # DA:0 last_act:0 last_rc:0
+            m = p0_1.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv6_add_dict.update({
+                    "da": int(groups["da"]),
+                    "last_act": int(groups["last_act"]),
+                    "last_rc": int(groups["last_rc"]),
+                })
+                continue
+
+            # State:(0) success, Flags:0x840
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                if current_context == "adj":
+                    ipv6_add_dict.setdefault("adj", {})["state"] = groups["state"]
+                elif current_context == "lookup":
+                    ipv6_add_dict.setdefault("lookup", {})["state"] = groups["state"]
+                else:
+                    ipv6_add_dict["state"] = groups["state"]
+                    if groups["flags"] and "flags" not in ipv6_add_dict:
+                        ipv6_add_dict["flags"] = groups["flags"]
+                continue
+
+            # NPD: device:0 lspa_rec:0 api_type:route(3)
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv6_add_dict.update({
+                    "device": int(groups["device"]),
+                    "lspa_rec": int(groups["lspa_rec"]),
+                    "api_type": int(groups["api_type"]),
+                })
+                continue
+
+            # SDK: is_host:0 l3_dest:0x787bd9bf8420 l3_dest:la_vxlan_next_hop_base(oid=3994) vrf(gid/oid):7/0xdaa
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_dict = ipv6_add_dict.setdefault("sdk", {})
+                sdk_dict.update({
+                    "is_host": int(groups["is_host"]),
+                    "l3_dest": groups["l3_dest"],
+                    "l3_dest_type": groups["l3_dest_type"],
+                    "l3_dest_oid": int(groups["l3_dest_oid"]),
+                    "vrf_gid": int(groups["vrf_gid"]),
+                    "vrf_oid": groups["vrf_oid"],
+                })
+                continue
+
+            # NPD: SDK oid 0xf9a, devid:1, asic:0
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                if current_context == "adj":
+                    sdk_dict = ipv6_add_dict.setdefault("adj", {})
+                else:
+                    sdk_dict = ipv6_add_dict.setdefault("sdk_object", {})
+                sdk_dict.update({
+                    "sdk_oid": groups["sdk_oid"],
+                    "devid": int(groups["devid"]),
+                    "asic": int(groups["asic"]),
+                })
+                continue
+
+            # object type: vxlan_next_hop
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                if current_context == "adj":
+                    ipv6_add_dict.setdefault("adj", {})["object_type"] = groups["object_type"]
+                else:
+                    ipv6_add_dict.setdefault("sdk_object", {})["object_type"] = groups["object_type"]
+                continue
+
+            # ====== NPL Hardware Information for 2001:10:10:1:: vrf gid 7======
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                current_context = "npl"
+                npl_dict = ipv6_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "prefix": groups["prefix"],
+                    "vrf_gid": int(groups["vrf_gid"]),
+                })
+                continue
+
+            # ====== NPL Hardware Information for vrf gid 7 profile gid 1======
+            m = p6_1.match(line)
+            if m:
+                groups = m.groupdict()
+                npl_dict = ipv6_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "vrf_gid": int(groups["vrf_gid"]),
+                    "profile_gid": int(groups["profile_gid"]),
+                })
+                continue
+
+            # Destination type = DESTINATION_L2_DLP, Destination id = 7
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                npl_dict = ipv6_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "destination_type": groups["destination_type"],
+                    "destination_id": int(groups["destination_id"]),
+                })
+                continue
+
+            # Slice = 0 Destination IP = 172.16.254.1, Source IP = 172.16.254.2
+            m = p8.match(line)
+            if m:
+                groups = m.groupdict()
+                npl_dict = ipv6_add_dict.setdefault("npl_hardware", {})
+                npl_dict.update({
+                    "slice": int(groups["slice"]),
+                    "destination_ip": groups["destination_ip"],
+                    "source_ip": groups["source_ip"],
+                })
+                continue
+
+            # ADJ:objid:0x99 iif_id:0x519 encap_type:VXLAN vrf:0 link_type:IPv6
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                current_context = "adj"
+                adj_dict = ipv6_add_dict.setdefault("adj", {})
+                adj_dict.update({
+                    "objid": groups["objid"],
+                    "iif_id": groups["iif_id"],
+                    "encap_type": groups["encap_type"],
+                    "vrf": int(groups["vrf"]),
+                    "link_type": groups["link_type"],
+                })
+                continue
+
+            # NPD: device:0 underlay_vrf:0 overlay_vrf:7 vxlan_tunnel_gid:7 vxlan_port_oid:3987 vxlan_nh_oid:3994
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                adj_dict = ipv6_add_dict.setdefault("adj", {})
+                adj_dict.update({
+                    "device": int(groups["device"]),
+                    "underlay_vrf": int(groups["underlay_vrf"]),
+                    "overlay_vrf": int(groups["overlay_vrf"]),
+                    "vxlan_tunnel_gid": int(groups["vxlan_tunnel_gid"]),
+                    "vxlan_port_oid": int(groups["vxlan_port_oid"]),
+                    "vxlan_nh_oid": int(groups["vxlan_nh_oid"]),
+                })
+                continue
+
+            # vni:10100 SIP:172.16.254.2 DIP:172.16.254.1
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                adj_dict = ipv6_add_dict.setdefault("adj", {})
+                adj_dict.update({
+                    "vni": int(groups["vni"]),
+                    "sip": groups["sip"],
+                    "dip": groups["dip"],
+                })
+                continue
+
+            # per-vrf VNI 10100
+            m = p12.match(line)
+            if m:
+                groups = m.groupdict()
+                ipv6_add_dict.setdefault("npl_hardware", {})["per_vrf_vni"] = int(groups["per_vrf_vni"])
+                continue
+
+            # LOOKUP:obj_id:48 table_id:2 proto:1
+            m = p13.match(line)
+            if m:
+                groups = m.groupdict()
+                current_context = "lookup"
+                lookup_dict = ipv6_add_dict.setdefault("lookup", {})
+                lookup_dict.update({
+                    "obj_id": int(groups["obj_id"]),
+                    "table_id": int(groups["table_id"]),
+                    "proto": int(groups["proto"]),
+                })
+                continue
+
+            # sdk nexthop oid:0xf9b,dev:1, gid:0xc
+            m = p14.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_object_dict = ipv6_add_dict.setdefault("sdk_object", {})
+                sdk_object_dict.update({
+                    "nexthop_oid": groups["nexthop_oid"],
+                    "nexthop_dev": int(groups["nexthop_dev"]),
+                    "nexthop_gid": int(groups["nexthop_gid"], 0),
+                })
+                continue
+
+            # macaddr:4e41.5000.0114, nh_type:normal(0)
+            m = p15.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_object_dict = ipv6_add_dict.setdefault("sdk_object", {})
+                sdk_object_dict.update({
+                    "macaddr": groups["macaddr"],
+                    "nh_type": groups["nh_type"],
+                })
+                continue
+
+            # sdk outgoing port oid 0xdab, porttype:l3ac(70)
+            m = p16.match(line)
+            if m:
+                groups = m.groupdict()
+                sdk_object_dict = ipv6_add_dict.setdefault("sdk_object", {})
+                sdk_object_dict.update({
+                    "sdk_outgoing_port_oid": groups["sdk_outgoing_port_oid"],
+                    "porttype": groups["porttype"],
+                })
+                continue
+
+        return ret_dict
+
 
 class ShowPlatformSoftwareFedActiveIpMfibVrfSchema(MetaParser):
     """

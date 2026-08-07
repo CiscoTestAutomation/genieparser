@@ -1,0 +1,7 @@
+Total Vlan Current Count/Max Reached      : 2/3
+Snoop Group Current Count/Max Reached     : 16000/16001
+Total Group Current Count/Max Reached     : 16000/16001
+Port Current Count/Max Reached            : 1/20003
+Last cleared timestamp for IPv6           : N/A
+Last used Vlan Urid                       : 0x4000000000000006
+Last Used Group Urid                      : 0x60000000000109a2

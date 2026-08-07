@@ -1,0 +1,10 @@
+Cloud-Mgmt Cloud Monitoring: Compatible
+Cloud-Mgmt Cloud Management
+------------------------------------
+  Boot Mode        INSTALL  - Compatible
+
+Switch# SKU - Status           Bootloader Version - Status  Expansion Modules
+--------------------------------------------------------------------------------------------
+1   IE-3500-8U3X    - Compatible    17_18_2r    - Compatible    IEM-3500-4MU - Compatible
+
+Compatible EMs : IEM-3500-8T, IEM-3500-4MU
