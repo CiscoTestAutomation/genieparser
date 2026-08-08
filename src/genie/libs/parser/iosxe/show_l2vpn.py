@@ -4667,10 +4667,10 @@ class ShowL2vpnEvpnEviDetailSchema(MetaParser):
                     },
                     Optional('peer'): {
                         Any(): {
-                            'mac_routes': int,
-                            'mac_ip_routes': int,
-                            'imet_routes': int,
-                            'ead_routes': int,
+                            optional('mac_routes'): int,
+                            optional('mac_ip_routes'): int,
+                            optional('imet_routes'): int,
+                            optional('ead_routes'): int,
                         },
                     },
                 },
