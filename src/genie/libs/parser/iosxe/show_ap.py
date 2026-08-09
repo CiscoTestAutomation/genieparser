@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, Optional, Or, ListOf
 
 
 # ====================
@@ -1149,7 +1149,7 @@ class ShowApCdpNeighborSchema(MetaParser):
                 Optional("neighbor_name"): str,
                 Optional("neighbor_port"): str,
                 Optional("neighbor_ip_count"): int,
-                Optional("neighbor_ip_addresses"): list
+                Optional("neighbor_ip_addresses"): ListOf(str)
             }
         }
     }
@@ -1199,8 +1199,9 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
 
         neighbor_count_capture = re.compile(r"^Number\s+of\s+neighbors:\s+(?P<neighbor_count>\d+)$")
         # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com TenGigabitEthernet3/0/47
+        # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com 10.8.32.1   TenGigabitEthernet3/0/47
         neighbor_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<ap_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<neighbor_name>\S+)\s+(?P<neighbor_port>\S+)$")
+            r"^(?P<ap_name>\S+)\s+(?P<ap_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<neighbor_name>\S+)(\s+(?P<neighbor_ip>\S+))?\s+(?P<neighbor_port>\S+)$")
         # Neighbor IP Count: 1
         neighbor_ip_count_capture = re.compile(r"^Neighbor\s+IP\s+Count:\s+(?P<neighbor_ip_count>\d+)$")
         # 10.8.32.1
@@ -1222,6 +1223,7 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
             elif line.startswith('-----'):
                 continue
             # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com TenGigabitEthernet3/0/47
+            # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com 10.8.32.1   TenGigabitEthernet3/0/47
             elif neighbor_info_capture.match(line):
                 neighbor_info_capture_match = neighbor_info_capture.match(line)
                 groups = neighbor_info_capture_match.groupdict()
@@ -1235,6 +1237,11 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
                 ap_cdp_neighbor_dict['ap_name'][ap_name]['ap_ip'] = ap_ip
                 ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_name'] = neighbor_name
                 ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_port'] = neighbor_port
+                if groups['neighbor_ip']:
+                    neighbor_ip = groups['neighbor_ip']
+                    address_list = ap_cdp_neighbor_dict['ap_name'][ap_name].setdefault('neighbor_ip_addresses', [])
+                    address_list.append(neighbor_ip)
+                    
             # Neighbor IP Count: 1
             elif neighbor_ip_count_capture.match(line):
                 neighbor_ip_count_match = neighbor_ip_count_capture.match(line)
