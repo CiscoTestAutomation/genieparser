@@ -38275,6 +38275,17 @@
       }
     }
   },
+  "show ip device tracking all": {
+    "ios": {
+      "class": "ShowIpDeviceTrackingAll",
+      "doc": "\n    Parser for 'show ip device tracking all'\n    ",
+      "module_name": "show_ip",
+      "package": "genie.libs.parser",
+      "schema": "{\n'state': <class 'str'>,\n'probe_count': <class 'int'>,\n'probe_interval': <class 'int'>,\n'delay_interval': <class 'int'>,\n'total_numb_if_enabled': <class 'int'>,\n'devices': {\n  Any  (str) *: {\n    'mac_address': <class 'str'>,\n    'vlan': <class 'int'>,\n    'interface': <class 'str'>,\n    'state': <class 'str'>,\n    Optional  (str) source: <class 'str'>,\n    Optional  (str) probe_timeout: <class 'int'>,\n    },\n  },\n}",
+      "uid": "show_ip_device_tracking_all",
+      "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/ios/show_ip.py#L78"
+    }
+  },
   "show ip dhcp binding": {
     "folders": {
       "iosxe": {

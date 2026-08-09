@@ -1,0 +1,17 @@
+Global IP Device Tracking for clients = Enabled
+Global IP Device Tracking Probe Count = 3
+Global IP Device Tracking Probe Interval = 30
+Global IP Device Tracking Probe Delay Interval = 0
+-----------------------------------------------------------------------------------------------
+  IP Address    MAC Address   Vlan  Interface           Probe-Timeout      State    Source
+-----------------------------------------------------------------------------------------------
+192.168.178.218 b437.6c25.f929 30   GigabitEthernet0/8     30              ACTIVE   ARP
+192.168.178.205 c29c.85a3.2ea7 30   GigabitEthernet0/4     30              ACTIVE   ARP
+192.168.178.194 d026.88aa.5029 30   GigabitEthernet0/3     30              ACTIVE   ARP
+192.168.178.28  5d13.9664.24ed 30   GigabitEthernet0/7     30              ACTIVE   ARP
+192.168.178.18  efe6.f1c6.718f 30   GigabitEthernet0/2     30              ACTIVE   ARP
+
+Total number interfaces enabled: 8
+Enabled interfaces:
+  Gi0/1, Gi0/2, Gi0/3, Gi0/4, Gi0/5, Gi0/6, Gi0/7,
+  Gi0/8
