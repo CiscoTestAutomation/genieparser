@@ -1,0 +1,15 @@
+Meraki Monitoring          : Disabled
+Number of Supported APs    : 58
+
+AP Name                          AP Model             Radio MAC      MAC Address    AP Serial Number       Cloud ID         Status
+---------------------------------------------------------------------------------------------------------------------------------------------------
+lab-ap-01                        C9136I-B             0011.2233.0001 0011.2233.1001 TST00000001            Q2ZZ-0001-AAAA   Registered
+lab-ap-02                        AIR-AP1562I-B-K9     0011.2233.0002 0011.2233.1002 TST00000002            Q2ZZ-0002-AAAB   Registered
+lab-ap-03                        AIR-AP3802I-B-K9     0011.2233.0003 0011.2233.1003 TST00000003            Q2ZZ-0003-AAAC   Registered
+lab-ap-04                        AIR-AP3802I-B-K9     0011.2233.0004 0011.2233.1004 TST00000004            Q2ZZ-0004-AAAD   Registered
+lab-ap-05                        AIR-AP3802E-B-K9     0011.2233.0005 0011.2233.1005 TST00000005            Q2ZZ-0005-AAAE   Registered
+lab-ap-06                        CW9176I              0011.2233.0006 0011.2233.1006 TST00000006            Q5BK-0006-AAAF   Registered
+lab-ap-07                        CW9176I              0011.2233.0007 0011.2233.1007 TST00000007            Q5BK-0007-AAAG   Registered
+lab-ap-08                        CW9176D1             0011.2233.0008 0011.2233.1008 TST00000008            Q5BL-0008-AAAH   Registered
+lab-ap-09                        CW9176D1             0011.2233.0009 0011.2233.1009 TST00000009            Q5BC-0009-AAAJ   Registered
+lab-ap-10                        CW9176I              0011.2233.0010 0011.2233.1010 TST00000010            Q5BK-0010-AAAK   Registered

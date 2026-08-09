@@ -117327,5 +117327,21 @@
         }
       }
     }
+  },
+  "show ap meraki monitoring summary": {
+    "folders": {
+      "iosxe": {
+        "class": "ShowApMerakiMonitoringSummary",
+        "doc": "Parser for show ap meraki monitoring summary",
+        "module_name": "iosxe.show_ap",
+        "package": "genie.libs.parser",
+        "schema": "{\n    'meraki_monitoring': {\n        'monitoring_status': str,\n        'supported_ap_count': int,\n        Optional('aps'): {\n            '<class 'str'>': {\n                Optional('ap_model'): str,\n                Optional('radio_mac'): str,\n                Optional('mac_address'): str,\n                Optional('serial_number'): str,\n                Optional('cloud_id'): str,\n                Optional('status'): str,\n            },\n        },\n    },\n}",
+        "tokens": {
+          "os": "iosxe"
+        },
+        "uid": "show_ap_meraki_monitoring_summary",
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_ap.py#L1286"
+      }
+    }
   }
 }
