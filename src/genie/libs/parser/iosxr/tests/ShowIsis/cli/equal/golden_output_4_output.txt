@@ -1,0 +1,55 @@
+show isis
+Mon Dec 15 08:17:44.848 CET
+
+IS-IS Router: 1
+  System Id: fc20.2400.06fd 
+  Hostname: PE3
+  IS Levels: level-2-only
+  Manual area address(es):
+    49.0000
+  Routing for area address(es):
+    49.0000
+  Multi-Instance Id: 0
+  Job Id: 1005
+  PID: 7263
+  Respawn count: 1
+  Started: Tue Jun 10 08:56:24 2025
+  Null0 ready: Tue Jun 10 08:56:24 2025
+  LSP MTU: 1492
+  LSP Full: level-1: No, level-2: No
+  Non-stop forwarding: Disabled
+  Most recent startup mode: Cold Restart
+  TE connection status: Up
+  XTC connection status: Up
+  Overload Bit Level-2: configured, clear
+    interarea prefixes suppressed, external prefixes suppressed
+      on startup for 300 seconds
+    clear since Jun 10 2025 09:01:25.384 CEST
+  Maximum Metric: not configured
+  Topologies supported by IS-IS:
+    IPv4 Unicast
+      Rib connected
+      Level-2
+        Metric style (generate/accept): Wide/Wide
+        Metric: 10
+      Redistributing:
+        Connected
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+    IPv6 Unicast
+      Rib connected
+      Level-2
+        Metric: 10
+      No protocols redistributed
+      Distance: 115
+      Advertise Passive Interface Prefixes Only: No
+  SRv6:
+    Configured locators:
+      MAIN (Active)
+  Interfaces supported by IS-IS 1:
+    Loopback0 is running passively (passive in configuration)
+    GigabitEthernet0/0/0/0 is running actively (active in configuration)
+    TenGigE0/0/0/14 is running actively (active in configuration)
+    TenGigE0/0/0/15 is disabled (active in configuration)
+    TenGigE0/0/0/16 is disabled (active in configuration)
+    TenGigE0/0/0/17 is disabled (active in configuration)

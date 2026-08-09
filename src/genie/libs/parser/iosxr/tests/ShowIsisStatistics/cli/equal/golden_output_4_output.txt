@@ -1,0 +1,79 @@
+show isis statistics
+Mon Dec 15 08:17:45.399 CET
+
+IS-IS 1 Packet and Event Statistics
+                                              Dropped        Dropped
+  Total PDUs       Sent       Received       On Input      By Update
+    Hello:      5441144        5440051              0              -
+    CSNP:             8        1855873              -              0
+    PSNP:          4172           5157              0              0
+    LSP:           5356           4343              0              0
+  
+  LSP Retransmissions:           20
+  LSP Checksum Errors:           0
+  
+  IS-IS Update Queue:            0/3455
+    High Water Mark:             11
+    Total Traffic:               1865373
+    Drops:                       0
+  IS-IS Input Queue:             0/6400
+    High Water Mark:             11
+    Total Traffic:               7305425
+    Drops:                       0
+  
+  Level-2
+    LSPs sourced (new/refresh):  37/252
+    Route Calculations:
+      IPv4 Unicast Total:        18182
+        Full SPF Calculations:   18115
+          Periodic:              18030
+        Partial Route Calc:      61
+        Next Hop Calculations:   6
+      IPv6 Unicast Total:        18171
+        Full SPF Calculations:   18119
+          Periodic:              18029
+        Partial Route Calc:      48
+        Next Hop Calculations:   4
+
+Loopback0
+  Passive
+
+GigabitEthernet0/0/0/0
+  PTP Hellos (sent/rcvd):        1856417/1855630
+    LSP Retransmissions:         0
+  Level-2
+    LSPs (sent/rcvd):            2387/281
+    CSNPs (sent/rcvd):           1/1855866
+    PSNPs (sent/rcvd):           270/2287
+
+TenGigE0/0/0/14
+  PTP Hellos (sent/rcvd):        97436/97375
+    LSP Retransmissions:         10
+  Level-2
+    LSPs (sent/rcvd):            48/146
+    CSNPs (sent/rcvd):           2/2
+    PSNPs (sent/rcvd):           125/28
+
+TenGigE0/0/0/15
+  PTP Hellos (sent/rcvd):        3140/3111
+    LSP Retransmissions:         10
+  Level-2
+    LSPs (sent/rcvd):            26/17
+    CSNPs (sent/rcvd):           2/2
+    PSNPs (sent/rcvd):           7/6
+
+TenGigE0/0/0/16
+  PTP Hellos (sent/rcvd):        17765/17762
+    LSP Retransmissions:         0
+  Level-2
+    LSPs (sent/rcvd):            9/27
+    CSNPs (sent/rcvd):           1/1
+    PSNPs (sent/rcvd):           25/8
+
+TenGigE0/0/0/17
+  PTP Hellos (sent/rcvd):        1729305/1729144
+    LSP Retransmissions:         0
+  Level-2
+    LSPs (sent/rcvd):            1912/1933
+    CSNPs (sent/rcvd):           1/1
+    PSNPs (sent/rcvd):           1866/1855
