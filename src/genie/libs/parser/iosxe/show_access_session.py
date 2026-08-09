@@ -59,24 +59,26 @@ class ShowAccessSessionSchema(MetaParser):
 class ShowAccessSession(ShowAccessSessionSchema):
     """Parser for show access-session"""
 
-    MAP = {'auth': 'authenticator',
-           'supp': 'supplicant'}
-
     cli_command = 'show access-session'
 
     def cli(self,output=None):
         if output is None:
             # get output from device
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # initial return dictionary
         ret_dict = {}
 
         # initial regexp pattern
+        
+        # No sessions currently exist
         p1 = re.compile(r'^No sessions currently exist$')
+
+        # Session count = 2
         p2 = re.compile(r'^Session +count \= +(?P<val>\d+)$')
+        
+        # Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
+        # Gi1/0/2                  aabb.cc11.2233 dot1x   VOICE   Unauth      000000000000000A1B2C3D4E
         p3 = re.compile(r'^(?P<intf>[\w\/\-\.]+) +'
                          r'(?P<client>[\w\.]+) +'
                          r'(?P<method>\w+) +'
@@ -84,7 +86,7 @@ class ShowAccessSession(ShowAccessSessionSchema):
                          r'(?P<status>\w+) +'
                          r'(?P<session>\w+)$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             line = line.replace('\t', '    ')
 
@@ -94,13 +96,14 @@ class ShowAccessSession(ShowAccessSessionSchema):
                 ret_dict['session_count'] = 0
                 return ret_dict
 
-            # Session count = 1
+            # Session count = 2
             m = p2.match(line)
             if m:
                 ret_dict['session_count'] = int(m.groupdict()['val'])
                 continue
 
             # Gi1/0/1                  f4cf.beff.9cb1 dot1x   DATA    Auth        000000000000000BB6FC9EAF
+            # Gi1/0/2                  aabb.cc11.2233 dot1x   VOICE   Unauth      000000000000000A1B2C3D4E
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -113,8 +116,7 @@ class ShowAccessSession(ShowAccessSessionSchema):
                 client_dict['client'] = client
                 client_dict['method'] = group['method']
                 client_dict['domain'] = group['domain']
-                client_dict['status'] = self.MAP[group['status'].lower()] \
-                    if group['status'].lower() in self.MAP else group['status'].lower()
+                client_dict['status'] = group['status']
                 session = group['session']
                 client_dict.setdefault('session', {}).setdefault(session, {})\
                     .setdefault('session_id', session)
