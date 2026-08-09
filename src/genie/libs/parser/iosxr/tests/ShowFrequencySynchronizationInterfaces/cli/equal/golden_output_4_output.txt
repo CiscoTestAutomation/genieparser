@@ -1,0 +1,128 @@
+
+Interface TenGigE0/0/0/16 (up)
+  Wait-to-restore time 0 minutes
+  SSM Enabled
+    Peer Up for 1d00h, last SSM received 0.423s ago
+    Peer has come up 73 times and timed out 5 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:          88562        88552        10          0
+      Received:      88570        88570         0          0
+  Input:
+    Down - not assigned for selection
+    Configured QL: Lowest Opt-I/PRC
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/0/26
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 2
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+  Next selection points: ETH_RXMUX
+
+Interface TenGigE0/0/0/26 (up)
+  Assigned as input for selection
+  Wait-to-restore time 1 minute
+  SSM Enabled
+    Peer Up for 1d00h, last SSM received 0.380s ago
+    Peer has come up 131 times and timed out 0 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:          88497        88490         7      87848
+      Received:      88493        88490         3          0
+  Input:
+    Up
+    Last received QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC, Priority: 10, Time-of-day Priority 25
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 1
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/0/26
+    Selected source QL: Opt-I/PRC
+    Effective QL: DNU
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 2
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+  Next selection points: ETH_RXMUX
+
+Interface TenGigE0/0/0/27 (up)
+  Assigned as input for selection
+  Wait-to-restore time 1 minute
+  SSM Enabled
+    Peer Up for 1d00h, last SSM received 0.470s ago
+    Peer has come up 134 times and timed out 0 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:          88507        88499         8        585
+      Received:      88500        88499         1          0
+  Input:
+    Up
+    Last received QL: Opt-I/PRC
+    Configured QL: Lowest Opt-I/SSU-A
+    Effective QL: Opt-I/PRC, Priority: 20, Time-of-day Priority 25
+    Originator clock ID: 4c01f7fffe415c00
+    SyncE steps: 1, eSyncE steps: 1
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/0/26
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 2
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+  Next selection points: ETH_RXMUX
+
+Interface GigabitEthernet0/0/0/1 (shutdown)
+  Wait-to-restore time 5 minutes
+  SSM Enabled
+  Input:
+    Down - not assigned for selection
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/0/26
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 2
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+  Next selection points: ETH_RXMUX
+
+Interface GigabitEthernet0/0/0/9 (shutdown)
+  Wait-to-restore time 0 minutes
+  SSM Enabled
+  Input:
+    Down - not assigned for selection
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/0/26
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 2
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+  Next selection points: ETH_RXMUX
+
+Interface GigabitEthernet0/0/0/17 (up)
+  Assigned as input for selection
+  Wait-to-restore time 1 minute
+  SSM Enabled
+    Peer Timed Out for 1w6d, last SSM received never
+    Peer has come up 0 times and timed out 5 times
+    ESMC SSMs        Total  Information     Event    DNU/DUS
+      Sent:        1155550      1155531        19          0
+      Received:          0            0         0          0
+  Input:
+    Down
+    Last received QL: Failed
+    Effective QL: Failed, Priority: 10, Time-of-day Priority 100
+    Extended ESMC data not received
+    Supports frequency
+  Output:
+    Selected source: TenGigE0/0/0/26
+    Selected source QL: Opt-I/PRC
+    Effective QL: Opt-I/PRC
+    Originator clock ID: a0334ffffea03e00
+    SyncE steps: 1, eSyncE steps: 2
+    Not all steps run eSyncE; Chain of extended ESMC data is broken
+  Next selection points: ETH_RXMUX

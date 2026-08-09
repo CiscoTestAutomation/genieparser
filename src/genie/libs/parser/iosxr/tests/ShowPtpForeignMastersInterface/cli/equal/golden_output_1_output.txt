@@ -1,0 +1,18 @@
+Interface TenGigE0/0/0/26 (PTP port number 5)
+  Ethernet, Address a033.4fa0.3e16, Multicast
+    Configured priority: None (128)
+    Configured clock class: None
+    Configured delay asymmetry: None
+    Qualified for 1 day, 4 hours, 48 minutes
+    Clock ID: 84c807fffe10faa2
+    Phase difference: -5ns
+    Servo status: Phase aligned
+    Received clock properties:
+      Domain: 24, Priority1: 128, Priority2: 20, Class: 6
+      Accuracy: 0x21, Offset scaled log variance: 0x4e5d
+      Steps-removed: 4, Time source: GPS, Timescale: PTP
+      Frequency-traceable, Time-traceable
+      Current UTC offset: 37 seconds (valid)
+    Parent properties:
+      Clock ID: a0334ffffea03e00
+      Port number: 1
