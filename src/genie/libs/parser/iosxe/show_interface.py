@@ -1775,7 +1775,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         return merged_output
 
 
-class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
+class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBriefSchema):
     """Parser for:
      show ip interface brief | include Vlan
      parser class implements detail parsing mechanisms for cli and yang output.
@@ -1794,8 +1794,55 @@ class ShowIpInterfaceBriefPipeVlan(ShowIpInterfaceBrief):
         super().__init__(*args, **kwargs)
         self.cmd = self.cli_command
 
-    def cli(self):
-        super(ShowIpInterfaceBriefPipeVlan, self).cli()
+    def cli(self, output=None):
+
+        """parsing mechanism: cli
+
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        """
+
+        if output is None:
+            cmd = self.cli_command
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if out:
+            interface_dict = {}
+
+            # GigabitEthernet0/0     10.1.18.80      YES manual up                    up
+            p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+                r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_is_ok>[A-Z]+) '
+                r'+(?P<method>[a-zA-Z]+) +(?P<status>[a-z\s]+) '
+                r'+(?P<protocol>[a-z]+)$')
+
+            for line in out.splitlines():
+                line = line.strip()
+
+                m = p.match(line)
+                if m:
+                    interface = m.groupdict()['interface']
+                    if 'interface' not in interface_dict:
+                        interface_dict['interface'] = {}
+                    if interface not in interface_dict['interface']:
+                        interface_dict['interface'][interface] = {}
+
+                    interface_dict['interface'][interface]['ip_address'] = \
+                        m.groupdict()['ip_address']
+                    interface_dict['interface'][interface]['interface_is_ok'] = \
+                        m.groupdict()['interface_is_ok']
+                    interface_dict['interface'][interface]['method'] = \
+                        m.groupdict()['method']
+                    interface_dict['interface'][interface]['status'] = \
+                        m.groupdict()['status'].strip()
+                    interface_dict['interface'][interface]['protocol'] = \
+                        m.groupdict()['protocol']
+
+                    continue
+
+        return interface_dict
 
     def yang(self):
         """parsing mechanism: yang
