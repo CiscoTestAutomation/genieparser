@@ -382,14 +382,23 @@ class ShowChassisHardwareSchema(MetaParser):
             Optional("@junos:style"): str,
             "chassis-module": [
                 {
+                    "description": str,
+                    "name": str,
+                    "part-number": str,
+                    "serial-number": str,
+                    "version": str
+                },
+                {
                     "chassis-sub-module": [
                         {
-                            "chassis-sub-sub-module": {
-                                "description": str,
-                                "name": str,
-                                "part-number": str,
-                                "serial-number": str
-                            },
+                            "chassis-sub-sub-module": [
+                                {
+                                    "description": str,
+                                    "name": str,
+                                    "part-number": str,
+                                    "serial-number": str
+                                }
+                            ],
                             "description": str,
                             "name": str,
                             "part-number": str,
@@ -398,7 +407,17 @@ class ShowChassisHardwareSchema(MetaParser):
                         }
                     ],
                     "description": str,
-                    "name": str
+                    "name": str,
+                    "part-number": str,
+                    "serial-number": str,
+                    "version": str
+                },
+                {
+                    "description": str,
+                    "name": str,
+                    "part-number": str,
+                    "serial-number": str,
+                    "version": str
                 }
             ],
             "description": str,
@@ -486,19 +505,25 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
         # Chassis                                VM5D4C6B3599      VMX
+        # Chassis                                JN123D12FJCB      JNP10003 [MX10003]
+        # Chassis                                E1234             MX80-48T
         p_chassis = re.compile(r'^(?P<name>Chassis) +(?P<serial_number>[A-Z\d]+)'
-                               r' +(?P<description>\S+)$')
+                               r' +(?P<description>.*)$')
 
         # -------------------------------------------------------------------------------------
         # For general chassis modules, for example:
         # -------------------------------------------------------------------------------------
         # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
         # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+        # Midplane         REV 07   711-031603   AB1234            MX80-48T
+        # Midplane         REV 20   750-074276   ABCD1234          Midplane 2
         p_module0 = re.compile(r'(?P<name>Midplane( \d+)?) +(?P<version>\w+ \d+)'
                                r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
-                               r'+(?P<description>[\s\S]+)$')        
+                               r'+(?P<description>.*)$')        
 
+        # PEM 0            Rev 05   740-028288   AB01234           AC Power Entry Module
         # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+        # TFEB 0                    BUILTIN      BUILTIN           Forwarding Engine Processor
         # CB 0             REV 10   750-051985   CAFC0322          Control Board
         # FPC 0            REV 72   750-044130   ABDF7568          MPC6E 3D
         # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
@@ -509,9 +534,11 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         # PDM 3            REV 01   740-050036   1EFD3390136       DC Power Dist Module
         # PSM 11           REV 04   740-050037   1EDB527002P       DC 52V Power Supply Module
         # PMP 1            REV 01   711-051408   ACAJ5284          Upper Power Midplane
-        p_module1 = re.compile(r'^(?P<name>(Routing Engine|CB|FPC|SPMB|SFB|ADC|Fan Tray|FPM|PDM|PSM|PMP) (\d+|Board))( +(?P<version>\w+ \d+)'
-                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
-                               r'+(?P<description>[\s\S]+)$')
+        p_module1 = re.compile(r'^(?P<name>(PEM|Routing Engine|TFEB|CB|FPC|SPMB|SFB|ADC|Fan Tray|FPM|PDM|PSM|PMP) (\d|Board|)) +(?P<version>(\w+ \d+))?'
+                               r' +(?P<part_number>[A-Z\d\-]+)? +(?P<serial_number>[A-Z\d]+)? '
+                               r'+(?P<description>.*)$')
+
+
 
         # Midplane   
         p_module2 = re.compile(r'^(?P<name>\S+)$')
@@ -522,9 +549,9 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
         # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
         # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
-        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+) +(?P<version>\w+ \d+)'
-                                  r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
-                                  r'+(?P<description>[\s\S]+)$')
+        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+) +(?P<version>(\w+ \d+))?'
+                                  r' +(?P<part_number>[A-Z\d\-]+)? +(?P<serial_number>[A-Z\d]+)? '
+                                  r'+(?P<description>.*)$')
 
         # CPU            Rev. 1.0 RIOT-LITE    BUILTIN     
         p_sub_module_2 = re.compile(r'(?P<name>CPU) +(?P<version>[\s\S]+) +(?P<part_number>[A-Z\-]+)'
@@ -537,17 +564,17 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         # For chassis-sub-sub-module, for example:
         # -------------------------------------------------------------------------------------
         # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
-        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+) +(?P<part_number>[A-Z]+) '
-                                      r'+(?P<serial_number>[A-Z]+) +(?P<description>[\s\S]+)$')
+        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+) +(?P<part_number>[A-Z]+)'
+                                      r' +(?P<serial_number>[A-Z]+) +(?P<description>.*)$')
 
 
         # -------------------------------------------------------------------------------------
         # For chassis-sub-sub-sub-module, for example:
         # -------------------------------------------------------------------------------------
         # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
-        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+)( +(?P<version>(\w+ \d+)|(\S+)))?'
-                                          r' +(?P<part_number>[\d\-]+|NON-JNPR) +(?P<serial_number>[A-Z\d]+)'
-                                          r' +(?P<description>[\s\S]+)$')                                      
+        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+) +((?P<version>(\w+ \d+)|(\S+)))?'
+                                          r' +(?P<part_number>[\d\-]+|NON-JNPR) +(?P<serial_number>[A-Z\d]+) '
+                                          r'+(?P<description>.*)$')
 
         res = {}
 
