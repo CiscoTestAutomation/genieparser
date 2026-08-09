@@ -107109,6 +107109,26 @@
       }
     }
   },
+  "show running-config dhcp": {
+    "ios": {
+      "class": "ShowRunDhcp",
+      "doc": "\n    Parser for: show running-config dhcp\n    real command is: show running-config\n    ",
+      "module_name": "show_run_dhcp",
+      "package": "genie.libs.parser",
+      "schema": "{\nAny  (str) *: {\n  Optional  (str) domain: <class 'str'>,\n  Optional  (str) gateway: <class 'str'>,\n  Optional  (str) vrf: <class 'str'>,\n  Optional  (str) boot_file: <class 'str'>,\n  Optional  (str) netbios_servers: <class 'list'>,\n  Optional  (str) dns_servers: <class 'list'>,\n  Optional  (str) dhcp_excludes: {\n    Any  (str) *: {\n      Optional  (str) end: <class 'str'>,\n      Optional  (str) start: <class 'str'>,\n      },\n    },\n  Optional  (str) networks: {\n    Any  (str) *: {\n      Optional  (str) ip: <class 'str'>,\n      Optional  (str) subnet_mask: <class 'str'>,\n      Optional  (str) secondary: <class 'bool'>,\n      },\n    },\n  Optional  (str) dhcp_options: {\n    Any  (str) *: {\n      Optional  (str) option: <class 'str'>,\n      Optional  (str) type: <class 'str'>,\n      Optional  (str) data: <class 'str'>,\n      },\n    },\n  Optional  (str) lease_time: <class 'str'>,\n  },\n}",
+      "uid": "show_running-config_dhcp",
+      "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/ios/show_run_dhcp.py#L4"
+    },
+    "iosxe": {
+      "class": "ShowRunDhcp",
+      "doc": null,
+      "module_name": "show_run_dhcp",
+      "package": "genie.libs.parser",
+      "schema": "{\nAny  (str) *: {\n  Optional  (str) domain: <class 'str'>,\n  Optional  (str) gateway: <class 'str'>,\n  Optional  (str) vrf: <class 'str'>,\n  Optional  (str) boot_file: <class 'str'>,\n  Optional  (str) netbios_servers: <class 'list'>,\n  Optional  (str) dns_servers: <class 'list'>,\n  Optional  (str) dhcp_excludes: {\n    Any  (str) *: {\n      Optional  (str) end: <class 'str'>,\n      Optional  (str) start: <class 'str'>,\n      },\n    },\n  Optional  (str) networks: {\n    Any  (str) *: {\n      Optional  (str) ip: <class 'str'>,\n      Optional  (str) subnet_mask: <class 'str'>,\n      Optional  (str) secondary: <class 'bool'>,\n      },\n    },\n  Optional  (str) dhcp_options: {\n    Any  (str) *: {\n      Optional  (str) option: <class 'str'>,\n      Optional  (str) type: <class 'str'>,\n      Optional  (str) data: <class 'str'>,\n      },\n    },\n  Optional  (str) lease_time: <class 'str'>,\n  },\n}",
+      "uid": "show_running-config_dhcp",
+      "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_run_dhcp.py#L100"
+    }
+  },
   "show running-config flow exporter": {
     "folders": {
       "iosxe": {
@@ -107439,6 +107459,26 @@
         "uid": "show_running-config___format_netconf-xml",
         "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_run.py#L3181"
       }
+    }
+  },
+  "show running-config | i ^ip route": {
+    "ios": {
+      "class": "ShowRunIpRoute",
+      "doc": "Parser for: show running-config | ^ip route",
+      "module_name": "show_run_ip_route",
+      "package": "genie.libs.parser",
+      "schema": "{\n'ip_routes': {\n  Any  (str) *: {\n    'vrf': <class 'str'>,\n    'vrf_global': <class 'str'>,\n    'subnet': <class 'str'>,\n    'subnet_mask': <class 'str'>,\n    'next_hop': <class 'str'>,\n    'forward_address': <class 'str'>,\n    'route_name': <class 'str'>,\n    'metric': <class 'str'>,\n    'track_object': <class 'str'>,\n    'permanent': <class 'str'>,\n    'tag': <class 'str'>,\n    'parsing_leftovers': <class 'str'>,\n    },\n  },\n}",
+      "uid": "show_running-config___i_^ip_route",
+      "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/ios/show_run_ip_route.py#L4"
+    },
+    "iosxe": {
+      "class": "ShowRunIpRoute",
+      "doc": null,
+      "module_name": "show_run_ip_route",
+      "package": "genie.libs.parser",
+      "schema": "{\n'ip_routes': {\n  Any  (str) *: {\n    'vrf': <class 'str'>,\n    'vrf_global': <class 'str'>,\n    'subnet': <class 'str'>,\n    'subnet_mask': <class 'str'>,\n    'next_hop': <class 'str'>,\n    'forward_address': <class 'str'>,\n    'route_name': <class 'str'>,\n    'metric': <class 'str'>,\n    'track_object': <class 'str'>,\n    'permanent': <class 'str'>,\n    'tag': <class 'str'>,\n    'parsing_leftovers': <class 'str'>,\n    },\n  },\n}",
+      "uid": "show_running-config___i_^ip_route",
+      "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_run_ip_route.py#L31"
     }
   },
   "show running-config | inc peer": {
