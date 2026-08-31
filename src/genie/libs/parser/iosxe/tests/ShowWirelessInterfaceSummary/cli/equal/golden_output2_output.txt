@@ -1,0 +1,6 @@
+Device# show wireless interface summary
+
+Interface Name   Interface Type VLAN ID IP Address   IP Netmask     NAT-IP Address   MAC Address
+--------------------------------------------------------------------------------------------------
+GigabitEthernet0 Management     0       0.0.0.0     255.255.255.0  0.0.0.0          d4c9.3ce6.b854
+                                      fd09:9:2:49::54/64

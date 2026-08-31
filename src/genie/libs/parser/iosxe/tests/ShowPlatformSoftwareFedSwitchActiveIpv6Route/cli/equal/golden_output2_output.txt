@@ -1,0 +1,5 @@
+Number of npi_ipv6route entries = 3
+Object ID           IPv6 Address                            Mask Length         Parent Type         Parent ObjectID     SGT   
+0x560a323ae7d8      fe80::                                  10                  RECV                0x0                 0     
+0x560a323ae6e8      ::                                      127                 DROP                0x0                 0     
+0x560a323ab7e8      ::                                      0                   DROP                0x0                 0     

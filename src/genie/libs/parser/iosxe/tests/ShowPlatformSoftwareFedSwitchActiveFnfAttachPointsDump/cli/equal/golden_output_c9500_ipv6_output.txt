@@ -1,0 +1,4 @@
+FNF Attach Points
+=================
+ap(0x7dd668026e78) iif(0x61) ifname(Tw1/0/4) traffic(IPv6) direction(EGRESS) monitor0((nil)) monitor0_type(0, NULL) features0(0) monitor1(0x7dd66802b2e8) monitor1_type(4, FNF/FNF based feature) features1(0) sub_traffic_filter[0]=0 sub_traffic_filter[1]=3
+ap(0x7dd668026f88) iif(0x62) ifname(Tw1/0/5) traffic(IPv4) direction(EGRESS) monitor0(0x1234) monitor0_type(4, FNF/FNF based feature) features0(0) monitor1(0xdeadbeef) monitor1_type(0, NULL) features1(0) sub_traffic_filter[0]=3 sub_traffic_filter[1]=0

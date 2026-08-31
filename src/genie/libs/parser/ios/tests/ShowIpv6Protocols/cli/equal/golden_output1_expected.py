@@ -45,6 +45,24 @@ expected_output = {
                 }
             }
         },
+        "application": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                         "ipv6": {}
+                    }
+                }
+            }
+        },
+        "ND": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                         "ipv6": {}
+                    }
+                }
+            }
+        },
         "connected": {
             "vrf": {
                 "default": {

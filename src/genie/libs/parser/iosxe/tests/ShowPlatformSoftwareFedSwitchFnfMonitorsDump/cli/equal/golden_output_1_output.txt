@@ -1,0 +1,19 @@
+C9500-1#show platform software fed active fnf monitors-dump
+FNF Monitors
+============
+Monitor (0x7f30dc025bc8):
+    profile_id(0x82231916) ref_ct(1) monitor_type(4, FNF/FNF based feature)
+    wdavc_monitor_create_requested(False)
+    wdavc_remote_monitoring_remote_caching(0)
+    flags(0x0000) is_wireless(No) wireless_flags(0)
+    assurance_mon(No) mon_field_cnt(8)     is_etta_over_fnf No ettaOrBaseProfile(00000000)
+    etta_refcnt(0) swc_flag No
+    Active timeout (60) Inactive timeout (15)
+field(93) size(4) param(0) flags(1) offset(0)
+field(94) size(4) param(0) flags(1) offset(4)
+field(132) size(1) param(255) flags(0) offset(8)
+field(177) size(8) param(0) flags(0) offset(9)
+field(181) size(8) param(0) flags(0) offset(17)
+field(197) size(8) param(0) flags(0) offset(25)
+field(198) size(8) param(0) flags(0) offset(33)
+field(46) size(1) param(0) flags(1) offset(41)

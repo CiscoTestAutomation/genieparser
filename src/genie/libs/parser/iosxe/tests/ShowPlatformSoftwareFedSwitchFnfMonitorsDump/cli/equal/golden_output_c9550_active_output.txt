@@ -1,0 +1,22 @@
+----------------------------------------------
+FNF  monitor  statistics
+fnf_mon_id:             2416048847
+exp_action:             0
+exp_id:                 0
+inactive_timeout:       15
+active_timeout:         60
+cache_type:             1
+cache_size:             16384
+record_size:            45
+record_count:           9
+Record | Field | Size | Param | Flags | Offset
+     1 |    87 |    4 |     0 |     1 |      0
+     2 |    90 |    4 |     0 |     1 |      4
+     3 |   124 |    2 |     0 |     1 |      8
+     4 |   125 |    2 |     0 |     1 |     10
+     5 |   197 |    8 |     0 |     0 |     12
+     6 |   199 |    8 |     0 |     0 |     20
+     7 |   221 |    8 |     0 |     0 |     28
+     8 |   222 |    8 |     0 |     0 |     36
+     9 |    34 |    1 |     0 |     1 |     44
+fnf_mon_hdl:             140506515291976

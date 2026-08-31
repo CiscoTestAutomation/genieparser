@@ -1,0 +1,5 @@
+          SUP 0 Authentication:  pass
+    RoT:0 Asic-0 Authentication:    Passed
+     Fan Tray 1 Authentication:  Not Available
+     Fan Tray 2 Authentication:  Not Available
+     Fan Tray 3 Authentication:  Not Available

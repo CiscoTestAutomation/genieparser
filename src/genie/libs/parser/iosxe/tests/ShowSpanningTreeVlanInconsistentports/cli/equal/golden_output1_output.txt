@@ -1,0 +1,3 @@
+Name                 Interface                      Inconsistency
+-------------------- ------------------------------ ------------------
+Number of inconsistent ports (segments) in vlan 200 : 0

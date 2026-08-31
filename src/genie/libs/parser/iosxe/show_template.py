@@ -169,7 +169,7 @@ class ShowTemplateBriefSchema(MetaParser):
                 'bound_to_interface': str
             }
         },
-        'service_template': {
+        Optional('service_template'): {
             Any(): {
                 'source': str,
                 'bound_to_session': str

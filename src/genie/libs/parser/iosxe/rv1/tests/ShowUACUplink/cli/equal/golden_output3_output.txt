@@ -1,0 +1,11 @@
+Uplink Autoconfig: Enable
+Uplink IPv4 interface: TenGigabitEthernet0/0/3
+        IP Address: 10.8.30.51/255.255.255.0
+        Type:       DHCP
+        SVI:        NotApplicable
+        Port Used:  NotApplicable
+        GW IP:      10.8.30.1
+        GW MAC:     4567.89ab.0123
+        VRF:
+Uplink IPv6 interface: None
+Uplink Reachable: IPv4

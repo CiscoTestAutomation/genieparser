@@ -103,11 +103,11 @@ class ShowPlatformSoftwareFedMatmMacTable(ShowPlatformSoftwareFedMatmMacTableSch
         # VLAN   MAC                   Type  Seq#    EC_Bi  Flags    *a_time  *e_time  ports                                                         Con
         # 100    0011.2233.4455       0x202    4341      0      0          0        0  GigabitEthernet1/0/12                                         No
         p_short = re.compile(
-            r"(?P<vlanport>\d+) +(?P<mac>[\w\.]+) +"
-            r"(?P<type>\w+) +(?P<sequence>\d+) +"
-            r"(?P<ecbi>\d+) +(?P<flag>\d+) +"
-            r"(?P<atime>\d+) +(?P<etime>\d+) +"
-            r"(?P<port>[\w\.\_\/\s\s]+) + (?P<con>[\s\w\s]+)$"
+            r"^(?P<vlanport>\d+)\s+(?P<mac>[\w.]+)\s+"
+            r"(?P<type>\w+)\s+(?P<sequence>\d+)\s+"
+            r"(?P<ecbi>\d+)\s+(?P<flag>\d+)\s+"
+            r"(?P<atime>\d+)\s+(?P<etime>\d+)\s+"
+            r"(?P<port>.+?)\s+(?P<con>Yes|No)$"
         )
 
         # Total Mac number of addresses:: 5

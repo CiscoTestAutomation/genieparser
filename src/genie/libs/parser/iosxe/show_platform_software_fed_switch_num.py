@@ -8,7 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 # =============================================================================
 #  Schema for
@@ -455,7 +455,11 @@ class ShowPlatformSoftwareFedSwitchFnfSwStatsShow(ShowPlatformSoftwareFedSwitchF
         return ret_dict
 
 class ShowPlatformSoftwareFedSwitchFnfMonitorsDumpSchema(MetaParser):
-    """Schema for 'show platform software fed switch {switch_num} fnf monitors-dump'"""
+    """Schema for the following commands:
+
+    * 'show platform software fed switch {switch_num} fnf monitors-dump'
+    * 'show platform software fed {switch} fnf monitors-dump'
+    """
 
     schema = {
         "monitors": {
@@ -464,6 +468,14 @@ class ShowPlatformSoftwareFedSwitchFnfMonitorsDumpSchema(MetaParser):
                 Optional("ref_ct"): int,
                 Optional("monitor_type"): int,
                 Optional("monitor_type_desc"): str,
+                Optional("fnf_mon_id"): int,
+                Optional("exp_action"): int,
+                Optional("exp_id"): int,
+                Optional("cache_type"): int,
+                Optional("cache_size"): int,
+                Optional("record_size"): int,
+                Optional("record_count"): int,
+                Optional("fnf_mon_hdl"): int,
                 Optional("wdavc_monitor_create_requested"): bool,
                 Optional("wdavc_remote_monitoring_remote_caching"): int,
                 Optional("flags"): str,
@@ -479,6 +491,7 @@ class ShowPlatformSoftwareFedSwitchFnfMonitorsDumpSchema(MetaParser):
                 Optional("inactive_timeout"): int,
                 Optional("fields"): {
                     Optional(Any()): {
+                        Optional("record"): int,
                         Optional("size"): int,
                         Optional("param"): int,
                         Optional("flags"): int,
@@ -489,14 +502,28 @@ class ShowPlatformSoftwareFedSwitchFnfMonitorsDumpSchema(MetaParser):
         }
     }
 
-class ShowPlatformSoftwareFedSwitchFnfMonitorsDump(ShowPlatformSoftwareFedSwitchFnfMonitorsDumpSchema):
-    """Parser for 'show platform software fed switch {switch_num} fnf monitors-dump'"""
 
-    cli_command = "show platform software fed switch {switch_num} fnf monitors-dump"
+class ShowPlatformSoftwareFedSwitchFnfMonitorsDump(
+        ShowPlatformSoftwareFedSwitchFnfMonitorsDumpSchema):
+    """Parser for the following commands:
 
-    def cli(self, switch_num, output=None):
+    * 'show platform software fed switch {switch_num} fnf monitors-dump'
+    * 'show platform software fed {switch} fnf monitors-dump'
+    """
+
+    cli_command = [
+        "show platform software fed switch {switch_num} fnf monitors-dump",
+        "show platform software fed {switch} fnf monitors-dump",
+    ]
+
+    def cli(self, switch_num=None, switch=None, output=None):
         if output is None:
-            cmd = self.cli_command.format(switch_num=switch_num)
+            if switch_num is not None:
+                cmd = self.cli_command[0].format(switch_num=switch_num)
+            elif switch is not None:
+                cmd = self.cli_command[1].format(switch=switch)
+            else:
+                raise ValueError("Either switch_num or switch must be provided")
             output = self.device.execute(cmd)
 
         ret_dict = {}
@@ -528,6 +555,30 @@ class ShowPlatformSoftwareFedSwitchFnfMonitorsDump(ShowPlatformSoftwareFedSwitch
 
         # field(93) size(4) param(0) flags(1) offset(0)
         p9 = re.compile(r"^field\((?P<field>\d+)\) size\((?P<size>\d+)\) param\((?P<param>\d+)\) flags\((?P<flags>\d+)\) offset\((?P<offset>\d+)\)$")
+
+        # FNF  monitor  statistics
+        p10 = re.compile(r"^FNF\s+monitor\s+statistics$")
+
+        # fnf_mon_id:             2416048847
+        p11 = re.compile(r"^fnf_mon_id:\s*(?P<fnf_mon_id>\d+)$")
+
+        # exp_action:             0
+        # inactive_timeout:       15
+        # fnf_mon_hdl:             140506515291976
+        p12 = re.compile(
+            r"^(?P<key>exp_action|exp_id|inactive_timeout|active_timeout|"
+            r"cache_type|cache_size|record_size|record_count|fnf_mon_hdl):"
+            r"\s*(?P<value>\d+)$"
+        )
+
+        # 1 | 87 | 4 | 0 | 1 | 0
+        p13 = re.compile(
+            r"^(?P<record>\d+)\s*\|\s*(?P<field>\d+)\s*\|\s*"
+            r"(?P<size>\d+)\s*\|\s*(?P<param>\d+)\s*\|\s*"
+            r"(?P<flags>\d+)\s*\|\s*(?P<offset>\d+)$"
+        )
+
+        monitor_dict = None
 
         for line in output.splitlines():
             line = line.strip()
@@ -616,6 +667,44 @@ class ShowPlatformSoftwareFedSwitchFnfMonitorsDump(ShowPlatformSoftwareFedSwitch
                 field = group.pop("field")
                 field_dict = monitor_dict.setdefault("fields", {}).setdefault(field, {})
                 field_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # FNF  monitor  statistics
+            m = p10.match(line)
+            if m:
+                # Prevent a malformed block from appending data to the
+                # previously parsed monitor while waiting for fnf_mon_id.
+                monitor_dict = None
+                continue
+
+            # fnf_mon_id:             2416048847
+            m = p11.match(line)
+            if m:
+                fnf_mon_id = int(m.group("fnf_mon_id"))
+                current_monitor = str(fnf_mon_id)
+                monitor_dict = ret_dict.setdefault("monitors", {}).setdefault(
+                    current_monitor, {}
+                )
+                monitor_dict["fnf_mon_id"] = fnf_mon_id
+                continue
+
+            # Colon-separated monitor attributes
+            m = p12.match(line)
+            if m:
+                if monitor_dict is not None:
+                    monitor_dict[m.group("key")] = int(m.group("value"))
+                continue
+
+            # Pipe-separated record table row
+            m = p13.match(line)
+            if m:
+                if monitor_dict is not None:
+                    group = m.groupdict()
+                    field = group.pop("field")
+                    field_dict = monitor_dict.setdefault("fields", {}).setdefault(
+                        field, {}
+                    )
+                    field_dict.update({k: int(v) for k, v in group.items()})
                 continue
 
         return ret_dict
@@ -737,7 +826,7 @@ class ShowPlatformSoftwareFedSwitchFnfProfileMapsDump(ShowPlatformSoftwareFedSwi
                 continue
 
         return ret_dict
-    
+
 # ======================================================================
 # Schema for 'show platform software fed switch {switch} fnf flow-table mon-id {mon_id} asic {asic} start-index {start_index} num-flows {num_flows}'
 # ======================================================================
@@ -833,7 +922,7 @@ class ShowPlatformSoftwareFedSwitchFnfFlowTableMonId(
                 ret_dict['no_flow_entries'] = True
                 continue
 
-        return ret_dict 
+        return ret_dict
 
 class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDumpSchema(MetaParser):
     """Schema for show platform software fed switch active fnf attach-points-dump"""
@@ -841,20 +930,22 @@ class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDumpSchema(MetaParser):
     schema = {
         'attach_points': {
             Any(): {
-                'sampler_type': int,
-                'sampler_window_size': int,
-                'fnf_mon_id': int,
+                Optional('sampler_type'): int,
+                Optional('sampler_window_size'): int,
+                Optional('fnf_mon_id'): int,
                 'direction': str,
                 'interface_id': str,
                 'traffic_type': str,
-                'status': str,
+                Optional('status'): str,
                 Optional('asic'): int,
                 Optional('fp_oid'): int,
                 Optional('acl_oid'): int,
                 Optional('rh_oid'): int,
+                Optional('monitor_ids'): ListOf(int),
             }
         }
     }
+
 
 class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDump(
     ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDumpSchema
@@ -901,9 +992,32 @@ class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDump(
         # rh_oid:  0
         p5 = re.compile(r'^rh_oid:\s+(?P<rh_oid>\d+)$')
 
+        # ap(0x7dd668026d68) iif(0x60) ifname(Tw1/0/3) traffic(IPv4)
+        # direction(INGRESS) monitor0(...) ... monitor1(...) ...
+        p6 = re.compile(
+            r'^ap\((?P<ap>0x[\da-fA-F]+)\)\s+'
+            r'iif\((?P<iif>0x[\da-fA-F]+)\)\s+'
+            r'ifname\((?P<interface_id>[^)]+)\)\s+'
+            r'traffic\((?P<traffic_type>IPv[46])\)\s+'
+            r'direction\((?P<direction>INGRESS|EGRESS)\)\s+'
+            r'(?P<monitor_data>.+)$',
+            re.IGNORECASE,
+        )
+
+        # monitor0(0x7dd66802b1d8) monitor0_type(4, FNF/FNF based feature)
+        # monitor1((nil)) monitor1_type(0, NULL)
+        p7 = re.compile(
+            r'monitor(?P<slot>[01])\('
+            r'(?P<monitor_id>0x[\da-fA-F]+|\(nil\))\)\s+'
+            r'monitor(?P=slot)_type\('
+            r'(?P<monitor_type>\d+),\s*'
+            r'(?P<monitor_type_desc>[^)]+)\)',
+            re.IGNORECASE,
+        )
+
         for line in output.splitlines():
             line = line.strip()
-           
+
             # | 0 | 0 | 3208064872 | Input | Gi2/0/6 | IPV4 TRAFFIC | SUCCESS |
             m = p1.match(line)
             if m:
@@ -918,14 +1032,14 @@ class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDump(
                 current_entry['traffic_type'] = g['traffic_type'].strip()
                 current_entry['status'] = g['status']
                 continue
-               
+
             # Asic:    0
             m = p2.match(line)
             if m and current_entry is not None:
                 current_entry['asic'] = int(m.group('asic'))
                 continue
 
-           # fp_oid:  0
+            # fp_oid:  0
             m = p3.match(line)
             if m and current_entry is not None:
                 current_entry['fp_oid'] = int(m.group('fp_oid'))
@@ -943,4 +1057,34 @@ class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDump(
                 current_entry['rh_oid'] = int(m.group('rh_oid'))
                 continue
 
-        return ret_dict 
+            # C9500 legacy ap(...) format
+            m = p6.match(line)
+            if m:
+                idx += 1
+                group = m.groupdict()
+                current_entry = ret_dict.setdefault(
+                    'attach_points', {}
+                ).setdefault(idx, {})
+                current_entry['interface_id'] = group['interface_id']
+                current_entry['traffic_type'] = group['traffic_type']
+                current_entry['direction'] = group['direction'].upper()
+
+                monitor_ids = []
+                for monitor_match in p7.finditer(group['monitor_data']):
+                    monitor = monitor_match.groupdict()
+                    monitor_id = monitor['monitor_id']
+                    monitor_type = int(monitor['monitor_type'])
+                    monitor_type_desc = monitor['monitor_type_desc'].upper()
+
+                    if monitor_id.lower() == '(nil)':
+                        continue
+
+                    # Type 4 is the legacy FNF/FNF-based-feature type. Keep
+                    # the description check for equivalent FNF type labels.
+                    if monitor_type == 4 or 'FNF' in monitor_type_desc:
+                        monitor_ids.append(int(monitor_id, 16))
+
+                current_entry['monitor_ids'] = monitor_ids
+                continue
+
+        return ret_dict

@@ -1,7 +1,115 @@
+""" show_wireless.py
+
+IOSXE parsers for the following show commands:
+    * 'show wireless interface summary'
+    * 'show wireless profile policy detailed {policy_name}'
+    * 'show wireless cts summary'
+    * 'show wireless fabric client summary'
+    * 'show wireless fabric summary'
+    * 'show wireless client summary'
+    * 'show wireless mobility ap-list'
+    * 'show wireless mobility summary'
+    * 'show wireless profile policy summary'
+    * 'show wireless stats ap join summary'
+    * 'show wireless client mac {mac_address} detail'
+    * 'show wireless fabric vnid mapping'
+    * 'show wireless stats client delete reasons'
+    * 'show wireless stats client detail'
+    * 'show wireless stats mobility'
+    * 'show wireless management trustpoint'
+    * 'show wireless multicast'
+    * 'show wireless profile flex summary'
+    * 'show wireless tag site summary'
+    * 'show wireless mesh ap backhaul'
+"""
+
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, Or
+from genie.metaparser.util.schemaengine import Any, ListOf, Optional, Or
+from genie.libs.parser.utils.common import Common
+
+
+# =============================================
+# Schema for:
+#  * 'show wireless interface summary'
+# =============================================
+class ShowWirelessInterfaceSummarySchema(MetaParser):
+    """Schema for show wireless interface summary."""
+
+    schema = {
+        "interfaces": {
+            Any(): {
+                "interface_type": str,
+                "vlan_id": int,
+                "ip_address": str,
+                "ip_netmask": str,
+                "nat_ip_address": str,
+                "mac_address": str,
+                Optional("ipv6_addresses"): ListOf(str),
+            }
+        }
+    }
+
+
+# =============================================
+# Parser for:
+#  * 'show wireless interface summary'
+# =============================================
+class ShowWirelessInterfaceSummary(ShowWirelessInterfaceSummarySchema):
+    """Parser for show wireless interface summary."""
+
+    cli_command = "show wireless interface summary"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+
+        # Vlan121  Management  121  192.0.2.10  255.255.255.0  0.0.0.0  001e.496d.ccff
+        p_interface = re.compile(
+            r"^(?P<interface_name>\S+)\s+"
+            r"(?P<interface_type>\S+)\s+"
+            r"(?P<vlan_id>\d+)\s+"
+            r"(?P<ip_address>\S+)\s+"
+            r"(?P<ip_netmask>\S+)\s+"
+            r"(?P<nat_ip_address>\S+)\s+"
+            r"(?P<mac_address>[0-9a-fA-F.:-]+)$"
+        )
+
+        # fd09:9:2:49::54/64
+        p_ipv6_address = re.compile(
+            r"^(?P<ipv6_address>[0-9a-fA-F:]+/\d+)$"
+        )
+
+        current_interface = None
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Vlan121  Management  121  192.0.2.10  255.255.255.0  0.0.0.0  001e.496d.ccff
+            match = p_interface.match(line)
+            if match:
+                interface_data = match.groupdict()
+                current_interface = Common.convert_intf_name(
+                    interface_data.pop("interface_name")
+                )
+                interface_data["vlan_id"] = int(
+                    interface_data["vlan_id"]
+                )
+                ret_dict.setdefault("interfaces", {})[current_interface] = (
+                    interface_data
+                )
+                continue
+
+            # fd09:9:2:49::54/64
+            match = p_ipv6_address.match(line)
+            if match and current_interface:
+                ret_dict["interfaces"][current_interface].setdefault(
+                    "ipv6_addresses", []
+                ).append(match.group("ipv6_address"))
+
+        return ret_dict
 
 
 

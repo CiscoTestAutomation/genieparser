@@ -1901,7 +1901,8 @@ class ShowPlatformSoftwareFedSwitchActiveNatAclSchema(MetaParser):
               'src_port': str,
               'dst_port': str, 
               'src_addr': str, 
-              'dst_addr': str,                           
+              'dst_addr': str,
+              Optional('vrf'): int,
             },
         },
         'ace_count': int,
@@ -1927,11 +1928,17 @@ class ShowPlatformSoftwareFedSwitchActiveNatAcl(ShowPlatformSoftwareFedSwitchAct
         ret_dict = {}
         index = 1
         index_dict = {}
-        #  Type | Protocol | Src Port | Dst Port |        Src Addr |        Dst Addr |
-        # ----------------------------------------------------------------------------
-        #  SNAT |      any |        - |        - |        12.0.0.0 |         0.0.0.0 |
-        #  DNAT |      any |        - |        - |         0.0.0.0 |        36.0.0.2 |
-        p0 = re.compile(r'^(?P<type>\S+)\s+\|+\s+(?P<protocol>\S+)\s+\|+\s+(?P<src_port>\S+)\s+\|+\s+(?P<dst_port>\S+)\s+\|+\s+(?P<src_addr>[\d\.]+)\s+\|+\s+(?P<dst_addr>[\d\.]+)\s+\|$')
+        #  Type | Protocol | Src Port | Dst Port | Src Addr | Dst Addr | VRF |
+        # ---------------------------------------------------------------------
+        #  SNAT | any      | -        | -        | 12.0.0.0 | 0.0.0.0  | 0   |
+        #
+        # The VRF column is present on newer releases and absent on older ones.
+        p0 = re.compile(
+            r'^(?P<type>\S+)\s+\|+\s+(?P<protocol>\S+)\s+\|+\s+'
+            r'(?P<src_port>\S+)\s+\|+\s+(?P<dst_port>\S+)\s+\|+\s+'
+            r'(?P<src_addr>[\d\.]+)\s+\|+\s+(?P<dst_addr>[\d\.]+)'
+            r'\s+\|(?:\s+(?P<vrf>\d+)\s+\|)?$'
+        )
 
         # Ace Count : 2
         p1 = re.compile(r'^Ace Count +: +(?P<ace_count>\d+)$')
@@ -1956,6 +1963,8 @@ class ShowPlatformSoftwareFedSwitchActiveNatAcl(ShowPlatformSoftwareFedSwitchAct
                 index_dict['dst_port'] = group['dst_port']
                 index_dict['src_addr'] = group['src_addr']
                 index_dict['dst_addr'] = group['dst_addr']
+                if group['vrf'] is not None:
+                    index_dict['vrf'] = int(group['vrf'])
                 index += 1
                 continue
             # Ace Count : 2
