@@ -32,6 +32,10 @@
     * 'show platform software fed switch {mode} ipv6 route vrf {vrf_name} {ip_add} detail'
     *'show platform software fed {switch} {module} ip igmp snooping group vlan {vlan_id} {group}',
     *'show platform software fed {switch} {module} ip igmp snooping group vlan {vlan_id} {group} detail'
+    * 'show platform software fed {mode} ip route'
+    * 'show platform software fed {mode} ip route vrf {vrf_name}'
+    * 'show platform software fed {mode} ipv6 route'
+    * 'show platform software fed {mode} ipv6 route vrf {vrf_name}'
 """
 # Python
 import re
@@ -1162,15 +1166,25 @@ class ShowPlatformSoftwareFedSwitchActiveIpRoute(
     show platform software fed switch active ip route vrf {vrf_name}
     """
 
-    cli_command = ["show platform software fed {switch} {mode} ip route","show platform software fed {switch} {mode} ip route vrf {vrf_name}"]
+    cli_command = [
+        "show platform software fed {switch} {mode} ip route",
+        "show platform software fed {switch} {mode} ip route vrf {vrf_name}",
+        "show platform software fed {mode} ip route",
+        "show platform software fed {mode} ip route vrf {vrf_name}"
+        ]
 
     def cli(self, switch='', mode='', vrf_name='', output=None):
         if output is None:
-            if vrf_name:
-                cmd = self.cli_command[1].format(switch=switch, mode=mode, vrf_name=vrf_name)
+            if switch:
+                if vrf_name:
+                    cmd = self.cli_command[1].format(switch=switch, mode=mode, vrf_name=vrf_name)
+                else:
+                    cmd = self.cli_command[0].format(switch=switch, mode=mode)
             else:
-                cmd = self.cli_command[0].format(switch=switch, mode=mode)
-
+                if vrf_name:
+                    cmd = self.cli_command[3].format(mode=mode, vrf_name=vrf_name)
+                else:
+                    cmd = self.cli_command[2].format(mode=mode)
             output = self.device.execute(cmd)
 
         ret_dict = {}
@@ -2673,16 +2687,24 @@ class ShowPlatformSoftwareFedSwitchActiveIpv6Route(
     """
 
     cli_command = [
-        "show platform software fed switch {mode} ipv6 route",
-        "show platform software fed switch {mode} ipv6 route vrf {vrf_name}"
+        "show platform software fed {switch} {mode} ipv6 route",
+        "show platform software fed {switch} {mode} ipv6 route vrf {vrf_name}",
+        "show platform software fed {mode} ipv6 route",
+        "show platform software fed {mode} ipv6 route vrf {vrf_name}"
     ]
 
-    def cli(self, mode='', vrf_name='', output=None):
+    def cli(self, mode='', vrf_name='', output=None, switch=None):
         if output is None:
-            if mode and vrf_name:
-                cmd = self.cli_command[1].format(mode=mode, vrf_name=vrf_name)
+            if switch:
+                if vrf_name:
+                    cmd = self.cli_command[1].format(switch=switch, mode=mode, vrf_name=vrf_name)
+                else:
+                    cmd = self.cli_command[0].format(switch=switch, mode=mode)
             else:
-                cmd = self.cli_command[0].format(mode=mode)
+                if vrf_name:
+                    cmd = self.cli_command[3].format(mode=mode, vrf_name=vrf_name)
+                else:
+                    cmd = self.cli_command[2].format(mode=mode)
 
             output = self.device.execute(cmd)
         ret_dict = {}

@@ -1326,6 +1326,13 @@ class ShowIpv6ProtocolsSchema(MetaParser):
             Optional('static'): {
                 'vrf': { Any(): { 'address_family': { Any(): { }, }, }, },
             },
+            Optional('application'): {
+                'vrf': { Any(): { 'address_family': { Any(): { }, }, },
+                },
+            },
+            Optional('ND'): {
+                'vrf': { Any(): { 'address_family': { Any(): { }, }, }, },
+            },
             Optional('rip'): {
                 'vrf': {
                     Any(): {
@@ -1598,6 +1605,8 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         passive_interfaces = False
         passive_intfs = []
 
+        # IPv6 Routing Protocol is "application"
+        # IPv6 Routing Protocol is "ND"
         # IPv6 Routing Protocol is "connected"
         # IPv6 Routing Protocol is "static"
         # IPv6 Routing Protocol is "ospf 1"
@@ -1606,7 +1615,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # IPv6 Routing Protocol is "isis banana"
         # IPv6 Routing Protocol is "eigrp 1"
         p1 = re.compile(r"^IPv6 Routing +Protocol +is"
-                        r" +\"(?P<protocol>(connected|static|ospf|bgp|isis|eigrp|rip))"
+                        r" +\"(?P<protocol>(application|ND|connected|static|ospf|bgp|isis|eigrp|rip))"
                         r"(?: *(?P<pid>(\S+)))?\"$")
 
         # Outgoing update filter list for all interfaces is not set
@@ -1754,6 +1763,8 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             # IPv6 Routing Protocol is "eigrp 1"
             # IPv6 Routing Protocol is "connected"
             # IPv6 Routing Protocol is "static"
+            # IPv6 Routing Protocol is "application"
+            # IPv6 Routing Protocol is "ND"
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1828,7 +1839,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                                             setdefault(instance, {})
                     redistribute_dict = rip_dict.setdefault('redistribute', {})
                     continue
-                elif protocol == 'connected' or protocol == 'static':
+                elif protocol in ('connected', 'static', 'application', 'ND'):
                    protocol_dict.setdefault('vrf', {}). \
                                      setdefault(vrf, {}). \
                                      setdefault('address_family', {}). \

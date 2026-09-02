@@ -1,0 +1,39 @@
+Database: LEABA_RM_DB
+
+Table Name or ID                Table OID ID                        Records     Cur
+  Table Type                    Table OID SRC                                   Mode
+------------------------------------------------------------------------------------
+table repl_toc                  0xec8f57c8c8ec0770bfdb5060df3e6cff  16          en
+  tbl_toc                       0x00000000000000000000000000000000              expl
+table rms_RM_RSC_SYSTEM_PORT_t  0xfa9ed6b6712df0ac892d98a6a3d6a702  194         en
+  rms_RM_RSC_SYSTEM_PORT_table  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_L3_AC_PORT_ta  0xbb6b3f62729f5ed9d42a13c15383ad66  3           en
+  rms_RM_RSC_L3_AC_PORT_table   0x00000000000000000000000000000000              expl
+table rms_RM_RSC_L2_AC_PORT_ta  0x096884c32c1dcefbdf7c8a7d383f8658  197         en
+  rms_RM_RSC_L2_AC_PORT_table   0x00000000000000000000000000000000              expl
+table rms_RM_RSC_L2_AC_PWE_POR  0x16f7c6cf87d7a2029c75cd7a2867ea59  0           en
+  rms_RM_RSC_L2_AC_PWE_PORT_ta  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_IN_MIRROR_tab  0xb7f241fe5dc10aa3aec5d2eaeebb07e1  0           en
+  rms_RM_RSC_IN_MIRROR_table    0x00000000000000000000000000000000              expl
+table rms_RM_RSC_EG_MIRROR_tab  0x08aec2483155e9f7599cef113cebbd8a  0           en
+  rms_RM_RSC_EG_MIRROR_table    0x00000000000000000000000000000000              expl
+table rms_RM_RSC_MPLS_PREFIX_O  0x2a88b2bf9321d7d68d07ceaa607cc0f4  0           en
+  rms_RM_RSC_MPLS_PREFIX_OBJ_t  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_PREFIX_NEXT_H  0x42c30651c5fd3b3df9fe885313d431e6  0           en
+  rms_RM_RSC_PREFIX_NEXT_HOP_t  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_BD_MCID_table  0x231e2a1015b7efb0c9d54fbed21858b1  2           en
+  rms_RM_RSC_BD_MCID_table      0x00000000000000000000000000000000              expl
+table rms_RM_RSC_FEATURE_MCID_  0x13b1437f40e23c8c33f24ba2a79f89e8  6           en
+  rms_RM_RSC_FEATURE_MCID_tabl  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_MPLS_L3VPN_EN  0xdb3abe4e88e4f0b1e896bddfea043bd7  0           en
+  rms_RM_RSC_MPLS_L3VPN_ENCAP_  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_MPLS_TE_TUNNE  0x11187c5eeac9c30529b5f919c84d5f23  0           en
+  rms_RM_RSC_MPLS_TE_TUNNEL_ta  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_LISP_SWITCH_t  0x3b245734d54c61c47799611557092589  0           en
+  rms_RM_RSC_LISP_SWITCH_table  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_PUNJECT_PORT_  0x22b7c1e00c071d6f1dd7edc51771280d  0           en
+  rms_RM_RSC_PUNJECT_PORT_GID_  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_L3TUNNEL_ADJ_  0x4b060cecfc8162b7989526001d7f6e6f  0           en
+  rms_RM_RSC_L3TUNNEL_ADJ_OBJ_  0x00000000000000000000000000000000              expl
+table rms_RM_RSC_PROTECTION_GR  0xf5fd783bf005652bb6ec5988be04e361  0           en
+  rms_RM_RSC_PROTECTION_GROUP_  0x00000000000000000000000000000000              expl

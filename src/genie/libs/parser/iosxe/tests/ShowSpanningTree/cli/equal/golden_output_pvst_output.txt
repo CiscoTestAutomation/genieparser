@@ -1,0 +1,29 @@
+G0:VLAN0100
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32868
+             Address     14bc.68c3.d261
+             Cost        2
+             Port        32 (TenGigabitEthernet0/0/18)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+  Bridge ID  Priority    32868  (priority 32768 sys-id-ext 100)
+             Address     8061.320b.7d61
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  30  sec
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Te0/0/18            Root LRN 2         128.32   P2p
+Te0/0/19            Altn BLK 2         128.33   P2p
+G0:VLAN0200
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32968
+             Address     14bc.68c3.d261
+             Cost        2
+             Port        33 (TenGigabitEthernet0/0/19)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+  Bridge ID  Priority    32968  (priority 32768 sys-id-ext 200)
+             Address     8061.320b.7d61
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  30  sec
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Te0/0/19            Root LRN 2         128.33   P2p

@@ -1,0 +1,14 @@
+Flags: L - Local, U - User, SG - Static Group, VG - Virtual Group,
+       SS - Static Source, VS - Virtual Source,
+       Ac - Group accounted towards access control limit
+Interface: TwentyFiveGigE1/0/3
+Group: 232.1.1.1
+Flags: SSM
+Uptime: 00:00:13
+Group mode: INCLUDE
+Last reporter: 10.20.99.2
+Group source list: (C - Cisco Src Report, U - URD, R - Remote, S - Static,
+                   V - Virtual, M - SSM Mapping, L - Local,
+                   Ac - Channel accounted towards access control limit)
+Source Address Uptime v3 Exp CSR Exp Fwd Flags
+20.20.20.100 00:00:13 00:02:49 stopped Yes R

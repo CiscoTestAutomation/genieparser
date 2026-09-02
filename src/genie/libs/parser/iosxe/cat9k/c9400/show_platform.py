@@ -12,6 +12,11 @@ IOSXE C9400 parsers for the following show commands:
     * 'show platform hardware chassis fantray detail switch {mode}'
     * 'show platform hardware chassis power-supply detail switch {instance} all'
     * 'show platform hardware chassis power-supply detail all'
+    * 'show platform hardware authentication status'
+    * 'show platform hardware fed active fwd-asic resource tcam utilization'
+    * 'show platform hardware fed active fwd-asic resource tcam utilization {asic}'
+    * 'show platform hardware fed standby fwd-asic resource tcam utilization'
+    * 'show platform hardware fed standby fwd-asic resource tcam utilization {asic}'
 '''
 
 # Python
@@ -23,6 +28,12 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 from genie.libs.parser.utils.common import Common
+from genie.libs.parser.iosxe.cat9k.c9610.show_platform import ShowPlatformHardwareAuthenticationStatus as ShowPlatformHardwareAuthenticationStatus_c9610
+
+from genie.libs.parser.iosxe.cat9k.c9600.show_platform import (
+    ShowPlatformFedActiveTcamUtilization as ShowPlatformFedActiveTcamUtilization_c9600,
+    ShowPlatformFedStandbyTcamUtilization as ShowPlatformFedStandbyTcamUtilization_c9600,
+)
 
 log = logging.getLogger(__name__)
 
@@ -1394,3 +1405,20 @@ class ShowPlatformUplinks(ShowPlatformUplinksSchema):
                 continue
 
         return ret_dict
+
+# ===================================================
+# Parser for:
+#  * 'show platform hardware authentication status'
+# ===================================================
+class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticationStatus_c9610):
+    """Parser for show platform hardware authentication status."""
+    pass
+
+class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilization_c9600):
+    """Parser for show platform hardware fed active fwd-asic resource tcam utilization"""
+    pass
+
+
+class ShowPlatformFedStandbyTcamUtilization(ShowPlatformFedStandbyTcamUtilization_c9600):
+    """Parser for show platform hardware fed standby fwd-asic resource tcam utilization"""
+    pass

@@ -48,6 +48,7 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware fed active fwd-asic resource rewrite utilization'
     * 'show platform hardware fed {switch} {switch_var} fwd-asic resource rewrite utilization'
     * 'show platform hardware fed {switch_var} fwd-asic resource rewrite utilization'
+    * 'show platform storm-control mode'
     '''
 
 # Python
@@ -6744,7 +6745,7 @@ class ShowVersionRunning(ShowVersionRunningSchema):
 
         # initial regexp pattern
         # Package: Provisioning File, version: n/a, status: active
-        p1 = re.compile(r'^Package: +(?P<package>[\w+\s+\w]+)+, +version: (?P<version>\S+)+, status: (?P<status>\S+)$')
+        p1 = re.compile(r'^Package: +(?P<package>[\w+\s+\w-]+)+, +version: (?P<version>\S+)+, status: (?P<status>\S+)$')
 
         # Role: provisioning file
         p2 = re.compile(r'^Role: +(?P<role>[\w+\s+\w]+)$')
@@ -13722,6 +13723,135 @@ class ShowPlatformConditions(ShowPlatformConditionsSchema):
             if m:
                 platform_dict = ret_dict.setdefault("platform_conditions", {})
                 platform_dict["system_status"] = m.group("system_status")
+                continue
+
+        return ret_dict
+
+class ShowPlatformStormControlModeSchema(MetaParser):
+    """Schema for show platform storm-control mode"""
+    schema = {
+        "configured_rate_mode": str,
+        "tracked_rate_mode": str,
+        "tracked_entry_counts": {
+            "percentage": int,
+            "bps": int,
+            "pps": int,
+        },
+        "observed_entry_counts": {
+            "percentage": int,
+            "bps": int,
+            "pps": int,
+        },
+        "counter_consistency": str,
+    }
+
+class ShowPlatformStormControlMode(ShowPlatformStormControlModeSchema):
+    """Parser for show platform storm-control mode"""
+    cli_command = "show platform storm-control mode"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Configured rate mode    : PPS
+        p1 = re.compile(r'^Configured\s+rate\s+mode\s*:\s*(?P<configured_rate_mode>\S+)\s*$')
+
+        # Tracked rate mode       : PPS
+        p2 = re.compile(r'^Tracked\s+rate\s+mode\s*:\s*(?P<tracked_rate_mode>\S+)\s*$')
+
+        # Percentage             : 0
+        p3 = re.compile(r'^Percentage\s*:\s*(?P<percentage>\d+)\s*$')
+
+        # BPS                    : 0
+        p4 = re.compile(r'^BPS\s*:\s*(?P<bps>\d+)\s*$')
+
+        # PPS                    : 23
+        p5 = re.compile(r'^PPS\s*:\s*(?P<pps>\d+)\s*$')
+
+        # Counter consistency     : OK
+        p6 = re.compile(r'^Counter\s+consistency\s*:\s*(?P<counter_consistency>\S+)\s*$')
+
+        # Tracked entry counts:
+        tracked_section = False
+        # Observed entry counts:
+        observed_section = False
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Configured rate mode    : PPS
+            m = p1.match(line)
+            if m:
+                ret_dict["configured_rate_mode"] = m.group(
+                    "configured_rate_mode")
+                continue
+
+            # Tracked rate mode       : PPS
+            m = p2.match(line)
+            if m:
+                ret_dict["tracked_rate_mode"] = m.group(
+                    "tracked_rate_mode")
+                continue
+
+            # Tracked entry counts:
+            if "Tracked entry counts:" in line:
+                tracked_section = True
+                observed_section = False
+                continue
+
+            # Observed entry counts:
+            if "Observed entry counts:" in line:
+                tracked_section = False
+                observed_section = True
+                continue
+
+            # Percentage             : 0
+            m = p3.match(line)
+            if m:
+                percentage = int(m.group("percentage"))
+                if tracked_section:
+                    ret_dict.setdefault(
+                        "tracked_entry_counts", {})["percentage"] = percentage
+                elif observed_section:
+                    ret_dict.setdefault(
+                        "observed_entry_counts", {})["percentage"] = percentage
+                continue
+
+            # BPS                    : 0
+            m = p4.match(line)
+            if m:
+                bps = int(m.group("bps"))
+                if tracked_section:
+                    ret_dict.setdefault(
+                        "tracked_entry_counts", {})["bps"] = bps
+                elif observed_section:
+                    ret_dict.setdefault(
+                        "observed_entry_counts", {})["bps"] = bps
+                continue
+
+            # PPS                    : 23
+            m = p5.match(line)
+            if m:
+                pps = int(m.group("pps"))
+                if tracked_section:
+                    ret_dict.setdefault(
+                        "tracked_entry_counts", {})["pps"] = pps
+                elif observed_section:
+                    ret_dict.setdefault(
+                        "observed_entry_counts", {})["pps"] = pps
+                continue
+
+            # Counter consistency     : OK
+            m = p6.match(line)
+            if m:
+                ret_dict["counter_consistency"] = m.group(
+                    "counter_consistency")
                 continue
 
         return ret_dict

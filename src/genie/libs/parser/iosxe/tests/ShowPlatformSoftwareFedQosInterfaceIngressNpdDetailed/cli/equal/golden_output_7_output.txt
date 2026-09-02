@@ -1,0 +1,9 @@
+show platform software fed active qos interface Port-channel92 ingress npd detailed
+***********************************************************************************
+ [Port-channel92, cos1, Ingress]: CGID = 0x6A6610
+***********************************************************************************
+  cgid: 0x6A6610
+  No of classes: 2
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: UP TO DATE

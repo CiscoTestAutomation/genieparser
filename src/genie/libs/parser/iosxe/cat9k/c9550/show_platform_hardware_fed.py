@@ -3,6 +3,8 @@
     * show platform hardware fed switch active npu slot 1 port 41 link_status
     * show platform hardware fed active npu slot 1 port 2 link_status
     * show platform hardware fed switch active qos queue config interface AppGigabitEthernet 2/0/2
+    * show platform hardware fed switch {mode} npu slot 1 port {port_num}
+      port-info
 """
 
 # Python
@@ -10,7 +12,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional, ListOf
+from genie.metaparser.util.schemaengine import Any, Or, Optional, ListOf
 from genie.libs.parser.utils.common import Common
 
 
@@ -660,5 +662,129 @@ class ShowPlatformHardwareFedSwitchQosQueueConfig(
                     m.groupdict()["value"]
                 )
                 continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortInfoSchema(MetaParser):
+    """Schema for show platform hardware fed switch {mode} npu slot 1 port
+    {port_num} port-info
+    """
+
+    schema = {
+        "sw_port_debug_states": {
+            Any(): Or(int, str),
+        },
+        "led_port_debug_states": {
+            Any(): Or(int, str),
+        },
+        "lc_present": str,
+        "outstanding_ports_to_be_deleted": int,
+        "total_failed_deleted_ports": int,
+        "lc_swap_port_count": int,
+    }
+
+
+class ShowPlatformHardwareFedSwitchActiveNpuSlotPortInfo(
+    ShowPlatformHardwareFedSwitchActiveNpuSlotPortInfoSchema
+):
+    """Parser for show platform hardware fed switch {mode} npu slot 1 port
+    {port_num} port-info.
+    """
+
+    cli_command = (
+        "show platform hardware fed switch {mode} npu slot 1 "
+        "port {port_num} port-info"
+    )
+
+    def cli(self, mode, port_num, output=None):
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(mode=mode, port_num=port_num)
+            )
+
+        ret_dict = {}
+        root_dict = None
+
+        # SW port debug states
+        p0 = re.compile(r"^\|\s*SW port debug states\s*\|$")
+
+        # LED port debug states
+        p1 = re.compile(r"^\|\s*LED port debug states\s*\|$")
+
+        # LC present : Yes
+        p2 = re.compile(r"^LC present:\s+(?P<lc_present>Yes|No)$")
+
+        # Outstanding ports to be deleted
+        p3 = re.compile(r"^\s*Outstanding ports to be deleted\s+(?P<outstanding_ports_to_be_deleted>\d+)$")
+
+        # Total failed Deleted ports
+        p4 = re.compile(r"^\s*Total failed deleted ports\s+(?P<total_failed_deleted_ports>\d+)$")
+
+        # LC Swap port count 0
+        p5 = re.compile(r"^\s*LC Swap port count\s+(?P<lc_swap_port_count>\d+)$")
+
+        # | Tx-Rx bytes (~delta) |    ~35492
+        p6 = re.compile(r"^\|?(?P<key>[^|]+)\|\s*(?P<value>.+)$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SW port debug states
+            m = p0.match(line)
+            if m:
+                root_dict = ret_dict.setdefault("sw_port_debug_states", {})
+                continue
+
+            # LED port debug states
+            m = p1.match(line)
+            if m:
+                root_dict = ret_dict.setdefault("led_port_debug_states", {})
+                continue
+
+            # Outstanding ports to be deleted
+            m = p2.match(line)
+            if m:
+                root_dict = None
+                ret_dict["lc_present"] = m.group("lc_present")
+                continue
+
+            # Outstanding ports to be deleted
+            m = p3.match(line)
+            if m:
+                root_dict = None
+                ret_dict["outstanding_ports_to_be_deleted"] = int(
+                    m.group("outstanding_ports_to_be_deleted")
+                )
+                continue
+
+            # Total failed deleted ports
+            m = p4.match(line)
+            if m:
+                root_dict = None
+                ret_dict["total_failed_deleted_ports"] = int(
+                    m.group("total_failed_deleted_ports")
+                )
+                continue
+
+            # LC Swap port count
+            m = p5.match(line)
+            if m:
+                root_dict = None
+                ret_dict["lc_swap_port_count"] = int(
+                    m.group("lc_swap_port_count")
+                )
+                continue
+
+            # | Tx-Rx bytes (~delta) |    ~35492
+            m = p6.match(line)
+            if m and root_dict is not None:
+                group = m.groupdict()
+                key = _normalize_key(group["key"])
+                value = group["value"].strip()
+                if value.isdigit():
+                    root_dict[key] = int(value)
+                else:
+                    root_dict[key] = value
 
         return ret_dict

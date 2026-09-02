@@ -39,6 +39,7 @@
     * show interfaces {interface} trunk
     * show interfaces {interface} mac-accounting
     * show interfaces mac-accounting
+    * show ip interface brief | exclude {exclude}
 """
 
 import os
@@ -6880,3 +6881,16 @@ class ShowInterfacesMacAccounting(ShowInterfacesMacAccountingSchema):
                 continue
 
         return ret_dict
+
+class ShowIpInterfaceBriefExclude(ShowIpInterfaceBrief):
+    """Parser for:
+        show ip interface brief | exclude <WORD>
+        parser class implements detail parsing mechanisms for cli and yang output.
+    """
+    cli_command = 'show ip interface brief | exclude {exclude}'
+
+    def cli(self, command, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+
+        return super().cli(output=output)

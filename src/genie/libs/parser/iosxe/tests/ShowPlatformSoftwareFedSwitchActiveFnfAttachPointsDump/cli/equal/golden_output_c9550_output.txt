@@ -1,0 +1,11 @@
+| 0 | 0 | 3208064872 | Input | Gi2/0/6 | IPV4 TRAFFIC | SUCCESS |
+Asic:    0
+fp_oid:  0
+acl_oid: 0
+rh_oid:  0
+| 1 | 32 | 3208064873 | Output | Te1/0/48 | IPV6 TRAFFIC | SUCCESS |
+Asic:    1
+fp_oid:  10
+acl_oid: 20
+rh_oid:  30
+| 2 | 64 | 3208064874 | Input | Po10 | IPV4 TRAFFIC | FAIL |
