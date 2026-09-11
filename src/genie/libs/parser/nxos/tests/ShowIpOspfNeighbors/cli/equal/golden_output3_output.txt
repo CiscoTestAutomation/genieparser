@@ -1,0 +1,6 @@
+OSPF Process ID UNDERLAY VRF default
+ Total number of neighbors: 3
+ Neighbor ID     Pri State            Up Time  Address         Interface
+ 20.2.0.1  1 FULL/ -  01:51:30 20.4.0.2 Eth1/1
+ 20.2.0.2  1 FULL/ -  01:59:59 20.4.0.6 Eth1/2
+ 20.2.0.3  1 FULL/ -  01:59:57 20.4.0.10 Eth1/3
