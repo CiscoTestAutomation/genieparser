@@ -12,6 +12,7 @@ NXOS parsers for the following show commands:
     * show ip ospf interface
     * show ip ospf interface vrf <WORD>
     * show ip ospf neighbors detail
+    * show ip ospf neighbors
     * show ip ospf neighbors detail vrf <WORD>
     * show ip ospf database external detail
     * show ip ospf database external detail vrf <WORD>
@@ -2350,6 +2351,114 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                 continue
 
         return ret_dict
+
+
+# ======================================================
+# Schema for 'show ip ospf neighbors'
+# ======================================================
+class ShowIpOspfNeighborsSchema(MetaParser):
+    """Schema for the NX-OS OSPF neighbor summary."""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    'ipv4': {
+                        'instance': {
+                            Any(): {
+                                'total_neighbors': int,
+                                Optional('interfaces'): {
+                                    Any(): {
+                                        'neighbors': {
+                                            Any(): {
+                                                'neighbor_router_id': str,
+                                                'priority': int,
+                                                'state': str,
+                                                'neighbor_role': str,
+                                                'up_time': str,
+                                                'address': str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpOspfNeighbors(ShowIpOspfNeighborsSchema):
+    """Parser for 'show ip ospf neighbors'."""
+
+    cli_command = 'show ip ospf neighbors'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        result = {}
+        instance = None
+        # OSPF Process ID UNDERLAY VRF default
+        p_header = re.compile(
+            r'^OSPF Process ID (?P<process>\S+) VRF (?P<vrf>\S+)$')
+        # Total number of neighbors: 2
+        p_total = re.compile(r'^Total number of neighbors:\s*(?P<total>\d+)$')
+        # 10.2.0.3  1 FULL/ -  02:00:11 10.4.0.2  Eth1/1
+        p_neighbor = re.compile(
+            r'^(?P<neighbor_router_id>\d+\.\d+\.\d+\.\d+)\s+'
+            r'(?P<priority>\d+)\s+(?P<state>\S+?)\s*/\s*'
+            r'(?P<neighbor_role>\S+)\s+(?P<up_time>\S+)\s+'
+            r'(?P<address>\d+\.\d+\.\d+\.\d+)\s+'
+            r'(?P<interface>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            match = p_header.match(line)
+            if match:
+                group = match.groupdict()
+                instance = result.setdefault('vrf', {}).setdefault(
+                    group['vrf'], {}).setdefault('address_family', {}).setdefault(
+                    'ipv4', {}).setdefault('instance', {}).setdefault(
+                    group['process'], {})
+                continue
+            match = p_total.match(line)
+            if match:
+                if instance is None:
+                    raise ValueError('OSPF neighbor count without process header')
+                instance['total_neighbors'] = int(match.group('total'))
+                continue
+            match = p_neighbor.match(line)
+            if match:
+                if instance is None:
+                    raise ValueError('OSPF neighbor row without process header')
+                group = match.groupdict()
+                interface = Common.convert_intf_name(group.pop('interface'))
+                group['priority'] = int(group['priority'])
+                group['state'] = group['state'].lower()
+                group['neighbor_role'] = group['neighbor_role'].lower()
+                neighbors = instance.setdefault('interfaces', {}).setdefault(
+                    interface, {}).setdefault('neighbors', {})
+                neighbor_id = group['neighbor_router_id']
+                if neighbor_id in neighbors:
+                    raise ValueError('Duplicate OSPF neighbor on the same interface')
+                neighbors[neighbor_id] = group
+
+        # A positive count must not silently become an empty/partial table.
+        for vrf_data in result.get('vrf', {}).values():
+            for instance_data in vrf_data['address_family']['ipv4']['instance'].values():
+                count = sum(len(data['neighbors']) for data in
+                            instance_data.get('interfaces', {}).values())
+                if 'total_neighbors' not in instance_data:
+                    raise ValueError('OSPF summary is missing the neighbor count')
+                if count != instance_data['total_neighbors']:
+                    raise ValueError('OSPF neighbor count does not match parsed rows')
+
+        return result
 
 
 # =======================================================
