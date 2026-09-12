@@ -7552,7 +7552,7 @@ class ShowBgpIpMvpnRouteTypeSchema(MetaParser):
                                                         'weight': str,
                                                         Optional('path'): str,
                                                         'origin': str,
-                                                        'localpref': str,
+                                                        Optional('localpref'): str,
                                                     }
                                                 }
                                             }
@@ -7598,6 +7598,15 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         else:
             out = output
         result_dict = {}
+        # Numeric columns are right-aligned; AS paths may contain multiple numbers.
+        columns = None
+        p_columns = re.compile(
+            r'^\s*Network\s+Next Hop\s+(?P<metric>Metric)\s+'
+            r'(?P<localpref>LocPrf)\s+(?P<weight>Weight)\s+(?P<path>Path)\s*$')
+        p_column_row = re.compile(
+            r'^\s*(?P<statuscode>[sSxdh>* ]+)?'
+            r'(?P<typecode>[ieclarI])?\s+'
+            r'(?P<ipnexthop>\d+\.\d+\.\d+\.\d+)\s+')
         # BGP routing table information for VRF default, address family IPv4 MVPN
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf>\S+),'
                 r' +address +family +(?P<af>[\w\s]+)$')
@@ -7631,6 +7640,11 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
             if line:
                 line = line.rstrip()
             else:
+                continue
+
+            m = p_columns.match(line)
+            if m:
+                columns = (m.end('metric'), m.end('localpref'), m.start('path'))
                 continue
 
             m = p1.match(line)
@@ -7691,10 +7705,25 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                     typecode = group['typecode']
                 continue
 
-            m = p6.match(line)
+            m = p_column_row.match(line) if columns else p6.match(line)
             if m:
                 index +=1
                 group = m.groupdict()
+                if columns:
+                    metric_end, localpref_end, path_start = columns
+                    group['metric'] = line[m.end('ipnexthop'):metric_end].strip()
+                    group['localpref'] = line[metric_end:localpref_end].strip()
+                    group['weight'] = line[localpref_end:path_start].strip()
+                    tail = line[path_start:].strip().rsplit(None, 1)
+                    if not tail or not group['weight'].isdigit():
+                        raise ValueError('Invalid BGP route weight or path columns')
+                    if not re.fullmatch(r'[ieclaI?|]+', tail[-1]):
+                        raise ValueError('Invalid BGP route origin column')
+                    for field in ('metric', 'localpref'):
+                        if group[field] and not group[field].isdigit():
+                            raise ValueError('Invalid BGP route {} column'.format(field))
+                    group['origin'] = tail[-1]
+                    group['path'] = tail[0] if len(tail) == 2 else None
                 path_dict = prefix_dict.setdefault('path', {}).setdefault(index, {})
                 path_dict.update({'pathnr': 0})
                 type_code = group.pop('typecode')
@@ -7727,7 +7756,8 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                 path_dict.update({'ipnexthop': group['ipnexthop']})
                 path_dict.update({'weight': group['weight']})
                 path_dict.update({'origin': group['origin']})
-                path_dict.update({'localpref': group['localpref'] })
+                if group['localpref']:
+                    path_dict.update({'localpref': group['localpref']})
                 if group['path']:
                     path_dict.update({'path': group['path']})
                 continue
