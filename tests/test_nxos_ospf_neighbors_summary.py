@@ -18,9 +18,12 @@ class TestOspfNeighborsSummary(unittest.TestCase):
     def test_expected_fixtures(self):
         for path in sorted(FIXTURES.glob('*_output.txt')):
             with self.subTest(fixture=path.name):
-                expected = runpy.run_path(str(path.with_name(
-                    path.name.replace('_output.txt', '_expected.py'))))['expected_output']
-                actual = ShowIpOspfNeighbors(device=None).parse(output=path.read_text())
+                expected_file = path.with_name(
+                    path.name.replace('_output.txt', '_expected.py'))
+                expected = runpy.run_path(
+                    str(expected_file))['expected_output']
+                actual = ShowIpOspfNeighbors(device=None).parse(
+                    output=path.read_text())
                 self.assertEqual(actual, expected)
                 json.dumps(actual)
 
@@ -47,19 +50,22 @@ class TestOspfNeighborsSummary(unittest.TestCase):
                     + raw.replace('default', 'tenant-a'))
         parsed = ShowIpOspfNeighbors(device=None).parse(output=combined)
         self.assertEqual(set(parsed['vrf']), {'default', 'tenant-a'})
-        instances = parsed['vrf']['default']['address_family']['ipv4']['instance']
+        instances = (
+            parsed['vrf']['default']['address_family']['ipv4']['instance'])
         self.assertEqual(set(instances), {'UNDERLAY', '10'})
         self.assertEqual(instances['10'], {'total_neighbors': 0})
 
     def test_reject_truncated_table(self):
         raw = (FIXTURES / 'golden_output3_output.txt').read_text()
         with self.assertRaises(ValueError):
-            ShowIpOspfNeighbors(device=None).parse(output='\n'.join(raw.splitlines()[:-1]))
+            output = '\n'.join(raw.splitlines()[:-1])
+            ShowIpOspfNeighbors(device=None).parse(output=output)
 
     def test_reject_unparsed_neighbor_row(self):
         raw = (FIXTURES / 'golden_output1_output.txt').read_text()
         with self.assertRaises(ValueError):
-            ShowIpOspfNeighbors(device=None).parse(output=raw.replace('FULL/ -', '???'))
+            output = raw.replace('FULL/ -', '???')
+            ShowIpOspfNeighbors(device=None).parse(output=output)
 
     def test_reject_duplicate_neighbor(self):
         raw = (FIXTURES / 'golden_output1_output.txt').read_text()
@@ -75,7 +81,8 @@ class TestOspfNeighborsSummary(unittest.TestCase):
                 lines = raw.splitlines()
                 del lines[missing_line]
                 with self.assertRaises(ValueError):
-                    ShowIpOspfNeighbors(device=None).parse(output='\n'.join(lines))
+                    output = '\n'.join(lines)
+                    ShowIpOspfNeighbors(device=None).parse(output=output)
 
 
 if __name__ == '__main__':

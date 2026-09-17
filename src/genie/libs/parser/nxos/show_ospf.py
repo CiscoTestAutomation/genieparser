@@ -2357,7 +2357,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 # Schema for 'show ip ospf neighbors'
 # ======================================================
 class ShowIpOspfNeighborsSchema(MetaParser):
-    """Schema for the NX-OS OSPF neighbor summary."""
+    """Schema for 'show ip ospf neighbors'."""
 
     schema = {
         'vrf': {
@@ -2421,15 +2421,20 @@ class ShowIpOspfNeighbors(ShowIpOspfNeighborsSchema):
             match = p_header.match(line)
             if match:
                 group = match.groupdict()
-                instance = result.setdefault('vrf', {}).setdefault(
-                    group['vrf'], {}).setdefault('address_family', {}).setdefault(
-                    'ipv4', {}).setdefault('instance', {}).setdefault(
-                    group['process'], {})
+                instance = (
+                    result.setdefault('vrf', {})
+                    .setdefault(group['vrf'], {})
+                    .setdefault('address_family', {})
+                    .setdefault('ipv4', {})
+                    .setdefault('instance', {})
+                    .setdefault(group['process'], {})
+                )
                 continue
             match = p_total.match(line)
             if match:
                 if instance is None:
-                    raise ValueError('OSPF neighbor count without process header')
+                    raise ValueError(
+                        'OSPF neighbor count without process header')
                 instance['total_neighbors'] = int(match.group('total'))
                 continue
             match = p_neighbor.match(line)
@@ -2445,18 +2450,22 @@ class ShowIpOspfNeighbors(ShowIpOspfNeighborsSchema):
                     interface, {}).setdefault('neighbors', {})
                 neighbor_id = group['neighbor_router_id']
                 if neighbor_id in neighbors:
-                    raise ValueError('Duplicate OSPF neighbor on the same interface')
+                    raise ValueError(
+                        'Duplicate OSPF neighbor on the same interface')
                 neighbors[neighbor_id] = group
 
         # A positive count must not silently become an empty/partial table.
         for vrf_data in result.get('vrf', {}).values():
-            for instance_data in vrf_data['address_family']['ipv4']['instance'].values():
+            instances = vrf_data['address_family']['ipv4']['instance']
+            for instance_data in instances.values():
                 count = sum(len(data['neighbors']) for data in
                             instance_data.get('interfaces', {}).values())
                 if 'total_neighbors' not in instance_data:
-                    raise ValueError('OSPF summary is missing the neighbor count')
+                    raise ValueError(
+                        'OSPF summary is missing the neighbor count')
                 if count != instance_data['total_neighbors']:
-                    raise ValueError('OSPF neighbor count does not match parsed rows')
+                    raise ValueError(
+                        'OSPF neighbor count does not match parsed rows')
 
         return result
 
