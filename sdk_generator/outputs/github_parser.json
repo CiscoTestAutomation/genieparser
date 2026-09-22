@@ -43362,6 +43362,22 @@
       }
     }
   },
+  "show ip ospf neighbors": {
+    "folders": {
+      "nxos": {
+        "class": "ShowIpOspfNeighbors",
+        "doc": "Parser for 'show ip ospf neighbors'.",
+        "module_name": "nxos.show_ospf",
+        "package": "genie.libs.parser",
+        "schema": "{\n    'vrf': {\n        Any('*'): {\n            'address_family': {\n                'ipv4': {\n                    'instance': {\n                        Any('*'): {\n                            'total_neighbors': int,\n                            Optional('interfaces'): {\n                                Any('*'): {\n                                    'neighbors': {\n                                        Any('*'): {\n                                            'neighbor_router_id': str,\n                                            'priority': int,\n                                            'state': str,\n                                            'neighbor_role': str,\n                                            'up_time': str,\n                                            'address': str,\n                                        },\n                                    },\n                                },\n                            },\n                        },\n                    },\n                },\n            },\n        },\n    },\n}",
+        "tokens": {
+          "os": "nxos"
+        },
+        "uid": "show_ip_ospf_neighbors",
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_ospf.py#L2393"
+      }
+    }
+  },
   "show ip ospf neighbors detail": {
     "folders": {
       "nxos": {
