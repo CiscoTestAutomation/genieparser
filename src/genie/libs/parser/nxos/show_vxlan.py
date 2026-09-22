@@ -398,6 +398,8 @@ class ShowNveInterfaceDetailSchema(MetaParser):
             Optional('src_if_holddown_tm'): int,
             Optional('src_if_holdup_tm'): int,
             Optional('src_if_holddown_left'): int,
+            Optional('fabric_convergence_time'): int,
+            Optional('fabric_convergence_time_left'): int,
             Optional('multisite_convergence_time'): int,
             Optional('multisite_convergence_time_left'): int,
             Optional('vip_rmac'): str,
@@ -414,6 +416,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
             Optional('multisite_bgw_if_oper_state'): str,
             Optional('multisite_bgw_if_oper_state_down_reason'): str,
             Optional('multisite_dci_advertise_pip'): bool,
+            Optional('multisite_fabric_advertise_pip_l3'): bool,
         }
     }
 
@@ -502,6 +505,15 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p25 = re.compile(r'Multisite +delay-restore +time +left: +(?P<multisite_convergence_time_left>\d+) +seconds$')
         # Multisite dci-advertise-pip configured: True
         p26 = re.compile(r'^Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
+
+        # Fabric convergence time: 135 seconds
+        p27 = re.compile(r'^Fabric +convergence +time: +(?P<fabric_convergence_time>\d+) +seconds$')
+
+        # Fabric convergence time left: 0 seconds
+        p28 = re.compile(r'^Fabric +convergence +time +left: +(?P<fabric_convergence_time_left>\d+) +seconds$')
+
+        # Multisite fabric-advertise-pip l3 configured: False
+        p29 = re.compile(r'^Multisite +fabric-advertise-pip +l3 +configured: +(?P<multisite_fabric_advertise_pip_l3>\S+)$')
 
         for nve in nve_list:
             if not output:
@@ -727,7 +739,35 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
                     group = m.groupdict()
                     nve_dict.update({'multisite_dci_advertise_pip': group.pop('multisite_dci_advertise_pip')=="True"})
                     continue
+                # Fabric convergence time: 135 seconds
+                m = p27.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({
+                        'fabric_convergence_time':
+                            int(group.pop('fabric_convergence_time'))
+                    })
+                    continue
 
+                # Fabric convergence time left: 0 seconds
+                m = p28.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({
+		                'fabric_convergence_time_left':
+		                    int(group.pop('fabric_convergence_time_left'))
+		            })
+                    continue
+
+                # Multisite fabric-advertise-pip l3 configured: False
+                m = p29.match(line)
+                if m:
+                    group = m.groupdict()
+                    nve_dict.update({
+		                'multisite_fabric_advertise_pip_l3':
+		                    group.pop('multisite_fabric_advertise_pip_l3') == "True"
+		            })
+                    continue
         return result_dict
 
 
