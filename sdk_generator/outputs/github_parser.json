@@ -33392,6 +33392,17 @@
       }
     }
   },
+  "show ignition": {
+    "iosxe": {
+      "class": "ShowIgnition",
+      "doc": " Parser for show ignition ",
+      "module_name": "show_ignition",
+      "package": "genie.libs.parser",
+      "schema": "{\n'ignition_status': {\n  'ignition_mgmt': <class 'str'>,\n  'input_volt': <class 'str'>,\n  'pwr_state': <class 'str'>,\n  Optional  (str) sense: <class 'str'>,\n  'shutdown_time': <class 'str'>,\n  Optional  (str) battery_type: <class 'str'>,\n  'undervoltage': <class 'str'>,\n  'overvoltage': <class 'str'>,\n  Optional  (str) sense_on_threshold: <class 'str'>,\n  Optional  (str) sense_off_threshold: <class 'str'>,\n  'undervoltage_time_delay': <class 'str'>,\n  'overvoltage_time_delay': <class 'str'>,\n  'ignition_off_time_delay': <class 'str'>,\n  },\n}",
+      "uid": "show_ignition",
+      "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_ignition.py#L40"
+    }
+  },
   "show im dampening": {
     "folders": {
       "iosxr": {
