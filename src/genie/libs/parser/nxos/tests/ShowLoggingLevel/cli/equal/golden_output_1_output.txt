@@ -1,0 +1,15 @@
+
+Facility        Default Severity        Current Session Severity
+--------        ----------------        ------------------------
+aaa                     3                       3
+acllog                  2                       1
+aclmgr                  3                       3
+aclqos                  5                       4
+vlan_mgr                2                       5
+vshd                    5                       5
+xbar                    5                       0
+xmlma                   3                       7
+
+0(emergencies)          1(alerts)       2(critical)
+3(errors)               4(warnings)     5(notifications)
+6(information)          7(debugging

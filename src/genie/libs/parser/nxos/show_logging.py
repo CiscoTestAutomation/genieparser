@@ -3,6 +3,8 @@
 NXOS parsers for the following show commands:
     * show logging logfile
     * show logging logfile | include {include}
+    * show logging level
+    * show logging level {facility}
 '''
 
 # Python
@@ -74,3 +76,59 @@ class ShowLoggingLogfile(ShowLoggingLogfileSchema):
                 continue
 
         return parsed_dict
+
+class ShowLoggingLevelSchema(MetaParser):
+    '''Schema for:
+        * 'show logging level'
+        * 'show logging level {name}'
+    '''
+
+    schema = { 'facility':
+                {
+                Any():
+                    { 'default_severity': int,
+                      'current_session_severity': int
+                       }
+                }
+            }
+
+class ShowLoggingLevel(ShowLoggingLevelSchema):
+    '''Schema for:
+        * 'show logging level'
+        * 'show logging level {facility}'
+    '''
+
+    cli_command = [ 'show logging level', 'show logging level {facility}' ]
+
+    def cli(self, facility='', output=None):
+
+        if output is None:
+            # Build the command
+            if facility:
+                cmd = self.cli_command[1].format(facility=facility)
+            else:
+                cmd = self.cli_command[0]
+
+            # Execute the command
+            output = self.device.execute(cmd)
+
+        # Example
+        # acllog                  2                       1
+        p0 = re.compile(r'(?P<facility>\S+)\s+'
+                        '(?P<default_severity>\d)\s+'
+                        '(?P<current_session_severity>\d)')
+        ret_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                facility = m.groupdict()['facility']
+                facility_dict = ret_dict.setdefault('facility', {}).setdefault(facility, {})
+
+                for x in ['default_severity', 'current_session_severity']:
+                    x_val = int(m.groupdict()[x])
+                    ret_dict['facility'][facility][x] = x_val
+
+        return ret_dict
