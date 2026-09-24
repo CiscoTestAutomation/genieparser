@@ -13,6 +13,7 @@ import re
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # ====================
 # Schema for:
@@ -842,10 +843,11 @@ class AcmReplaceValidateSchema(MetaParser):
 
     schema = {
         "target": str,
-        "validation": {
+        Optional("validation"): {
             "status": str,
             "time_ms": int
-        }
+        },
+        Optional("no_diff"): bool
     }
 
 
@@ -862,6 +864,11 @@ class AcmReplaceValidate(AcmReplaceValidateSchema):
 
         for line in output.splitlines():
             line = line.strip()
+
+            m = re.match(r'^Config diff empty\.\s+No Diff to Validate/Apply$',line)
+            if m:
+                ret_dict["no_diff"] = True
+                continue
 
             # Config Validation to Target: flash:day1
             m = re.match(r'^Config Validation to Target:\s+(?P<target>\S+)', line)
@@ -880,5 +887,66 @@ class AcmReplaceValidate(AcmReplaceValidateSchema):
             if m:
                 ret_dict.setdefault('validation', {})['time_ms'] = int(m.group('time'))
                 continue
+
+        return ret_dict
+
+class AcmReplaceDiffSchema(MetaParser):
+    """Schema for 'acm replace <configlet_file> diff'."""
+
+    schema = {
+        'target': str,
+        'diff': list,
+    }
+
+
+class AcmReplaceDiff(AcmReplaceDiffSchema):
+    """Parser for 'acm replace <configlet_file> diff'."""
+
+    cli_command = 'acm replace {configlet_file} diff'
+
+    def cli(self, configlet_file='', output=None):
+
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(configlet_file=configlet_file)
+            )
+        if not output or not output.strip():
+            raise SchemaEmptyParserError("Parser output is empty")
+
+        ret_dict = {
+            'target': configlet_file,
+            'diff': [],
+        }
+
+        in_diff = False
+
+        for raw_line in output.splitlines():
+            line = raw_line.strip()
+
+            if not line:
+                continue
+
+            # No configuration difference
+            m = re.match(
+                r'^Config diff empty\.\s+No Diff to Validate/Apply$',
+                line
+            )
+            if m:
+                ret_dict['diff'] = []
+                in_diff = False
+                continue
+
+            # Configuration difference starts
+            m = re.match(r'^Configuration Net-Diff:\s*$', line)
+            if m:
+                in_diff = True
+                continue
+
+            if in_diff:
+                ret_dict['diff'].append(line)
+
+                # End of configuration diff
+                if line == 'end':
+                    in_diff = False
 
         return ret_dict

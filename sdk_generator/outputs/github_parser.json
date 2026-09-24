@@ -11999,6 +11999,22 @@
       }
     }
   },
+  "acm replace {configlet_file} diff": {
+    "folders": {
+      "iosxe": {
+        "class": "AcmReplaceDiff",
+        "doc": "Parser for 'acm replace <configlet_file> diff'.",
+        "module_name": "iosxe.acm",
+        "package": "genie.libs.parser",
+        "schema": "{\n    'target': str,\n    'diff': list,\n}",
+        "tokens": {
+          "os": "iosxe"
+        },
+        "uid": "acm_replace_configlet_file_diff",
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/acm.py#L901"
+      }
+    }
+  },
   "acm replace {configlet_file} validate": {
     "folders": {
       "iosxe": {
@@ -12006,12 +12022,12 @@
         "doc": "Parser for 'acm replace <configlet_file> validate'.",
         "module_name": "iosxe.acm",
         "package": "genie.libs.parser",
-        "schema": "{\n    'target': str,\n    'validation': {\n        'status': str,\n        'time_ms': int,\n    },\n}",
+        "schema": "{\n    'target': str,\n    Optional('validation'): {\n        'status': str,\n        'time_ms': int,\n    },\n    Optional('no_diff'): bool,\n}",
         "tokens": {
           "os": "iosxe"
         },
         "uid": "acm_replace_configlet_file_validate",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/acm.py#L852"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/acm.py#L853"
       }
     }
   },
@@ -15344,16 +15360,16 @@
   "show archive log config {include}": {
     "folders": {
       "iosxe": {
-        "class": "ShowArchiveLogConfig",
-        "doc": " Parser for:\n        * show archive log config all\n        * show archive log config {include}\n    ",
-        "module_name": "iosxe.show_archive",
+        "class": "ShowCallHomeProfileAll",
+        "doc": "\n    Parser for\n        * 'show call-home profile all',\n          'show call-home profile {include}\n    ",
+        "module_name": "iosxe.show_call_home",
         "package": "genie.libs.parser",
-        "schema": "{\n    'idx': {\n        '<class 'int'>': {\n            'sess': int,\n            'userline': str,\n            'logged_command': str,\n        },\n    },\n}",
+        "schema": "{\n    'profile': {\n        'name': {\n            Any('*'): {\n                'status': str,\n                'mode': str,\n                'reporting_data': str,\n                'preferred_message_format': str,\n                'message_size_limit_in_bytes': int,\n                'transport_method': str,\n                Optional('email_address'): str,\n                Optional('http_address'): str,\n                Optional('other_address'): str,\n                Optional('periodic_info'): {\n                    Optional('Any  (str) *'): {\n                        Optional('scheduled'): str,\n                        Optional('time'): str,\n                    },\n                },\n                Optional('group_pattern'): {\n                    Any('*'): {\n                        'severity': str,\n                    },\n                },\n            },\n        },\n    },\n}",
         "tokens": {
           "os": "iosxe"
         },
         "uid": "show_archive_log_config_include",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_archive.py#L254"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_call_home.py#L205"
       }
     }
   },
@@ -29695,7 +29711,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_globals",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2212"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2252"
       }
     }
   },
@@ -29711,7 +29727,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_ipv4_l2-mroute_vni_all",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2638"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2678"
       }
     }
   },
@@ -29727,7 +29743,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_ipv4_l2-mroute_vni_vni",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2638"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2678"
       }
     }
   },
@@ -29743,7 +29759,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_ipv4_mroute",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2500"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2540"
       }
     }
   },
@@ -29759,7 +29775,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_ipv4_mroute_vrf_vrf",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2500"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2540"
       }
     }
   },
@@ -29775,7 +29791,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_ipv4_sa-ad-route",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2367"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2407"
       }
     }
   },
@@ -29791,7 +29807,7 @@
           "os": "nxos"
         },
         "uid": "show_fabric_multicast_ipv4_sa-ad-route_vrf_vrf",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2367"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2407"
       }
     }
   },
@@ -54933,7 +54949,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_evpn_ethernet-segment_all",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1129"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1169"
       }
     }
   },
@@ -55201,7 +55217,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_evpn_mac_all_detail",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1342"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1382"
       }
     }
   },
@@ -55281,7 +55297,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_evpn_mac_evi_evi_detail",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1342"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1382"
       }
     }
   },
@@ -55313,7 +55329,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_evpn_mac_evi_evi_mac_mac_detail",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1342"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1382"
       }
     }
   },
@@ -56829,7 +56845,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_evpn_mac-ip_all",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2719"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2759"
       }
     }
   },
@@ -56845,7 +56861,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_evpn_mac-ip_evi_evi",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2733"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2773"
       }
     }
   },
@@ -57245,7 +57261,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_fl_all",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1763"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1803"
       }
     }
   },
@@ -57261,7 +57277,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_mac-ip_all_detail",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1520"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1560"
       }
     }
   },
@@ -57277,7 +57293,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_summary",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1652"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1692"
       }
     }
   },
@@ -57309,7 +57325,7 @@
           "os": "nxos"
         },
         "uid": "show_l2route_topology_detail",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1211"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1251"
       }
     }
   },
@@ -79212,7 +79228,7 @@
           "os": "nxos"
         },
         "uid": "show_nve_ethernet-segment",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L898"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L938"
       }
     }
   },
@@ -79251,7 +79267,7 @@
           "os": "nxos"
         },
         "uid": "show_nve_ethernet-segment_summary",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2767"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2807"
       }
     }
   },
@@ -79267,7 +79283,7 @@
           "os": "nxos"
         },
         "uid": "show_nve_ethernet-segment_summary_esi_esi_id",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2767"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2807"
       }
     }
   },
@@ -79294,12 +79310,12 @@
         "doc": "parser for:\n        show nve interface <nve> detail",
         "module_name": "nxos.show_vxlan",
         "package": "genie.libs.parser",
-        "schema": "{\n    Any('*'): {\n        'nve_name': str,\n        Optional('if_state'): str,\n        Optional('encap_type'): str,\n        Optional('vpc_capability'): str,\n        Optional('local_rmac'): str,\n        Optional('host_reach_mode'): str,\n        Optional('source_if'): str,\n        Optional('primary_ip'): str,\n        Optional('anycast_if'): str,\n        Optional('secondary_ip'): str,\n        Optional('src_if_state'): str,\n        Optional('ir_cap_mode'): str,\n        Optional('adv_vmac'): bool,\n        Optional('nve_flags'): str,\n        Optional('nve_if_handle'): int,\n        Optional('src_if_holddown_tm'): int,\n        Optional('src_if_holdup_tm'): int,\n        Optional('src_if_holddown_left'): int,\n        Optional('multisite_convergence_time'): int,\n        Optional('multisite_convergence_time_left'): int,\n        Optional('vip_rmac'): str,\n        Optional('vip_rmac_ro'): str,\n        Optional('sm_state'): str,\n        Optional('peer_forwarding_mode'): bool,\n        Optional('dwn_strm_vni_cfg_mode'): str,\n        Optional('src_intf_last_reinit_notify_type'): str,\n        Optional('mcast_src_intf_last_reinit_notify_type'): str,\n        Optional('multi_src_intf_last_reinit_notify_type'): str,\n        Optional('multisite_bgw_if'): str,\n        Optional('multisite_bgw_if_ip'): str,\n        Optional('multisite_bgw_if_admin_state'): str,\n        Optional('multisite_bgw_if_oper_state'): str,\n        Optional('multisite_bgw_if_oper_state_down_reason'): str,\n        Optional('multisite_dci_advertise_pip'): bool,\n    },\n}",
+        "schema": "{\n    Any('*'): {\n        'nve_name': str,\n        Optional('if_state'): str,\n        Optional('encap_type'): str,\n        Optional('vpc_capability'): str,\n        Optional('local_rmac'): str,\n        Optional('host_reach_mode'): str,\n        Optional('source_if'): str,\n        Optional('primary_ip'): str,\n        Optional('anycast_if'): str,\n        Optional('secondary_ip'): str,\n        Optional('src_if_state'): str,\n        Optional('ir_cap_mode'): str,\n        Optional('adv_vmac'): bool,\n        Optional('nve_flags'): str,\n        Optional('nve_if_handle'): int,\n        Optional('src_if_holddown_tm'): int,\n        Optional('src_if_holdup_tm'): int,\n        Optional('src_if_holddown_left'): int,\n        Optional('fabric_convergence_time'): int,\n        Optional('fabric_convergence_time_left'): int,\n        Optional('multisite_convergence_time'): int,\n        Optional('multisite_convergence_time_left'): int,\n        Optional('vip_rmac'): str,\n        Optional('vip_rmac_ro'): str,\n        Optional('sm_state'): str,\n        Optional('peer_forwarding_mode'): bool,\n        Optional('dwn_strm_vni_cfg_mode'): str,\n        Optional('src_intf_last_reinit_notify_type'): str,\n        Optional('mcast_src_intf_last_reinit_notify_type'): str,\n        Optional('multi_src_intf_last_reinit_notify_type'): str,\n        Optional('multisite_bgw_if'): str,\n        Optional('multisite_bgw_if_ip'): str,\n        Optional('multisite_bgw_if_admin_state'): str,\n        Optional('multisite_bgw_if_oper_state'): str,\n        Optional('multisite_bgw_if_oper_state_down_reason'): str,\n        Optional('multisite_dci_advertise_pip'): bool,\n        Optional('multisite_fabric_advertise_pip_l3'): bool,\n    },\n}",
         "tokens": {
           "os": "nxos"
         },
         "uid": "show_nve_interface_interface_detail",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L423"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L426"
       }
     }
   },
@@ -79331,7 +79347,7 @@
           "os": "nxos"
         },
         "uid": "show_nve_multisite_dci-links",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L755"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L795"
       }
     }
   },
@@ -79347,7 +79363,7 @@
           "os": "nxos"
         },
         "uid": "show_nve_multisite_fabric-links",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L815"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L855"
       }
     }
   },
@@ -79467,7 +79483,7 @@
           "os": "nxos"
         },
         "uid": "show_nve_vni_ingress-replication",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2112"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L2152"
       }
     }
   },
@@ -107601,7 +107617,7 @@
           "os": "nxos"
         },
         "uid": "show_running-config_nv_overlay",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1862"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/nxos/show_vxlan.py#L1902"
       }
     }
   },
