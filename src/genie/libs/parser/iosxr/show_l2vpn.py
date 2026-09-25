@@ -1585,7 +1585,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         p62 = re.compile(r'^(?P<evpn>\S+), +state: +(?P<state>\S+)$')
 
         # evi: 1000
-        p63 = re.compile(r'^evi: +(?P<evi>\d+)$')
+        # evi: 1000 (SRv6)
+        p63 = re.compile(r'^evi: +(?P<evi>\d+)(?:\s*\(.*\))?$')
 
         # XC ID 0x80000009
         p64 = re.compile(r'^XC +ID (?P<xc_id>\S+)$')
