@@ -4,8 +4,8 @@ expected_output = {
         "!",
         "hostname Router",
         "interface GigabitEthernet1",
-        "description Uplink",
-        "no shutdown",
+        " description Uplink",
+        " no shutdown",
         "end",
     ],
 }

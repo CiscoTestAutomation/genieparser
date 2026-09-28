@@ -921,15 +921,17 @@ class AcmReplaceDiff(AcmReplaceDiffSchema):
         in_diff = False
 
         for raw_line in output.splitlines():
-            line = raw_line.strip()
+            # Preserve leading indentation; remove only trailing whitespace.
+            line = raw_line.rstrip()
+            normalized_line = line.strip()
 
-            if not line:
+            if not normalized_line:
                 continue
 
             # No configuration difference
             m = re.match(
                 r'^Config diff empty\.\s+No Diff to Validate/Apply$',
-                line
+                normalized_line
             )
             if m:
                 ret_dict['diff'] = []
@@ -937,12 +939,13 @@ class AcmReplaceDiff(AcmReplaceDiffSchema):
                 continue
 
             # Configuration difference starts
-            m = re.match(r'^Configuration Net-Diff:\s*$', line)
+            m = re.match(r'^Configuration Net-Diff:\s*$', normalized_line)
             if m:
                 in_diff = True
                 continue
 
             if in_diff:
+                # Preserve IOS-XE configuration indentation.
                 ret_dict['diff'].append(line)
 
                 # End of configuration diff
