@@ -78,4 +78,3 @@ EIGRP-IPv6 Protocol for AS(10)
     GigabitEthernet0/0 (passive)
   Redistribution:
     None
-

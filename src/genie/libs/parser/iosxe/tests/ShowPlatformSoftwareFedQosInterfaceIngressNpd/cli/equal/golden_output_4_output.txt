@@ -1,0 +1,118 @@
+show platform software fed switch 1 qos interface FiftyGigE1/1/3 ingress npd
+  ============================================================
+   NPD: Ingress QOS Profile information
+  ============================================================
+  OID: 0x1E7
+  Ref Count: 0
+  No of  Counter: 0
+  No of meters: 0
+  Tunnel Mode: PIPE
+  Need filter table update: CREATED
+  DSCP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+  ----      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      0    
+   1          1       0         0       0   G     N      0    
+   2          2       0         0       0   G     N      0    
+   3          3       0         0       0   G     N      0    
+   4          4       0         0       0   G     N      0    
+   5          5       0         0       0   G     N      0    
+   6          6       0         0       0   G     N      0    
+   7          7       0         0       0   G     N      0    
+   8          8       1         0       0   G     N      0    
+   9          9       1         0       0   G     N      0    
+   10         10      1         0       0   G     N      0    
+   11         11      1         0       0   G     N      0    
+   12         12      1         0       0   G     N      0    
+   13         13      1         0       0   G     N      0    
+   14         14      1         0       0   G     N      0    
+   15         15      1         0       0   G     N      0    
+   16         16      2         0       7   G     N      0    
+   17         17      2         0       0   G     N      0    
+   18         18      2         0       0   G     N      0    
+   19         19      2         0       0   G     N      0    
+   20         20      2         0       0   G     N      0    
+   21         21      2         0       0   G     N      0    
+   22         22      2         0       0   G     N      0    
+   23         23      2         0       0   G     N      0    
+   24         24      3         0       7   G     N      0    
+   25         25      3         0       0   G     N      0    
+   26         26      3         0       0   G     N      0    
+   27         27      3         0       0   G     N      0    
+   28         28      3         0       0   G     N      0    
+   29         29      3         0       0   G     N      0    
+   30         30      3         0       0   G     N      0    
+   31         31      3         0       0   G     N      0    
+   32         32      4         0       7   G     N      0    
+   33         33      4         0       0   G     N      0    
+   34         34      4         0       0   G     N      0    
+   35         35      4         0       0   G     N      0    
+   36         36      4         0       0   G     N      0    
+   37         37      4         0       0   G     N      0    
+   38         38      4         0       0   G     N      0    
+   39         39      4         0       0   G     N      0    
+   40         40      5         0       7   G     N      0    
+   41         41      5         0       0   G     N      0    
+   42         42      5         0       0   G     N      0    
+   43         43      5         0       0   G     N      0    
+   44         44      5         0       0   G     N      0    
+   45         45      5         0       0   G     N      0    
+   46         46      5         0       7   G     N      0    
+   47         47      5         0       0   G     N      0    
+   48         48      6         0       7   G     N      0    
+   49         49      6         0       0   G     N      0    
+   50         50      6         0       0   G     N      0    
+   51         51      6         0       0   G     N      0    
+   52         52      6         0       0   G     N      0    
+   53         53      6         0       0   G     N      0    
+   54         54      6         0       0   G     N      0    
+   55         55      6         0       0   G     N      0    
+   56         56      7         0       7   G     N      0    
+   57         57      7         0       0   G     N      0    
+   58         58      7         0       0   G     N      0    
+   59         59      7         0       0   G     N      0    
+   60         60      7         0       0   G     N      0    
+   61         61      7         0       0   G     N      0    
+   62         62      7         0       0   G     N      0    
+   63         63      7         0       0   G     N      0    
+   COS_DEI   Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   -------   -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      0    
+   1          1       0         0       0   G     N      0    
+   2          2       1         0       0   G     N      0    
+   3          3       1         0       0   G     N      0    
+   4          4       2         0       0   G     N      0    
+   5          5       2         0       0   G     N      0    
+   6          6       3         0       0   G     N      0    
+   7          7       3         0       0   G     N      0    
+   8          8       4         0       7   G     N      0    
+   9          9       4         0       7   G     N      0    
+   10         10      5         0       7   G     N      0    
+   11         11      5         0       7   G     N      0    
+   12         12      6         0       0   G     N      0    
+   13         13      6         0       0   G     N      0    
+   14         14      7         0       0   G     N      0    
+   15         15      7         0       0   G     N      0    
+   EXP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+   ---      -----   -----   ---------   --  --  ----- --------
+   0          0       0         0       0   G     N      0    
+   1          1       1         0       0   G     N      0    
+   2          2       2         0       0   G     N      0    
+   3          3       3         0       0   G     N      0    
+   4          4       4         0       0   G     N      0    
+   5          5       5         0       0   G     N      0    
+   6          6       6         0       0   G     N      0    
+   7          7       7         0       0   G     N      0    
+  ============================================================
+   NPD: Interface Bind
+  ============================================================
+  Port Type: L3
+  Meter Type: EXACT
+  Meter set OID: 0x0
+  No of meters: 0
+  Port: OID 0xAEE, system port OID 0xAF3
+  State: Active, Speed: 10000000000 bps, Trust: DSCP
+  Scheduler
+    OID: 0xAF4, ASIC: Argon
+  VOQ Set
+    OID: 0xAF1, device 0, base VOQ ID 880, size 8
+    State: Active, Flush: Flush not active, Empty: False

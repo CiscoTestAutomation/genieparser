@@ -23,6 +23,10 @@ expected_output= {
                 'max_l3_interface': {
                         'proposed': 8192
                 },
+                'max_mpls_label': {
+                        'current': 0,
+                        'proposed': 0
+                },
                 'max_mpls_te_tunnel': {
                         'proposed': 4096
                 },

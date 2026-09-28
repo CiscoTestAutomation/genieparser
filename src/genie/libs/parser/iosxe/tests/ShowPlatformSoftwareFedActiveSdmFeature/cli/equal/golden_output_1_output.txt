@@ -1,0 +1,29 @@
+TB3-BS-1#show platform software fed switch standby sdm feature
+NPI SDM Feature Table Entries
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+MAC entry             65536       8           0      8           0           65536       0      0
+FIB Host Route        81920       2           0      2           0           81920       0      0
+MPLS Label            65536       0           0      0           0           65536       0      0
+OG                    2048        0           0      0           0           2048        0      0
+NAT entries           262144      0           0      0           0           262144      0      0
+NPI SDM Feature Table Entries
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+SGACL Hosts           131072      0           0      0           0           131072      0      0
+SGACL Cells           24576       0           0      0           0           24576       0      0
+Security ACL IN       5120        118         0      118         0           21504       0      0
+Security ACL OUT      5120        42          0      42          0           21504       0      0
+QOS ACL IN            1024        0           0      0           0           5120        0      0
+NPI SDM Feature Table Entries
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+QOS ACL OUT           1024        0           0      0           0           5120        0      0
+PBR/NAT ACL IN        1024        0           0      0           0           8192        0      0
+PBR/NAT ACL OUT       1024        0           0      0           0           8192        0      0
+Mirror ACL IN         256         0           0      0           0           1024        0      0
+Mirror ACL OUT        256         0           0      0           0           1024        0      0
+NPI SDM Feature Table Entries
+Feature Name          Reserved    Used        %Used  Max         AllocFail   Capped Max  Asic   Slice
+FNF ACL IN            256         0           0      0           0           2048        0      0
+FNF ACL OUT           256         0           0      0           0           2048        0      0
+FNF Flow IN           32768       0           0      0           0           32768       0      0
+FNF Flow OUT          32768       0           0      0           0           32768       0      0
+TB3-BS-1#

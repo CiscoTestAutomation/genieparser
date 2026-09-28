@@ -1,0 +1,4 @@
+ASR_CC01#show subscriber default-session
+UID     Lite-sessions  Interface
+
+ASR_CC01#

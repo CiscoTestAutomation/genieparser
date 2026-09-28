@@ -1,0 +1,27 @@
+show authentication sessions interface GigabitEthernet0/1/1 details
+            Interface:  GigabitEthernet0/1/1
+               IIF-ID:  0x09CB0213
+          MAC Address:  0030.0000.0002
+         IPv6 Address:  Unknown
+         IPv4 Address:  Unknown
+            User-Name:  auto602
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  multi-domain
+     Oper control dir:  both
+      Session timeout:  100s (local), Remaining: 91s
+       Timeout action:  Reauthenticate
+    Common Session ID:  1CB1A8C000000168BBA5232C
+      Acct Session ID:  0x00000252
+               Handle:  0x3400011f
+       Current Policy:  dot1x_dvlan_reauth_af
+
+
+Server Policies:
+              ACS ACL:  xACSACLx-IP-Test_ACL-12345678
+           Vlan Group:  Vlan: 60
+
+
+Method status list:
+       Method           State
+        dot1x           Authc Success

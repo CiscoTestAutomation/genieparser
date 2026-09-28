@@ -29,8 +29,7 @@ expected_output = {
                     "server_policies": {
                         1: {
                             "name": "ACS ACL",
-                            "policies": "xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3",
-                            "security_policy": "Should Secure"
+                            "policies": "xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3"
                         }
                     },
                     "method_status": {
@@ -68,7 +67,8 @@ expected_output = {
                             "DEFAULT_LINKSEC_POLICY_SHOULD_SECURE": {
                                 "priority": 150
                             }
-                        }
+                        },
+                        "security_policy": "Should Secure"
                     },
                     "server_policies": {
                         1: {

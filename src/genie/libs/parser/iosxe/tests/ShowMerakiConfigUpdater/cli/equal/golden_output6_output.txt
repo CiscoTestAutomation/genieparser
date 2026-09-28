@@ -1,0 +1,23 @@
+Config Updater
+------------------------------------
+  Current state:                Ready
+  **Pending local changes:        Yes (next upload will trigger consilience)**
+  Last config save time(UTC): 2026-07-02 18:50:45
+  No config save scheduled.
+
+Latest operation
+------------------------------------
+  Upload running config after save
+
+  Save config: Completed
+    start time(UTC): 2026-07-02 18:50:40
+    result time(UTC): 2026-07-02 18:50:45
+  Get running config: Pass
+    start time(UTC): 2026-07-02 18:50:42
+    result time(UTC): 2026-07-02 18:50:45
+    Running config location: /flash/meraki/config_updater/monitor/upload.config
+  Get presigned url: Not needed
+    start time(UTC): 2026-07-02 18:50:45
+    result time(UTC): 2026-07-02 18:50:47
+    dashboard status code: 204
+  Upload config: Not started

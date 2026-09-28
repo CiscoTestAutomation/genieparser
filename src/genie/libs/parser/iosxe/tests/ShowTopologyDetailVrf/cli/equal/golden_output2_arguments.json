@@ -1,0 +1,5 @@
+{
+    "vrf": "default",
+    "address_family": "ipv4",
+    "topo_name": "t1"
+}

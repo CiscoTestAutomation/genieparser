@@ -1,0 +1,13 @@
+Feature-id: 100 Asic: 0
+Allocated Resources for the Feature:	IPSEC
+Resource Name           Allocated
+------------------------------------------
+RSC_SA_INDEX_INBOUND         3
+RSC_SA_INDEX_OUTBOUND    65535
+RSC_SI                       3
+
+Feature-id: 100 Asic: 1
+Allocated Resources for the Feature:	IPSEC
+Resource Name           Allocated
+------------------------------------------
+RSC_SI                       3

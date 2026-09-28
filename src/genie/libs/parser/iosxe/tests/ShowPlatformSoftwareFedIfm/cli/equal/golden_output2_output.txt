@@ -1,0 +1,4 @@
+show platform software fed switch active ifm interfaces tunnel
+Interface                         IF_ID               State
+----------------------------------------------------------------------
+Tunnel1                           0x000000ec          READY

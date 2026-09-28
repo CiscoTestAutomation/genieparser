@@ -1,0 +1,41 @@
+----------- Display L1 port debug info------------
+
+|-------------------------------------------------|
+|    SW port debug states                         |
+|-------------------------------------------------|
+| Slot/Port          |       1/66
+| Speed              |       speed_gbps10
+| Active             |       Yes
+| XCVR Presence      |       Not present
+| Admin              |       Enabled
+| Disabled           |       No
+| Link State         |       Up
+| Init Done          |       Yes
+| XCVR Type          |       512
+| Breakout           |       Disabled
+| Delete Mask        |       0
+| LED State          |       Off
+| Breakout Progress  |       0
+| Breakout Mode      |       1
+| Maximum Subports   |       0
+| Port Group Cfg     |       2
+| Port Group mode    |       0
+| Flow Control Mode  |       TX/RX OFF
+| Tx-Rx bytes (~delta) |    ~35492
+|-------------------------------------------------|
+|-------------------------------------------------|
+|    LED port debug states                        |
+|-------------------------------------------------|
+| Slot/Port                 |      1/66
+| Suspended                 |       No
+| Stp blocked               |       No
+| Txrx_error                |       No
+| Txrx_active               |       Yes
+|-------------------------------------------------|
+ LC present: Yes
+
+ Outstanding ports to be deleted 66
+
+ Total failed deleted ports 0
+
+ LC Swap port count 0

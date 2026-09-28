@@ -1,0 +1,27 @@
+expected_output = {
+    'monitors': {
+        '2416048847': {
+            'fnf_mon_id': 2416048847,
+            'exp_action': 0,
+            'exp_id': 0,
+            'inactive_timeout': 15,
+            'active_timeout': 60,
+            'cache_type': 1,
+            'cache_size': 16384,
+            'record_size': 45,
+            'record_count': 9,
+            'fields': {
+                '87': {'record': 1, 'size': 4, 'param': 0, 'flags': 1, 'offset': 0},
+                '90': {'record': 2, 'size': 4, 'param': 0, 'flags': 1, 'offset': 4},
+                '124': {'record': 3, 'size': 2, 'param': 0, 'flags': 1, 'offset': 8},
+                '125': {'record': 4, 'size': 2, 'param': 0, 'flags': 1, 'offset': 10},
+                '197': {'record': 5, 'size': 8, 'param': 0, 'flags': 0, 'offset': 12},
+                '199': {'record': 6, 'size': 8, 'param': 0, 'flags': 0, 'offset': 20},
+                '221': {'record': 7, 'size': 8, 'param': 0, 'flags': 0, 'offset': 28},
+                '222': {'record': 8, 'size': 8, 'param': 0, 'flags': 0, 'offset': 36},
+                '34': {'record': 9, 'size': 1, 'param': 0, 'flags': 1, 'offset': 44},
+            },
+            'fnf_mon_hdl': 131238318092168,
+        },
+    },
+}

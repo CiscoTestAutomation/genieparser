@@ -1,0 +1,30 @@
+show crypto ikev2 profile ikev2_prof
+
+IKEv2 profile: ikev2_prof
+ Shutdown : No
+ Ref Count: 5
+ Match criteria:
+  Fvrf: global
+  Local address/interface: none
+  Identities:
+   address 110.0.1.2 255.255.255.255
+  Certificate maps: none
+ Local identity: none
+ Remote identity: none
+ Local authentication method: pre-share
+ Remote authentication method(s): pre-share
+ EAP options: none
+ Keyring: ikev2_key
+ Trustpoint(s): none
+ Lifetime: 86400 seconds
+ DPD: interval 10, retry-interval 2, periodic
+ NAT-keepalive: disabled
+ Ivrf: none
+ Virtual-template: none
+ mode auto: none
+ AAA AnyConnect EAP authentication mlist: none
+ AAA EAP authentication mlist: none
+ AAA authentication mlist: none
+ AAA Accounting: none
+ AAA group authorization: none
+ AAA user authorization: none

@@ -1,0 +1,31 @@
+Local Intf: Gi1/0/7
+Local Intf service instance: -
+Chassis id: 8c94.1f8e.f800
+Port id: Gi2/0/5
+Port Description: GigabitEthernet2/0/5
+System Name: 9200_dut3
+
+System Description:
+Cisco IOS Software [IOSXE], Catalyst L3 Switch Software (CAT9K_LITE_IOSXE), Experimental Version 26.02.20260522:012045 [BLD_V262_THROTTLE_LATEST_20260522_003513-0-g96c05e6f2421a:/nobackup/mcpre/s2c-build-ws 101]
+Copyright (c) 1986-2026 by Cisco Systems, I
+
+Time remaining: 109 seconds
+System Capabilities: B,R
+Enabled Capabilities: B
+Management Addresses:
+    IP: 11.25.14.15
+Auto Negotiation - supported, enabled
+Physical media capabilities:
+    1000baseT(FD)
+    100base-TX(FD)
+    100base-TX(HD)
+    10base-T(FD)
+    10base-T(HD)
+Media Attachment Unit type: 30
+Vlan ID: 1
+Peer Source MAC: 8c94.1f8e.f805
+Age: 279 seconds
+Time since last update: 10 seconds
+
+
+Total entries displayed: 1

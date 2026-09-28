@@ -391,7 +391,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParserSchema(MetaParser):
                 "vmr_state": str,
             }
         },
-        "qos_profile_information": {
+        Optional("qos_profile_information"): {
             "oid": str,
             "ref_count": int,
             "no_of_counter": int,
@@ -539,6 +539,12 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParserSchema(MetaParser):
                 }
             },
         },
+        Optional("mac_acl"): {
+            Optional("oid"): str,
+            Optional("l3_oid"): str,
+            Optional("l2_oid"): str,
+            "number_of_aces": int,
+        },
         Optional("bind_information"): {
             "port_type": str,
             Optional('asic'): int,
@@ -551,8 +557,8 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParserSchema(MetaParser):
             Optional("no_of_meters"): int,
             "system_port_oid": str,
             "port_oid": str,
-            "speed": int,
-            "port_internal_state": str,
+            Optional("speed"): int,
+            Optional("port_internal_state"): str,
             Optional("meter_set_info"): {
                 Any(): {
                     "cir": int,
@@ -560,6 +566,23 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParserSchema(MetaParser):
                     "profile_oid": str,
                     "action_profile_oid": str,
                 }
+            },
+            Optional("state"): str,
+            Optional("trust"): str,
+            Optional("scheduler"): {
+                "oid": str,
+                "asic": str,
+                Optional("programmable"): bool,
+                Optional("logical_port"): str,
+            },
+            Optional("voq_set"): {
+                "oid": str,
+                "device": int,
+                "base_voq_id": int,
+                "size": int,
+                "state": str,
+                "flush": str,
+                "empty": bool,
             },
         },
     }
@@ -819,6 +842,52 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
         # Action Profile OID: 0x110
         p8_4 = re.compile(r"^Action Profile OID:\s+(?P<action_profile_oid>\w+)$")
+
+        # NPD: Interface Bind
+        # SDK: Interface Bind
+        # SDK: Interface Bind (ASIC 0)
+        p9 = re.compile(r"^(NPD|SDK): Interface Bind\s*(\(ASIC (?P<asic>\d+)\))?$")
+
+        # Port: OID 0x792, system port OID 0x796
+        p9_1 = re.compile(
+            r"^Port: OID (?P<port_oid>\w+), system port OID (?P<system_port_oid>\w+)$"
+        )
+
+        # State: Active, Speed: 1000000000 bps
+        # State: Active, Speed: 1000000000 bps, Trust: DSCP
+        p9_2 = re.compile(
+            r"^State:\s+(?P<state>\w+),\s+Speed:\s+(?P<speed>\d+)\s+bps(?:,\s+Trust:\s+(?P<trust>\w+))?$"
+        )
+
+        # Scheduler
+        p9_3 = re.compile(r"^Scheduler$")
+
+        # OID: 0x797, ASIC: Argon
+        p9_4 = re.compile(r"^OID:\s+(?P<oid>\w+),\s+ASIC:\s+(?P<asic>[\w\s]+)$")
+
+        # Programmable: False
+        p9_5 = re.compile(r"^Programmable: (?P<programmable>\w+)$")
+
+        # Logical port: Enabled
+        p9_5_1 = re.compile(r"^Logical port:\s+(?P<logical_port>\w+)$")
+
+        # VOQ Set
+        p9_6 = re.compile(r"^VOQ Set$")
+
+        # OID: 0x794, device 0, base VOQ ID 472, size 8
+        p9_7 = re.compile(
+            r"^OID:\s+(?P<oid>\w+),\s+device\s+(?P<device>\d+),\s+base\s+VOQ\s+ID\s+(?P<base_voq_id>\d+),\s+size\s+(?P<size>\d+)$"
+        )
+
+        # State: Active, Flush: Flush not active, Empty: False
+        p9_8 = re.compile(
+            r"^State:\s+(?P<state>\w+),\s+Flush:\s+(?P<flush>[\w\s]+),\s+Empty:\s+(?P<empty>\w+)$"
+        )
+
+        # IQP counter: size 1, OID 0x0
+        p9_9 = re.compile(
+            r"^IQP counter:\s+size\s+(?P<iqp_counter_size>\d+),\s+OID\s+(?P<iqp_counter_oid>\w+)$"
+        )
 
         ret_dict = {}
         meter_set_count = 0
@@ -1169,7 +1238,10 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
             # NPD: Bind Information
             # SDK: Bind Information
             # SDK: Bind Information (Asic: 1)
-            m = p7.match(line)
+            # NPD: Interface Bind
+            # SDK: Interface Bind
+            # SDK: Interface Bind (ASIC 0)
+            m = p7.match(line) or p9.match(line)
             if m:
                 bind_dict = ret_dict.setdefault("bind_information", {})
                 if m.groupdict()['asic']:
@@ -1295,8 +1367,97 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
                 )
                 continue
 
-        return ret_dict
+            # Port: OID 0x792, system port OID 0x796
+            m = p9_1.match(line)
+            if m:
+                bind_dict.setdefault(
+                    "port_oid", m.groupdict()["port_oid"]
+                )
+                bind_dict.setdefault(
+                    "system_port_oid", m.groupdict()["system_port_oid"]
+                )
+                continue
 
+            # State: Active, Speed: 1000000000 bps
+            # State: Active, Speed: 1000000000 bps, Trust: DSCP
+            m = p9_2.match(line)
+            if m:
+                bind_dict.setdefault("state", m.groupdict()["state"])
+                bind_dict.setdefault(
+                    "speed", int(m.groupdict()["speed"])
+                )
+                if m.groupdict().get("trust"):
+                    bind_dict.setdefault("trust", m.groupdict()["trust"])
+                continue
+
+            # Scheduler
+            m = p9_3.match(line)
+            if m:
+                scheduler_dict = bind_dict.setdefault("scheduler", {})
+                continue
+
+            # OID: 0x797, ASIC: Argon
+            m = p9_4.match(line)
+            if m:
+                scheduler_dict.setdefault("oid", m.groupdict()["oid"])
+                scheduler_dict.setdefault("asic", m.groupdict()["asic"])
+                continue
+
+            # Programmable: False
+            m = p9_5.match(line)
+            if m:
+                scheduler_dict["programmable"] = (
+                    True if m.groupdict()["programmable"] == "True" else False
+                )
+                continue
+
+            # Logical port: Enabled
+            m = p9_5_1.match(line)
+            if m:
+                scheduler_dict.setdefault(
+                    "logical_port", m.groupdict()["logical_port"]
+                )
+                continue
+
+            # VOQ Set
+            m = p9_6.match(line)
+            if m:
+                voq_set_dict = bind_dict.setdefault("voq_set", {})
+                continue
+
+            # OID: 0x794, device 0, base VOQ ID 472, size 8
+            m = p9_7.match(line)
+            if m:
+                voq_set_dict.setdefault("oid", m.groupdict()["oid"])
+                voq_set_dict.setdefault("device", int(m.groupdict()["device"]))
+                voq_set_dict.setdefault(
+                    "base_voq_id", int(m.groupdict()["base_voq_id"])
+                )
+                voq_set_dict.setdefault("size", int(m.groupdict()["size"]))
+                continue
+
+            # State: Active, Flush: Flush not active, Empty: False
+            m = p9_8.match(line)
+            if m:
+                voq_set_dict.setdefault("state", m.groupdict()["state"])
+                voq_set_dict.setdefault("flush", m.groupdict()["flush"])
+                voq_set_dict["empty"] = (
+                    True if m.groupdict()["empty"] == "True" else False
+                )
+                continue
+
+            # IQP counter: size 1, OID 0x0
+            m = p9_9.match(line)
+            if m:
+                bind_dict.setdefault(
+                    "iqp_counter_size", int(m.groupdict()["iqp_counter_size"])
+                )
+                bind_dict.setdefault(
+                    "iqp_counter_oid", m.groupdict()["iqp_counter_oid"]
+                )
+                continue
+
+        return ret_dict
 
 class ShowPlatformSoftwareFedQosInterfaceIngressNpdDetailed(
     ShowPlatformSoftwareFedQosInterfaceSuperParser

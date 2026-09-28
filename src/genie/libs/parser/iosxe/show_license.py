@@ -2537,7 +2537,16 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'miscellaneous':{
                 'custom_id':str,
             },
-            'policy':{
+            Optional('policy_v2'):{
+                'policy_in_use':str,
+                Optional('policy_name'):str,
+                'sync_overdue_interval':int,
+                'sync_retry_interval':int,
+                'grace_period':int,
+                'on_going_reporting_interval':int,
+                Optional('no_enforcement'):str,
+            },
+            Optional('policy'):{
                 'policy_in_use':str,
                 Optional('policy_name'):str,
                 'reporting_ack_required':str,
@@ -2548,15 +2557,16 @@ class ShowLicenseTechSupportSchema(MetaParser):
                 },
             },
             'usage_reporting':{
-                'last_ack_received':str,
-                'next_ack_deadline':str,
+                Optional('last_ack_received'):str,
+                Optional('next_ack_deadline'):str,
                 'reporting_push_interval':str,
-                'next_ack_push_check':str,
+                Optional('next_ack_push_check'):str,
                 'next_report_push':str,
                 'last_report_push':str,
-                'last_report_file_write':str,
+                Optional('last_report_file_write'):str,
             },
             Optional('trust_code_installed'):Or(str, dict),
+                Optional('secondary_signing_cert'):int,
                 Optional('active'):{
                     Optional('pid'):str,
                     Optional('sn'):str,
@@ -2587,6 +2597,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
                     'count': int,
                     'version': str,
                     'status': str,
+                    Optional('sync_overdue_deadline'): str,
                     Optional('authorized_count'): int,
                     Optional('outofcompliance_count'): int,
                     Optional('insufficient_count'): int,
@@ -2646,6 +2657,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             'external_event':str,
             Optional('operational_model'):str,
             Optional('hello_message'):str,
+            Optional('integrity_reporting'):str,
         },
         Optional('communication_statistics'):{
             'communication_level_allowed':str,
@@ -2703,7 +2715,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
                     },
                 },
             },
-            'purchased_licenses':str,
+            Optional('purchased_licenses'):str,
             Optional('last_reporting_not_required'):{
                 Optional('entitlement_tag'):str,
             }   
@@ -2809,6 +2821,8 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('smartagentslpenhanced'):str,
             Optional('smartagentmaxermnotifylistsize'):int,
             Optional('smartagentday0enforcement'):str,
+            Optional('smartagentdaynenforcement'):str,
+            Optional('smartagentstandardization'):str,
             Optional('smartagentunifiedlicensing'):str,
             Optional('smartagentmaxsinglereportsize'):int,
             Optional('smartagentslacreturnforcedallowed'):str,
@@ -2918,6 +2932,8 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p1_7 = re.compile(r'^(?P<miscellaneous>Miscellaneous)\:$')
         #Policy:
         p1_8 = re.compile(r'^(?P<policy>Policy)\:$')
+        #PolicyV2:
+        p1_8_2 = re.compile(r'^(?P<policy_v2>PolicyV2)\:$')
         #Unenforced/Non-Export Perpetual Attributes:
         #Unenforced/Non-Export Subscription Attributes:
         #Enforced (Perpetual/Subscription) License Attributes:
@@ -2987,6 +3003,9 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         p9_2_1_1 = re.compile(r'^(?P<term_information>Term +information)\:$')
         #Last Reporting Not Required:
         p9_3 = re.compile(r'^(?P<last_reporting_not_required>Last +Reporting +Not +Required)\:$')
+        #Enforcement Status:
+        #Device Enforcement State:
+        p9_4 = re.compile(r'^(?:Enforcement +Status|Device +Enforcement +State):$')
         
         #Usage Report Summary:
         p10 = re.compile(r'^(?P<usage_report_summary>Usage +Report +Summary)\:$')
@@ -3070,6 +3089,8 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
         #Trust Code Installed: Feb 27 09:06:59 2024 IST
         #Trust Code Installed:    Trust Code Type: CSSM
         p14_data1 = re.compile(r'^Trust +Code +Installed\: +(?P<trust_code_installed>(<none>|\w{3} +\d{1,2} +[\d:]+ +\d{4} +\w+))$')
+        #Secondary Signing Cert: 0
+        p14_data2 = re.compile(r'^Secondary +Signing +Cert: +(?P<secondary_signing_cert>\d+)$')
         # Authorized Count: 0
         p2_2 = re.compile(r'^Authorized Count:\s+(?P<authorized_count>\d+)$')
         # Out-Of-Compliance Count: 0
@@ -3280,6 +3301,11 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('policy', {})
                 continue     
 
+            m = p1_8_2.match(line)
+            if m:
+                current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('policy_v2', {})
+                continue
+
             m = p1_8_1.match(line)
             if m:
                 group=m.groupdict()
@@ -3455,6 +3481,11 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                 group=m.groupdict()
                 current_dict = ret_dict.setdefault('reservation_info',{}).setdefault('last_reporting_not_required',{})
                 continue
+
+            # Prevent enforcement fields from being added to reservation data.
+            if p9_4.match(line):
+                current_dict = {}
+                continue
                 
             m = p12_1.match(line)
             if m:
@@ -3542,9 +3573,21 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
                     if member_count > 1:
                        current_dict = ret_dict.setdefault('product_information',{}).setdefault('ha_udi_list', {}).setdefault(f'member{member_count}'.lower(),{})
                 else:
-                    current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed', {}).setdefault(group['member_type'].lower(),{})
+                    smart_licensing_status_dict = ret_dict.setdefault('smart_licensing_status', {})
+                    trust_code_installed = smart_licensing_status_dict.get('trust_code_installed')
+                    if not isinstance(trust_code_installed, dict):
+                        trust_code_installed_dict = {}
+                        if trust_code_installed and trust_code_installed != '<none>':
+                            trust_code_installed_dict['installed_on'] = trust_code_installed
+                        for key in ('trust_code_type', 'attributes'):
+                            if key in smart_licensing_status_dict:
+                                trust_code_installed_dict[key] = smart_licensing_status_dict.pop(key)
+                        smart_licensing_status_dict['trust_code_installed'] = trust_code_installed_dict
+                    else:
+                        trust_code_installed_dict = trust_code_installed
+                    current_dict = trust_code_installed_dict.setdefault(group['member_type'].lower(), {})
                     if member_count > 1:
-                       current_dict = ret_dict.setdefault('smart_licensing_status',{}).setdefault('trust_code_installed', {}).setdefault(f'member{member_count}'.lower(),{})
+                       current_dict = trust_code_installed_dict.setdefault(f'member{member_count}'.lower(), {})
 
                 # update the dictionary current_dict with the pid and sn
                 current_dict.update({
@@ -3569,6 +3612,13 @@ class ShowLicenseTechSupport(ShowLicenseTechSupportSchema):
             #Data lines that required special handling are done below with further checks and regular expressions
             m = p0_3.match(line)
             if m:
+                m1 = p14_data2.match(line)
+                if m1:
+                    group = m1.groupdict()
+                    current_dict = ret_dict.setdefault('smart_licensing_status', {})
+                    current_dict['secondary_signing_cert'] = int(group['secondary_signing_cert'])
+                    continue
+
                 m1 = p14_data1.match(line)
                 if  m1:
                     group = m1.groupdict()

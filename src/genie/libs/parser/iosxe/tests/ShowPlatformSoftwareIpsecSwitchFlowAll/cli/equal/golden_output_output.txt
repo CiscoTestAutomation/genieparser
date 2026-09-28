@@ -1,0 +1,35 @@
+show platform software ipsec switch 1 f0 flow all
+=========== Flow id: 141
+               mode: tunnel
+          direction: outbound
+           protocol: esp
+                SPI: 0x78744667
+      local IP addr: 110.0.1.1
+     remote IP addr: 110.0.1.2
+      crypto map id: 0
+             SPD id: 42
+         cpp SPD id: 0
+    ACE line number: 0
+      QFP SA handle: 14
+   crypto device id: 0
+IOS XE interface id: 237
+     interface name: Tunnel1
+       use path MTU: FALSE
+       object state: active
+  object bind state: new
+=========== Flow id: 142
+               mode: tunnel
+          direction: inbound
+           protocol: esp
+                SPI: 0x57b5fa26
+      local IP addr: 110.0.1.1
+     remote IP addr: 110.0.1.2
+      crypto map id: 0
+             SPD id: 42
+         cpp SPD id: 0
+    ACE line number: 0
+      QFP SA handle: 15
+   crypto device id: 0
+IOS XE interface id: 237
+     interface name: Tunnel1
+       object state: active

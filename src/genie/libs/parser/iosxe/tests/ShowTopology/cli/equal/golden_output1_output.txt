@@ -1,0 +1,9 @@
+Topology                         Address Family   Associated VRF                   State
+base                             ipv4             default                          UP
+t1                               ipv4             default                          UP
+base                             ipv4             __Platform_iVRF:_ID00_           UP
+base                             ipv6             default                          UP
+base                             ipv6             foo                              UP
+base                             ipv4 multicast   default                          DOWN
+base                             ipv6 multicast   default                          DOWN
+base                             ipv6 multicast   foo                              DOWN

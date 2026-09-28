@@ -1,0 +1,10 @@
+Topology: test
+  Address-family: ipv4
+  Associated VPN VRF is default
+  Topology state is UP
+  Topology CEF forwarding is enabled
+  Topology internal lock count = 1
+  Topology maximum route limit 100, warning limit 7% (7)
+  Associated interfaces:
+    Ethernet0/0, operation state: DOWN, Upstream
+  Topology total user lock count: 0

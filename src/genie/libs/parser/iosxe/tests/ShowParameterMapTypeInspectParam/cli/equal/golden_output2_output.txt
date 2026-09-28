@@ -1,0 +1,27 @@
+show parameter-map type inspect global
+ parameter-map type inspect global
+  log dropped-packet off
+  log flow off
+  icmp unreachable drop
+  alert off
+  lisp inner packet inspection on
+  multi-tenancy off
+  Global VRF (VRF0) Configuration:
+  --------------------------------
+  total_session  unlimited
+  number of packet per flow default
+ aggressive aging disabled
+  syn_flood_limit  unlimited
+  max_incomplete unlimited aggressive aging disabled
+  max_incomplete TCP unlimited
+  max_incomplete UDP unlimited
+  max_incomplete ICMP unlimited
+
+  Per Box Configuration:
+  ----------------------
+  aggressive aging disabled
+  syn_flood_limit  unlimited
+  max incomplete unlimited  aggressive aging disabled
+  max_incomplete TCP unlimited
+  max_incomplete UDP unlimited
+  max_incomplete ICMP unlimited

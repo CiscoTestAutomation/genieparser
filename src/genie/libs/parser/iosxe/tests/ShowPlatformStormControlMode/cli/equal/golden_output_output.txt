@@ -1,0 +1,11 @@
+Configured rate mode    : PPS
+Tracked rate mode       : PPS
+Tracked entry counts:
+  Percentage             : 0
+  BPS                    : 0
+  PPS                    : 23
+Observed entry counts:
+  Percentage             : 0
+  BPS                    : 0
+  PPS                    : 23
+Counter consistency     : OK

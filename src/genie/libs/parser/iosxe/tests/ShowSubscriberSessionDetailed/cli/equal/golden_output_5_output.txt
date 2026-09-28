@@ -1,0 +1,41 @@
+show subscriber session uid 705 detailed
+Current Subscriber Information: Total sessions 1
+--------------------------------------------------
+Type: IPv4/IPv6, UID: 705, State: authen, Identity: aaaa.bbbb.cccc
+IPv4 Address: 11.11.11.2
+IPv6 Address: 8001::
+Session Up-time: 00:00:18, Last Changed: 00:00:06
+Switch-ID: 4717
+
+Policy information:
+  Context 7F2190EB88D0: Handle 1D00041D
+  AAA_id 000003A9: Flow_handle 0
+  Authentication status: authen
+  Downloaded User profile, excluding services:
+    service-type         0   2 [Framed]
+    prefix               0   00 40 80 01 00 00 00 00 00 00
+  Downloaded User profile, including services:
+    service-type         0   2 [Framed]
+    prefix               0   00 40 80 01 00 00 00 00 00 00
+  Config history for session (recent to oldest):
+    Access-type: IP Client: SM
+     Policy event: Service Selection Request
+      Profile name: aaaa.bbbb.cccc, 2 references
+        service-type         0   2 [Framed]
+        prefix               0   00 40 80 01 00 00 00 00 00 00
+  Rules, actions and conditions executed:
+    subscriber rule-map TAL
+      condition always event session-start
+        10 authorize identifier mac-address
+
+Classifiers:
+Class-id    Dir   Packets    Bytes                  Pri.  Definition
+0           In    5          542                    0    Match Any
+1           Out   4          456                    0    Match Any
+
+Template Id : 69
+
+Configuration Sources:
+Type  Active Time  AAA Service ID  Name
+USR   00:00:18     -               Peruser
+INT   00:00:18     -               GigabitEthernet0/0/3

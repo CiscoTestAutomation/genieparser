@@ -1,0 +1,17 @@
+    Network Layer Address                    Link Layer Address     Interface  vlan/bd    prlvl      age        state      Time left
+L   192.168.30.254                           0000.5e00.0101         Vl3020     3020       0100       11mn       REACHABLE
+L   192.168.20.254                           0000.5e00.0101         Vl2020     2020       0100       11mn       REACHABLE
+ARP 192.168.20.128                           aabb.0000.0191         Et0/1      2020       0005       6mn        STALE     try 0 1708 s
+ARP 192.168.20.11                            aabb.0000.0191         Et0/1      2020       0005       6mn        STALE     try 0 1710 s try 0
+ARP 192.168.0.11                             aabb.0000.0191         Et0/1      2000       0005       10mn       STALE     try 0 1554 s
+ARP 192.168.0.11                             aabb.0000.0191         Et0/1      2000       0005       11mn       STALE     try 0 1411 s
+ND  FE80::A8BB:FF:FE00:191                   aabb.0000.0191         Et0/1      2020       0005       13s        REACHABLE  296 s try 0
+ND  FE80::A8BB:FF:FE00:191                   aabb.0000.0191         Et0/1      3020       0005       7s         REACHABLE  307 s
+L   FE80::200:5EFF:FE00:101                  0000.5e00.0101         Vl2000     2000       0100       11mn       REACHABLE
+L   FE80::200:5EFF:FE00:101                  0000.5e00.0101         Vl2020     2020       0100       11mn       REACHABLE
+L   FE80::200:5EFF:FE00:101                  0000.5e00.0101         Vl3020     3020       0100       11mn       REACHABLE
+L   ABCD:192:168::254                        0000.5e00.0101         Vl2000     2000       0100       11mn       REACHABLE
+L   2001:192:168:30::254                     0000.5e00.0101         Vl3020     3020       0100       11mn       REACHABLE
+ND  2001:192:168:20:8000::11                 aabb.0000.0191         Et0/1      2020       0005       6mn        STALE     try 0 1773 s
+L   2001:192:168:20::254                     0000.5e00.0101         Vl2020     2020       0100       11mn       REACHABLE
+ND  2001:192:168:20::11                      aabb.0000.0191         Et0/1      2020       0005       6mn        STALE     try 0 1722 s

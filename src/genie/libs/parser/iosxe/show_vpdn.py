@@ -4,6 +4,7 @@ IOSXE parsers for the following show commands:
     * 'show vpdn tunnel'
     * 'show vpdn tunnel pptp all'
     * 'show vpdn tunnel all'
+    * 'show vpdn group-select default'
     * 'show vpdn group-select summary'
     * 'show vpdn session all'
 """
@@ -780,6 +781,171 @@ class ShowVpdnTunnelAll(ShowVpdnTunnelAllSchema):
         return ret_dict
 
 
+class ShowVpdnGroupSelectDefaultSchema(MetaParser):
+    """Schema for show vpdn group-select default"""
+    schema = {
+        "vpdn": {
+            "group_select": {
+                "default": {
+                    "default_group": str,
+                    "current_default_group": str,
+                    "state": str,
+                    "group_info": {
+                        Any(): {
+                            "protocol": str,
+                            "domain_handling": str,
+                            "priority": int
+                        }
+                    },
+                    "protocols": {
+                        Any(): {
+                            "default_group": Or(str, None)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowVpdnGroupSelectDefault(ShowVpdnGroupSelectDefaultSchema):
+    """Parser for show vpdn group-select default"""
+
+    cli_command = "show vpdn group-select default"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        # Default VPDN group: L2TP_GROUP
+        p1 = re.compile(r"^Default VPDN group\s*:\s*(?P<default_group>\S+)$")
+        # Default VPDN group information:
+        p2 = re.compile(r"^Default VPDN group information\s*:\s*$")
+        # Group Name      : L2TP_GROUP
+        p3 = re.compile(r"^Group Name\s*:\s*(?P<group_name>\S+)$")
+        # Protocol        : l2tp
+        p4 = re.compile(r"^Protocol\s*:\s*(?P<protocol>\S+)$")
+        # Domain Handling : Enabled
+        p5 = re.compile(r"^Domain Handling\s*:\s*(?P<domain_handling>\S+)$")
+        # Priority        : 1
+        p6 = re.compile(r"^Priority\s*:\s*(?P<priority>\d+)$")
+        # VPDN Default Group Selection
+        p7 = re.compile(r"^VPDN Default Group Selection$")
+        # Current Default Group : DEFAULT_L2TP
+        p8 = re.compile(r"^Current Default Group\s*:\s*(?P<current_default_group>\S+)$")
+        # State                 : Active
+        p9 = re.compile(r"^State\s*:\s*(?P<state>\S+)$")
+        # Default VPDN Group      Protocol
+        p10 = re.compile(r"^Default VPDN Group\s+Protocol$")
+        # vgdefault               l2tp
+        p11 = re.compile(r"^(?P<group>\S+)\s+(?P<protocol>\S+)$")
+
+        default_dict = ret_dict.setdefault("vpdn", {}).setdefault("group_select", {}).setdefault("default", {})
+
+        in_group_info = False
+        in_groups_table = False
+        current_group_info_key = None
+
+        for raw_line in output.splitlines():
+            line = raw_line.strip()
+            if not line:
+                if in_groups_table:
+                    in_groups_table = False
+                continue
+
+            # Skip non-informational lines
+            lower_line = line.lower()
+            if lower_line.startswith("example"):
+                continue
+            if set(line) == set("-"):
+                continue
+            if lower_line.startswith("show vpdn"):
+                continue
+
+            # Default VPDN group: L2TP_GROUP
+            m = p1.match(line)
+            if m:
+                default_dict["default_group"] = m.group("default_group")
+                continue
+
+            # Default VPDN group information:
+            m = p2.match(line)
+            if m:
+                in_group_info = True
+                current_group_info_key = None
+                continue
+
+            # Group Name      : L2TP_GROUP
+            m = p3.match(line)
+            if m and in_group_info:
+                current_group_info_key = m.group("group_name")
+                gi_dict = default_dict.setdefault("group_info", {})
+                gi_dict.setdefault(current_group_info_key, {})
+                continue
+
+            # Protocol        : l2tp
+            m = p4.match(line)
+            if m and in_group_info and current_group_info_key:
+                gi_entry = default_dict.setdefault("group_info", {}).setdefault(current_group_info_key, {})
+                gi_entry["protocol"] = m.group("protocol")
+                continue
+
+            # Domain Handling : Enabled
+            m = p5.match(line)
+            if m and in_group_info and current_group_info_key:
+                gi_entry = default_dict.setdefault("group_info", {}).setdefault(current_group_info_key, {})
+                gi_entry["domain_handling"] = m.group("domain_handling").lower()
+                continue
+
+            # Priority        : 1
+            m = p6.match(line)
+            if m and in_group_info and current_group_info_key:
+                gi_entry = default_dict.setdefault("group_info", {}).setdefault(current_group_info_key, {})
+                gi_entry["priority"] = int(m.group("priority"))
+                continue
+
+            # VPDN Default Group Selection
+            m = p7.match(line)
+            if m:
+                # Nothing to set here; next lines carry values
+                continue
+
+            # Current Default Group : DEFAULT_L2TP
+            m = p8.match(line)
+            if m:
+                default_dict["current_default_group"] = m.group("current_default_group")
+                continue
+
+            # State                 : Active
+            m = p9.match(line)
+            if m:
+                default_dict["state"] = m.group("state")
+                continue
+
+            # Default VPDN Group      Protocol
+            m = p10.match(line)
+            if m:
+                in_groups_table = True
+                continue
+
+            # vgdefault               l2tp
+            # None                    pptp
+            m = p11.match(line)
+            if m and in_groups_table:
+                group_name = m.group("group")
+                protocol = m.group("protocol")
+                protocols_dict = default_dict.setdefault("protocols", {})
+                protocol_entry = protocols_dict.setdefault(protocol, {})
+                protocol_entry["default_group"] = None if group_name.lower() == "none" else group_name
+                continue
+
+        return ret_dict
+
+
 class ShowVpdnSessionAllSchema(MetaParser):
     """Schema for show vpdn session all"""
     schema = {
@@ -970,6 +1136,183 @@ class ShowVpdnSessionAll(ShowVpdnSessionAllSchema):
             m = p15.match(line)
             if m:
                 current_session["unique_id"] = int(m.group("uid"))
+                continue
+
+        return ret_dict
+
+
+class ShowVpdnSessionSchema(MetaParser):
+    """Schema for show vpdn session"""
+    schema = {
+        "vpdn": {
+            "l2tp": {
+                "total_tunnels": str,
+                "total_sessions": str,
+                "sessions": ListOf({
+                    "local_id": int,
+                    "remote_id": int,
+                    "tunnel_id": int,
+                    "interface": str,
+                    "username": str,
+                    "state": str,
+                    "last_change": str,
+                    "unique_id": int,
+                }),
+            },
+            "l2f": {
+                "total_tunnels": str,
+                "total_sessions": str,
+                "sessions": ListOf({
+                    "clid": int,
+                    "mid": int,
+                    "username": str,
+                    "interface": str,
+                    "state": str,
+                    "unique_id": int,
+                }),
+            },
+            "pppoe": {
+                "total_tunnels": str,
+                "total_sessions": str,
+                "sessions": ListOf({
+                    "uid": int,
+                    "sid": int,
+                    "remote_mac": str,
+                    "local_mac": str,
+                    "outgoing_interface": str,
+                    "interface": str,
+                    "vast": Or(str, None),
+                    "session_state": str,
+                }),
+            },
+        }
+    }
+
+
+class ShowVpdnSession(ShowVpdnSessionSchema):
+    """Parser for show vpdn session"""
+
+    cli_command = "show vpdn session"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        if not output:
+            return ret_dict
+
+        vpdn_dict = ret_dict.setdefault("vpdn", {})
+
+        current_section = None
+        last_pppoe_session = None
+
+        # L2TP Session Information Total tunnels X sessions Y
+        p1 = re.compile(r'^L2TP Session Information Total tunnels\s+(?P<total_tunnels>\S+)\s+sessions\s+(?P<total_sessions>\S+)$')
+        # L2F Session Information Total tunnels X sessions Y
+        p2 = re.compile(r'^L2F Session Information Total tunnels\s+(?P<total_tunnels>\S+)\s+sessions\s+(?P<total_sessions>\S+)$')
+        # PPPoE Session Information Total tunnels X sessions Y
+        p3 = re.compile(r'^PPPoE Session Information Total tunnels\s+(?P<total_tunnels>\S+)\s+sessions\s+(?P<total_sessions>\S+)$')
+        # 4     691   13695 Se0/0         user@domain.com      est      00:06:00  4
+        p4 = re.compile(r'^(?P<local_id>\d+)\s+(?P<remote_id>\d+)\s+(?P<tunnel_id>\d+)\s+(?P<interface>\S+)\s+(?P<username>\S+)\s+(?P<state>\S+)\s+(?P<last_change>[\d:]+)\s+(?P<unique_id>\d+)$')
+        # 1      2      user@domain.com            SSS Circuit   open    10
+        p5 = re.compile(r'^(?P<clid>\d+)\s+(?P<mid>\d+)\s+(?P<username>\S+)\s+(?P<interface>.+?)\s+(?P<state>\S+)\s+(?P<unique_id>\d+)$')
+        # 3      1      0030.949b.b4a0 Fa2/0          N/A       CNCT_FWDED
+        p6 = re.compile(r'^(?P<uid>\d+)\s+(?P<sid>\d+)\s+(?P<remote_mac>\S+)\s+(?P<outgoing_interface>\S+)\s+(?P<interface>\S+)\s+(?P<session_state>\S+)$')
+        #               0010.7b90.0840
+        p7 = re.compile(r'^\s+(?P<local_mac>[0-9a-fA-F.]+)(?:\s+(?P<vast>\S+))?$')
+
+        for raw_line in output.splitlines():
+            line = raw_line.rstrip()
+            if not line:
+                continue
+
+            # L2TP Session Information Total tunnels X sessions Y
+            m = p1.match(line)
+            if m:
+                current_section = "l2tp"
+                sec = vpdn_dict.setdefault("l2tp", {})
+                sec["total_tunnels"] = m.group("total_tunnels")
+                sec["total_sessions"] = m.group("total_sessions")
+                sec.setdefault("sessions", [])
+                continue
+
+            # L2F Session Information Total tunnels X sessions Y
+            m = p2.match(line)
+            if m:
+                current_section = "l2f"
+                sec = vpdn_dict.setdefault("l2f", {})
+                sec["total_tunnels"] = m.group("total_tunnels")
+                sec["total_sessions"] = m.group("total_sessions")
+                sec.setdefault("sessions", [])
+                continue
+
+            # PPPoE Session Information Total tunnels X sessions Y
+            m = p3.match(line)
+            if m:
+                current_section = "pppoe"
+                sec = vpdn_dict.setdefault("pppoe", {})
+                sec["total_tunnels"] = m.group("total_tunnels")
+                sec["total_sessions"] = m.group("total_sessions")
+                sec.setdefault("sessions", [])
+                continue
+
+            # 4     691   13695 Se0/0         user@domain.com      est      00:06:00  4
+            m = p4.match(line)
+            if m and current_section == "l2tp":
+                sessions = vpdn_dict.setdefault("l2tp", {}).setdefault("sessions", [])
+                entry = {
+                    "local_id": int(m.group("local_id")),
+                    "remote_id": int(m.group("remote_id")),
+                    "tunnel_id": int(m.group("tunnel_id")),
+                    "interface": m.group("interface"),
+                    "username": m.group("username"),
+                    "state": m.group("state"),
+                    "last_change": m.group("last_change"),
+                    "unique_id": int(m.group("unique_id")),
+                }
+                sessions.append(entry)
+                continue
+
+            # 1      2      user@domain.com            SSS Circuit   open    10
+            m = p5.match(line)
+            if m and current_section == "l2f":
+                sessions = vpdn_dict.setdefault("l2f", {}).setdefault("sessions", [])
+                entry = {
+                    "clid": int(m.group("clid")),
+                    "mid": int(m.group("mid")),
+                    "username": m.group("username"),
+                    "interface": m.group("interface").strip(),
+                    "state": m.group("state"),
+                    "unique_id": int(m.group("unique_id")),
+                }
+                sessions.append(entry)
+                continue
+
+            # 3      1      0030.949b.b4a0 Fa2/0          N/A       CNCT_FWDED
+            m = p6.match(line)
+            if m and current_section == "pppoe":
+                sessions = vpdn_dict.setdefault("pppoe", {}).setdefault("sessions", [])
+                entry = {
+                    "uid": int(m.group("uid")),
+                    "sid": int(m.group("sid")),
+                    "remote_mac": m.group("remote_mac"),
+                    "outgoing_interface": m.group("outgoing_interface"),
+                    "interface": m.group("interface"),
+                    "vast": None,
+                    "session_state": m.group("session_state"),
+                }
+                sessions.append(entry)
+                last_pppoe_session = entry
+                continue
+
+            #               0010.7b90.0840
+            m = p7.match(line)
+            if m and current_section == "pppoe" and last_pppoe_session is not None:
+                last_pppoe_session["local_mac"] = m.group("local_mac")
+                vast_val = m.group("vast")
+                if vast_val is not None:
+                    last_pppoe_session["vast"] = vast_val
                 continue
 
         return ret_dict

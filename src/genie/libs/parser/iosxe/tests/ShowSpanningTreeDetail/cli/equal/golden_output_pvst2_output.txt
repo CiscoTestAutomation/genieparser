@@ -1,0 +1,42 @@
+ G0:VLAN0100 is executing the ieee compatible Spanning Tree protocol
+  Bridge Identifier has priority 32768, sysid 100, address 4874.104a.eb51
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 35 last change occurred 1w0d ago
+          from FiveGigabitEthernet0/0/1
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15
+  Timers: hello 0, topology change 0, notification 0, aging 30
+
+ Port 22 (FiveGigabitEthernet0/0/1) of G0:VLAN0100 is designated forwarding
+   Port path cost 4, Port priority 128, Port Identifier 128.22.
+   Designated root has priority 32868, address 4874.104a.eb51
+   Designated bridge has priority 32868, address 4874.104a.eb51
+   Designated port id is 128.22, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 433491, received 37
+
+
+ G0:VLAN0200 is executing the ieee compatible Spanning Tree protocol
+  Bridge Identifier has priority 32768, sysid 200, address 4874.104a.eb51
+  Configured hello time 2, max age 20, forward delay 15
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 14 last change occurred 1w0d ago
+          from FiveGigabitEthernet0/0/1
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15
+  Timers: hello 0, topology change 0, notification 0, aging 30
+
+ Port 22 (FiveGigabitEthernet0/0/1) of G0:VLAN0200 is designated forwarding
+   Port path cost 4, Port priority 128, Port Identifier 128.22.
+   Designated root has priority 32968, address 4874.104a.eb51
+   Designated bridge has priority 32968, address 4874.104a.eb51
+   Designated port id is 128.22, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 433466, received 17

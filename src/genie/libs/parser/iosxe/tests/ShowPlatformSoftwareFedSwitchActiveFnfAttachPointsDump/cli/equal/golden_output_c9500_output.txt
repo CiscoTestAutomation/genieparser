@@ -1,0 +1,3 @@
+FNF Attach Points
+=================
+ap(0x7dd668026d68) iif(0x60) ifname(Tw1/0/3) traffic(IPv4) direction(INGRESS) monitor0(0x7dd66802b1d8) monitor0_type(4, FNF/FNF based feature) features0(0) monitor1((nil)) monitor1_type(0, NULL) features1(0) sub_traffic_filter[0]=3 sub_traffic_filter[1]=0

@@ -1,0 +1,24 @@
+Global MLD Snooping configuration:
+-------------------------------------------
+-------------------------------------------
+MLD snooping Oper State      : Disabled
+MLDv2 snooping (minimal)     : Enabled
+Listener message suppression : Enabled
+TCN solicit query            : Disabled
+TCN flood query count        : 2
+Robustness variable          : 2
+Last listener query count    : 2
+Last listener query interval : 1000
+Check Hop-count=1            : No
+
+Vlan 100:
+--------
+MLD snooping Admin State            : Enabled
+MLD snooping Oper State             : Disabled
+MLD immediate leave                 : Disabled
+Listener message suppression        : Enabled
+Robustness variable                 : 1
+Last listener query count           : 3
+Last listener query interval        : 2000
+Check Hop-count=1                   : Yes
+Max Response Time                   : 10000

@@ -1,0 +1,72 @@
+expected_output = {
+    'interface': {
+        'FiveGigabitEthernet1/0/6': {
+            'protocol': {
+                'Total': {
+                    'in_5min_bit_rate_bps': 42000,
+                    'in_5min_max_bit_rate_bps': 42000,
+                    'in_byte_count': 42000,
+                    'in_packet_count': 528,
+                    'out_5min_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0,
+                    'out_byte_count': 0,
+                    'out_packet_count': 0,
+                },
+                'facebook': {
+                    'in_5min_bit_rate_bps': 3000,
+                    'in_5min_max_bit_rate_bps': 3000,
+                    'in_byte_count': 3000,
+                    'in_packet_count': 246,
+                    'out_5min_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0,
+                    'out_byte_count': 0,
+                    'out_packet_count': 0,
+                },
+                'http': {
+                    'in_5min_bit_rate_bps': 39000,
+                    'in_5min_max_bit_rate_bps': 39000,
+                    'in_byte_count': 39000,
+                    'in_packet_count': 282,
+                    'out_5min_bit_rate_bps': 0,
+                    'out_5min_max_bit_rate_bps': 0,
+                    'out_byte_count': 0,
+                    'out_packet_count': 0,
+                },
+            },
+        },
+        'TenGigabitEthernet1/0/41': {
+            'protocol': {
+                'Total': {
+                    'in_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'in_byte_count': 0,
+                    'in_packet_count': 0,
+                    'out_5min_bit_rate_bps': 42000,
+                    'out_5min_max_bit_rate_bps': 42000,
+                    'out_byte_count': 42000,
+                    'out_packet_count': 528,
+                },
+                'facebook': {
+                    'in_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'in_byte_count': 0,
+                    'in_packet_count': 0,
+                    'out_5min_bit_rate_bps': 3000,
+                    'out_5min_max_bit_rate_bps': 3000,
+                    'out_byte_count': 3000,
+                    'out_packet_count': 246,
+                },
+                'http': {
+                    'in_5min_bit_rate_bps': 0,
+                    'in_5min_max_bit_rate_bps': 0,
+                    'in_byte_count': 0,
+                    'in_packet_count': 0,
+                    'out_5min_bit_rate_bps': 39000,
+                    'out_5min_max_bit_rate_bps': 39000,
+                    'out_byte_count': 39000,
+                    'out_packet_count': 282,
+                },
+            },
+        },
+    },
+}

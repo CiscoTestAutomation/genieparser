@@ -1,0 +1,10 @@
+show wireless interface summary
+
+Wireless Interface Summary
+
+
+Interface Name Interface Type VLAN ID IP Address     IP Netmask     NAT-IP Address   MAC Address
+--------------------------------------------------------------------------------------------------
+
+Vlan121        Management     121     192.0.2.10     255.255.255.0  0.0.0.0          001e.496d.ccff
+

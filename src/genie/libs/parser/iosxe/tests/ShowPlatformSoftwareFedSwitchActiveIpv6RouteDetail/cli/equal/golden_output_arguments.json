@@ -1,0 +1,5 @@
+{
+    "mode": "active",
+    "vrf_name": "green",
+    "ip_add": "2001:10:10:1::/64"
+}

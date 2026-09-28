@@ -1,0 +1,10 @@
+Topology: base
+  Address-family: ipv6
+  Associated VPN VRF is v1
+  Topology state is UP
+  Topology CEF forwarding is enabled
+  Topology internal lock count = 1
+  Associated interfaces:
+    Tunnel1, operation state: DOWN
+    Ethernet0/0, operation state: DOWN
+  Topology total user lock count: 0

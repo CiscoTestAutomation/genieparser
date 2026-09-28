@@ -1,0 +1,19 @@
+show platform hardware authentication status
+          SUP 0 Authentication:  pass
+    RoT:0 Asic-0 Authentication:    Passed
+          SUP 1 Authentication:  pass
+    RoT:1 Asic-0 Authentication:    Not Available
+    Line Card 1 Authentication:  pass
+    Line Card 2 Authentication:  Not Available
+    Line Card 5 Authentication:  Not Available
+    Line Card 6 Authentication:  pass
+    Line Card 7 Authentication:  pass
+     Fan Tray 1 Authentication:  pass
+       Fan Tray 2 Authentication:  Not Available
+       Fan Tray 3 Authentication:  Not Available
+       Fan Tray 4 Authentication:  Not Available
+       Fan Tray 5 Authentication:  Not Available
+       Fan Tray 6 Authentication:  Not Available
+       Fan Tray 7 Authentication:  Not Available
+       Fan Tray 8 Authentication:  Not Available
+       Fan Tray 9 Authentication:  Not Available

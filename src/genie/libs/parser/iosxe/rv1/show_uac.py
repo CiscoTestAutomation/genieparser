@@ -26,7 +26,7 @@ class ShowUACUplinkSchema(MetaParser):
         "autoconfig_status": str,
         Optional("ipv4"): {
             "interface": str,
-            "configured_interface": str,
+            Optional("configured_interface"): str,
             "config_in_progress": bool,
             Optional("ip_address"): str,
             Optional("type"): str,
@@ -38,7 +38,7 @@ class ShowUACUplinkSchema(MetaParser):
         },
         Optional("ipv6"): {
             "interface": str,
-            "configured_interface": str,
+            Optional("configured_interface"): str,
             "config_in_progress": bool,
             Optional("ip_address"): str,
             Optional("type"): str,
@@ -128,6 +128,8 @@ class ShowUACUplink(ShowUACUplinkSchema):
             # Uplink IPv4 interface: Vlan 92
             m = p3.match(line)
             if m:
+                current_section = "ipv4"
+                parsed_dict.setdefault(current_section, {})
                 interface_name = m.group(1).strip()
                 if interface_name.endswith("*"):
                     interface_name = interface_name[:-1].strip()
@@ -143,6 +145,8 @@ class ShowUACUplink(ShowUACUplinkSchema):
             # Uplink IPv6 interface: Vlan 92
             m = p4.match(line)
             if m:
+                current_section = "ipv6"
+                parsed_dict.setdefault(current_section, {})
                 interface_name = m.group(1).strip()
                 if interface_name.endswith("*"):
                     interface_name = interface_name[:-1].strip()

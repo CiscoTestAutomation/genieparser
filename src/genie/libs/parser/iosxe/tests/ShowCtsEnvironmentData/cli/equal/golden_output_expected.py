@@ -86,6 +86,7 @@ expected_output = {
                     "sec_group_name": "TEST_8000"
                 }
             },
+            "transport_type": "CTS_TRANSPORT_IP_UDP",
             "env_data_lifetime_secs": 86400,
             "last_update": {
                 "date": "Tue, Jul/21/2020",

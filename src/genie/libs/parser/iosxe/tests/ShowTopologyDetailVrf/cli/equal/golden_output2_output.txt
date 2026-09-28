@@ -1,0 +1,23 @@
+Topology: t1
+  Address-family: ipv4
+  Associated VPN VRF is default
+  Topology state is UP
+  Topology CEF forwarding is enabled
+  Topology internal lock count = 2
+  Topology is enabled on all interfaces
+  Route Replication Enabled:
+    from unicast static
+    from unicast ospf 11
+    from unicast topology test static
+    from vrf foo unicast connected (Source topology missing)
+    from vrf global unicast connected route-map rm1
+    from vrf v1 unicast topology t1 bgp 65001
+    from vrf bar unicast bgp 11.12
+    from vrf vrf-a unicast isis tag123 (Source topology missing)
+    from vrf global unicast ospf 777
+  Associated interfaces:
+    GigabitEthernet1, operation state: UP
+    GigabitEthernet2, operation state: UP
+    Ethernet1/0.77, operation state: DOWN
+  Topology total user lock count: 0
+ Topology is being deleted

@@ -1,0 +1,4 @@
+ASR_CC01#show subscriber default-session
+UID     Lite-sessions  Interface
+50      0              GigabitEthernet0/3/0
+ASR_CC01#

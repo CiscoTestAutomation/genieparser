@@ -1,0 +1,11 @@
+Topology: base
+  Address-family: ipv6 multicast
+  Associated VPN VRF is v1
+  Topology state is DOWN
+  Topology CEF forwarding is disabled
+  Topology internal lock count = 2
+  Multicast multi-topology mode is enabled.
+  Route Replication Enabled:
+    from unicast all
+  Associated interfaces:
+  Topology total user lock count: 0

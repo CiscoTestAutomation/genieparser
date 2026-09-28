@@ -1,0 +1,8 @@
+show platform software fed switch 1 wdavc flows
+CurrFlows=1, Watermark=1
+
+IX  |IP1                                     |IP2                                     |PORT1|PORT2|L3   |L4   |VRF |TIMEOUT|APP                             |TUPLE   |FLOW     |IS FIF  |CLIENTS|BYPASS|FINAL |#PKTS |BYPASS|
+    |                                        |                                        |     |     |PROTO|PROTO|VLAN|SEC  HL|NAME                            |TYPE    |TYPE     |SWAPPED |ALLW BP|      |      |      |PKT   |
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1   |0.0.0.0                                 |255.255.255.255                         |68   |67   |1    |17   |0   |60   SW|dhcp                            |Full    |Real Flow|Yes     |0x01   |True  |True  |2     |2     |
+magic 0x1c1c1c1c ft inst 0x737ecc02fae8 timer 0x737ecf0fbf08 msg ref_cnt 0 flags 0x228019c vis appid 13 sgt1 0 sgt2 0

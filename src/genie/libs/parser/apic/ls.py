@@ -1,8 +1,11 @@
 
 import re
+import logging
 
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
+
+logger = logging.getLogger(__name__)
 
 
 class LsSchema(MetaParser):
@@ -29,15 +32,27 @@ class LsSchema(MetaParser):
 
 class Ls(LsSchema):
 
-    cli_command = ['ls -l', 'ls -l {directory}']
+    cli_command = [
+        'ls -{args}',
+        'ls -{args} {directory}',
+    ]
 
-    def cli(self, directory='', output=None):
+    def cli(self, args='l', directory='', output=None, **kwargs):
+
+        args = args or 'l'
+        directory = directory or ''
+        if args and 'l' not in args:
+            logger.info(
+                'Adding -l to the command since it is not present '
+                'in the arguments'
+            )
+            args += 'l'
 
         if output is None:
+            command = 'ls -{}'.format(args)
             if directory:
-                out = self.device.execute(self.cli_command[1].format(directory=directory))
-            else:
-                out = self.device.execute(self.cli_command[0])
+                command = '{} {}'.format(command, directory)
+            out = self.device.execute(command)
         else:
             out = output
 

@@ -1,0 +1,54 @@
+show access-session interface GigabitEthernet0/1/0 details
+            Interface:  GigabitEthernet0/1/0
+               IIF-ID:  0x09CB0212
+          MAC Address:  0030.0000.0001
+         IPv6 Address:  Unknown
+         IPv4 Address:  Unknown
+            User-Name:  auto601
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  multi-domain
+     Oper control dir:  both
+      Session timeout:  100s (local), Remaining: 91s
+       Timeout action:  Reauthenticate
+    Common Session ID:  1CB1A8C000000168BBA5232B
+      Acct Session ID:  0x00000250
+               Handle:  0x3400011e
+       Current Policy:  dot1x_dvlan_reauth_af
+
+
+Server Policies:
+           Vlan Group:  Vlan: 60
+
+
+Method status list:
+       Method           State
+        dot1x           Authc Success
+
+----------------------------------------
+
+            Interface:  GigabitEthernet0/1/0
+               IIF-ID:  0x07FA353B
+          MAC Address:  0030.00a0.0022
+         IPv6 Address:  Unknown
+         IPv4 Address:  Unknown
+            User-Name:  auto1601
+               Status:  Authorized
+               Domain:  VOICE
+       Oper host mode:  multi-domain
+     Oper control dir:  both
+      Session timeout:  100s (local), Remaining: 91s
+       Timeout action:  Reauthenticate
+    Common Session ID:  1CB1A8C000000169BBA71DFF
+      Acct Session ID:  0x00000251
+               Handle:  0xfc00011f
+       Current Policy:  dot1x_dvlan_reauth_af
+
+
+Server Policies:
+           Vlan Group:  Vlan: 160
+
+
+Method status list:
+       Method           State
+        dot1x           Authc Success

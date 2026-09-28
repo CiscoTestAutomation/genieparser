@@ -1,0 +1,99 @@
+VRF TEST_1; RD 10.10.10.10:10; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  GigabitEthernet0/0/0/0.2
+  Gi0/0/0/0.1
+  GigabitEthernet0/0/0/1
+  Gi0/0/0/4
+  TenGigE0/0/0/0.1
+  TenGigabitEthernet0/0/0/0.2
+  Te0/0/0/0.3
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:1234:5678
+  Export VPN route-target communities:
+    RT:8765:4321
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+
+VRF TEST_2; RD 1.2.3.4:5; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  FortyGigE0/0/0/0.1
+  FortyGigabitEthernet0/0/0/0.2
+  Fo0/0/0/0.3
+  FortyGigE0/0/0/1
+  FortyGigabitEthernet0/0/0/2
+  Fo0/0/0/3
+  HundredGigE0/0/0/0.1
+  HundredGigabitEthernet0/0/0/0.2
+  Hu0/0/0/0.3
+  HundredGigE0/0/0/1
+  HundredGigabitEthernet0/0/0/2
+  Hu0/0/0/3
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:1111:2222
+  Export VPN route-target communities:
+    RT:2222:1111
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+
+VRF TEST_3; RD 5.4.3.2:1; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  Bundle-Ether0
+  Bundle-Ethernet1
+  BE2
+  Loopback1
+  Lo0
+  Null0
+  Nu1
+  MgmtEth0/RP0/CPU0/0
+  ManagementEthernet1/RP0/CPU0/0
+  MgmtEth0/0/3
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:7984:4657
+  Export VPN route-target communities:
+    RT:13285:56891
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy
+
+VRF TEST_4; RD 1.1.1.1:1; VPN ID not set
+VRF mode: Regular
+Description not set
+Interfaces:
+  POS0/0/0/0
+  PacketOverSonet0/0/0/1
+  PoS0/0/0/2
+Address family IPV4 Unicast
+  Import VPN route-target communities:
+    RT:7985:4654
+  Export VPN route-target communities:
+    RT:1111:1111
+  No import route policy
+  No export route policy
+Address family IPV6 Unicast
+  No import VPN route-target communities
+  No export VPN route-target communities
+  No import route policy
+  No export route policy

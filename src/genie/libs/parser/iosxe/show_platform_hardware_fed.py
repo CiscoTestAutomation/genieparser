@@ -40,7 +40,10 @@
     * 'show platform hardware fed {switch} {mode} forward last summary'
     * 'show platform hardware fed switch active forward interface {interface} pcap {pcap_path} number {number} flowid {flowid}'
     * 'show platform hardware fed switch {switch} forward interface {interface} pcap {pcap_path} number {number} flowid {flowid}'
-
+    * 'show platform hardware fed {switch} {switch_var} fwd-asic resource feature-id-mapping'
+    * 'show platform hardware fed {switch_var} fwd-asic resource feature-id-mapping'
+    * 'show platform hardware fed {switch} {switch_var} fwd-asic resource utilization feature {feature_id}'
+    * 'show platform hardware fed {switch_var} fwd-asic resource utilization feature {feature_id}'
 """
 # Python
 import re
@@ -9226,16 +9229,18 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuitSchema(MetaP
         'l2_attachment_circuit_status': {
             'ac_info': {
                 'ac_type': str,
-                'vlan_tag': int,
-                'lag_gid': int,
+                Optional('vlan_tag'): int,
+                Optional('lag_gid'): int,
                 'ac_gid': int,
                 'ac_cookie': str,
+                Optional('sysport_gid'): int,
             },
-            'eth_logical_port_info': {
+            Optional('eth_logical_port_info'): {
                 'eth_port_oid': int,
             },
-            'eth_port_info': {
-                'lag_cookie': str,
+            Optional('eth_port_info'): {
+                Optional('lag_cookie'): str,
+                Optional('sysport_cookie'): str,
             }
         }
     }
@@ -9261,6 +9266,18 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuit(ShowPlatfor
         p2 = re.compile(r'^\|\s*ac_gid:\s*(?P<ac_gid>\d+)\s*\|.*eth_port_oid:\s*(?P<eth_port_oid>\d+)\s*\|.*lag_cookie:\s*(?P<lag_cookie>\S+)\s*\|$')
         # ac_cookie: Po5
         p3 = re.compile(r'^\|\s*ac_cookie:\s*(?P<ac_cookie>\S+)\s*\|.*$')
+
+        # | ac_type: L2-DENSE   |                    | eth_port_oid: 1440    | sysport_gid: 41          |
+        p4 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S$')
+
+        # | ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
+        p5 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
+
+        # | ac_gid: 123015      |             | eth_port_oid: 2757    | sysport_cookie: Twe2/1/5 |
+        p6 = re.compile(r'^\S\s+ac_gid:\s+(?P<ac_gid>\d+)\s+\S\s+\S\s+eth_port_oid:\s+(?P<eth_port_oid>\d+)\s+\S\s+sysport_cookie:\s+(?P<sysport_cookie>\S+)\s+\S$')
+
+        # | ac_type: L2-DENSE   |             | vlan_tag: 1           | sysport_gid: 333         |
+        p7 = re.compile(r'^\S\s+ac_type:\s+(?P<ac_type>\S+)\s+\S\s+\S\s+vlan_tag:\s+(?P<vlan_tag>\d+)\s+\S\s+sysport_gid:\s+(?P<sysport_gid>\d+)\s+\S$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -9293,6 +9310,57 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightL2AttachmentCircuit(ShowPlatfor
                 group = m.groupdict()
                 ac_info = ret_dict['l2_attachment_circuit_status']['ac_info']
                 ac_info['ac_cookie'] = group['ac_cookie']
+                continue
+
+            # | ac_type: L2-DENSE   |                    | eth_port_oid: 1440    | sysport_gid: 41          |
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict.setdefault(
+                    'l2_attachment_circuit_status', {}).setdefault('ac_info', {})
+                ac_info['ac_type'] = group['ac_type']
+                ac_info['sysport_gid'] = int(group['sysport_gid'])
+                eth_logical_port_info = ret_dict['l2_attachment_circuit_status'].setdefault(
+                    'eth_logical_port_info', {})
+                eth_logical_port_info['eth_port_oid'] = int(group['eth_port_oid'])
+                continue
+
+            # | ac_gid: 122880      |                    |                       | sysport_cookie: Gi1/0/1  |
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict.setdefault(
+                    'l2_attachment_circuit_status', {}).setdefault('ac_info', {})
+                ac_info['ac_gid'] = int(group['ac_gid'])
+                eth_port_info = ret_dict['l2_attachment_circuit_status'].setdefault(
+                    'eth_port_info', {})
+                eth_port_info['sysport_cookie'] = group['sysport_cookie']
+                continue
+
+            # | ac_gid: 123015      |             | eth_port_oid: 2757    | sysport_cookie: Twe2/1/5 |
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict.setdefault(
+                    'l2_attachment_circuit_status', {}).setdefault('ac_info', {})
+                ac_info['ac_gid'] = int(group['ac_gid'])
+                eth_logical_port_info = ret_dict['l2_attachment_circuit_status'].setdefault(
+                    'eth_logical_port_info', {})
+                eth_logical_port_info['eth_port_oid'] = int(group['eth_port_oid'])
+                eth_port_info = ret_dict['l2_attachment_circuit_status'].setdefault(
+                    'eth_port_info', {})
+                eth_port_info['sysport_cookie'] = group['sysport_cookie']
+                continue
+
+            # | ac_type: L2-DENSE   |             | vlan_tag: 1           | sysport_gid: 333         |
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ac_info = ret_dict.setdefault(
+                    'l2_attachment_circuit_status', {}).setdefault('ac_info', {})
+                ac_info['ac_type'] = group['ac_type']
+                ac_info['vlan_tag'] = int(group['vlan_tag'])
+                ac_info['sysport_gid'] = int(group['sysport_gid'])
                 continue
 
         return ret_dict
@@ -11694,10 +11762,14 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpsecSecurityAssociationSchema(
                     Optional('decrypt_pkts'): int,
                     Optional('encrypt_bytes'): int,
                     Optional('encrypt_pkts'): int,
-                    'errors': int,
+                    Optional('errors'): int,
                     'h_value': str,
                     'key': str,
-                    'key_extra': str
+                    'key_extra': str,
+                    Optional('esn'): bool,
+                    Optional('anti_replay'): bool,
+                    Optional('decrypt_errors'): int,
+                    Optional('encrypt_errors'): int,
                 }
             }
         }
@@ -11731,6 +11803,16 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpsecSecurityAssociation(
             r'(?P<key>0x[0-9a-fA-F]+)\s*\|\s*(?P<key_extra>0x[0-9a-fA-F]+)\s*\|$'
         )
 
+        # | 947601419 |   INGRESS | True |       False | AES_GCM_256 |      10025 |      10022320 |        10024 |              0 |           0 | 0xdf5ea8a080f328368d1424fee30784225f50e514c6a81c03075d3e3f3db84436 | 0x211f4b9baded6823bbac229fd4cc7bf8cb892aefb03e5a6578fcf27bc6ad5caf | 0x45f0009a0000000000000000 |
+        # | 3167388969 |    EGRESS | True | AES_GCM_256 |   10025 |      10022320 |        10024 |              0 | 0x4e7712f4ea4ab07730b272ece775322c5dbcc6b027d26da93fedc167439a34e3 | 0xa8c7aa15d54b1f15408f307505dbfd30234149ec8357e6d85fe480038a0ad6df | 0x6a89a15b0000000000000000 |
+        p2 = re.compile(
+            r'^\|\s*(?P<spi>\d+)\s*\|\s*(?P<direction>\S+)\s*\|\s*(?P<esn>(True|False))\s*\|(\s*'
+            r'(?P<anti_replay>(True|False))\s*\|)?\s*(?P<algorithm>\S+)\s*\|\s*(?P<current_or_next_pn>\d+)\s*\|\s*'
+            r'(?P<decrypt_or_encrypt_bytes>\d+)\s*\|\s*(?P<decrypt_or_encrypt_pkts>\d+)\s*\|\s*'
+            r'(?P<decrypt_or_encrypt_errors>\d+)\s*\|(\s*(?P<errors>\d*)\s*\|)?\s*(?P<h_value>0x[0-9a-fA-F]+)\s*\|\s*'
+            r'(?P<key>0x[0-9a-fA-F]+)\s*\|\s*(?P<key_extra>0x[0-9a-fA-F]+)\s*\|$'
+        )
+
         current_direction = None
 
         for line in output.splitlines():
@@ -11745,7 +11827,7 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpsecSecurityAssociation(
                 continue
 
             # | 3229334400 |   INGRESS | AES_GCM_256 |          1 |             0 |            0 |      0 | ...
-            m = p1.match(line)
+            m = p1.match(line) or p2.match(line)
             if m:
                 group = m.groupdict()
                 spi = int(group['spi'])
@@ -11758,20 +11840,29 @@ class ShowPlatformHardwareFedSwitchFwdAsicInsightIpsecSecurityAssociation(
                 sa_dict['spi'] = spi
                 sa_dict['direction'] = direction
                 sa_dict['algorithm'] = group['algorithm']
-                sa_dict['errors'] = int(group['errors'])
+                if group.get('errors'):
+                    sa_dict['errors'] = int(group['errors'])
                 sa_dict['h_value'] = group['h_value']
                 sa_dict['key'] = group['key']
                 sa_dict['key_extra'] = group['key_extra']
-                
+                if group.get('esn'):
+                    sa_dict['esn'] = group['esn'].lower() == 'true'
+                if group.get('anti_replay'):
+                    sa_dict['anti_replay'] = group['anti_replay'].lower() == 'true'
+
                 # Determine if this is INGRESS (Current PN, Decrypt) or EGRESS (Next PN, Encrypt)
                 if direction == 'INGRESS':
                     sa_dict['current_pn'] = int(group['current_or_next_pn'])
                     sa_dict['decrypt_bytes'] = int(group['decrypt_or_encrypt_bytes'])
                     sa_dict['decrypt_pkts'] = int(group['decrypt_or_encrypt_pkts'])
+                    if group.get('decrypt_or_encrypt_errors'):
+                        sa_dict['decrypt_errors'] = int(group['decrypt_or_encrypt_errors'])
                 else:
                     sa_dict['next_pn'] = int(group['current_or_next_pn'])
                     sa_dict['encrypt_bytes'] = int(group['decrypt_or_encrypt_bytes'])
                     sa_dict['encrypt_pkts'] = int(group['decrypt_or_encrypt_pkts'])
+                    if group.get('decrypt_or_encrypt_errors'):
+                        sa_dict['encrypt_errors'] = int(group['decrypt_or_encrypt_errors'])
 
         return ret_dict
         
@@ -12579,3 +12670,130 @@ class ShowPlatformHardwareFedSwitchActiveForwardInterfacePcap(
 
         return ret_dict
       
+class ShowPlatformHardwareFedSwitchFwdAsicResourceFeatureIdMappingSchema(MetaParser):
+    """Schema for show platform hardware fed switch {switch} fwd-asic resource feature-id-mapping"""
+
+    schema = {
+        'feature_id_mapping': {
+            str: int
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchFwdAsicResourceFeatureIdMapping(ShowPlatformHardwareFedSwitchFwdAsicResourceFeatureIdMappingSchema):
+    """Parser for show platform hardware fed switch {switch} fwd-asic resource feature-id-mapping"""
+
+    cli_command = [
+        'show platform hardware fed {switch_var} fwd-asic resource feature-id-mapping',
+        'show platform hardware fed {switch} {switch_var} fwd-asic resource feature-id-mapping'
+    ]
+
+    def cli(self, switch_var, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(
+                    switch=switch, switch_var=switch_var
+                    )
+            else:
+                cmd = self.cli_command[0].format(switch_var=switch_var)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # 0                       INVALID
+        # 1                       CATCHALL_INGRESS
+        p1 = re.compile(r'^(?P<feature_id>\d+)\s+(?P<feature_name>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line or line.startswith('Feature ID') or line.startswith('--'):
+                continue
+
+            # 1                       CATCHALL_INGRESS
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                feature_mapping = ret_dict.setdefault('feature_id_mapping', {})
+                feature_mapping[group['feature_name']] = int(group['feature_id'])
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceUtilizationFeatureSchema(MetaParser):
+    """Schema for show platform hardware fed switch active fwd-asic resource utilization feature {feature_id}"""
+
+    schema = {
+        'feature': {
+            Any(): {
+                'feature_name': str,
+                'asic': {
+                    int: {
+                        'resources': {
+                            Any(): int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceUtilizationFeature(ShowPlatformHardwareFedSwitchActiveFwdAsicResourceUtilizationFeatureSchema):
+    """Parser for show platform hardware fed switch active fwd-asic resource utilization feature {feature_id}"""
+
+    cli_command = [
+        'show platform hardware fed {switch_var} fwd-asic resource utilization feature {feature_id}',
+        'show platform hardware fed {switch} {switch_var} fwd-asic resource utilization feature {feature_id}'
+    ]
+
+    def cli(self, switch_var, feature_id, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[1].format(
+                    switch=switch, switch_var=switch_var, feature_id=feature_id
+                    )
+            else:
+                cmd = self.cli_command[0].format(
+                    switch_var=switch_var, feature_id=feature_id
+                    )
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Feature-id: 100 Asic: 0
+        p1 = re.compile(r'^Feature-id:\s+(?P<feature_id>\d+)\s+Asic:\s+(?P<asic>\d+)$')
+
+        # Allocated Resources for the Feature:	IPSEC
+        p2 = re.compile(r'^Allocated Resources for the Feature:\s+(?P<feature_name>\S+)$')
+
+        # RSC_SA_INDEX_INBOUND         3
+        p3 = re.compile(r'^(?P<resource_name>\S+)\s+(?P<allocated>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Feature-id: 100 Asic: 0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                feature_dict = ret_dict.setdefault(
+                    'feature', {}).setdefault(int(group['feature_id']), {})
+                asic_dict = feature_dict.setdefault(
+                    'asic', {}).setdefault(int(group['asic']), {})
+                continue
+
+            # Allocated Resources for the Feature:	IPSEC
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                feature_dict['feature_name'] = group['feature_name']
+                continue
+
+            # RSC_SA_INDEX_INBOUND         3
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                resource_dict = asic_dict.setdefault('resources', {})
+                resource_dict[group['resource_name']] = int(group['allocated'])
+                continue
+
+        return ret_dict

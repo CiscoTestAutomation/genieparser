@@ -1,0 +1,19 @@
+RP/0/RP0/CPU0:ios#show plat
+Thu Jul  2 19:09:11.342 UTC
+Node              Type                     State                      Config state
+----------------------------------------------------------------------------------
+0/RP0/CPU0        8800-RP2(Active)         IOS XR RUN                 NSHUT
+0/RP1/CPU0        8800-RP2(Standby)        IOS XR RUN                 NSHUT
+0/0/CPU0          UNKNOWN                  BOOTING                    NSHUT
+0/1/CPU0          UNKNOWN                  INSTALL BOOTHOLD           NSHUT
+0/2/CPU0          UNKNOWN                  IOS XR INITIALIZING        NSHUT
+0/3/CPU0          88-LC1-16H16F-EM         PLATFORM INITIALIZED       NSHUT
+0/4/CPU0          UNKNOWN                  FPD UPGRADE                NSHUT
+0/5/CPU0          88-LC1-16H16F-EM         INITIALIZING CHILD CARDS   NSHUT
+0/6/CPU0          UNKNOWN                  IMAGE INSTALLING           NSHUT
+0/FC0             8808-FC1                 OPERATIONAL                NSHUT
+0/FT0             8808-FAN                 OPERATIONAL                NSHUT
+0/FT1             8808-FAN                 OPERATIONAL                NSHUT
+0/FT2             8808-FAN                 OPERATIONAL                NSHUT
+0/FT3             8808-FAN                 OPERATIONAL                NSHUT
+0/PT0             FAM7000-ACHV-TRAY        OPERATIONAL                NSHUT

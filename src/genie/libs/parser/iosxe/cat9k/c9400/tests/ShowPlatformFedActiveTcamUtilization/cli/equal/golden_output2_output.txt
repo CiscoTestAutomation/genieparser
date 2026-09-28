@@ -1,0 +1,15 @@
+9610_CORE#show platform hardware fed active fwd-asic resource tcam utilization 3 slice-id 1
+-------------------------------------------------------------------------------------------------------------------
+***Number of TCAM entries shown under Free is for unidimensional scale. Using the TCAM for one of the feature will
+***change the available TCAM for other features in the same slice
+-------------------------------------------------------------------------------------------------------------------
+                                         Slice0       Slice1       Slice2       Slice3       Slice4       Slice5
+-------------------------------------------------------------------------------------------------------------------
+       Resource                        Used  Free   Used  Free   Used  Free   Used  Free   Used  Free   Used  Free
+-------------------------------------------------------------------------------------------------------------------
+Ingress Wide TCAM entries                 0     0     29 106662      0     0      0     0      0     0      0     0
+Ingress Narrow_Pool_0 TCAM entries        0     0   4125 108598      0     0      0     0      0     0      0     0
+Egress Wide TCAM entries                  0     0      9 72889      0     0      0     0      0     0      0     0
+Egress Narrow_Pool_0 TCAM entries         0     0  36006 76921      0     0      0     0      0     0      0     0
+IPv6 LPTS TCAM entries                    0     0     33 106662      0     0      0     0      0     0      0     0
+IPv4 LPTS TCAM entries                    0     0     36 108598      0     0      0     0      0     0      0     0

@@ -33,4 +33,8 @@ expected_output = {
             },
         },
     },
+    'slot': {
+        'Switch_1_Slot_1_Supervisor': {},
+        'Switch_2_Slot_1_Supervisor': {},
+    },
 }

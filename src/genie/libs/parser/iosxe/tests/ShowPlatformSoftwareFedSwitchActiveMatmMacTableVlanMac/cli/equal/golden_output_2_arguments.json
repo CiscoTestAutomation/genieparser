@@ -1,0 +1,6 @@
+{
+    "switch": "switch",
+    "state": "active",
+    "vlan": "100",
+    "mac": "00:11:22:33:44:55"
+}

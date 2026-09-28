@@ -21,114 +21,266 @@ class ShowSdmPreferNewSchema(MetaParser):
         'show sdm prefer custom'
     """
     schema = {
-        str: 
-            { 
-                'template_type': str, 
-                'feature_name': str,
-                'unicast_mac_addresses':
+        str:
+            {
+                Optional('template_type'): str,
+                Optional('feature_name'): str,
+                Optional('unicast_mac_addresses'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
-                        'resource_programmed': str,
+                        Optional('resource_programmed'): str,
                 },
-                'fib_host_route':
+                Optional('fib_host_route'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
-                        'resource_programmed': str,
+                        Optional('resource_programmed'): str,
                 },
-                'og_sgacl_hosts_cells':
+                Optional('og_sgacl_hosts_cells'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
-                        'resource_programmed': str,
+                        Optional('resource_programmed'): str,
                 },
-                'l3_multicast_entries':
-                    {
-                        Optional('current'): int,
-                        Optional('proposed'): int,
-                },
-                'l2_multicast_entries':
+                Optional('l3_multicast_entries'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'number_of_vlans':
+                Optional('l2_multicast_entries'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'overflow_unicast_mac_addresses':
+                Optional('number_of_vlans'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'overflow_l2_multicast_entries':
+                Optional('overflow_unicast_mac_addresses'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'overflow_l3_multicast_entries':
+                Optional('overflow_l2_multicast_entries'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'ipv4_ipv6_shared_unicast_routes':
+                Optional('overflow_l3_multicast_entries'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'overflow_shared_unicast_routes':
+                Optional('ipv4_ipv6_shared_unicast_routes'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'stp_instances':
+                Optional('overflow_shared_unicast_routes'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'tunnels':
+                Optional('stp_instances'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'vrf':
+                Optional('tunnels'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'max_mpls_vpn_routes_per_vrf_label_mode':
+                Optional('vrf'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'max_mpls_vpn_routes_per_prefix_label_mode':
+                Optional('max_mpls_vpn_routes_per_vrf_label_mode'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'max_l3_adjacency':
+                Optional('max_mpls_vpn_routes_per_prefix_label_mode'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'max_l3_interface':
+                Optional('max_l3_adjacency'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
                 },
-                'max_mpls_te_tunnel':
+                Optional('max_l3_interface'):
                     {
                         Optional('current'): int,
                         Optional('proposed'): int,
-                }          
-        },
-        'scale': 
-            { 
-                'em': int          
+                },
+                Optional('max_mpls_te_tunnel'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('max_mpls_label'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                # Core template fields
+                Optional('security_ingress_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('security_ingress_non_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('security_egress_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('security_egress_non_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('qos_ingress_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('qos_ingress_non_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('qos_egress_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('qos_egress_non_ipv4_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('netflow_input_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('netflow_output_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('flow_span_input_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('flow_span_output_access_control_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('policy_based_routing_aces_nat_aces'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('lisp_instance_mapping_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('control_plane_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('input_netflow_flows'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('output_netflow_flows'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('sgt_dgt_or_mpls_vpn_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('sgt_dgt_or_mpls_vpn_overflow_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('wired_clients'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('macsec_spd_entries'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('mpls_labels'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('mpls_l3_vpn_routes_vrf_mode'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('mpls_l3_vpn_routes_prefix_mode'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('mvpn_mdt_tunnels'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('l2_vpn_eompls_attachment_circuit'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('max_vpls_bridge_domains'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('max_vpls_peers_per_bridge_domain'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('max_vpls_vpws_pseudowires'):
+                    {
+                        Optional('current'): int,
+                        Optional('proposed'): int,
+                },
+                Optional('em'): int,
+            },
+        Optional('scale'):
+            {
+                'em': int
         }
-    }   
+    }
 
 # ==============================================
 # Parser for 'show sdm prefer' for 9500 devices
@@ -142,7 +294,8 @@ class ShowSdmPreferNew(ShowSdmPreferNewSchema):
         # initial regexp pattern for
         result_dict = {}
         re_dict = {}
-        
+        title = '' # to store the title of the this whole data
+
         # loop to split lines of output
         if output is None:
             if custom:
@@ -164,53 +317,83 @@ class ShowSdmPreferNew(ShowSdmPreferNewSchema):
         # Unicast MAC addresses                               262144
         # FIB Host Route                                      262144
         # OG/SGACL Hosts/Cells                                32768
-        p3 = re.compile(r'^(?P<feature>Unicast MAC addresses|FIB Host Route|OG\/SGACL Hosts\/Cells)(?:\s*)(?P<number_feature>\d*)$')
+        # Unicast MAC addresses:                              32768
+        p3 = re.compile(r'^(?P<feature>Unicast MAC addresses|FIB Host Route|OG\/SGACL Hosts\/Cells)\s*:?(?:\s*)(?P<number_feature>\d+)$')
 
         # Unicast MAC addresses*                              131072 (current) - 262144 (proposed)
         # FIB Host Route*                                     131072 (current) - 262144 (proposed)
         # OG/SGACL Hosts/Cells*                               32768  (current) - 32768  (proposed)
-        p3_1 = re.compile(r'^(?P<feature>Unicast MAC addresses|FIB Host Route|OG\/SGACL Hosts\/Cells)\S(?:\s*)'
-                            r'(?P<current_feature>\d*)(?:\s*\Scurrent\S)(?:\s*-\s*)(?P<proposed_feature>\d*)(?:\s*\Sproposed\S)$')
+        # Unicast MAC addresses*:                             32768  (current) - 32768  (proposed)
+        p3_1 = re.compile(r'^(?P<feature>Unicast MAC addresses|FIB Host Route|OG\/SGACL Hosts\/Cells)\*\s*:?(?:\s*)'
+                            r'(?P<current_feature>\d+)\s*\(current\)\s*-\s*(?P<proposed_feature>\d+)\s*\(proposed\)$')
 
         # Resource-Programmed: EM
         p4 = re.compile(r'^Resource-Programmed:(?:\s*)(?P<em>\w*)$')
 
-        # L3 Multicast entries                                32768 (**)
-        # L2 Multicast entries                                16384 (**)
-        # Number of VLANs                                     4094 (**)
-        # Overflow Unicast MAC addresses                      512 (**)
-        # Overflow L2 Multicast entries                       512 (**)
-        # Overflow L3 Multicast entries                       512 (**)
-        # Ipv4/Ipv6 shared unicast routes                     262144 (**)
-        # Overflow shared unicast routes                      2000000 (**)
-        # STP Instances                                       4094 (**)
-        # Tunnels                                             1024 (**)
-        # VRF                                                 3840 (**)
-        # Max MPLS VPN Routes Per-Vrf label mode              2000000 (**)
-        # Max MPLS VPN Routes Per-Prefix label mode           65536 (**)
-        # Max L3 adjacency                                    131072 (**)
-        # Max L3 Interface                                    8192 (**)
-        # Max MPLS TE TUNNEL                                  4096 (**)
-        p5 = re.compile(r'^(?P<type>L3 Multicast entries|L2 Multicast entries|Number of VLANs|'
-                        r'Overflow Unicast MAC addresses|Overflow L2 Multicast entries|Overflow L3 Multicast entries|'
-                        r'Ipv4\/Ipv6 shared unicast routes|Overflow shared unicast routes|STP Instances|Tunnels|VRF|'
-                        r'Max MPLS VPN Routes Per-Vrf label mode|Max MPLS VPN Routes Per-Prefix label mode|Max L3 adjacency|'
-                        r'Max L3 Interface|Max MPLS TE TUNNEL)(?:\s*)(?P<input_number>\d*)(?:\s*\S*)$')
-
-        #L3 Multicast entries*                               32768  (current) - 32768  (proposed) (**)
-        #L2 Multicast entries*                               16384  (current) - 16384  (proposed) (**)
-        p5_1 = re.compile(r'^(?P<type_1>L3 Multicast entries\S|L2 Multicast entries\S|Number of VLANs\S|'
-                        r'Overflow Unicast MAC addresses\S|Overflow L2 Multicast entries\S|Overflow L3 Multicast entries\S|'
-                        r'Ipv4\/Ipv6 shared unicast routes\S|Overflow shared unicast routes\S|STP Instances\S|Tunnels\S|VRF\S|'
-                        r'Max MPLS VPN Routes Per-Vrf label mode\S|Max MPLS VPN Routes Per-Prefix label mode\S|Max L3 adjacency\S|'
-                        r'Max L3 Interface\S|Max MPLS TE TUNNEL\S)(?:\s*)(?P<current_l>\d*)(?:\s*\Scurrent\S)(?:\s*-\s*)'
-                        r'(?P<proposed_l>\d*)(?:\s*\Sproposed\S)(?:\s*\S*)$')
-
-        #Resource scale information
+        # Resource scale information
         p6 = re.compile(r'^Resource\s(?P<resource_scale>\w*)\sinformation$')
 
-        #EM                                                  622592
+        # EM                                                  622592
         p7 = re.compile(r'^EM(?:\s*)(?P<em_number>\d*)$')
+
+        # Generic feature line with current/proposed values. Matches lines like:
+        # L3 Multicast entries*                               32768  (current) - 32768  (proposed) (**)
+        # Security Ingress IPv4 Access Control Entries*:      7168   (current) - 7168   (proposed)
+        # Security Ingress Non-IPv4 Access Control Entries*: 5120   (current) - 5120   (proposed)
+        # Security Egress IPv4 Access Control Entries*:      7168   (current) - 7168   (proposed)
+        # Security Egress Non-IPv4 Access Control Entries*:  8192   (current) - 8192   (proposed)
+        # QoS Ingress IPv4 Access Control Entries*:          5632   (current) - 5632   (proposed)
+        # QoS Ingress Non-IPv4 Access Control Entries*:      2560   (current) - 2560   (proposed)
+        # QoS Egress IPv4 Access Control Entries*:           6144   (current) - 6144   (proposed)
+        # QoS Egress Non-IPv4 Access Control Entries*:       2048   (current) - 2048   (proposed)
+        # Netflow Input Access Control Entries*:             512    (current) - 512    (proposed)
+        # Netflow Output Access Control Entries*:            512    (current) - 512    (proposed)
+        # Flow SPAN Input Access Control Entries*:           512    (current) - 512    (proposed)
+        # Flow SPAN Output Access Control Entries*:          512    (current) - 512    (proposed)
+        # Policy Based Routing ACEs / NAT ACEs*:             3072   (current) - 3072   (proposed)
+        # LISP Instance Mapping Entries*:                    2048   (current) - 2048   (proposed)
+        # Control Plane Entries*:                            512    (current) - 512    (proposed)
+        # Input Netflow flows*:                              49152  (current) - 49152  (proposed)
+        # Output Netflow flows*:                             49152  (current) - 49152  (proposed)
+        # SGT/DGT (or) MPLS VPN entries*:                    32768  (current) - 32768  (proposed)
+        # SGT/DGT (or) MPLS VPN Overflow entries*:           768    (current) - 768    (proposed)
+        # Wired clients*:                                    2048   (current) - 2048   (proposed)
+        # MACSec SPD Entries*:                               256    (current) - 256    (proposed)
+        # VRF*:                                              1024   (current) - 1024   (proposed)
+        # MPLS Labels*:                                      45056  (current) - 45056  (proposed)
+        # MPLS L3 VPN Routes VRF Mode*:                      81920  (current) - 81920  (proposed)
+        # MPLS L3 VPN Routes Prefix Mode*:                   32768  (current) - 32768  (proposed)
+        # MVPN MDT Tunnels*:                                 1024   (current) - 1024   (proposed)
+        # L2 VPN EOMPLS Attachment Circuit*:                 1024   (current) - 1024   (proposed)
+        # MAX VPLS Bridge Domains*:                          1000   (current) - 1000   (proposed)
+        # MAX VPLS Peers Per Bridge Domain*:                 128    (current) - 128    (proposed)
+        # MAX VPLS/VPWS Pseudowires*:                        16384  (current) - 16384  (proposed)
+        p5 = re.compile(r'^(?P<type>[A-Za-z][A-Za-z0-9 /()\-]*?)\s*\*\s*:?\s+'
+                        r'(?P<current_l>\d+)\s*\(current\)\s*-\s*'
+                        r'(?P<proposed_l>\d+)\s*\(proposed\)\s*(?:\(\*+\))?$')
+
+        # Generic feature line (proposed only). Matches lines like:
+        # L3 Multicast entries                                32768 (**)
+        # Number of VLANs:                                    4094
+        # Policy Based Routing ACEs / NAT ACEs:               3072
+        # SGT/DGT (or) MPLS VPN entries:                      32768
+        # MAX VPLS Bridge Domains :                           1000
+        p5_1 = re.compile(r'^(?P<type>[A-Za-z][A-Za-z0-9 /()\-]*?)\s*:?\s+'
+                          r'(?P<input_number>\d+)\s*(?:\(\*+\))?$')
+
+        def _normalize_key(name):
+            key = re.sub(r'[^a-z0-9]+', '_', name.lower())
+            return key.strip('_')
+
+        def _ensure_re_dict():
+            nonlocal title, re_dict, result_dict
+            if not title:
+                title = 'sdm'
+                result_dict = result_dict.setdefault(title, {})
+                re_dict = result_dict
+            elif not re_dict:
+                re_dict = result_dict.setdefault(title, {})
+            return re_dict
 
         # loop to split lines of output
         for line in output.splitlines():
@@ -243,7 +426,8 @@ class ShowSdmPreferNew(ShowSdmPreferNewSchema):
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                feature = groups['feature'].lower().replace(' ', '_').replace('/', '_')
+                _ensure_re_dict()
+                feature = _normalize_key(groups['feature'])
                 feature_dict = re_dict.setdefault(feature, {})
                 feature_dict.update({
                     'proposed': int(groups['number_feature']),
@@ -254,7 +438,8 @@ class ShowSdmPreferNew(ShowSdmPreferNewSchema):
             m = p3_1.match(line)
             if m:
                 groups = m.groupdict()
-                feature = groups['feature'].lower().replace(' ', '_').replace('/', '_')
+                _ensure_re_dict()
+                feature = _normalize_key(groups['feature'])
                 feature_dict = re_dict.setdefault(feature, {})
                 feature_dict.update({
                     'current': int(groups['current_feature']),
@@ -268,41 +453,6 @@ class ShowSdmPreferNew(ShowSdmPreferNewSchema):
                 groups = m.groupdict()
                 re_dict.setdefault(feature, {}).update({
                     'resource_programmed': str(groups['em']),
-                })
-                continue
-                    
-            # L3 Multicast entries                                32768 (**)
-            # L2 Multicast entries                                16384 (**)
-            # Number of VLANs                                     4094 (**)
-            # Overflow Unicast MAC addresses                      512 (**)
-            # Overflow L2 Multicast entries                       512 (**)
-            # Overflow L3 Multicast entries                       512 (**)
-            # Ipv4/Ipv6 shared unicast routes                     262144 (**)
-            # Overflow shared unicast routes                      2000000 (**)
-            # STP Instances                                       4094 (**)
-            # Tunnels                                             1024 (**)
-            # VRF                                                 3840 (**)
-            # Max MPLS VPN Routes Per-Vrf label mode              2000000 (**)
-            # Max MPLS VPN Routes Per-Prefix label mode           65536 (**)
-            # Max L3 adjacency                                    131072 (**)
-            # Max L3 Interface                                    8192 (**)
-            # Max MPLS TE TUNNEL                                  4096 (**)
-            m = p5.match(line)
-            if m:
-                groups = m.groupdict()
-                sdm_type = m.groupdict()['type'].lower().replace(' ', '_').replace('-', '_').replace('/', '_')
-                re_dict.setdefault(sdm_type, {}).update({'proposed':int(groups['input_number'])})
-                continue
-
-            #L3 Multicast entries*                               32768  (current) - 32768  (proposed) (**)
-            #L2 Multicast entries*                               16384  (current) - 16384  (proposed) (**)
-            m = p5_1.match(line)
-            if m:
-                groups = m.groupdict()
-                sdm_type = m.groupdict()['type_1'].lower().replace(' ', '_').replace('-', '_').replace('*', '')
-                re_dict.setdefault(sdm_type, {}).update({
-                    'current':int(groups['current_l']),
-                    'proposed':int(groups['proposed_l']),
                 })
                 continue
 
@@ -319,5 +469,33 @@ class ShowSdmPreferNew(ShowSdmPreferNewSchema):
                 groups = m.groupdict()
                 result_dict.setdefault('scale',{}).update({'em':int(groups['em_number'])})
                 continue
-        
+
+            # L3 Multicast entries*                              32768  (current) - 32768  (proposed) (**)
+            # Security Ingress IPv4 Access Control Entries*:     7168   (current) - 7168   (proposed)
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                sdm_type = _normalize_key(groups['type'])
+                if not sdm_type:
+                    continue
+                _ensure_re_dict()
+                re_dict.setdefault(sdm_type, {}).update({
+                    'current':int(groups['current_l']),
+                    'proposed':int(groups['proposed_l']),
+                })
+                continue
+
+            # L3 Multicast entries                               32768 (**)
+            # Number of VLANs:                                   4094
+            # Policy Based Routing ACEs / NAT ACEs:              3072
+            m = p5_1.match(line)
+            if m:
+                groups = m.groupdict()
+                sdm_type = _normalize_key(groups['type'])
+                if not sdm_type:
+                    continue
+                _ensure_re_dict()
+                re_dict.setdefault(sdm_type, {}).update({'proposed':int(groups['input_number'])})
+                continue
+
         return result_dict

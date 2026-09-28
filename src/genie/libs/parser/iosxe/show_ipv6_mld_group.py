@@ -137,13 +137,15 @@ class ShowIpv6MldSnoopingGroups(ShowIpv6MldSnoopingGroupsSchema):
 
         return mld_dict
 
+
 class ShowIpv6MldSnoopingVlanSchema(MetaParser):
     """
     Schema for 'show ipv6 mld snooping vlan {vlan_id}'
     """
     schema = {
-        'mld': str,
-        'pim': str,
+        Optional('mld'): str,
+        Optional('oper_state'): str,
+        Optional('pim'): str,
         'mldv2': str,
         'suppression': str,
         'solicit_query': str,
@@ -151,18 +153,25 @@ class ShowIpv6MldSnoopingVlanSchema(MetaParser):
         'robustness': int,
         'query_count': int,
         'query_interval': int,
+        Optional('check_hop_count'): str,
         'vlan': {
             Any(): {
-                'mld': str,
-                'pim': str,
+                Optional('mld'): str,
+                Optional('pim'): str,
+                Optional('admin_state'): str,
+                Optional('oper_state'): str,
                 'mld_leave': str,
                 Optional('host_tracking'): str,
+                Optional('suppression'): str,
+                Optional('check_hop_count'): str,
+                Optional('max_response_time'): int,
                 'robustness': int,
                 'query_count': int,
                 'query_interval': int,
             }
         }
     }
+
 
 class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
     """
@@ -173,34 +182,45 @@ class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
     def cli(self, vlan_id, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vlan_id=vlan_id))
-        
+
         # MLD snooping                 : Disabled
         p0 = re.compile(r'^MLD\s+snooping\s+:\s+(?P<mld>\w+)$')
 
         # Global PIM Snooping          : Disabled
-        p1 = re.compile(r'^[Global\s]*(PIM|Pim)\s+Snooping\s+:\s+(?P<pim>\w+)$')
+        # Pim Snooping                 : Disabled
+        p1 = re.compile(r'^(?:Global\s+)?(?:PIM|Pim)\s+Snooping\s+:\s+(?P<pim>\w+)$')
 
         # MLDv2 snooping               : Disabled
         # MLDv2 snooping (minimal)     : Enabled
         p2 = re.compile(r'^MLDv2\s+snooping.+\s+:\s+(?P<mldv2>\w+)$')
-        
+
         # Listener message suppression : Disabled
         p3 = re.compile(r'^Listener\s+message\s+suppression\s+:\s+(?P<suppression>\w+)$')
-        
+
         # TCN solicit query            : Disabled
         p4 = re.compile(r'^TCN\s+solicit\s+query\s+:\s+(?P<solicit_query>\w+)$')
-        
+
         # TCN flood query count        : 2
         p5 = re.compile(r'^TCN\s+flood\s+query\s+count\s+:\s+(?P<flood_query>\d+)$')
-        
+
         # Robustness variable          : 2
         p6 = re.compile(r'^Robustness\s+variable\s+:\s+(?P<robustness>\d+)$')
-        
+
         # Last listener query count    : 2
         p7 = re.compile(r'^Last\s+listener\s+query\s+count\s+:\s+(?P<query_count>\d+)$')
-        
+
         # Last listener query interval : 1000
         p8 = re.compile(r'^Last\s+listener\s+query\s+interval\s+:\s+(?P<query_interval>\d+)$')
+
+        # Check Hop-count=1            : No/Yes
+        p8_1 = re.compile(r'^Check\s+Hop-count=1\s+:\s+(?P<check_hop_count>\w+)$')
+
+        # MLD snooping Admin State            : Enabled
+        p_mld_admin = re.compile(r'^MLD\s+snooping\s+Admin\s+State\s+:\s+(?P<admin_state>\w+)$')
+
+        # MLD snooping Oper State             : Disabled
+        # MLD snooping Oper State      : Disabled
+        p_mld_oper = re.compile(r'^MLD\s+snooping\s+Oper\s+State\s+:\s+(?P<oper_state>\w+)$')
 
         # Vlan 1:
         p9 = re.compile(r'^Vlan\s+(?P<vlan>\d+):$')
@@ -211,21 +231,47 @@ class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
         # Explicit host tracking              : Enabled
         p11 = re.compile(r'^Explicit\s+host\s+tracking\s+:\s+(?P<host_tracking>\w+)$')
 
+        # Max Response Time                   : 10000
+        p12 = re.compile(r'^Max\s+Response\s+Time\s+:\s+(?P<max_response_time>\d+)$')
+
         ret_dict = dict()
         vlan_flag = False
+
         for line in output.splitlines():
             line = line.strip()
 
             # MLD snooping                 : Disabled
             m = p0.match(line)
             if m:
-                ret_dict['vlan'][vlan_id].update(m.groupdict()) if vlan_flag else ret_dict.update(m.groupdict())
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].update(m.groupdict())
+                else:
+                    ret_dict.update(m.groupdict())
                 continue
-            
+
+            # MLD snooping Admin State            : Enabled
+            m = p_mld_admin.match(line)
+            if m:
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].update(m.groupdict())
+                continue
+
+            # MLD snooping Oper State             : Disabled
+            m = p_mld_oper.match(line)
+            if m:
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].update(m.groupdict())
+                else:
+                    ret_dict.update(m.groupdict())
+                continue
+
             # Global PIM Snooping          : Disabled
             m = p1.match(line)
             if m:
-                ret_dict['vlan'][vlan_id].update(m.groupdict()) if vlan_flag else ret_dict.update(m.groupdict())
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].update(m.groupdict())
+                else:
+                    ret_dict.update(m.groupdict())
                 continue
 
             # MLDv2 snooping               : Disabled
@@ -233,52 +279,71 @@ class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
             if m:
                 ret_dict.update(m.groupdict())
                 continue
-            
+
             # Listener message suppression : Disabled
             m = p3.match(line)
             if m:
-                ret_dict.update(m.groupdict())
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].update(m.groupdict())
+                else:
+                    ret_dict.update(m.groupdict())
                 continue
-            
+
             # TCN solicit query            : Disabled
             m = p4.match(line)
             if m:
                 ret_dict.update(m.groupdict())
                 continue
-            
+
             # TCN flood query count        : 2
             m = p5.match(line)
             if m:
-                ret_dict.setdefault('flood_query', int(m.groupdict()['flood_query']))
+                ret_dict.setdefault('flood_query', int(
+                    m.groupdict()['flood_query']))
                 continue
-            
+
             # Robustness variable          : 2
             m = p6.match(line)
             if m:
                 robustness = int(m.groupdict()['robustness'])
-                ret_dict['vlan'][vlan_id].setdefault(
-                    'robustness', robustness
-                    ) if vlan_flag else ret_dict.setdefault('robustness', robustness)
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].setdefault(
+                        'robustness', robustness)
+                else:
+                    ret_dict.setdefault('robustness', robustness)
                 continue
-            
+
             # Last listener query count    : 2
             m = p7.match(line)
             if m:
                 query_count = int(m.groupdict()['query_count'])
-                ret_dict['vlan'][vlan_id].setdefault(
-                    'query_count', query_count
-                    ) if vlan_flag else ret_dict.setdefault('query_count', query_count)
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].setdefault(
+                        'query_count', query_count)
+                else:
+                    ret_dict.setdefault('query_count', query_count)
                 continue
-            
+
             # Last listener query interval : 1000
             m = p8.match(line)
             if m:
                 query_interval = int(m.groupdict()['query_interval'])
-                ret_dict['vlan'][vlan_id].setdefault(
-                    'query_interval', query_interval
-                    ) if vlan_flag else ret_dict.setdefault('query_interval', query_interval)
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].setdefault(
+                        'query_interval', query_interval)
+                else:
+                    ret_dict.setdefault('query_interval', query_interval)
                 continue
-            
+
+            # Check Hop-count=1            : No/Yes
+            m = p8_1.match(line)
+            if m:
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].update(m.groupdict())
+                else:
+                    ret_dict.update(m.groupdict())
+                continue
+
             # Vlan 1:
             m = p9.match(line)
             if m:
@@ -286,7 +351,7 @@ class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
                 ret_dict.setdefault('vlan', {}).setdefault(vlan_id, {})
                 vlan_flag = True
                 continue
-            
+
             # MLD immediate leave                 : Disabled
             m = p10.match(line)
             if m:
@@ -297,7 +362,16 @@ class ShowIpv6MldSnoopingVlan(ShowIpv6MldSnoopingVlanSchema):
             m = p11.match(line)
             if m:
                 ret_dict['vlan'][vlan_id].update(m.groupdict())
-                continue     
+                continue
+
+            # Max Response Time                   : 10000
+            m = p12.match(line)
+            if m:
+                max_response_time = int(m.groupdict()['max_response_time'])
+                if vlan_flag:
+                    ret_dict['vlan'][vlan_id].setdefault(
+                        'max_response_time', max_response_time)
+                continue
 
         return ret_dict
 

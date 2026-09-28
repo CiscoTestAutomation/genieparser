@@ -45,6 +45,33 @@ expected_output = {
                 }
             }
         },
+        "application": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                         "ipv6": {}
+                    }
+                }
+            }
+        },
+        "ND": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                         "ipv6": {}
+                    }
+                }
+            }
+        },
+        "connected": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                         "ipv6": {}
+                    }
+                }
+            }
+        },
         "eigrp": {
             "vrf": {
                 "default": {
@@ -188,6 +215,15 @@ expected_output = {
                 }
             }
         },
+        "static": {
+            "vrf": {
+                "default": {
+                    "address_family": {
+                        "ipv6": {}
+                    }
+                }
+            }
+        }
     }
 }
 

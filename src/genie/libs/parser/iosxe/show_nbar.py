@@ -52,7 +52,8 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             out = output
             
         result_dict = {}
-        p1 = re.compile(r'^(?P<interface>Gig.+|Ten.+|Fast.+ |Port.+ |Vlan.+)')
+        # FiveGigabitEthernet1/0/6
+        p1 = re.compile(r'^(?P<interface>Gig.+|Ten.+|Fast.+|Five.+|Port.+ |Vlan.+)$')
         p2 = re.compile(r'^(?P<protocol>[\w\-]+) +(?P<In_Packet_Count>[\d]+) +(?P<Out_Packet_Count>[\d]+)')
         p3 = re.compile(r'^(?P<In_Byte_Count>[\d]+) +(?P<Out_Byte_Count>[\d]+)')
         p4 = re.compile(r'^(?P<In_Bitrate>[\d]+) +(?P<Out_Bitrate>[\d]+)')

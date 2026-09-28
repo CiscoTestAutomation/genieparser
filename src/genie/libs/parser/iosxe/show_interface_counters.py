@@ -128,10 +128,11 @@ class ShowInterfacesCountersErrorsSchema(MetaParser):
                 "excess_col": int,
                 "carri_sen": int,
                 "runts": int,
-
+                Optional("giants"): int
             }
         }
     }
+
 
 class ShowInterfacesCountersErrors(ShowInterfacesCountersErrorsSchema):
 
@@ -140,28 +141,28 @@ class ShowInterfacesCountersErrors(ShowInterfacesCountersErrorsSchema):
     cli_command = ['show interfaces counters errors']
 
     def cli(self, output=None):
-        cmd = self.cli_command[0]
         if output is None:
             output = self.device.execute(self.cli_command[0])
-        
+
         ret_dict = {}
 
-        # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
-        p1 = re.compile(r'^(?P<port_name>\S+) +(?P<align_err>\d+) +(?P<fcs_err>\d+) +(?P<xmit_err>\d+) +(?P<rcv_err>\d+) +(?P<under_size>\d+) +(?P<out_discards>\d+)$')
-        # Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts 
-        p2 = re.compile(r'^Port +Single-Col +Multi-Col +Late-Col +Excess-Col +Carri-Sen +Runts$')
-        # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
-        p3 = re.compile(r'^(?P<port_name>\S+) +(?P<single_col>\d+) +(?P<multi_col>\d+) +(?P<late_col>\d+) +(?P<excess_col>\d+) +(?P<carri_sen>\d+) +(?P<runts>\d+)$')
+        # Ap2/0/1                0           0           0           0       0     0
+        p1 = re.compile(r'^(?P<port_name>\S+) +(?P<align_err>\d+) +(?P<fcs_err>\d+) +(?P<xmit_err>\d+) '
+                        r'+(?P<rcv_err>\d+) +(?P<under_size>\d+) +(?P<out_discards>\d+)$')
+        # Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts
+        p2 = re.compile(r'^Port +Single-Col +Multi-Col +Late-Col +Excess-Col +Carri-Sen +Runts( +Giants)?')
+        # Ap2/0/1                0           0           0        0      0     0
+        p3 = re.compile(r'^(?P<port_name>\S+) +(?P<single_col>\d+) +(?P<multi_col>\d+) +(?P<late_col>\d+) '
+                        r'+(?P<excess_col>\d+) +(?P<carri_sen>\d+) +(?P<runts>\d+) *(?P<giants>\d+)?')
         extra_counters = False
 
         for line in output.splitlines():
             line = line.strip()
-            
-            # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
+            # Ap2/0/1     0     0     0           0          0        0        m = p1.match(line)
             m = p1.match(line)
             if m and not extra_counters:
                 group = m.groupdict()
-                ports = ret_dict.setdefault('ports',{}).setdefault(group['port_name'],{})
+                ports = ret_dict.setdefault('ports', {}).setdefault(group['port_name'], {})
                 ports['align_err'] = int(group['align_err'])
                 ports['fcs_err'] = int(group['fcs_err'])
                 ports['xmit_err'] = int(group['xmit_err'])
@@ -169,12 +170,12 @@ class ShowInterfacesCountersErrors(ShowInterfacesCountersErrorsSchema):
                 ports['under_size'] = int(group['under_size'])
                 ports['out_discards'] = int(group['out_discards'])
                 continue
-            # Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts 
+            # Port         Single-Col  Multi-Col   Late-Col  Excess-Col  Carri-Sen      Runts
             m = p2.match(line)
             if m:
                 extra_counters = True
                 continue
-            # Ap2/0/1                0           0           0           0          0            0             m = p1.match(line)
+            # Ap2/0/1           0          0        0        0       0       0      m = p1.match(line)
             m = p3.match(line)
             if m and extra_counters:
                 group = m.groupdict()
@@ -184,8 +185,9 @@ class ShowInterfacesCountersErrors(ShowInterfacesCountersErrorsSchema):
                 ret_dict['ports'][group['port_name']]['excess_col'] = int(group['excess_col'])
                 ret_dict['ports'][group['port_name']]['carri_sen'] = int(group['carri_sen'])
                 ret_dict['ports'][group['port_name']]['runts'] = int(group['runts'])
+                if group['giants']:
+                    ret_dict['ports'][group['port_name']]['giants'] = int(group['giants'])
                 continue
-
         return ret_dict
 
 
@@ -193,10 +195,11 @@ class ShowInterfaceCounterErrors(ShowInterfacesCountersErrors):
     """Parser for show interfaces {interface} counters errors"""
 
     cli_command = 'show interfaces {interface} counters errors'
+
     def cli(self, interface, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(interface=interface))
-        
+
         return super().cli(output=output)
 
 

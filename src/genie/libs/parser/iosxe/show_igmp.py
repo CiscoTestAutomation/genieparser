@@ -5,7 +5,7 @@ IOSXE parsers for the following show commands:
 
     * show ip igmp interface
     * show ip igmp interface <WORD>
-    * show ip igmp vrf <WORD> interface 
+    * show ip igmp vrf <WORD> interface
     * show ip igmp groups detail
     * show ip igmp vrf <WORD> groups detail
     * show ip igmp groups  <WORD> detail
@@ -169,7 +169,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # Internet address is 10.1.2.1/24
             p3 = re.compile(r'^Internet +address +is +(?P<ip>[\w\/\.\:]+)$')
             m = p3.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['interface_address'] = \
                     m.groupdict()['ip']
                 continue
@@ -177,30 +177,30 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # IGMP is enabled on interface
             p4 = re.compile(r'^IGMP +is +(?P<status>\w+) +on +interface$')
             m = p4.match(line)
-            if m:      
-                status = m.groupdict()['status'].lower()          
+            if m:
+                status = m.groupdict()['status'].lower()
                 ret_dict['vrf'][vrf]['interface'][intf]['enable'] = True if \
                     'enable' in status else False
                 continue
-            
+
             # Current IGMP host version is 3
             p5 = re.compile(r'^Current +IGMP +host +version +is +(?P<ver>\d+)$')
             m = p5.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['host_version'] = int(m.groupdict()['ver'])
                 continue
 
             # Current IGMP router version is 3
             p6 = re.compile(r'^Current +IGMP +router +version +is +(?P<ver>\d+)$')
             m = p6.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['router_version'] = int(m.groupdict()['ver'])
                 continue
 
             # IGMP query interval is 133 seconds
             p7 = re.compile(r'^IGMP +query +interval +is +(?P<query_interval>\d+) +seconds$')
             m = p7.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['query_interval'] = \
                     int(m.groupdict()['query_interval'])
                 continue
@@ -209,7 +209,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p8 = re.compile(r'^IGMP +configured +query +interval +is +'
                              r'(?P<query_interval>\d+) +seconds$')
             m = p8.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['configured_query_interval'] = \
                     int(m.groupdict()['query_interval'])
                 continue
@@ -218,7 +218,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p9 = re.compile(r'^IGMP +querier +timeout +is +'
                              r'(?P<timeout>\d+) +seconds$')
             m = p9.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['querier_timeout'] = \
                     int(m.groupdict()['timeout'])
                 continue
@@ -227,7 +227,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p10 = re.compile(r'^IGMP +configured +querier +timeout +is +'
                              r'(?P<timeout>\d+) +seconds$')
             m = p10.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['configured_querier_timeout'] = \
                     int(m.groupdict()['timeout'])
                 continue
@@ -236,7 +236,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p11 = re.compile(r'^IGMP +max +query +response +time +is +'
                              r'(?P<time>\d+) +seconds$')
             m = p11.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['query_max_response_time'] = \
                     int(m.groupdict()['time'])
                 continue
@@ -244,7 +244,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # Last member query count is 2
             p12 = re.compile(r'^Last +member +query +count +is +(?P<count>\d+)$')
             m = p12.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['last_member_query_count'] = \
                     int(m.groupdict()['count'])
                 continue
@@ -253,7 +253,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p13 = re.compile(r'^Last +member +query +response +interval +is '
                               r'+(?P<time>\d+) +ms$')
             m = p13.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['last_member_query_interval'] = \
                     int(m.groupdict()['time'])
                 continue
@@ -261,7 +261,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             # Inbound IGMP access group is test2
             p14 = re.compile(r'^Inbound +IGMP +access +group +is +(?P<group_policy>\S+)$')
             m = p14.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['group_policy'] = \
                     m.groupdict()['group_policy']
                 continue
@@ -282,7 +282,7 @@ class ShowIpIgmpInterface(ShowIpIgmpInterfaceSchema):
             p16 = re.compile(r'^Interface +IGMP +State +Limit *: +'
                               r'(?P<active>\d+) +active +out +of +(?P<max>\d+) +max$')
             m = p16.match(line)
-            if m:                
+            if m:
                 ret_dict['vrf'][vrf]['interface'][intf]['max_groups'] = int(m.groupdict()['max'])
                 ret_dict['vrf'][vrf]['interface'][intf]['active_groups'] = int(m.groupdict()['active'])
                 continue
@@ -561,8 +561,8 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
             # 10.4.1.1         00:05:06  stopped   stopped   Yes  L
             p7 = re.compile(r'^(?P<source>[\w\.\:]+) +'
                              r'(?P<up_time>[\w\.\:]+) +'
-                             r'(?P<v3_exp>\w+) +'
-                             r'(?P<csr_exp>\w+) +'
+                             r'(?P<v3_exp>[\w\.\:]+) +'
+                             r'(?P<csr_exp>[\w\.\:]+) +'
                              r'(?P<forward>\w+) +'
                              r'(?P<source_flags>\w+)$')
             m = p7.match(line)
@@ -628,9 +628,9 @@ class ShowIpIgmpGroupsDetail(ShowIpIgmpGroupsDetailSchema):
                     static_join_group = group + ' ' + source
                     for key in keys:
                         if static_join_group not in ret_dict['vrf'][vrf]['interface'][intf][key]:
-                            ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}    
+                            ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group] = {}
                         ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['group'] = group
-                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source                
+                        ret_dict['vrf'][vrf]['interface'][intf][key][static_join_group]['source'] = source
 
                         # create structure for pre define keys
                         key_value_dict = {'expire': expire,
@@ -1122,7 +1122,7 @@ class ShowIpIgmpVrfGroups(ShowIpIgmpVrfGroupsSchema):
 
         # initial variables
         igmp_dict = {}
-        
+
         # 228.1.1.1        Vlan111                  00:03:07  00:02:59  151.1.1.2
         p1=re.compile(r"^(?P<groupip>[\d\.]+)\s+(?P<interface>\S+)\s+(?P<uptime>\S+)\s+(?P<expires>\S+)\s+(?P<last_reporter>\S+).*$")
 
@@ -1138,7 +1138,7 @@ class ShowIpIgmpVrfGroups(ShowIpIgmpVrfGroupsSchema):
                     igmp_group_dict[key]=value
                 continue
         return igmp_dict
-     
+
 #==================================================
 # Parser for show ip igmp snooping groups count
 #==================================================
@@ -1260,7 +1260,7 @@ class ShowIpIgmpGroups(ShowIpIgmpGroupsSchema):
 
         # initial variables
         igmp_dict = {}
-        
+
         # 228.0.8.204      Vlan10                   00:02:26  00:02:45  60.1.1.2
         p1=re.compile(r'^(?P<group>[\w\.\:]+) +(?P<intf>[\w\.\/\-]+) +(?P<uptime>[\w\.\:]+) +(?P<expires>[\w\.\:]+) +(?P<last_reporter>[\w\.\:]+)$')
 
@@ -1310,7 +1310,7 @@ class ShowIpIgmpSnoopingMrouterVlan(ShowIpIgmpSnoopingMrouterVlanSchema):
 
         for line in out.splitlines():
             line = line.strip()
-        
+
             #  777    Po10(dynamic), Router
             m = p1.match(line)
             if m:
@@ -1337,7 +1337,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
         Optional('port'): str,
         Optional('max_response_time'): str,
         'global_igmp': {
-            'admin_state': str,           
+            'admin_state': str,
             'admin_version': int,
             'source_ip_address': str,
             'query_interval': int,
@@ -1346,9 +1346,9 @@ class ShowIpIgmpSnoopingQuerierVlanDetailSchema(MetaParser):
             'tcn_query_count': int,
             'tcn_query_interval': int,
         },
-        Optional('vlan'): {     
-            Any(): {       
-                'admin_state': str,                             
+        Optional('vlan'): {
+            Any(): {
+                'admin_state': str,
                 'admin_version': int,
                 'source_ip_address': str,
                 'query_interval': int,
@@ -1372,7 +1372,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
         cmd = self.cli_command.format(vlan_id = vlan_id)
         if not output:
             output = self.device.execute(cmd)
-        
+
         # IP address               : 1.1.1.1
         p1 = re.compile(r"^IP\s+address\s+:\s+(?P<ip_address>\S+)$")
 
@@ -1394,7 +1394,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
         # admin state                    : Enabled
         # admin state                    : Enabled (state inherited)
         p7 = re.compile(r"^admin\s+state\s+:\s+(?P<admin_state>\w+)(?:\s+\((?P<state>[\w\s]+)\))?")
-       
+
         # admin version                  : 2
         p8 = re.compile(r"^admin\s+version\s+:\s+(?P<admin_version>\d+)$")
 
@@ -1425,12 +1425,12 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
 
         # tcn query pending count        : 0
         p17 = re.compile(r"^tcn\s+query\s+pending\s+count\s+:\s+(?P<tcn_query_pending_count>\d+)$")
-        
+
         ret_dict = {}
-        global_dict = {}       
-       
+        global_dict = {}
+
         for line in output.splitlines():
-            line = line.strip()           
+            line = line.strip()
 
             # IP address               : 1.1.1.1
             m = p1.match(line)
@@ -1452,7 +1452,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
                 group = m.groupdict()
                 ret_dict['port'] = group['port']
                 continue
-                            
+
            # Max response time        : 10s
             m = p4.match(line)
             if m:
@@ -1462,29 +1462,29 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
 
             # Vlan 100:   IGMP switch querier status
             m = p6.match(line)
-            if m:                
+            if m:
                 vlan_dict = ret_dict.setdefault("vlan", {}).setdefault(m.groupdict()["vlan"], {})
                 continue
-                
+
             # Global IGMP switch querier status
             m = p5.match(line)
-            if m:                
-                global_dict = ret_dict.setdefault("global_igmp", {}) 
-                vlan_dict = global_dict               
-                continue           
-          
+            if m:
+                global_dict = ret_dict.setdefault("global_igmp", {})
+                vlan_dict = global_dict
+                continue
+
             # admin state                    : Enabled (state inherited)
-            m = p7.match(line)        
-            if m:         
-                group = m.groupdict()                 
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
                 vlan_dict["admin_state"] = group["admin_state"]
                 continue
-                 
+
             # admin version                  : 2
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                vlan_dict["admin_version"] = int(group["admin_version"])                
+                vlan_dict["admin_version"] = int(group["admin_version"])
                 continue
 
             # source IP address              : 1.1.1.1
@@ -1498,7 +1498,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                vlan_dict["query_interval"] = int(group["query_interval"])             
+                vlan_dict["query_interval"] = int(group["query_interval"])
                 continue
 
             # max-response-time (sec)        : 10
@@ -1519,7 +1519,7 @@ class ShowIpIgmpSnoopingQuerierVlanDetail(ShowIpIgmpSnoopingQuerierVlanDetailSch
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                vlan_dict["tcn_query_count"] = int(group["tcn_query_count"])                
+                vlan_dict["tcn_query_count"] = int(group["tcn_query_count"])
                 continue
 
             # tcn query interval (sec)       : 10
@@ -1583,7 +1583,7 @@ class ShowIpIgmpSnoopingGroupsVlanGroup(ShowIpIgmpSnoopingGroupsVlanGroupSchema)
 
         # initial variables
         ret_dict = {}
-        
+
         # Vlan      Group                    Type        Version     Port List
         # -----------------------------------------------------------------------
         # 11        225.0.0.1                igmp        v3          Po92
@@ -1646,7 +1646,7 @@ class ShowIpIgmpMembership(ShowIpIgmpMembershipSchema):
                 continue
 
         return ret_dict
-    
+
 class ShowIpIgmpSnoopingGroupsVlanCountSchema(MetaParser):
     """Schema for 'show ip igmp snooping groups vlan {vlan} count'"""
 

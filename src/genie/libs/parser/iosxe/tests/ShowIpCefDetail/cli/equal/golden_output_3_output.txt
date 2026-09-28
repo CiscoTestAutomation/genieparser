@@ -1,0 +1,8 @@
+iolxtr11#sh ip cef vrf red 128.0.0.0/2 det
+128.0.0.0/2, epoch 0, flags [subtree context, check lisp eligibility]
+  SC owned,sourced: LISP remote EID - locator status bits 0x00000000, encap_iid 5000
+  LISP remote EID: 0 packets 0 bytes fwd action encap, encap_iid 5000
+  LISP source path list
+    nexthop 100.88.88.88 LISP0.4100
+  2 IPL sources [no flags]
+  nexthop 100.88.88.88 LISP0.4100

@@ -69,6 +69,11 @@
     * show platform software access-list RP active statistics
     * show platform software ess FP active drl
     * show platform software ess fp active l4r
+    * show platform software ipsec {switch} {switch_var} f0 sadb all
+    * show platform software ipsec {switch_var} f0 sadb all
+    * show platform software ipsec {switch} {switch_var} f0 flow all
+    * show platform software ipsec {switch_var} f0 flow all
+    * show platform software ipsec policy statistics
 """
 
 # Python
@@ -17858,6 +17863,435 @@ class ShowPlatformSoftwareEssFpActiveL4r(ShowPlatformSoftwareEssFpActiveL4rSchem
                 temp_entry["aom_state"] = group["aom_state"]
                 sub_dict["entries"].append(temp_entry)
                 temp_entry = None
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareIpsecPolicyStatisticsSchema(MetaParser):
+    """Schema for show platform software ipsec policy statistics"""
+
+    schema = {
+        "pal_cmd": {
+            Any(): {
+                "request": int,
+                "reply_ok": int,
+                "reply_err": int,
+                "abort": int,
+            }
+        },
+        "pal_notify": {
+            Any(): {
+                "receive": int,
+                "complete": int,
+                "proc_err": int,
+                "ignore": int,
+            }
+        },
+        "ipsec_pal_database_summary": {
+            Any(): {
+                "ent_add": int,
+                "ent_del": int,
+                "abort": int,
+            }
+        },
+    }
+
+class ShowPlatformSoftwareIpsecPolicyStatistics(
+    ShowPlatformSoftwareIpsecPolicyStatisticsSchema
+):
+    """Parser for show platform software ipsec policy statistics"""
+
+    cli_command = "show platform software ipsec policy statistics"
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        current_section = None
+
+        # PAL CMD    REQUEST   REPLY OK  REPLY ERR      ABORT
+        p_pal_cmd_header = re.compile(
+            r"^\s*PAL CMD\s+REQUEST\s+REPLY OK\s+REPLY ERR\s+ABORT\s*$"
+        )
+
+        # SADB_INIT_START         19         19          0          0
+        p_pal_cmd_entry = re.compile(
+            r"^\s*(?P<cmd_name>\S+)\s+(?P<request>\d+)\s+(?P<reply_ok>\d+)\s+(?P<reply_err>\d+)\s+(?P<abort>\d+)\s*$"
+        )
+
+        # PAL NOTIFY    RECEIVE   COMPLETE   PROC ERR     IGNORE
+        p_pal_notify_header = re.compile(
+            r"^\s*PAL NOTIFY\s+RECEIVE\s+COMPLETE\s+PROC ERR\s+IGNORE\s*$"
+        )
+
+        # NOTIFY_RP          0          0          0          0
+        p_pal_notify_entry = re.compile(
+            r"^\s*(?P<notify_name>\S+)\s+(?P<receive>\d+)\s+(?P<complete>\d+)\s+(?P<proc_err>\d+)\s+(?P<ignore>\d+)\s*$"
+        )
+
+        # IPSec PAL database summary:
+        p_db_summary_header = re.compile(
+            r"^\s*IPSec PAL database summary:\s*$"
+        )
+
+        # DB NAME    ENT ADD    ENT DEL      ABORT
+        p_db_header = re.compile(
+            r"^\s*DB NAME\s+ENT ADD\s+ENT DEL\s+ABORT\s*$"
+        )
+
+        # PAL_SADB         19         18          0
+        p_db_entry = re.compile(
+            r"^\s*(?P<db_name>\S+)\s+(?P<ent_add>\d+)\s+(?P<ent_del>\d+)\s+(?P<abort>\d+)\s*$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if not line:
+                continue
+
+            # Check for section headers
+            if p_pal_cmd_header.match(line):
+                current_section = "pal_cmd"
+                continue
+
+            if p_pal_notify_header.match(line):
+                current_section = "pal_notify"
+                continue
+
+            if p_db_summary_header.match(line):
+                current_section = "ipsec_pal_database_summary"
+                continue
+
+            if p_db_header.match(line):
+                continue
+
+            # Parse PAL CMD entries
+            m = p_pal_cmd_entry.match(line)
+            if m and current_section == "pal_cmd":
+                group = m.groupdict()
+                cmd_name = group["cmd_name"]
+                pal_cmd_dict = ret_dict.setdefault("pal_cmd", {})
+                pal_cmd_dict[cmd_name] = {
+                    "request": int(group["request"]),
+                    "reply_ok": int(group["reply_ok"]),
+                    "reply_err": int(group["reply_err"]),
+                    "abort": int(group["abort"]),
+                }
+                continue
+
+            # Parse PAL NOTIFY entries
+            m = p_pal_notify_entry.match(line)
+            if m and current_section == "pal_notify":
+                group = m.groupdict()
+                notify_name = group["notify_name"]
+                pal_notify_dict = ret_dict.setdefault("pal_notify", {})
+                pal_notify_dict[notify_name] = {
+                    "receive": int(group["receive"]),
+                    "complete": int(group["complete"]),
+                    "proc_err": int(group["proc_err"]),
+                    "ignore": int(group["ignore"]),
+                }
+                continue
+
+            # Parse IPSec PAL database summary entries
+            m = p_db_entry.match(line)
+            if m and current_section == "ipsec_pal_database_summary":
+                group = m.groupdict()
+                db_name = group["db_name"]
+                db_summary_dict = ret_dict.setdefault("ipsec_pal_database_summary", {})
+                db_summary_dict[db_name] = {
+                    "ent_add": int(group["ent_add"]),
+                    "ent_del": int(group["ent_del"]),
+                    "abort": int(group["abort"]),
+                }
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareIpsecSwitchSadbAllSchema(MetaParser):
+    """Schema for show platform software ipsec switch {switch} f0 sadb all"""
+
+    schema = {
+        "sadb_object_table": {
+            Any(): {
+                "sadb_id": int,
+                "hint": str,
+                "complete": str,
+                "ref_cnt": int,
+                "cfg_cnt": int,
+                "acl_ref": int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareIpsecSwitchSadbAll(
+    ShowPlatformSoftwareIpsecSwitchSadbAllSchema
+):
+    """Parser for show platform software ipsec switch {switch} f0 sadb all"""
+
+    cli_command = [
+        "show platform software ipsec {switch} {switch_var} f0 sadb all",
+        "show platform software ipsec {switch_var} f0 sadb all",
+    ]
+
+    def cli(self, switch_var, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.cli_command[0].format(
+                    switch=switch, switch_var=switch_var
+                )
+            else:
+                output = self.cli_command[1].format(switch_var=switch_var)
+            output = self.device.execute(output)
+
+        ret_dict = {}
+
+        # 19          vir-tun-int  true        2           0           0
+        p1 = re.compile(
+            r"^(?P<sadb_id>\d+)\s+(?P<hint>\S+)\s+(?P<complete>\S+)\s+"
+            r"(?P<ref_cnt>\d+)\s+(?P<cfg_cnt>\d+)\s+(?P<acl_ref>\d+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # 19          vir-tun-int  true        2           0           0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                sadb_dict = ret_dict.setdefault(
+                    "sadb_object_table", {}
+                ).setdefault(int(group["sadb_id"]), {})
+                sadb_dict["sadb_id"] = int(group["sadb_id"])
+                sadb_dict["hint"] = group["hint"]
+                sadb_dict["complete"] = group["complete"]
+                sadb_dict["ref_cnt"] = int(group["ref_cnt"])
+                sadb_dict["cfg_cnt"] = int(group["cfg_cnt"])
+                sadb_dict["acl_ref"] = int(group["acl_ref"])
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareIpsecSwitchFlowAllSchema(MetaParser):
+    """Schema for show platform software ipsec switch {switch} f0 flow all"""
+
+    schema = {
+        "flows": {
+            int: {
+                "mode": str,
+                "direction": str,
+                "protocol": str,
+                "spi": str,
+                "local_ip_addr": str,
+                "remote_ip_addr": str,
+                "crypto_map_id": int,
+                "spd_id": int,
+                "cpp_spd_id": int,
+                "ace_line_number": int,
+                "qfp_sa_handle": int,
+                "crypto_device_id": int,
+                "ios_xe_interface_id": int,
+                "interface_name": str,
+                Optional("use_path_mtu"): str,
+                Optional("object_state"): str,
+                Optional("object_bind_state"): str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareIpsecSwitchFlowAll(
+    ShowPlatformSoftwareIpsecSwitchFlowAllSchema
+):
+    """Parser for show platform software ipsec switch {switch} f0 flow all"""
+
+    cli_command = [
+        "show platform software ipsec {switch} {switch_var} f0 flow all",
+        "show platform software ipsec {switch_var} f0 flow all",
+    ]
+
+    def cli(self, switch_var, switch=None, output=None):
+        if output is None:
+            if switch:
+                output = self.cli_command[0].format(
+                    switch=switch, switch_var=switch_var
+                )
+            else:
+                output = self.cli_command[1].format(switch_var=switch_var)
+            output = self.device.execute(output)
+
+        ret_dict = {}
+
+        # Flow id: 65
+        # =========== Flow id: 142
+        p1 = re.compile(r"^(=+\s*)?Flow id:\s+(?P<flow_id>\d+)\s*$")
+
+        # mode: tunnel
+        p2 = re.compile(r"^mode:\s+(?P<mode>\S+)\s*$")
+
+        # direction: outbound
+        p3 = re.compile(r"^direction:\s+(?P<direction>\S+)\s*$")
+
+        # protocol: esp
+        p4 = re.compile(r"^protocol:\s+(?P<protocol>\S+)\s*$")
+
+        # SPI: 0x77091b96
+        p5 = re.compile(r"^SPI:\s+(?P<spi>0x[0-9a-fA-F]+)\s*$")
+
+        # local IP addr: 110.0.1.1
+        p6 = re.compile(r"^local IP addr:\s+(?P<local_ip>\S+)\s*$")
+
+        # remote IP addr: 110.0.1.2
+        p7 = re.compile(r"^remote IP addr:\s+(?P<remote_ip>\S+)\s*$")
+
+        # crypto map id: 0
+        p8 = re.compile(r"^crypto map id:\s+(?P<crypto_map_id>\d+)\s*$")
+
+        # SPD id: 19
+        p9 = re.compile(r"^SPD id:\s+(?P<spd_id>\d+)\s*$")
+
+        # cpp SPD id: 0
+        p10 = re.compile(r"^cpp SPD id:\s+(?P<cpp_spd_id>\d+)\s*$")
+
+        # ACE line number: 0
+        p11 = re.compile(r"^ACE line number:\s+(?P<ace_line_number>\d+)\s*$")
+
+        # QFP SA handle: 14
+        p12 = re.compile(r"^QFP SA handle:\s+(?P<qfp_sa_handle>\d+)\s*$")
+
+        # crypto device id: 0
+        p13 = re.compile(r"^crypto device id:\s+(?P<crypto_device_id>\d+)\s*$")
+
+        # IOS XE interface id: 1156
+        p14 = re.compile(r"^IOS XE interface id:\s+(?P<ios_xe_interface_id>\d+)\s*$")
+
+        # interface name: Tunnel1
+        p15 = re.compile(r"^interface name:\s+(?P<interface_name>\S+)\s*$")
+
+        # use path MTU: FALSE
+        p16 = re.compile(r"^use path MTU:\s+(?P<use_path_mtu>\S+)\s*$")
+
+        # object state: active
+        p17 = re.compile(r"^object state:\s+(?P<object_state>\S+)\s*$")
+
+        # object bind state: new
+        p18 = re.compile(r"^object bind state:\s+(?P<object_bind_state>\S+)\s*$")
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # =========== Flow id: 142
+            m = p1.match(line)
+            if m:
+                flow_id = int(m.group("flow_id"))
+                current_flow = ret_dict.setdefault("flows", {}).setdefault(
+                    flow_id, {}
+                )
+                continue
+
+            # mode: tunnel
+            m = p2.match(line)
+            if m:
+                current_flow["mode"] = m.group("mode")
+                continue
+
+            # direction: outbound
+            m = p3.match(line)
+            if m:
+                current_flow["direction"] = m.group("direction")
+                continue
+
+            # protocol: esp
+            m = p4.match(line)
+            if m:
+                current_flow["protocol"] = m.group("protocol")
+                continue
+
+            # SPI: 0x77091b96
+            m = p5.match(line)
+            if m:
+                current_flow["spi"] = m.group("spi")
+                continue
+
+            # local IP addr: 110.0.1.1
+            m = p6.match(line)
+            if m:
+                current_flow["local_ip_addr"] = m.group("local_ip")
+                continue
+
+            # remote IP addr: 110.0.1.2
+            m = p7.match(line)
+            if m:
+                current_flow["remote_ip_addr"] = m.group("remote_ip")
+                continue
+
+            # crypto map id: 0
+            m = p8.match(line)
+            if m:
+                current_flow["crypto_map_id"] = int(m.group("crypto_map_id"))
+                continue
+
+            # SPD id: 19
+            m = p9.match(line)
+            if m:
+                current_flow["spd_id"] = int(m.group("spd_id"))
+                continue
+
+            # cpp SPD id: 0
+            m = p10.match(line)
+            if m:
+                current_flow["cpp_spd_id"] = int(m.group("cpp_spd_id"))
+                continue
+
+            # ACE line number: 0
+            m = p11.match(line)
+            if m:
+                current_flow["ace_line_number"] = int(m.group("ace_line_number"))
+                continue
+
+            # QFP SA handle: 14
+            m = p12.match(line)
+            if m:
+                current_flow["qfp_sa_handle"] = int(m.group("qfp_sa_handle"))
+                continue
+
+            # crypto device id: 0
+            m = p13.match(line)
+            if m:
+                current_flow["crypto_device_id"] = int(m.group("crypto_device_id"))
+                continue
+
+            # IOS XE interface id: 1156
+            m = p14.match(line)
+            if m:
+                current_flow["ios_xe_interface_id"] = int(
+                    m.group("ios_xe_interface_id")
+                )
+                continue
+
+            # interface name: Tunnel1
+            m = p15.match(line)
+            if m:
+                current_flow["interface_name"] = m.group("interface_name")
+                continue
+
+            # use path MTU: FALSE
+            m = p16.match(line)
+            if m:
+                current_flow["use_path_mtu"] = m.group("use_path_mtu")
+                continue
+
+            # object state: active
+            m = p17.match(line)
+            if m:
+                current_flow["object_state"] = m.group("object_state")
+                continue
+
+            # object bind state: new
+            m = p18.match(line)
+            if m:
+                current_flow["object_bind_state"] = m.group("object_bind_state")
                 continue
 
         return ret_dict

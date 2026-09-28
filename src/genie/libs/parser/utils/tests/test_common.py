@@ -1,6 +1,8 @@
 import unittest
+from unittest.mock import patch
 
-from genie.libs.parser.utils.common import Common
+from genie.libs.parser.utils import common
+from genie.libs.parser.utils.common import Common, _matches_fuzzy
 from  genie.libs.parser.utils.common import check_for_duplicate
 from genie.abstract.package import AbstractTree, DEFAULT_ABSTRACT_ORDER
 PARSER_MODULE_NAME = 'genie.libs.parser'
@@ -304,6 +306,50 @@ class TestDuplicate(unittest.TestCase):
                                                 feature='parser')
 
         internal_data.update(external_data)
-        
+
         duplicates = check_for_duplicate(internal_data)
         self.assertIn('show vrf', duplicates)
+
+
+class TestFuzzySearchCommand(unittest.TestCase):
+    def setUp(self):
+        self.parser_data = common.parser_data
+
+    def tearDown(self):
+        common.parser_data = self.parser_data
+
+    def test_exact_match_after_fuzzy_preprocessing_skips_fuzzy_matching(self):
+        parser_cls = object()
+        abstract = {'os': 'iosxe'}
+        common.parser_data = {'show install committed': {}}
+
+        with patch.object(common, '_get_parser_cls',
+                          return_value=parser_cls) as get_parser_cls:
+            with patch.object(common, '_matches_fuzzy',
+                              side_effect=AssertionError):
+                results = common._fuzzy_search_command(
+                    r'^show\ install\ committed$', True, abstract=abstract)
+
+        self.assertEqual(results, [('show install committed', parser_cls, {})])
+        get_parser_cls.assert_called_once_with('show install committed',
+                                               abstract)
+
+
+class TestMatchesFuzzy(unittest.TestCase):
+    def test_ls_args_and_directory_are_extracted(self):
+        result = _matches_fuzzy(0, 0, 'ls -al /var/log'.split(),
+                                'ls -{args} {directory}', {}, False)
+
+        self.assertIsNotNone(result)
+        kwargs, _ = result
+        self.assertEqual(kwargs, {'args': 'al', 'directory': '/var/log'})
+
+    def test_exact_option_token_scores_higher_than_embedded_argument(self):
+        exact = _matches_fuzzy(0, 0, 'ls -l'.split(), 'ls -l', {}, False)
+        argument = _matches_fuzzy(0, 0, 'ls -l'.split(), 'ls -{args}', {},
+                                  False)
+
+        self.assertIsNotNone(exact)
+        self.assertIsNotNone(argument)
+        self.assertEqual(argument[0], {'args': 'l'})
+        self.assertGreater(exact[1], argument[1])

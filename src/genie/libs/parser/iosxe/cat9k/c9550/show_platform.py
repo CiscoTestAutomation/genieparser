@@ -18,6 +18,11 @@ from genie.libs.parser.iosxe.cat9k.c9500.show_platform import(
    ShowPlatformHardwareChassisPowerSupplyDetailAll as ShowPlatformHardwareChassisPowerSupplyDetailAll_C9550
 )
 
+from genie.libs.parser.iosxe.cat9k.c9610.show_platform import(
+   ShowPlatformHardwareAuthenticationStatusSchema as ShowPlatformHardwareAuthenticationStatusSchema_C9610,
+   ShowPlatformHardwareAuthenticationStatus as ShowPlatformHardwareAuthenticationStatus_C9610
+)
+
 class ShowPlatformSoftwareFedActiveAclInfoDbDetailSchema(ShowPlatformSoftwareFedActiveAclInfoDbDetailSchema_C9550):
     ...
 
@@ -49,6 +54,21 @@ class ShowPlatformHardwareFedQosSchedulerSdkInterface(ShowPlatformHardwareFedQos
 
 class ShowPlatformHardwareChassisPowerSupplyDetailAll(ShowPlatformHardwareChassisPowerSupplyDetailAll_C9550):
     ...
+
+class ShowPlatformHardwareAuthenticationStatusSchema(ShowPlatformHardwareAuthenticationStatusSchema_C9610):
+    """Schema for show platform hardware authentication status."""
+
+    ...
+
+
+# ==========================================================
+#  Parser for 'show platform hardware authentication status'
+# ==========================================================
+class ShowPlatformHardwareAuthenticationStatus(ShowPlatformHardwareAuthenticationStatus_C9610):
+    """Parser for show platform hardware authentication status."""
+
+    ...
+
 
 class ShowPlatformHardwareChassisFantrayDetailSchema(MetaParser):
     """Schema for show platform hardware chassis fantray detail"""

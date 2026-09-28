@@ -1,0 +1,11 @@
+Configured rate mode    : None
+Tracked rate mode       : None
+Tracked entry counts:
+  Percentage             : 0
+  BPS                    : 0
+  PPS                    : 0
+Observed entry counts:
+  Percentage             : 0
+  BPS                    : 0
+  PPS                    : 0
+Counter consistency     : OK

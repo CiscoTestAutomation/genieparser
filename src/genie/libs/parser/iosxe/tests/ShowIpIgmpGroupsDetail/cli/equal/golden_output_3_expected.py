@@ -70,7 +70,17 @@ expected_output = {
                             "flags": "L U SG",
                             "up_time": "4d11h",
                             "last_reporter": "192.168.76.1",
-                        }
+                        },
+                        "232.1.1.1 192.168.34.2": {
+                            "v3_exp": "00:02:30",
+                            "csr_exp": "stopped",
+                            "forward": True,
+                            "flags": "SSM",
+                            "group": "232.1.1.1",
+                            "source": "192.168.34.2",
+                            "up_time": "1w0d",
+                            "last_reporter": "192.168.76.4",
+                        },
                     },
                     "group": {
                         "224.0.1.39": {
@@ -84,6 +94,15 @@ expected_output = {
                             "up_time": "1w0d",
                             "group_mode": "include",
                             "flags": "SSM",
+                            "source": {
+                                "192.168.34.2": {
+                                    "up_time": "1w0d",
+                                    "v3_exp": "00:02:30",
+                                    "csr_exp": "stopped",
+                                    "forward": True,
+                                    "flags": "R",
+                                },
+                            },
                         },
                         "239.1.1.1": {
                             "expire": "00:02:29",

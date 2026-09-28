@@ -418,6 +418,17 @@ def _fuzzy_search_command(search,
 
     # Fix search to remove extra spaces
     search = ' '.join(filter(None, search.split()))
+
+    # Check for perfect match again after preprocessing
+    if search in data:
+        parser_cls = None
+        if abstract:
+            parser_cls = _get_parser_cls(search, abstract)
+        if parser_cls is not None:
+            return [(search, parser_cls, {})]
+        # If perfect match found but no valid parser class, continue to fuzzy search
+        # instead of returning None parser class
+
     tokens = search.split()
     best_score = -math.inf
     result = []
@@ -697,7 +708,8 @@ def _matches_fuzzy(i,
                     return None
             elif token == command_token:
                 # Same token, assign higher score
-                score += 102
+                # Give exact matches a significant advantage over argument matches
+                score += 110
             else:
                 # Not matching, check if prefix
                 if not command_token.startswith(token):

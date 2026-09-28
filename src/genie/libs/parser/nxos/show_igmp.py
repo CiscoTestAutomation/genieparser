@@ -12,6 +12,7 @@ NXOS parsers for the following show commands:
     * show ip igmp local-groups vrf all
     * show ip igmp local-groups vrf <WORD>
     * show ip igmp snooping
+    * show ip igmp snooping groups
 
 """
 
@@ -20,7 +21,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -1141,3 +1142,90 @@ class ShowIpIgmpLocalGroups(ShowIpIgmpLocalGroupsSchema):
 
         return ret_dict
 
+class ShowIpIgmpSnoopingGroupsSchema(MetaParser):
+    """Schema for show ip igmp snooping groups"""
+
+    schema = {
+        'vlans': {
+            Any(): {
+                'groups': {
+                    Any(): {
+                        'version': str,
+                        'type': str,
+                        'port_list': ListOf(str),
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpIgmpSnoopingGroups(ShowIpIgmpSnoopingGroupsSchema):
+    """Parser for show ip igmp snooping groups"""
+
+    cli_command = 'show ip igmp snooping groups'
+
+    def cli(self, command='', output=None, **kwargs):
+        if output is None:
+            command = command or self.cli_command
+            output = self.device.execute(command)
+
+        ret_dict = {}
+
+        # Type: S - Static, D - Dynamic, R - Router port, F - Fabricpath core port
+        p1 = re.compile(
+            r'^Type: +S +- +Static, +D +- +Dynamic, +R +- +Router +port, +'
+            r'F +- +Fabricpath +core +port$'
+        )
+
+        # Vlan  Group Address      Ver  Type  Port list
+        p2 = re.compile(r'^Vlan +Group +Address +Ver +Type +Port +list$')
+
+        # 10    */*                -    R     Vlan10
+        # 10    225.1.1.1          v2   D     Eth1/1
+        # 13    */*                -    R     Eth1/29 Vlan13
+        p3 = re.compile(
+            r'^(?P<vlan>\d+) +(?P<group_address>\S+) +(?P<version>\S+) +'
+            r'(?P<type>\S+) +(?P<port_list>[\w\.\/\-\s]+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Type: S - Static, D - Dynamic, R - Router port, F - Fabricpath core port
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Vlan  Group Address      Ver  Type  Port list
+            m = p2.match(line)
+            if m:
+                continue
+
+            # 10    */*                -    R     Vlan10
+            # 10    225.1.1.1          v2   D     Eth1/1
+            # 13    */*                -    R     Eth1/29 Vlan13
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                vlan = int(group['vlan'])
+                group_address = group['group_address']
+                port_list = [
+                    Common.convert_intf_name(port)
+                    for port in group['port_list'].split()
+                ]
+
+                group_dict = ret_dict.setdefault('vlans', {}) \
+                    .setdefault(vlan, {}) \
+                    .setdefault('groups', {}) \
+                    .setdefault(group_address, {})
+                group_dict.update({
+                    'version': group['version'],
+                    'type': group['type'],
+                    'port_list': port_list,
+                })
+                continue
+
+        return ret_dict

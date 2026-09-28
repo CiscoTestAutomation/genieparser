@@ -1401,6 +1401,7 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
                     Optional("sec_group_name"): str
               }
           },
+          Optional("transport_type"): str,
           Optional("env_data_lifetime_secs"): int,
           Optional("last_update"): {
                 Optional("date"): str,
@@ -1488,6 +1489,10 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
             r"^auto-test\s+=\s+(?P<auto_test>(TRUE|FALSE)),\s+keywrap-enable\s+=\s+(?P<keywrap_enable>(TRUE|FALSE)),\s+idle-time\s+=\s+(?P<idle_time_mins>\d+)\s+mins,\s+deadtime\s+=\s+(?P<dead_time_secs>\d+)\s+secs")
         #     0-15:Unit0
         sec_group_capture = re.compile(r"^(?P<sec_group>\S+):(?P<sec_group_name>\S+)")
+        # Transport type = CTS_TRANSPORT_IP_UDP
+        transport_type_capture = re.compile(
+            r"^Transport\s+type\s+=\s+(?P<transport_type>\S+)$"
+        )
         # Environment Data Lifetime = 86400 secs
         env_data_capture = re.compile(r"^Environment\s+Data\s+Lifetime\s+=\s+(?P<env_data_lifetime_secs>\d+)\s+secs")
         # Last update time = 20:04:42 PDT Tue Jul 21 2020
@@ -1609,6 +1614,14 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                     cts_env_dict['cts_env']['security_groups'][sec_group_index] = sec_groups_data
                 sec_group_index = sec_group_index + 1
                 continue
+
+            # Transport type = CTS_TRANSPORT_IP_UDP
+            transport_type_match = transport_type_capture.match(line)
+            if transport_type_match:
+                groups = transport_type_match.groupdict()
+                cts_env_dict['cts_env']['transport_type'] = groups['transport_type']
+                continue
+
             # Environment Data Lifetime = 86400 secs
             env_data_match = env_data_capture.match(line)
             if env_data_match:
@@ -4605,7 +4618,6 @@ class ShowCtsSxpExportImportGroupDetailed(ShowCtsSxpExportImportGroupDetailedSch
 
         if peers:
             ret_dict['peers'] = peers
-
         return ret_dict
 
 class ShowCtsKeyStoreSchema(MetaParser):
@@ -4647,5 +4659,4 @@ class ShowCtsKeyStore(ShowCtsKeyStoreSchema):
                 keystore_dict['type'] = group['type']
                 keystore_dict['name'] = group['name']
                 continue
-        
         return ret_dict

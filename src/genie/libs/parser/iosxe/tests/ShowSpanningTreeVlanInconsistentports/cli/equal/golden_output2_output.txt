@@ -1,0 +1,4 @@
+Name                 Interface                      Inconsistency
+-------------------- ------------------------------ ------------------
+G0:VLAN0200          TenGigabitEthernet0/0/19       Root Inconsistent
+Number of inconsistent ports (segments) in vlan 200 : 1

@@ -1,0 +1,40 @@
+show subscriber session detailed
+Current Subscriber Information: Total sessions 1
+--------------------------------------------------
+Type: IPv6, UID: 12, State: authen, Identity: client1
+IPv6 Address: 5001::
+Session Up-time: 00:00:28, Last Changed: 00:00:11
+Switch-ID: 4141
+
+Policy information:
+  Context 789750921F48: Handle 6600000C
+  AAA_id 0000001D: Flow_handle 0
+  Authentication status: authen
+  Downloaded User profile, excluding services:
+    service-type         0   2 [Framed]
+  Downloaded User profile, including services:
+    service-type         0   2 [Framed]
+  Config history for session (recent to oldest):
+    Access-type: Web-user-logon Client: Account Command-Handler
+     Policy event: Got More Keys
+      Profile name: client1, 2 references
+        service-type         0   2 [Framed]
+  Rules, actions and conditions executed:
+    subscriber rule-map ACCT_LOGON
+      condition always event session-start
+        5 service local
+    subscriber rule-map ACCT_LOGON
+      condition always event account-logon
+        15 authenticate aaa list AUTHEN_LIST
+
+Classifiers:
+Class-id    Dir   Packets    Bytes                  Pri.  Definition
+0           In    8          828                    0    Match Any
+1           Out   4          456                    0    Match Any
+
+Template Id : 1
+
+Configuration Sources:
+Type  Active Time  AAA Service ID  Name
+USR   00:00:11     -               Peruser
+INT   00:00:28     -               GigabitEthernet0/0/3

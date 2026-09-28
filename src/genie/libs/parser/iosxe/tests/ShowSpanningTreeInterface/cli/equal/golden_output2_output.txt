@@ -1,0 +1,4 @@
+Vlan                Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+G0:VLAN0100         Desg BKN*2         128.32   P2p *ROOT_Inc
+G0:VLAN0200         Desg FWD 4         128.22   P2p

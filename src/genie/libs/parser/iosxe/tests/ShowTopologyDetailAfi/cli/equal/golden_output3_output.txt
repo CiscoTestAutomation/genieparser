@@ -1,0 +1,12 @@
+Topology: t1
+  Address-family: ipv4
+  Associated VPN VRF is default
+  Topology state is UP
+  Topology CEF forwarding is enabled
+  Topology internal lock count = 2
+  Topology is enabled on all interfaces
+  Associated interfaces:
+    GigabitEthernet1, operation state: UP
+    GigabitEthernet2, operation state: UP
+  Topology total user lock count: 0
+ Topology is being deleted

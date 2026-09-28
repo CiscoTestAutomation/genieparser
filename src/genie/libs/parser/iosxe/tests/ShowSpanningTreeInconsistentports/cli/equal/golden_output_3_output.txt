@@ -1,0 +1,3 @@
+Name                 Interface                      Inconsistency
+-------------------- ------------------------------ ------------------
+G0:VLAN0100          GigabitEthernet0/1/0           Port Type Inconsistent

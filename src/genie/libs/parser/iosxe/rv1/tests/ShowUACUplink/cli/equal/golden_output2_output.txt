@@ -1,0 +1,11 @@
+Uplink Autoconfig: Enable
+Uplink IPv4 interface: TwentyFiveGigE0/0/11.20
+        IP Address: 20.241.0.11/255.255.255.0
+        Type:       DHCP
+        SVI:        NotApplicable
+        Port Used:  NotApplicable
+        GW IP:      20.241.0.1
+        GW MAC:     0123.4567.89ab
+        VRF:
+Uplink IPv6 interface: None
+Uplink Reachable: IPv4

@@ -1,0 +1,8 @@
+show platform software fed active stp-vlan 1
+                   Interface   pvlan_mode   stp_state    stp_state(HW)  vtp pruned    Untagged      Ingress(HW)       Egress(HW)         GID     Mac learn
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+    TenGigabitEthernet5/0/23         none    disabled                           No         Yes                                        123011
+     TenGigabitEthernet5/0/1         none  forwarding                           No         Yes                                        123012
+        GigabitEthernet1/0/1         none    blocking                           No         Yes                                        123009
+
+HW flood list: : TenGigabitEthernet1/0/37, TenGigabitEthernet5/0/23, GigabitEthernet1/0/1, TenGigabitEthernet5/0/1

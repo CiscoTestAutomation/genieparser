@@ -925,7 +925,7 @@ class ShowLldpNeighborsInterfaceDetailSchema(MetaParser):
                             Optional('release_software'): str,
                             Optional('technical_support'): str,
                             'copyright': str,
-                            'compiled': str,
+                            Optional('compiled'): str,
                             'time_remaining_sec': int,
                             'system_capabilities': str,
                             'enabled_capabilities': str,
@@ -939,6 +939,8 @@ class ShowLldpNeighborsInterfaceDetailSchema(MetaParser):
                             Optional('media_attachment_unit_type'): int,
                             'vlan_id': int,
                             'peer_source_mac': str,
+                            Optional('age_sec'): int,
+                            Optional('time_since_last_update_sec'): int,
                         }
                     }
                 }
@@ -1025,6 +1027,13 @@ class ShowLldpNeighborsInterfaceDetail(ShowLldpNeighborsInterfaceDetailSchema):
 
         # Peer Source MAC: d477.989b.79c4
         p19 = re.compile(r'^Peer Source MAC: (?P<peer_source_mac>\S+)$')
+
+        # Age: 186 seconds
+        p19_1 = re.compile(r'^Age: (?P<age>\d+) seconds$')
+
+        # Time since last update: 6 seconds
+        p19_2 = re.compile(r'^Time since last update: (?P<since_update>\d+) seconds$')
+
 
         # Total entries displayed: 8
         p20 = re.compile(r'^Total entries displayed: (?P<total_entries>\d+)$')
@@ -1184,6 +1193,19 @@ class ShowLldpNeighborsInterfaceDetail(ShowLldpNeighborsInterfaceDetailSchema):
                 group = m.groupdict()
                 desc_dict['peer_source_mac'] = group['peer_source_mac']
                 continue
+
+            # Age: 186 seconds
+            m = p19_1.match(line)
+            if m:
+                desc_dict['age_sec'] = int(m.group('age'))
+                continue
+
+            # Time since last update: 6 seconds
+            m = p19_2.match(line)
+            if m:
+                desc_dict['time_since_last_update_sec'] = int(m.group('since_update'))
+                continue
+
 
             # Total entries displayed: 8
             m = p20.match(line)

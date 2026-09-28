@@ -15,32 +15,34 @@ class ShowParameterMapTypeInspectParamSchema(MetaParser):
         'log_dropped_packet': str,
         'log_flow': str,
         'icmp_unreachable': str,
-        'audit_trail': str,
+        Optional('audit_trail'): str,
         'alert': str,
-        'max_incomplete': {
+        Optional('lisp_inner_packet_inspection'): str,
+        Optional('multi_tenancy'): str,
+        Optional('max_incomplete'): {
             'level': str,
             'value': str,
         },
-        'one_minute': {
+        Optional('one_minute'): {
             'level': str,
             'value': str,
         },
-        'sessions_rate': {
+        Optional('sessions_rate'): {
             'level': str,
             'value': str,
         },
-        'udp': {
+        Optional('udp'): {
             'idle_time': int,
             'ageout_time': int,
             'halfopen_idle_time': int,
             'halfopen_ageout_time': int,
         },
-        'icmp': {
+        Optional('icmp'): {
             'idle_time': int,
             'ageout_time': int,
         },
-        'dns_timeout': int,
-        'tcp': {
+        Optional('dns_timeout'): int,
+        Optional('tcp'): {
             'window_scaling_enforcement': str,
             'idle_time': int,
             'ageout_time': int,
@@ -52,10 +54,28 @@ class ShowParameterMapTypeInspectParamSchema(MetaParser):
             'max_incomplete_host': str,
             'block_time': int,
         },
-        'zone_mismatch_drop': str,
-        'application_inspect': str,
-        'sessions_maximum': str,
-        'number_of_packet_per_flow': str,
+        Optional('zone_mismatch_drop'): str,
+        Optional('application_inspect'): str,
+        Optional('sessions_maximum'): str,
+        Optional('number_of_packet_per_flow'): str,
+        Optional('global_vrf_configuration'): {
+            Optional('total_session'): str,
+            Optional('number_of_packet_per_flow'): str,
+            Optional('aggressive_aging'): str,
+            Optional('syn_flood_limit'): str,
+            Optional('max_incomplete'): str,
+            Optional('max_incomplete_tcp'): str,
+            Optional('max_incomplete_udp'): str,
+            Optional('max_incomplete_icmp'): str,
+        },
+        Optional('per_box_configuration'): {
+            Optional('aggressive_aging'): str,
+            Optional('syn_flood_limit'): str,
+            Optional('max_incomplete'): str,
+            Optional('max_incomplete_tcp'): str,
+            Optional('max_incomplete_udp'): str,
+            Optional('max_incomplete_icmp'): str,
+        },
     }
 
 class ShowParameterMapTypeInspectParam(ShowParameterMapTypeInspectParamSchema):
@@ -85,7 +105,7 @@ class ShowParameterMapTypeInspectParam(ShowParameterMapTypeInspectParamSchema):
 		
 	#alert on
         p5 = re.compile(r'^alert (?P<alert>\S+)$')
-		
+
 	#max-incomplete low  unlimited
 	#max-incomplete high unlimited
         p6 = re.compile(r'^max-incomplete (?P<level>\S+) (?P<value>\S+)$')
@@ -140,11 +160,117 @@ class ShowParameterMapTypeInspectParam(ShowParameterMapTypeInspectParamSchema):
 	#number of packet per flow default
         p22 = re.compile(r'^number of packet per flow (?P<number_of_packet_per_flow>\S+)$')
 
+        #lisp inner packet inspection on
+        p23 = re.compile(r'^lisp inner packet inspection (?P<lisp_inner_packet_inspection>\S+)$')
+
+        #multi-tenancy off
+        p24 = re.compile(r'^multi-tenancy (?P<multi_tenancy>\S+)$')
+
+        #Global VRF (VRF0) Configuration: or Per Box Configuration:
+        p25 = re.compile(r'^(Global VRF \(VRF\d+\) Configuration|Per Box Configuration):')
+
+        #Section-specific patterns
+        #total_session unlimited
+        p25_1 = re.compile(r'^total_session\s+(?P<value>\S+)$')
+
+        #number of packet per flow default
+        p25_2 = re.compile(r'^number of packet per flow\s+(?P<value>\S+)$')
+
+        #aggressive aging disabled
+        p25_3 = re.compile(r'^aggressive aging\s+(?P<value>\S+)$')
+
+        #syn_flood_limit unlimited or syn-flood-limit unlimited
+        p25_4 = re.compile(r'^syn[_-]flood[_-]limit\s+(?P<value>\S+)$')
+
+        #max_incomplete unlimited or max incomplete unlimited
+        p25_5 = re.compile(r'^max[_\s]incomplete\s+(?P<value>\S+)(?:\s|$)')
+
+        #max_incomplete TCP unlimited
+        p25_6 = re.compile(r'^max[_\s]incomplete\s+TCP\s+(?P<value>\S+)$')
+
+        #max_incomplete UDP unlimited
+        p25_7 = re.compile(r'^max[_\s]incomplete\s+UDP\s+(?P<value>\S+)$')
+
+        #max_incomplete ICMP unlimited
+        p25_8 = re.compile(r'^max[_\s]incomplete\s+ICMP\s+(?P<value>\S+)$')
+
         # Iterate over each line in the output
+        current_section = None  # Track which section we're in
         for line in output.splitlines():
             line = line.strip()
 
-            # Match each line with the corresponding regex
+            # Check for section headers
+            m_section = p25.match(line)
+            if m_section:
+                section_name = m_section.group(1)
+                if 'Global VRF' in section_name:
+                    current_section = 'global_vrf_configuration'
+                    parsed_dict[current_section] = {}
+                elif 'Per Box' in section_name:
+                    current_section = 'per_box_configuration'
+                    parsed_dict[current_section] = {}
+                continue
+
+            # If we're in a section, parse section-specific lines using regex patterns
+            if current_section:
+                # max_incomplete TCP unlimited
+                m = p25_6.match(line)
+                if m:
+                    parsed_dict[current_section]['max_incomplete_tcp'] = m.group('value')
+                    continue
+
+                # max_incomplete UDP unlimited
+                m = p25_7.match(line)
+                if m:
+                    parsed_dict[current_section]['max_incomplete_udp'] = m.group('value')
+                    continue
+
+                # max_incomplete ICMP unlimited
+                m = p25_8.match(line)
+                if m:
+                    parsed_dict[current_section]['max_incomplete_icmp'] = m.group('value')
+                    continue
+
+                # max_incomplete or max incomplete (generic - must come after TCP/UDP/ICMP)
+                m = p25_5.match(line)
+                if m:
+                    parsed_dict[current_section]['max_incomplete'] = m.group('value')
+                    continue
+
+                # total_session unlimited
+                m = p25_1.match(line)
+                if m:
+                    parsed_dict[current_section]['total_session'] = m.group('value')
+                    continue
+
+                # number of packet per flow default (only in Global VRF)
+                # This value belongs both inside global_vrf_configuration and
+                # at the top level. Only set the top-level key here if p22
+                # (the standalone top-level match) hasn't already set it, so
+                # the two matches never clobber each other.
+                m = p25_2.match(line)
+                if m:
+                    if current_section == 'global_vrf_configuration':
+                        parsed_dict[current_section]['number_of_packet_per_flow'] = m.group('value')
+                        if 'number_of_packet_per_flow' not in parsed_dict:
+                            parsed_dict['number_of_packet_per_flow'] = m.group('value')
+                    continue
+
+                # aggressive aging disabled
+                m = p25_3.match(line)
+                if m:
+                    parsed_dict[current_section]['aggressive_aging'] = m.group('value')
+                    continue
+
+                # syn_flood_limit unlimited
+                m = p25_4.match(line)
+                if m:
+                    parsed_dict[current_section]['syn_flood_limit'] = m.group('value')
+                    continue
+
+                continue
+
+            # Top-level parameters (outside sections)
             #log dropped-packet off
             m = p1.match(line)
             if m:
@@ -173,6 +299,18 @@ class ShowParameterMapTypeInspectParam(ShowParameterMapTypeInspectParamSchema):
             m = p5.match(line)
             if m:
                 parsed_dict['alert'] = m.group('alert')
+                continue
+
+            #lisp inner packet inspection on
+            m = p23.match(line)
+            if m:
+                parsed_dict['lisp_inner_packet_inspection'] = m.group('lisp_inner_packet_inspection')
+                continue
+
+            #multi-tenancy off
+            m = p24.match(line)
+            if m:
+                parsed_dict['multi_tenancy'] = m.group('multi_tenancy')
                 continue
 
             #max-incomplete low  unlimited

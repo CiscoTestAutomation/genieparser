@@ -1,0 +1,43 @@
+show ip nbar protocol-discovery protocol
+ FiveGigabitEthernet1/0/6 
+ Last clearing of "show ip nbar protocol-discovery" counters 00:01:31
+                                                                                 Input                    Output                  
+                                                                                 -----                    ------                  
+ Protocol                                                                        Packet Count             Packet Count            
+                                                                                 Byte Count               Byte Count              
+                                                                                 30sec Bit Rate (bps)     30sec Bit Rate (bps)    
+                                                                                 30sec Max Bit Rate (bps) 30sec Max Bit Rate (bps)
+ ------------------------------------------------------------------------------- ------------------------ ------------------------
+ http                                                                            282                      0                       
+                                                                                 303136                   0                       
+                                                                                 25000                    0                       
+                                                                                 39000                    0                       
+ facebook                                                                        246                      0                       
+                                                                                 20696                    0                       
+                                                                                 1000                     0                       
+                                                                                 3000                     0                       
+ Total                                                                           528                      0                       
+                                                                                 323832                   0                       
+                                                                                 26000                    0                       
+                                                                                 42000                    0                       
+ TenGigabitEthernet1/0/41 
+ Last clearing of "show ip nbar protocol-discovery" counters 00:01:30
+                                                                                 Input                    Output                  
+                                                                                 -----                    ------                  
+ Protocol                                                                        Packet Count             Packet Count            
+                                                                                 Byte Count               Byte Count              
+                                                                                 30sec Bit Rate (bps)     30sec Bit Rate (bps)    
+                                                                                 30sec Max Bit Rate (bps) 30sec Max Bit Rate (bps)
+ ------------------------------------------------------------------------------- ------------------------ ------------------------
+ http                                                                            0                        282                     
+                                                                                 0                        303136                  
+                                                                                 0                        25000                   
+                                                                                 0                        39000                   
+ facebook                                                                        0                        246                     
+                                                                                 0                        20696                   
+                                                                                 0                        1000                    
+                                                                                 0                        3000                    
+ Total                                                                           0                        528                     
+                                                                                 0                        323832                  
+                                                                                 0                        26000                   
+                                                                                 0                        42000                   

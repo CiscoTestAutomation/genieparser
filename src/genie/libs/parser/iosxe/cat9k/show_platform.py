@@ -1,5 +1,17 @@
+'''show_platform.py
+
+IOSXE Cat9k parsers for the following show commands:
+    * show platform software process slot sw {chassis} r0 monitor |
+      count {process}
+    * show platform software process slot sw {chassis} r0 monitor |
+      include {process}
+    * show platform software process database resource-manager switch
+      {switch_id} r0 summary
+'''
+
 # Metaparser
 from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
 import re
 
 
@@ -135,3 +147,120 @@ class ShowPlatformSoftIProcess(ShowPlatformSoftIProcessSchema):
                     'cmd': groups['cmd']
                 })
         return platform_software_ret_dict
+
+
+# ====================
+# Schema for:
+#  * 'show platform software process database resource-manager switch
+#    {switch_id} r0 summary'
+# ====================
+
+
+class ShowPlatformSoftwareProcessDatabaseResourceManagerSwitchR0SummarySchema(
+        MetaParser):
+    """Schema for show platform software process database resource-manager
+    switch {switch_id} r0 summary.
+    """
+
+    schema = {
+        "database": str,
+        "tables": {
+            Any(): {
+                "table_oid_id": str,
+                "records": int,
+                "current_state": str,
+                "table_types": {
+                    Any(): {
+                        "table_oid_source": str,
+                        "mode": str,
+                    }
+                },
+            }
+        },
+    }
+
+
+# ====================
+# Parser for:
+#  * 'show platform software process database resource-manager switch
+#    {switch_id} r0 summary'
+# ====================
+
+
+class ShowPlatformSoftwareProcessDatabaseResourceManagerSwitchR0Summary(
+        ShowPlatformSoftwareProcessDatabaseResourceManagerSwitchR0SummarySchema
+):
+    """Parser for show platform software process database resource-manager
+    switch {switch_id} r0 summary.
+    """
+
+    cli_command = (
+        "show platform software process database resource-manager "
+        "switch {switch_id} r0 summary"
+    )
+
+    def cli(self, switch_id, output=None):
+        if output is None:
+            command = self.cli_command.format(switch_id=switch_id)
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        current_table = None
+
+        # Database: LEABA_RM_DB
+        p1 = re.compile(r"^Database:\s+(?P<database>\S+)$")
+
+        # table rms_RM_RSC_L2_AC_PORT_ta
+        #   0x096884c32c1dcefbdf7c8a7d383f8658  575  en
+        p2 = re.compile(
+            r"^table\s+(?P<table_name>\S+)\s+"
+            r"(?P<table_oid_id>0x[0-9a-fA-F]+)\s+"
+            r"(?P<records>\d+)\s+(?P<current_state>\S+)$"
+        )
+
+        # rms_RM_RSC_L2_AC_PORT_table
+        #   0x00000000000000000000000000000000  expl
+        p3 = re.compile(
+            r"^(?P<table_type>\S+)\s+"
+            r"(?P<table_oid_source>0x[0-9a-fA-F]+)\s+"
+            r"(?P<mode>\S+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Database: LEABA_RM_DB
+            match = p1.match(line)
+            if match:
+                ret_dict["database"] = match.group("database")
+                continue
+
+            # table rms_RM_RSC_L2_AC_PORT_ta
+            #   0x096884c32c1dcefbdf7c8a7d383f8658  575  en
+            match = p2.match(line)
+            if match:
+                groups = match.groupdict()
+                current_table = ret_dict.setdefault("tables", {}).setdefault(
+                    groups["table_name"], {}
+                )
+                current_table.update({
+                    "table_oid_id": groups["table_oid_id"].lower(),
+                    "records": int(groups["records"]),
+                    "current_state": groups["current_state"],
+                })
+                continue
+
+            # rms_RM_RSC_L2_AC_PORT_table
+            #   0x00000000000000000000000000000000  expl
+            match = p3.match(line)
+            if match and current_table is not None:
+                groups = match.groupdict()
+                table_types = current_table.setdefault("table_types", {})
+                table_type = table_types.setdefault(groups["table_type"], {})
+                table_type.update({
+                    "table_oid_source": groups["table_oid_source"].lower(),
+                    "mode": groups["mode"],
+                })
+                continue
+
+        return ret_dict

@@ -1,0 +1,20 @@
+IPV6ROUTE_ID:id:0x574a415e0958 nobj:(LOOKUP,0x30) 2001:10:10:1::/64 table_id:0
+DA:0 last_act:0 last_rc:0
+    State:(0) success, Flags:0x800
+   NPD: device:0 lspa_rec:0 api_type:route(3)
+   State:(0) success Flags:0x0
+   SDK: is_host:0 l3_dest:0x787c938fc190 l3_dest:la_next_hop_base(oid=3995) vrf(gid/oid):0/0x3b2
+
+ SDK Object Details:
+   NPD: SDK oid 0xf9b, devid:1, asic:0
+
+   	Next Hop Object:
+   	sdk nexthop oid:0xf9b,dev:1, gid:0xc
+   	macaddr:4e41.5000.0114, nh_type:normal(0)
+   	sdk outgoing port oid 0xdab, porttype:l3ac(70)
+
+   Events Log
+   [2026/07/20 16:14:13.226] NPD IPROUTE EV ADD IPV6 ROUTE
+
+LOOKUP:obj_id:48 table_id:2 proto:1
+State:(0) success

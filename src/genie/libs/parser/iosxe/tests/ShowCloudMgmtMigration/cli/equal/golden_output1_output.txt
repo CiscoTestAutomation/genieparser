@@ -1,0 +1,4 @@
+Cloud-Mgmt Mode Migration Status
+-------------------------------------------
+  Current Booted Mode:              IE35xx-M
+  Migration in Progress:            NO

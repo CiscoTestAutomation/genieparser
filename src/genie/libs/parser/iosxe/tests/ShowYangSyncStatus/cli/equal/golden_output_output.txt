@@ -1,0 +1,4 @@
+sync pending: false
+pending full sync: false
+syncing state: Not Syncing
+sync trigger: N/A

@@ -1,0 +1,9 @@
+show wireless interface summary
+
+Wireless Interface Summary
+
+
+Interface Name Interface Type VLAN ID IP Address     IP Netmask     NAT-IP Address   MAC Address
+--------------------------------------------------------------------------------------------------
+
+

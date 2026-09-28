@@ -1,0 +1,13 @@
+Topology: t1
+  Address-family: ipv4
+  Associated VPN VRF is default
+  Topology state is UP
+  Topology CEF forwarding is enabled
+  Topology fallback is enabled
+  Topology internal lock count = 1
+  Used by topologies:
+    ipv4 multicast topology base
+    ipv4 multicast topology test
+    ipv4 multicast topology bar
+  Associated interfaces:
+  Topology total user lock count: 0

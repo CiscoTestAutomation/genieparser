@@ -1,0 +1,67 @@
+IP Multicast Routing Table for VRF "default" 
+
+ 
+
+Group not found 
+
+ 
+
+IP Multicast Routing Table for VRF "egress-loadbalance-resolution-" 
+
+ 
+
+Group not found 
+
+ 
+
+IP Multicast Routing Table for VRF "red" 
+
+ 
+
+(47.1.1.2/32, 225.1.1.7/32), uptime: 00:09:12, pim mrib ip  
+
+  Incoming interface: Ethernet1/49, RPF nbr: 40.1.1.2 
+
+  Outgoing interface list: (count: 1) 
+
+    Vlan10, uptime: 00:09:12, mrib 
+    
+IP Multicast Routing Table for VRF "blue" 
+
+ 
+
+(47.1.1.2/32, 225.1.1.7/32), uptime: 00:09:14, ip pim mrib  
+
+  Incoming interface: Ethernet1/49, RPF nbr: 40.1.1.2 
+
+  Outgoing interface list: (count: 1) 
+
+    Vlan11, uptime: 00:09:12, mrib 
+
+ 
+
+  Extranet receiver list: (vrf count: 2, OIF count: 2) 
+
+  Extranet receiver in vrf red: 
+
+  (47.1.1.2/32, 225.1.1.7/32) OIF count: 1 
+
+  Extranet receiver in vrf green: 
+
+  (47.1.1.2/32, 225.1.1.7/32) OIF count: 1 
+
+ 
+
+ 
+
+IP Multicast Routing Table for VRF "green" 
+
+ 
+
+(47.1.1.2/32, 225.1.1.7/32), uptime: 00:09:14, ip mrib pim  
+
+  Incoming interface: Ethernet1/49, RPF nbr: 40.1.1.2 
+
+  Outgoing interface list: (count: 1) 
+
+    Vlan12, uptime: 00:09:14, mrib 

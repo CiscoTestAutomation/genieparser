@@ -11,10 +11,13 @@ IOSXE parsers for the following show commands:
     * 'show running-config all | section class {class_map}'
     * 'show running-config vrf'
     * 'show running-config all | section alarm'
+    * 'show running-config | format netconf-xml'
 '''
 
 # Python
 import re
+import xmltodict
+from xml.parsers.expat import ExpatError
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -3159,6 +3162,52 @@ class ShowRunningConfigAAAUsername(ShowRunningConfigAAAUsernameSchema):
         return ret_dict
 
 
+# ==============================================================
+# Schema for 'show running-config | format netconf-xml'
+# ==============================================================
+class ShowRunningConfigFormatNetconfXmlSchema(MetaParser):
+    """Schema for the NETCONF-XML running configuration."""
+
+    schema = {
+        'config': {
+            Any(): Any(),
+        }
+    }
+
+
+# ==============================================================
+# Parser for 'show running-config | format netconf-xml'
+# ==============================================================
+class ShowRunningConfigFormatNetconfXml(
+    ShowRunningConfigFormatNetconfXmlSchema
+):
+    """Parser for 'show running-config | format netconf-xml'."""
+
+    cli_command = 'show running-config | format netconf-xml'
+
+    def cli(self, output=None):
+        """Execute the command and convert the complete XML document to a dict."""
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        if not output:
+            return {}
+
+        xml_start = output.find('<config')
+        xml_end = output.rfind('</config>')
+        if xml_start == -1 or xml_end == -1:
+            return {}
+
+        try:
+            parsed_output = xmltodict.parse(
+                output[xml_start:xml_end + len('</config>')]
+            )
+        except ExpatError:
+            return {}
+
+        return dict(parsed_output)
+
+
 # =================================================
 # Schema for:
 #   * 'show running-config flow monitor'
@@ -5611,6 +5660,6 @@ class ShowRunSectionAlarm(ShowRunSectionAlarmSchema):
                 ] = int(m.group('size'))
                 continue
 
-        return ret_dict          
+        return ret_dict
     
                         

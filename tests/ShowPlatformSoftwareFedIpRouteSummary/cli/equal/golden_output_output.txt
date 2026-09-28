@@ -1,0 +1,26 @@
+Total number of v4 fib entries = 20018 
+Total number succeeded in hardware = 8189 
+Total entries in retry queue = 11829 
+ 
+ Mask-Len 0 :-  Total-count 1  hw-installed count 1 
+ Mask-Len 4 :-  Total-count 1  hw-installed count 1 
+ Mask-Len 8 :-  Total-count 2  hw-installed count 2 
+ Mask-Len 24 :-  Total-count 20002  hw-installed count 8173 
+ Mask-Len 32 :-  Total-count 12  hw-installed count 12
+ MPLS info: 
+   Number prefixes with label OCE: 0 
+   Number MPLS LSPA prefixes in hardware: 0 
+   Number MPLS Swenh ECR prefixes in hardware: 0
+ Number of ECR entries: ipv4/ipv6: 0/0
+   # of create/modify/delete msgs: 46/0/46
+   # of ECR nested backwalks ignore:0
+   ECR OOR Retry queue size:0
+
+AAL L3 ECR summary:
+
+  # of ecr add/modify/delete ::20/5/20
+  # of modify from level-1 to level-2:0
+  # of modify from level-2 to level-1:0
+  # of ecr delete errs::0
+  # of ecr create skip refcnt::0
+  # of ecr modify inuse: 0 nochange:0 inplace:5 ECR OOR Retry queue size:0

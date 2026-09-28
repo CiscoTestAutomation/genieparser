@@ -207,11 +207,14 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
                         Optional('idle_timeout'): str,
                         Optional('current_policy'): str,
                         Optional('server_policies'): {
-                            Any():{ # 1, 2, 3
+                            Any(): {  # 1, 2, 3
                                 Optional('name'): str,
                                 Optional('policies'): str,
                                 Optional('security_policy'): str,
-                                Optional('security_status'): str
+                                Optional('security_status'): str,
+                                Optional('vlan_group'): {
+                                    'vlan': int,
+                                },
                             }
                         },
                         Optional('local_policies'): {
@@ -247,6 +250,7 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
 #           * 'show authentication sessions mac {mac_address} details switch {switch} r0'
 # ==================================================================================
 
+
 class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDetailsSuperSchema):
     """
     SuperParser for:
@@ -258,9 +262,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
 
     def cli(self, interface='', mac_address='', switch='', output=None):
 
-
         # Interface:  GigabitEthernet3/0/2
-        # IIF-ID:  0x1055240000001F6 
+        # IIF-ID:  0x1055240000001F6
         # MAC Address:  0010.00ff.1011
         # IPv6 Address:  Unknown
         # IPv4 Address:  192.0.2.1
@@ -310,7 +313,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
         #   Security Policy:  Should Secure
         #   Security Status:  Link Unsecure
         p10 = re.compile(r'^Security +(?P<security_name>\S+): +(?P<policy_status>[\S ]+)$')
-        
+
         # *      Security Policy:  None      Security Status:  Link Unsecured*
         p10_1 = re.compile(r'(.*)\s+ Security +(?P<security_name>\w+):(\s+)* +'
                 r'(?P<policy_status>\w+(\s\w+)?)(\s+)+ Security +(?P<security_name2>\w+):(\s+)* '
@@ -342,6 +345,7 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
         hold_dict = {}
         mac_dict = {}
         policies_dict = {}
+        intf_dict = {}
         policies_flag = False
         index = 1
 
@@ -349,8 +353,12 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
         for line in out.splitlines():
             line = line.strip()
 
+            if p2.match(line):
+                policies_flag = False
+                continue
+
             # Ignore all titles
-            if p2.match(line) or p5.match(line) or p7.match(line):
+            if p5.match(line) or p7.match(line):
                 continue
 
             #   Security Policy:  Should Secure
@@ -362,12 +370,15 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                     if index != 1:
                         index += 1
                     if not policies_dict:
-                        policies_dict = mac_dict.setdefault('server_policies', {})
+                        policies_dict = mac_dict.setdefault(
+                            'server_policies', {})
                         index_dict = policies_dict.setdefault(index, {})
                     if group['security_name'] == 'Policy':
-                        index_dict.update({'security_policy': group['policy_status']})
+                        index_dict.update(
+                            {'security_policy': group['policy_status']})
                     elif group['security_name'] == 'Status':
-                        index_dict.update({'security_status': group['policy_status']})
+                        index_dict.update(
+                            {'security_status': group['policy_status']})
                 else:
                     security_dict = mac_dict.setdefault('local_policies', {})
                     if group['security_name'] == 'Policy':
@@ -385,14 +396,19 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                 group = m.groupdict()
                 if policies_flag:
                     if not policies_dict:
-                        policies_dict = mac_dict.setdefault('server_policies', {})
+                        policies_dict = mac_dict.setdefault(
+                            'server_policies', {})
                         index_dict = policies_dict.setdefault(index, {})
-                    index_dict.update({'security_policy': group['policy_status']})
-                    index_dict.update({'security_status': group['policy_status2']})
+                    index_dict.update(
+                        {'security_policy': group['policy_status']})
+                    index_dict.update(
+                        {'security_status': group['policy_status2']})
                 else:
                     security_dict = mac_dict.setdefault('local_policies', {})
-                    security_dict.update({'security_policy': group['policy_status']})
-                    security_dict.update({'security_status': group['policy_status2']})
+                    security_dict.update(
+                        {'security_policy': group['policy_status']})
+                    security_dict.update(
+                        {'security_status': group['policy_status2']})
                 continue
 
             # Session timeout:  43200s(local), Remaining: 31799s
@@ -407,9 +423,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                     session_dict.update({'type': group['name']})
                     session_dict.update({'timeout': group['value']})
                     session_dict.update({'remaining': group['remaining']})
-
                 continue
-            
+
             # Restart timeout:  10s, Remaining: 5s
             m13 = p13.match(line)
             if m13:
@@ -449,15 +464,16 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
             # *ACS ACL:* *xGENIEx-Test_ACL_CiscoPhones-e23431ede2*
             m = p1.match(line)
             if m:
-                known_list = ['interface', 'iif_id', 'mac_address', 
-                              'ipv6_address', 'ipv4_address', 'user_name', 
-                              'status', 'domain', 'oper_host_mode', 
+                known_list = ['interface', 'iif_id', 'mac_address',
+                              'ipv6_address', 'ipv4_address', 'user_name',
+                              'status', 'domain', 'oper_host_mode',
                               'oper_control_dir',
-                              'common_session_id', 'acct_session_id', 
+                              'common_session_id', 'acct_session_id',
                               'handle', 'current_policy', 'authorized_by',
                               'periodic_acct_timeout',
                               'session_uptime', 'timeout_action', 'ip_address',
-                              'idle_timeout', 'vlan_policy', 'device_type', 'device_name']
+                              'idle_timeout', 'vlan_policy', 'device_type',
+                              'device_name']
 
                 group = m.groupdict()
                 key = re.sub(r'( |-)', '_', group['argument'].lower())
@@ -470,9 +486,13 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                     if 'interfaces' in ret_dict.keys():
                         if key == 'mac_address':
                             index = 1
+                            policies_dict = {}
+                            index_dict = {}
+                            policies_flag = False
                             mac_dict = intf_dict.setdefault(group['value'], {})
                         elif key == 'iif_id':
-                            hold_dict.update({'argument': key, 'value': group['value']})
+                            hold_dict.update(
+                                {'argument': key, 'value': group['value']})
                         elif hold_dict:
                             mac_dict.update({key: group['value']})
                             tmp_keys = hold_dict.pop('argument')
@@ -493,9 +513,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                     index_dict.update({'name': group['argument']})
                     index_dict.update({'policies': group['value']})
                     index += 1
-                    
                     continue
- 
+
             # Template: CRITICAL_VLAN (priority 150)
             # Interface Template: IP_PHONE_INTERFACE_TEMPLATE
             m = p3.match(line)
@@ -503,7 +522,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                 group = m.groupdict()
                 local_policies_dict = mac_dict.setdefault('local_policies', {})
                 if group['template_type'] == 'Interface':
-                    local_policies_dict.setdefault('interface_template', group['template'])
+                    local_policies_dict.setdefault(
+                        'interface_template', group['template'])
                     continue
                 template_dict = local_policies_dict.setdefault('template', {})
                 priority_dict = template_dict.setdefault(group['template'], {})
@@ -514,10 +534,17 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                vlan_dict = mac_dict.setdefault('local_policies', {}).setdefault('vlan_group', {})
-
-                vlan_dict.update({'vlan': int(group['vlan_value'])})
-
+                if policies_flag:
+                    policies_dict = mac_dict.setdefault(
+                        'server_policies', {})
+                    index_dict = policies_dict.setdefault(index, {})
+                    vlan_dict = index_dict.setdefault('vlan_group', {})
+                    vlan_dict.update({'vlan': int(group['vlan_value'])})
+                    index += 1
+                else:
+                    local_policies = mac_dict.setdefault('local_policies', {})
+                    vlan_dict = local_policies.setdefault('vlan_group', {})
+                    vlan_dict.update({'vlan': int(group['vlan_value'])})
                 continue
 
             # dot1x            Authc Failed
@@ -525,7 +552,8 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
             if m:
                 group = m.groupdict()
 
-                method_stat = mac_dict.setdefault('method_status', {}).setdefault(group['method'], {})
+                method_stat = mac_dict.setdefault(
+                    'method_status', {}).setdefault(group['method'], {})
                 method_stat.update({'method': group['method']})
                 method_stat.update({'state': group['state']})
                 continue
@@ -539,23 +567,23 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
             m11 = p11.match(line)
             if m11:
                 mac_dict.update({'ipv6_address': m11.groupdict()['ipv6']})
-
                 continue
-            
             # 1555:10::5ced:6cc3:825b:39da
-            # 1555:10::225:1ff:fe00:5            
-            m = p11_1.match(line)                            
-            if m:                         
+            # 1555:10::225:1ff:fe00:5
+            m = p11_1.match(line)
+            if m:
                 group = m.groupdict()
-                com_dict = mac_dict.setdefault('ipv6', {}).setdefault('ipv6_address', [])      
-                com_dict.append(group['address'])         
+                com_dict = mac_dict.setdefault(
+                    'ipv6', {}).setdefault('ipv6_address', [])
+                com_dict.append(group['address'])
                 continue
 
             # Server Policies:
             m12 = p12.match(line)
             if m12:
                 policies_flag = True
-
+                policies_dict = {}
+                index_dict = {}
                 continue
 
         return ret_dict

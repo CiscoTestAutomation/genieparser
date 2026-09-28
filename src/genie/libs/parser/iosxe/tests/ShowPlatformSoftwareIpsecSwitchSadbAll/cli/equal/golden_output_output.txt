@@ -1,0 +1,6 @@
+show platform software ipsec switch 3 f0 sadb all
+IPsec SADB object table:
+
+  SADB-ID     Hint         Complete    #RefCnt     #CfgCnt     #ACL-Ref
+  -----------------------------------------------------------------------
+  42          vir-tun-int  true        2           0           0

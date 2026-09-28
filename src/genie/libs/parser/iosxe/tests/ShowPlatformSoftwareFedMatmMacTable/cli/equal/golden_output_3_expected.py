@@ -1,0 +1,35 @@
+expected_output = {
+    'mac': {
+        '0011.0100.0001': {
+            'atime': 0,
+            'con': 'No',
+            'ecbi': 0,
+            'etime': 0,
+            'flag': 0,
+            'mac': '0011.0100.0001',
+            'port': 'GigabitEthernet1/0/25',
+            'sequence': 16435,
+            'type': '0x44202',
+            'vlanport': 101,
+        },
+        '9446.6764.1441': {
+            'atime': 0,
+            'con': 'Yes',
+            'ecbi': 0,
+            'etime': 0,
+            'flag': 0,
+            'mac': '9446.6764.1441',
+            'port': 'Vlan101',
+            'sequence': 0,
+            'type': '0x8002',
+            'vlanport': 101,
+        },
+    },
+    'summary': {
+        'total_drop': 0,
+        'total_lisp_local': 0,
+        'total_lisp_remote': 0,
+        'total_secure': 1,
+    },
+    'total_mac': 2,
+}

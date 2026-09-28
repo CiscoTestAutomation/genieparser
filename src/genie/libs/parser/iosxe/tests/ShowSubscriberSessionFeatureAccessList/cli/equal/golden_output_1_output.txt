@@ -1,0 +1,11 @@
+show subscriber session uid 61 feature access-list
+--------------------------------------------------
+Type: DHCPv4, UID: 61, State: authen, Identity: aaaa.bbbb.1111
+IPv4 Address: 11.11.11.4
+Session Up-time: 00:00:05, Last Changed: 00:00:07
+Switch-ID: 4328
+Features:
+Per-User ACL:
+Class-id   Dir  Protocol  ACL Name                            Source
+0          In   IP        ACL_IN_INTERNET11                   Peruser
+1          Out  IP        ACL_OUT_INTERNET11                  Peruser
