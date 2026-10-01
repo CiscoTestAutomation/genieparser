@@ -12011,7 +12011,7 @@
           "os": "iosxe"
         },
         "uid": "acm_replace_configlet_file_diff",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/acm.py#L902"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/acm.py#L903"
       }
     }
   },
@@ -15360,16 +15360,16 @@
   "show archive log config {include}": {
     "folders": {
       "iosxe": {
-        "class": "ShowCallHomeProfileAll",
-        "doc": "\n    Parser for\n        * 'show call-home profile all',\n          'show call-home profile {include}\n    ",
-        "module_name": "iosxe.show_call_home",
+        "class": "ShowArchiveLogConfig",
+        "doc": " Parser for:\n        * show archive log config all\n        * show archive log config {include}\n    ",
+        "module_name": "iosxe.show_archive",
         "package": "genie.libs.parser",
-        "schema": "{\n    'profile': {\n        'name': {\n            Any('*'): {\n                'status': str,\n                'mode': str,\n                'reporting_data': str,\n                'preferred_message_format': str,\n                'message_size_limit_in_bytes': int,\n                'transport_method': str,\n                Optional('email_address'): str,\n                Optional('http_address'): str,\n                Optional('other_address'): str,\n                Optional('periodic_info'): {\n                    Optional('Any  (str) *'): {\n                        Optional('scheduled'): str,\n                        Optional('time'): str,\n                    },\n                },\n                Optional('group_pattern'): {\n                    Any('*'): {\n                        'severity': str,\n                    },\n                },\n            },\n        },\n    },\n}",
+        "schema": "{\n    'idx': {\n        '<class 'int'>': {\n            'sess': int,\n            'userline': str,\n            'logged_command': str,\n        },\n    },\n}",
         "tokens": {
           "os": "iosxe"
         },
         "uid": "show_archive_log_config_include",
-        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_call_home.py#L205"
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_archive.py#L254"
       }
     }
   },
@@ -20430,6 +20430,22 @@
           "os": "iosxe"
         },
         "uid": "show_call-home_profile_all",
+        "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_call_home.py#L205"
+      }
+    }
+  },
+  "show call-home profile {include}": {
+    "folders": {
+      "iosxe": {
+        "class": "ShowCallHomeProfileAll",
+        "doc": "\n    Parser for\n        * 'show call-home profile all',\n          'show call-home profile {include}\n    ",
+        "module_name": "iosxe.show_call_home",
+        "package": "genie.libs.parser",
+        "schema": "{\n    'profile': {\n        'name': {\n            Any('*'): {\n                'status': str,\n                'mode': str,\n                'reporting_data': str,\n                'preferred_message_format': str,\n                'message_size_limit_in_bytes': int,\n                'transport_method': str,\n                Optional('email_address'): str,\n                Optional('http_address'): str,\n                Optional('other_address'): str,\n                Optional('periodic_info'): {\n                    Optional('Any  (str) *'): {\n                        Optional('scheduled'): str,\n                        Optional('time'): str,\n                    },\n                },\n                Optional('group_pattern'): {\n                    Any('*'): {\n                        'severity': str,\n                    },\n                },\n            },\n        },\n    },\n}",
+        "tokens": {
+          "os": "iosxe"
+        },
+        "uid": "show_call-home_profile_include",
         "url": "https://github.com/CiscoTestAutomation/genieparser/tree/master/src/genie/libs/parser/iosxe/show_call_home.py#L205"
       }
     }

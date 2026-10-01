@@ -865,6 +865,7 @@ class AcmReplaceValidate(AcmReplaceValidateSchema):
         for line in output.splitlines():
             line = line.strip()
 
+            # Config diff empty. No Diff to Validate/Apply
             m = re.match(r'^Config diff empty\.\s+No Diff to Validate/Apply$',line)
             if m:
                 ret_dict["no_diff"] = True
@@ -928,7 +929,7 @@ class AcmReplaceDiff(AcmReplaceDiffSchema):
             if not normalized_line:
                 continue
 
-            # No configuration difference
+            # Config diff empty. No Diff to Validate/Apply
             m = re.match(
                 r'^Config diff empty\.\s+No Diff to Validate/Apply$',
                 normalized_line
@@ -938,7 +939,7 @@ class AcmReplaceDiff(AcmReplaceDiffSchema):
                 in_diff = False
                 continue
 
-            # Configuration difference starts
+            # Configuration Net-Diff:
             m = re.match(r'^Configuration Net-Diff:\s*$', normalized_line)
             if m:
                 in_diff = True

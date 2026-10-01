@@ -4,4 +4,4 @@ expected_output = {
             ' ip address 192.0.2.100 255.255.255.255',
             ' no ip route-cache',
             'end'],
-    'target': ''}
+    'target': 'flash:day1'}
