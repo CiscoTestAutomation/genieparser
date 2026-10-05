@@ -11884,7 +11884,7 @@ class ShowPlatformHardwareFedSwitchForwardLastSummarySchema(MetaParser):
                 "vlan": int,
                 "type": str,
             },
-            "ip": {
+            Optional("ip"): {
                 "version": int,
                 "ihl": int,
                 "tos": str,
@@ -11910,7 +11910,7 @@ class ShowPlatformHardwareFedSwitchForwardLastSummarySchema(MetaParser):
                 "load": str,
             }
         },
-        "ingress": {
+        Optional("ingress"): {
             "port": str,
             "global_port_number": int,
             "local_port_number": int,
@@ -11927,14 +11927,14 @@ class ShowPlatformHardwareFedSwitchForwardLastSummarySchema(MetaParser):
                 "ipv6_routing": str,
                 "vrf_id": int,
             },
-            "adjacency": {
+            Optional("adjacency"): {
                 "station_index": str,
                 "destination_index": int,
                 "rewrite_index": int,
                 "replication_bit_map": str,
             }
         },
-        "decision": {
+        Optional("decision"): {
             "destination_index": str,
             "rewrite_index": str,
             "dest_mod_index": str,
@@ -11946,7 +11946,7 @@ class ShowPlatformHardwareFedSwitchForwardLastSummarySchema(MetaParser):
             "sgt": int,
             "dgtid": int,
         },
-        "egress": {
+        Optional("egress"): {
             Optional("possible_replication"): {
                 "port": str,
             },
@@ -11977,7 +11977,7 @@ class ShowPlatformHardwareFedSwitchForwardLastSummary(ShowPlatformHardwareFedSwi
     """Parser for show platform hardware fed switch active forward last summary"""
 
     cli_command = [
-        "show platform hardware fed {mode} active forward last summary",
+        "show platform hardware fed {mode} forward last summary",
         "show platform hardware fed {switch} {mode} forward last summary"]
 
 

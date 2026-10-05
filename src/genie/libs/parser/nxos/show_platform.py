@@ -8,6 +8,7 @@ NXOS parser class for below commands:
         show processes cpu | include <include>
         show processes memory
         show processes memory | include <include>
+        show processes memory shared
         show cores
 """
 import re
@@ -1753,6 +1754,124 @@ class ShowProcessesMemory(ShowProcessesMemorySchema):
             if m:
                 group = m.groupdict()
                 ret_dict.update({'all_mem_alloc': int(group['all_mem_alloc'])})
+
+        return ret_dict
+
+
+class ShowProcessesMemorySharedSchema(MetaParser):
+    """Schema for:
+        Show processes memory shared
+    """
+
+    schema = {
+        'component': {
+            Any(): {
+                'shared_memory_address': str,
+                'size_kbytes': int,
+                Optional('size_type'): str,
+                Optional('max_size_kbytes'): int,
+                'used_kbytes': int,
+                'available_kbytes': int,
+                'ref_count': int,
+            }
+        },
+        'shared_memory_totals': {
+            'size_mb': int,
+            'used_mb': int,
+            'available_mb': int,
+        }
+    }
+
+
+class ShowProcessesMemoryShared(ShowProcessesMemorySharedSchema):
+    """Parser for:
+        Show processes memory shared
+    """
+
+    cli_command = 'show processes memory shared'
+
+    def cli(self, command, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+
+        # Component Shared Memory Size Used Available Ref
+        p1 = re.compile(r'^Component +Shared +Memory +Size +Used +Available +Ref$')
+
+        # Address     (kbytes)                (kbytes)      (kbytes)  Count
+        p2 = re.compile(r'^Address +\(kbytes\) +\(kbytes\) +\(kbytes\) +Count$')
+
+        # urib 0x700014d04000 3072+ (1572868) 2075 997 34
+        p3 = re.compile(r'^(?P<component>\S+) +(?P<shared_memory_address>0x[0-9a-fA-F]+) +(?P<size_kbytes>\d+)(?P<size_flag>[+*])?(?: +\((?P<max_size_kbytes>\d+)\))? +(?P<used_kbytes>\d+) +(?P<available_kbytes>\d+) +(?P<ref_count>\d+)$')
+
+        # Shared memory totals - Size: 3041 MB, Used: 162 MB, Available: 2888 MB
+        p4 = re.compile(r'^Shared +memory +totals +- +Size: +(?P<size_mb>\d+) +MB, +Used: +(?P<used_mb>\d+) +MB, +Available: +(?P<available_mb>\d+) +MB$')
+
+        # '+' - Dynamic shared memory segment.
+        p5 = re.compile(r"^'\+' +- +Dynamic +shared +memory +segment\.$")
+
+        # '*' - Non-default sized share memory segment.
+        p6 = re.compile(r"^'\*' +- +Non-default +sized +share +memory +segment\.$")
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Component Shared Memory Size Used Available Ref
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Address     (kbytes)                (kbytes)      (kbytes)  Count
+            m = p2.match(line)
+            if m:
+                continue
+
+            # urib 0x700014d04000 3072+ (1572868) 2075 997 34
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                component_dict = ret_dict.setdefault('component', {}). \
+                    setdefault(groups['component'], {})
+                component_dict.update({
+                    'shared_memory_address': groups['shared_memory_address'],
+                    'size_kbytes': int(groups['size_kbytes']),
+                    'used_kbytes': int(groups['used_kbytes']),
+                    'available_kbytes': int(groups['available_kbytes']),
+                    'ref_count': int(groups['ref_count']),
+                })
+                if groups['size_flag'] == '+':
+                    component_dict['size_type'] = 'dynamic'
+                elif groups['size_flag'] == '*':
+                    component_dict['size_type'] = 'non_default'
+                if groups['max_size_kbytes']:
+                    component_dict['max_size_kbytes'] = int(
+                        groups['max_size_kbytes'])
+                continue
+
+            # Shared memory totals - Size: 3041 MB, Used: 162 MB, Available: 2888 MB
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                totals_dict = ret_dict.setdefault('shared_memory_totals', {})
+                totals_dict.update({
+                    'size_mb': int(groups['size_mb']),
+                    'used_mb': int(groups['used_mb']),
+                    'available_mb': int(groups['available_mb']),
+                })
+                continue
+
+            # '+' - Dynamic shared memory segment.
+            m = p5.match(line)
+            if m:
+                continue
+
+            # '*' - Non-default sized share memory segment.
+            m = p6.match(line)
+            if m:
+                continue
 
         return ret_dict
 

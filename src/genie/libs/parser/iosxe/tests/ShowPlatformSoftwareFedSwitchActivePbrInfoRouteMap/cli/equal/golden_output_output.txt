@@ -1,0 +1,11 @@
+List of Route-Map Entries: 
+  Route-map Name: TC1-PBR-A       
+    CG_ID: 1     Protocol: IPv4 Is_CGM_Attach: Yes
+    Ref Cnt: 3   
+    Route-Map Sequence List
+      Class ID: 1     Seq Num: 10   
+        Adj_id: 0xf8004836 Vrf_id: 0     Table_id: 0     IP_addr: 10.1.1.2       
+      Class ID: 2     Seq Num: 20   
+        Adj_id: 0x0       Vrf_id: 0     Table_id: 0     IP_addr: 0.0.0.0        
+      Class ID: 3     Seq Num: 30   
+        Adj_id: 0x0       Vrf_id: 0     Table_id: 0     IP_addr: 0.0.0.0        

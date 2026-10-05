@@ -1,0 +1,8 @@
+VLAN 2020
+  L3VNI       : 33001
+  RMAC        : aabb.cc83.6500
+  Tunnel-Src  : 100.193.0.2
+  Num anchors : 2
+      #                                Anchor IP         Anchor MAC       L2VNI
+      0                              100.196.0.2     aabb.cc82.1100       22020
+      1                              100.195.0.2     aabb.cc82.5200       22020

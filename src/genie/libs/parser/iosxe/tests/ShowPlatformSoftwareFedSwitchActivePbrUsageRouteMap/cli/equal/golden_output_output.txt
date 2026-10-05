@@ -1,0 +1,6 @@
+------------------------------------------------------------------------
+If-Name       Protocol    Status      CG-ID    Routemap-Name  
+------------------------------------------------------------------------
+Gi1/0/13      IPv4        Success     1        TC1-PBR-A      
+Twe2/0/2      IPv4        Success     1        TC1-PBR-A      
+Twe2/0/13     IPv4        Success     1        TC1-PBR-A

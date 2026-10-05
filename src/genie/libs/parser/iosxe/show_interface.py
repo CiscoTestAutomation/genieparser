@@ -2490,6 +2490,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('inbound_access_list'): str,
                     Optional('proxy_arp'): bool,
                     Optional('local_proxy_arp'): bool,
+                    Optional('local_proxy_arp_host_routing'): bool,
                     Optional('security_level'): str,
                     Optional('split_horizon'): bool,
                     Optional('icmp'): {
@@ -2812,14 +2813,19 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             # Local Proxy ARP is disabled
-            p12 = re.compile(r'^Local +Proxy +ARP +is +'
-                            r'(?P<status>\w+)$')
+            # Local Proxy ARP is enabled (host-routing)
+            p12 = re.compile(r'^Local +Proxy +ARP +is +(?P<status>\w+)(?: +\((?P<host_routing>host-routing)\))?$')
+            # Local Proxy ARP is disabled
+            # Local Proxy ARP is enabled (host-routing)
             m = p12.match(line)
             if m:
                 if 'disabled' in m.groupdict()['status']:
                     interface_dict[interface]['local_proxy_arp'] = False
                 else:
                     interface_dict[interface]['local_proxy_arp'] = True
+                if m.groupdict()['host_routing']:
+                    interface_dict[interface]['local_proxy_arp_host_routing'] = \
+                        interface_dict[interface]['local_proxy_arp']
                 continue
 
             # Security level is default

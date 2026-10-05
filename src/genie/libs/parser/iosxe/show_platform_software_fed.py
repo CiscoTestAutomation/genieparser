@@ -53,6 +53,8 @@
     * 'show platform software fed switch <switch> wdavc function wdavc_ft_show_all_flows_seg_ui'
     * 'show platform software fed {switch} {switch_var} ifm interfaces tunnel'
     * 'show platform software fed {switch_var} ifm interfaces tunnel'
+    * 'show platform software fed switch {switch_var} pbr info route-map {route_map}'
+    * 'show platform software fed switch {switch_var} pbr usage route-map {route_map}'
 """
 # Python
 import re
@@ -11853,6 +11855,7 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetailSchema(MetaParser):
                 'pol_hdl': str,
                 'oid': str,
                 Optional('no_of_ace'): int,
+                Optional('asic'): int,
                 Any(): {
                     Optional("ipv4_src_value"): str,
                     Optional("ipv4_src_mask"): str,
@@ -11931,8 +11934,8 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetail(ShowPlatformSoftwareFe
         p6 = re.compile(r'^Pol Hdl\s+:\s+(?P<pol_hdl>\S+)$')
 
         # ACL (OID: 0x81E, No of ACEs: 1)
-        # ACL (asic: 0, OID: 0xD8D, No of ACEs: 8)
-        p7 = re.compile(r'^ACL\s+\((?:asic:\s+\d+,\s+)?OID:\s+(?P<oid>\S+),\s+No\s+of\s+ACEs:\s+(?P<no_of_ace>\d+)\)$')
+        # ACL (asic: 0, OID: 0xDB6, No of ACEs: 3)
+        p7 = re.compile(r'^ACL\s+\((asic:\s+(?P<asic>\d+),\s+)?OID:\s+(?P<oid>\S+),\s+No\s+of\s+ACEs:\s+(?P<no_of_ace>\d+)\)$')
 
         # IPV4 ACE Key/Mask
         p8 = re.compile(r'^IPV4 ACE Key/Mask$')
@@ -12028,6 +12031,8 @@ class ShowPlatformSoftwareFedSwitchActiveAclInfoSdkDetail(ShowPlatformSoftwareFe
                 group = m.groupdict()
                 class_dict["oid"] = group["oid"]
                 class_dict["no_of_ace"] = int(group["no_of_ace"])
+                if group.get("asic") is not None:
+                    class_dict["asic"] = int(group["asic"])
                 continue
 
             # IPV4 ACE Key/Mask
@@ -21490,6 +21495,181 @@ class ShowPlatformSoftwareFedIpRouteSummary(ShowPlatformSoftwareFedIpRouteSummar
                 aal['ecr_modify_nochange'] = int(m.group('nochange'))
                 aal['ecr_modify_inplace'] = int(m.group('inplace'))
                 aal['ecr_oor_retry_queue_size'] = int(m.group('oor'))
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActivePbrUsageRouteMapSchema(MetaParser):
+    """Schema for
+    show platform software fed switch {switch_var} pbr usage route-map {route_map}
+    """
+
+    schema = {
+        "interfaces": {
+            Any(): {
+                "protocol": str,
+                "status": str,
+                "cg_id": int,
+                "routemap_name": str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActivePbrUsageRouteMap(
+    ShowPlatformSoftwareFedSwitchActivePbrUsageRouteMapSchema
+):
+    """Parser for
+    show platform software fed switch {switch_var} pbr usage route-map {route_map}
+    """
+
+    cli_command = [
+        "show platform software fed switch {switch_var} pbr usage route-map {route_map}",
+    ]
+
+    def cli(self, switch_var, route_map, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(switch_var=switch_var, route_map=route_map)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Gi1/0/13      IPv4        Success     1        TC1-PBR-A
+        p1 = re.compile(
+            r"^(?P<if_name>\S+)\s+(?P<protocol>\S+)\s+(?P<status>\S+)\s+"
+            r"(?P<cg_id>\d+)\s+(?P<routemap_name>\S+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Gi1/0/13      IPv4        Success     1        TC1-PBR-A
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = ret_dict.setdefault(
+                    "interfaces", {}).setdefault(Common.convert_intf_name(group["if_name"]), {})
+                intf_dict["protocol"] = group["protocol"]
+                intf_dict["status"] = group["status"]
+                intf_dict["cg_id"] = int(group["cg_id"])
+                intf_dict["routemap_name"] = group["routemap_name"]
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareFedSwitchActivePbrInfoRouteMapSchema(MetaParser):
+    """Schema for
+    show platform software fed switch {switch_var} pbr info route-map {route_map}
+    """
+
+    schema = {
+        "route_map": {
+            Any(): {
+                "cg_id": {
+                    Any(): {
+                        "protocol": str,
+                        "is_cgm_attach": str,
+                        "ref_cnt": int,
+                        "sequence_list": {
+                            Any(): {
+                                "seq_num": int,
+                                "adj_id": str,
+                                "vrf_id": int,
+                                "table_id": int,
+                                "ip_addr": str,
+                            }
+                        },
+                    }
+                }
+            }
+        }
+    }
+
+class ShowPlatformSoftwareFedSwitchActivePbrInfoRouteMap(
+    ShowPlatformSoftwareFedSwitchActivePbrInfoRouteMapSchema
+):
+    """Parser for
+    show platform software fed switch {switch_var} pbr info route-map {route_map}
+    """
+
+    cli_command = [
+        "show platform software fed switch {switch_var} pbr info route-map {route_map}",
+    ]
+
+    def cli(self, switch_var, route_map, output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(
+                switch_var=switch_var, route_map=route_map
+            )
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # Route-map Name: TC1-PBR-A
+        p1 = re.compile(r"^Route-map\s+Name:\s+(?P<route_map_name>\S+)$")
+
+        # CG_ID: 1     Protocol: IPv4 Is_CGM_Attach: Yes
+        p2 = re.compile(
+            r"^CG_ID:\s*(?P<cg_id>\d+)\s+Protocol:\s*(?P<protocol>\S+)\s+"
+            r"Is_CGM_Attach:\s*(?P<is_cgm_attach>\S+)$"
+        )
+
+        # Ref Cnt: 3
+        p3 = re.compile(r"^Ref\s+Cnt:\s*(?P<ref_cnt>\d+)$")
+
+        # Class ID: 1     Seq Num: 10
+        p4 = re.compile(
+            r"^Class\s+ID:\s*(?P<class_id>\d+)\s+Seq\s+Num:\s*(?P<seq_num>\d+)$"
+        )
+
+        # Adj_id: 0xf8004836 Vrf_id: 0     Table_id: 0     IP_addr: 10.1.1.2
+        p5 = re.compile(
+            r"^Adj_id:\s*(?P<adj_id>\S+)\s+Vrf_id:\s*(?P<vrf_id>\d+)\s+"
+            r"Table_id:\s*(?P<table_id>\d+)\s+IP_addr:\s*(?P<ip_addr>\S+)$"
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Route-map Name: TC1-PBR-A
+            m = p1.match(line)
+            if m:
+                route_map_name = m.group("route_map_name")
+                route_map_dict = ret_dict.setdefault("route_map", {}).setdefault(
+                    route_map_name, {})
+                continue
+
+            # CG_ID: 1     Protocol: IPv4 Is_CGM_Attach: Yes
+            m = p2.match(line)
+            if m:
+                cg_dict = route_map_dict.setdefault(
+                    "cg_id", {}).setdefault(
+                    int(m.group("cg_id")), {}
+                )
+                cg_dict["protocol"] = m.group("protocol")
+                cg_dict["is_cgm_attach"] = m.group("is_cgm_attach")
+                continue
+
+            # Ref Cnt: 3
+            m = p3.match(line)
+            if m:
+                cg_dict["ref_cnt"] = int(m.group("ref_cnt"))
+                continue
+
+            # Class ID: 1     Seq Num: 10
+            m = p4.match(line)
+            if m:
+                sequence_dict = cg_dict.setdefault(
+                "sequence_list", {}).setdefault(int(m.group("class_id")), {})
+                sequence_dict["seq_num"] = int(m.group("seq_num"))
+                continue
+
+            # Adj_id: 0xf8004836 Vrf_id: 0     Table_id: 0     IP_addr: 10.1.1.2
+            m = p5.match(line)
+            if m:
+                sequence_dict["adj_id"] = m.group("adj_id")
+                sequence_dict["vrf_id"] = int(m.group("vrf_id"))
+                sequence_dict["table_id"] = int(m.group("table_id"))
+                sequence_dict["ip_addr"] = m.group("ip_addr")
                 continue
 
         return ret_dict

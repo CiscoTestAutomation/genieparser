@@ -788,7 +788,9 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
         # NPD: Bind Information
         # SDK: Bind Information
         # SDK: Bind Information (Asic: 1)
-        p7 = re.compile(r"^(NPD|SDK): Bind Information\s*(\(Asic: (?P<asic>\d+)\))?$")
+        # NPD: Interface Bind
+        # SDK: Interface Bind (ASIC 0)
+        p7 = re.compile(r"^(NPD|SDK): (Bind Information|Interface Bind)\s*(\((Asic|ASIC):? (?P<asic>\d+)\))?$")
 
         # Port Type: L3
         # Port Type: L2 ETHER CHANNEL
@@ -850,7 +852,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
         # Port: OID 0x792, system port OID 0x796
         p9_1 = re.compile(
-            r"^Port: OID (?P<port_oid>\w+), system port OID (?P<system_port_oid>\w+)$"
+            r"^Port:? OID:?\s+(?P<port_oid>\w+), system port OID\s+(?P<system_port_oid>\w+)$"
         )
 
         # State: Active, Speed: 1000000000 bps
@@ -892,6 +894,8 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
         ret_dict = {}
         meter_set_count = 0
         ace_count = 0
+        acl_dict = None
+        ace_dict = None
 
         for line in output.splitlines():
             line = line.strip()
@@ -1067,6 +1071,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
                 if acl_name not in ret_dict.keys():
                     ace_count = 0
                 acl_dict = ret_dict.setdefault(acl_name, {})
+                ace_dict = None
                 if values["oid"]:
                     acl_dict["oid"] = values["oid"]
                 else:
@@ -1077,7 +1082,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
             # IPV4 ACE Key/Mask
             # IPV6 ACE Key/Mask
             m = p5_0.match(line)
-            if m:
+            if m and acl_dict is not None:
                 ace_dict = acl_dict.setdefault("ace", {}).setdefault(ace_count, {})
                 ace_count += 1
                 continue
@@ -1085,6 +1090,15 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
             # Class id: 0x0
             m = p5_1.match(line)
             if m:
+                if acl_dict is None:
+                    continue
+                # Some platforms omit the ACE Key/Mask marker. In that case,
+                # use Class id as the start of the next ACE.
+                if ace_dict is None or "class_id" in ace_dict:
+                    ace_dict = acl_dict.setdefault("ace", {}).setdefault(
+                        ace_count, {}
+                    )
+                    ace_count += 1
                 ace_dict["class_id"] = m.groupdict()["class_id"]
                 continue
 
@@ -1240,6 +1254,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
             # SDK: Bind Information (Asic: 1)
             # NPD: Interface Bind
             # SDK: Interface Bind
+            # SDK: Interface Bind (ASIC 0)
             # SDK: Interface Bind (ASIC 0)
             m = p7.match(line) or p9.match(line)
             if m:

@@ -146,6 +146,7 @@ class ShowIpRouteSchema(MetaParser):
                                         Any(): {  # interface  if there is no next_hop
                                             Optional('outgoing_interface'): str,
                                             Optional('updated'): str,
+                                            Optional('vrf'): str,
                                         },
                                     },
                                     Optional('next_hop_list'): {
@@ -266,6 +267,18 @@ class ShowIpRoute(ShowIpRouteSchema):
         index = 0
         active = False
 
+        def add_outgoing_interface(next_hop_dict, interface):
+            if '%' in interface:
+                interface, vrf_val = interface.split('%', 1)
+            else:
+                vrf_val = ''
+
+            intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
+            intf_entry = intf_dict.setdefault(interface, {})
+            intf_entry['outgoing_interface'] = interface
+            if vrf_val:
+                intf_entry['vrf'] = vrf_val
+
         # Routing Table: VRF1
         # Routing Table: VRF-infra
         p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
@@ -341,8 +354,8 @@ class ShowIpRoute(ShowIpRouteSchema):
         #      via 33.33.33.33%default, Vlan100%default
         #      via ::100.0.0.2, NVI0
         #      via ::128.0.1.0, NVI0
-        p6 = re.compile(r'^via( +(?P<next_hop>(?:[\w]+[.:]|:+)[\w\:\.\%]{4,}),?)?'
-                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%]*),?)?,?( +receive)?'
+        p6 = re.compile(r'^via( +(?P<next_hop>(?:[\w]+[.:]|:+)[\w\:\.\%\-\_]{4,}),?)?'
+                        r'( +(?P<interface>[\w\.\/\-\_]+[\w\:\.\%\-\_]*),?)?,?( +receive)?'
                         r'( +directly connected)?( +indirectly connected)?$')
 
         for line in out.splitlines():
@@ -451,8 +464,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop and interface:
-                    intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
-                    intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+                    add_outgoing_interface(next_hop_dict, interface)
 
                 elif next_hop:
                     idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
@@ -556,8 +568,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                     #'outgoing_interface': 'Vlan500',
                     if not next_hop and interface:
-                        intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
-                        intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+                        add_outgoing_interface(next_hop_dict, interface)
 
                     # 'next_hop_list': 1
                     elif next_hop:
@@ -652,8 +663,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                     #'outgoing_interface': 'Vlan500',
                     if not next_hop and interface:
-                        intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
-                        intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+                        add_outgoing_interface(next_hop_dict, interface)
 
                     # 'next_hop_list': 1
                     elif next_hop:
@@ -703,8 +713,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop and interface:
-                    intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
-                    intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+                    add_outgoing_interface(next_hop_dict, interface)
 
                 elif next_hop:
                     idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
@@ -750,8 +759,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop and interface:
-                    intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
-                    intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+                    add_outgoing_interface(next_hop_dict, interface)
 
                 elif next_hop:
                     idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})
@@ -796,8 +804,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 next_hop_dict = route_dict.setdefault('next_hop', {})
 
                 if not next_hop and interface:
-                    intf_dict = next_hop_dict.setdefault('outgoing_interface', {})
-                    intf_dict.setdefault(interface, {}).update({'outgoing_interface': interface})
+                    add_outgoing_interface(next_hop_dict, interface)
 
                 elif next_hop:
                     idx_dict = next_hop_dict.setdefault('next_hop_list', {}).setdefault(index, {})

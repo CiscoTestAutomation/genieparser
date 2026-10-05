@@ -1,0 +1,6 @@
+route-map rm1, permit, sequence 1
+  Match clauses:
+    ip address prefix-lists: pl1
+  Set clauses:
+    ip tos 7
+  Policy routing matches: 0 packets, 0 bytes

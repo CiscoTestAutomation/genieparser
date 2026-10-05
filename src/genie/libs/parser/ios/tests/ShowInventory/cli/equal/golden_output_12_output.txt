@@ -1,0 +1,2 @@
+NAME: "", DESCR: "7206VXR chassis, Hw Serial#: 34942674, Hw Revision: B"
+PID:                   , VID: 2.11, SN: 34942674

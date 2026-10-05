@@ -1,0 +1,7 @@
+Created Timestamp            : 14:35:18 21 Sep 2026
+Session Name                 : session-43
+Created User                 : admin
+Current/Last user            : admin
+Last Action Timestamp        : 14:35:18 21 Sep 2026
+Last Action Terminal         : /dev/ttyS0
+Session State                : PENDING

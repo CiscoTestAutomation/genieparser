@@ -3001,3 +3001,154 @@ class ShowDeviceTrackingMessagesDetailedNum(ShowDeviceTrackingMessagesDetailedNu
                 ret_dict["messages"] = messages
 
         return ret_dict
+
+
+# ====================================================
+#  Schema for:
+#   * 'show device-tracking anchors'
+#   * 'show device-tracking anchors vlan {vlan}'
+# ====================================================
+class ShowDeviceTrackingAnchorsSchema(MetaParser):
+    '''Schema for:
+
+    * 'show device-tracking anchors'
+    * 'show device-tracking anchors vlan {vlan}'
+    '''
+
+    schema = {
+        'vlan': {
+            Any(): {
+                'l3vni': int,
+                'rmac': str,
+                'tunnel_src': str,
+                'num_anchors': int,
+                Optional('anchors'): {
+                    Any(): {
+                        'anchor_ip': str,
+                        'anchor_mac': str,
+                        'l2vni': int,
+                    },
+                },
+            },
+        },
+    }
+
+
+# ============================================
+# Parser for:
+#   * 'show device-tracking anchors'
+#   * 'show device-tracking anchors vlan {vlan}'
+# ============================================
+class ShowDeviceTrackingAnchors(ShowDeviceTrackingAnchorsSchema):
+    '''Parser for:
+
+        * 'show device-tracking anchors'
+        * 'show device-tracking anchors vlan {vlan}'
+    '''
+
+    cli_command = ['show device-tracking anchors',
+                   'show device-tracking anchors vlan {vlan}']
+
+    def cli(self, vlan='', output=None):
+
+        if output is None:
+            if vlan:
+                cmd = self.cli_command[1].format(vlan=vlan)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # VLAN 2020
+        #   L3VNI       : 33001
+        #   RMAC        : aabb.cc82.1200
+        #   Tunnel-Src  : 100.193.0.2
+        #   Num anchors : 2
+        #       #                                Anchor IP         Anchor MAC       L2VNI
+        #       0                              100.195.0.2     aabb.cc82.d900       22020
+        #       1                              100.196.0.2     aabb.cc83.8500       22020
+        #
+        # VLAN 3020
+        #   L3VNI       : 33002
+        #   RMAC        : aabb.cc82.0c00
+        #   Tunnel-Src  : 100.194.0.2
+        #   Num anchors : 2
+        #       #                                Anchor IP         Anchor MAC       L2VNI
+        #       0                              100.196.0.2     aabb.cc83.8500       23020
+        #       1                              100.195.0.2     aabb.cc82.d900       23020
+
+        res_dict = {}
+
+        # VLAN 2020
+        p_vlan = re.compile(r'^VLAN\s+(?P<vlan_id>\d+)$')
+
+        # L3VNI       : 33001
+        p_l3vni = re.compile(r'^\s*L3VNI\s*:\s*(?P<l3vni>\d+)$')
+
+        # RMAC        : aabb.cc83.6500
+        p_rmac = re.compile(r'^\s*RMAC\s*:\s*(?P<rmac>[\w\.]+)$')
+
+        # Tunnel-Src  : 100.193.0.2
+        p_tunnel_src = re.compile(r'^\s*Tunnel-Src\s*:\s*(?P<tunnel_src>[\S]+)$')
+
+        # Num anchors : 2
+        p_num_anchors = re.compile(r'^\s*Num\s+anchors\s*:\s*(?P<num_anchors>\d+)$')
+
+        #     0                              100.196.0.2     aabb.cc82.1100       22020
+        p_anchor = re.compile(
+            r'^\s*(?P<index>\d+)\s+(?P<anchor_ip>[\d\.]+)\s+'
+            r'(?P<anchor_mac>[\w\.]+)\s+(?P<l2vni>\d+)$')
+
+        current_vlan = None
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # VLAN 2020
+            m = p_vlan.match(line)
+            if m:
+                current_vlan = m.group('vlan_id')
+                vlan_dict = res_dict.setdefault('vlan', {}).setdefault(current_vlan, {})
+                continue
+
+            if current_vlan is None:
+                continue
+
+            # L3VNI       : 33001
+            m = p_l3vni.match(line)
+            if m:
+                vlan_dict['l3vni'] = int(m.group('l3vni'))
+                continue
+
+            # RMAC        : aabb.cc83.6500
+            m = p_rmac.match(line)
+            if m:
+                vlan_dict['rmac'] = m.group('rmac')
+                continue
+
+            # Tunnel-Src  : 100.193.0.2
+            m = p_tunnel_src.match(line)
+            if m:
+                vlan_dict['tunnel_src'] = m.group('tunnel_src')
+                continue
+
+            # Num anchors : 2
+            m = p_num_anchors.match(line)
+            if m:
+                vlan_dict['num_anchors'] = int(m.group('num_anchors'))
+                continue
+
+            # Anchor entry
+            m = p_anchor.match(line)
+            if m:
+                index = m.group('index')
+                anchor_dict = vlan_dict.setdefault('anchors', {}).setdefault(index, {})
+                anchor_dict['anchor_ip'] = m.group('anchor_ip')
+                anchor_dict['anchor_mac'] = m.group('anchor_mac')
+                anchor_dict['l2vni'] = int(m.group('l2vni'))
+                continue
+
+        return res_dict

@@ -6,6 +6,8 @@ NXOS parsers for the following show commands:
     * Show ipv6 mroute vrf all
     * Show ipv6 mroute summary vrf all
     * Show ip mroute summary vrf all
+    * Show ip mroute summary count
+    * Show ip mroute detail
     * Show ip static-route multicast
     * Show ipv6 static-route multicast
     * Show ip mroute <group> <source> source-tree vrf all
@@ -1015,7 +1017,11 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
 # ===================================
 
 class ShowIpMrouteSummarySchema(MetaParser):
-    """Schema for show ip mroute summary vrf all"""
+    """Schema for:
+        show ip mroute summary
+        show ip mroute summary count
+        show ip mroute summary vrf <vrf>
+        show ip mroute summary vrf all"""
 
     schema = {
         'vrf': {
@@ -1028,7 +1034,7 @@ class ShowIpMrouteSummarySchema(MetaParser):
                         'count_multicast_total': int,
                         'group_count': int,
                         'avg_source_per_group': float,
-                        'groups': {
+                        Optional('groups'): {
                             Any(): {
                                 'source_count': int,
                                 'source': {
@@ -1054,13 +1060,18 @@ class ShowIpMrouteSummarySchema(MetaParser):
 class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
     """parser for:
         show ip mroute summary
+        show ip mroute summary count
         show ip mroute summary vrf <vrf>
         show ip mroute summary vrf all"""
 
     cli_command = ['show ip mroute summary vrf {vrf}',
-                   'show ip mroute summary']
-    def cli(self, vrf="default", output=None):
-        if vrf != 'default':
+                   'show ip mroute summary',
+                   'show ip mroute summary count']
+
+    def cli(self, command='', vrf="default", output=None, **kwargs):
+        if command:
+            cmd = command
+        elif vrf != 'default':
             cmd = self.cli_command[0].format(vrf=vrf)
         else:
             cmd = self.cli_command[1]
@@ -1071,7 +1082,7 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
             out = output
 
         mroute_dict = {}
-        #IP Multicast Routing Table for VRF "vxlan-1001" 
+        # IP Multicast Routing Table for VRF "vxlan-1001"
         p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                          r' +[rR]outing +[tT]able +for +VRF '
                          r'+(?P<vrf>\S+)$')
@@ -1084,67 +1095,106 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
         # Total number of routes: 51
         p4 = re.compile(r'^\s*Total +number +of +routes:'
                          r' +(?P<count>[0-9]+)$')
-        #Total number of (*,G-prefix) routes: 0
+        # Total number of (*,G-prefix) routes: 0
         p5 = re.compile(r'^\s*Total +number +of +\(\*,G-prefix\) +routes:'
                          r' +(?P<count>[0-9]+)$')
-        #Group count: 41, rough average sources per group: 3.0
+        # Group count: 41, rough average sources per group: 3.0
         p6 = re.compile(r'^\s*Group +count: +(?P<count>[0-9]+),'
                         r' +rough +average +sources +per +group: +(?P<avg_count>[0-9.]+)$')
-        #Group: 225.0.0.2/32, Source count: 3
+        # Group: 225.0.0.2/32, Source count: 3
         p7 = re.compile(r'^\s*Group: +(?P<group_ip>\S+), +Source count: +(?P<src_count>[0-9]+)$')
-        #100.100.100.5   1743         88893           51    0         27.200  bps  1
-        #(*,G)           0            0               0     0         0.000   bps  2
+        # 100.100.100.5   1743         88893           51    0         27.200  bps  1
+        # (*,G)           0            0               0     0         0.000   bps  2
         p8 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
                         r'(?P<bitrate>[0-9.]+) +(?P<bitrate_unit>[kmgt]?bps) +(?P<oifs>[0-9]+)$')
 
         for line in out.splitlines():
             line = line.strip()
+            if not line:
+                continue
+
+            # IP Multicast Routing Table for VRF "vxlan-1001"
             m = p1.match(line)
             if m:
-                vrf = m.groupdict()['vrf']
-                vrf = vrf.replace('"',"")
-                address_family = m.groupdict()['address_family'].lower()
+                groups = m.groupdict()
+                vrf = groups['vrf']
+                vrf = vrf.replace('"', "")
+                address_family = groups['address_family'].lower()
                 address_family += 'v4'
-                address_family_dict = mroute_dict.setdefault('vrf', {}).setdefault(vrf,{}).setdefault('address_family', {}).setdefault(address_family, {})
+                address_family_dict = mroute_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {})
                 continue
+
+            # Total number of (*,G) routes: 34
             m = p2.match(line)
             if m:
                 count_multicast_starg = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_starg', int(count_multicast_starg))
+                address_family_dict.setdefault(
+                    'count_multicast_starg',
+                    int(count_multicast_starg))
                 continue
+
+            # Total number of (S,G) routes: 17
             m = p3.match(line)
             if m:
                 count_multicast_sg = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_sg', int(count_multicast_sg))
+                address_family_dict.setdefault(
+                    'count_multicast_sg',
+                    int(count_multicast_sg))
                 continue
+
+            # Total number of routes: 51
             m = p4.match(line)
             if m:
                 count_multicast_total = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_total', int(count_multicast_total))
+                address_family_dict.setdefault(
+                    'count_multicast_total',
+                    int(count_multicast_total))
                 continue
+
+            # Total number of (*,G-prefix) routes: 0
             m = p5.match(line)
             if m:
                 count_multicast_starg_prefix = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_starg_prefix', int(count_multicast_starg_prefix))
+                address_family_dict.setdefault(
+                    'count_multicast_starg_prefix',
+                    int(count_multicast_starg_prefix))
                 continue
+
+            # Group count: 41, rough average sources per group: 3.0
             m = p6.match(line)
             if m:
-                address_family_dict.setdefault('group_count', int(m.groupdict()['count']))
-                address_family_dict.setdefault('avg_source_per_group', float(m.groupdict()['avg_count']))
+                groups = m.groupdict()
+                address_family_dict.setdefault(
+                    'group_count',
+                    int(groups['count']))
+                address_family_dict.setdefault(
+                    'avg_source_per_group',
+                    float(groups['avg_count']))
                 continue
+
+            # Group: 225.0.0.2/32, Source count: 3
             m = p7.match(line)
             if m:
-                group_ip = m.groupdict()['group_ip']
-                source_count = m.groupdict()['src_count']
-                group_dict = address_family_dict.setdefault('groups',{}).setdefault(group_ip,{})
-                group_dict.update({'source_count': int(source_count)})    
+                groups = m.groupdict()
+                group_ip = groups['group_ip']
+                source_count = groups['src_count']
+                group_dict = address_family_dict.setdefault('groups', {}). \
+                    setdefault(group_ip, {})
+                group_dict.update({'source_count': int(source_count)})
                 continue
+
+            # 100.100.100.5   1743         88893           51    0         27.200  bps  1
+            # (*,G)           0            0               0     0         0.000   bps  2
             m = p8.match(line)
             if m:
                 # Capture the values
-                bitrate_value = float(m.groupdict()['bitrate'])
-                bitrate_unit = m.groupdict()['bitrate_unit']
-                
+                groups = m.groupdict()
+                bitrate_value = float(groups['bitrate'])
+                bitrate_unit = groups['bitrate_unit']
+
                 # Convert to bps
                 conversion_factors = {
                     'bps': 1,
@@ -1153,14 +1203,301 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
                     'gbps': 1000000000,
                     'tbps': 1000000000000
                 }
-                
+
                 bitrate_in_bps = bitrate_value * conversion_factors.get(bitrate_unit, 1)
-                
-                src_dict = group_dict.setdefault('source',{}).setdefault(m.groupdict()['source'],{})
-                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': bitrate_in_bps,'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
+
+                src_dict = group_dict.setdefault('source', {}). \
+                    setdefault(groups['source'], {})
+                src_dict.update({
+                    'packets': int(groups['packets']),
+                    'bytes': int(groups['bytes']),
+                    'aps': int(groups['aps']),
+                    'pps': int(groups['pps']),
+                    'bitrate': bitrate_in_bps,
+                    'bitrate_unit': 'bps',
+                    'oifs': int(groups['oifs'])})
                 continue
         return mroute_dict
 
+
+# ===================================
+# Parser for 'show ip mroute detail'
+# ===================================
+
+class ShowIpMrouteDetailSchema(MetaParser):
+    """Schema for show ip mroute detail"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'count_multicast_total': int,
+                        'count_multicast_starg': int,
+                        'count_multicast_sg': int,
+                        'count_multicast_starg_prefix': int,
+                        Optional('multicast_group'): {
+                            Any(): {
+                                Optional('source_address'): {
+                                    Any(): {
+                                        'uptime': str,
+                                        Optional('client_count'): {
+                                            Any(): int,
+                                        },
+                                        Optional('data_created'): str,
+                                        Optional('statistics'): {
+                                            Optional('packets'): int,
+                                            Optional('bytes'): int,
+                                            Optional('bitrate'): float,
+                                            Optional('bitrate_unit'): str,
+                                            Optional('flow_status'): str,
+                                        },
+                                        Optional('incoming_interface_list'): ListOf(
+                                            {
+                                                Optional('interface'): str,
+                                                Optional('uptime'): str,
+                                                Optional('internal'): bool,
+                                            }
+                                        ),
+                                        Optional('oil_count'): int,
+                                        Optional('outgoing_interface_list'): ListOf(
+                                            {
+                                                Optional('interface'): str,
+                                                Optional('oil_uptime'): str,
+                                                Optional('oil_flags'): str,
+                                                Optional('flag'): str,
+                                            }
+                                        ),
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpMrouteDetail(ShowIpMrouteDetailSchema):
+    """Parser for show ip mroute detail"""
+
+    cli_command = 'show ip mroute detail'
+
+    exclude = [
+        'incoming_interface_list',
+        'oil_count',
+        'outgoing_interface_list',
+        'oil_uptime',
+        'uptime',
+    ]
+
+    def cli(self, command, output=None):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        address_family_dict = None
+        route_dict = None
+
+        # IP Multicast Routing Table for VRF "default"
+        p1 = re.compile(
+            r'^(?P<address_family>[Ii][Pp]) +[mM]ulticast +[rR]outing +'
+            r'[tT]able +for +VRF +"(?P<vrf>[^"]+)"$'
+        )
+
+        # Total number of routes: 701
+        p2 = re.compile(r'^Total +number +of +routes: +(?P<count>[0-9]+)$')
+
+        # Total number of (*,G) routes: 0
+        p3 = re.compile(
+            r'^Total +number +of +\(\*,G\) +routes: +(?P<count>[0-9]+)$'
+        )
+
+        # Total number of (S,G) routes: 700
+        p4 = re.compile(
+            r'^Total +number +of +\(S,G\) +routes: +(?P<count>[0-9]+)$'
+        )
+
+        # Total number of (*,G-prefix) routes: 1
+        p5 = re.compile(
+            r'^Total +number +of +\(\*,G-prefix\) +routes: +(?P<count>[0-9]+)$'
+        )
+
+        # (192.205.38.2/32, 224.1.24.0/32), uptime: 13:03:24, nbm(5) pim(0) ip(0)
+        p6 = re.compile(
+            r'^\((?P<source_address>[0-9\.\*\/]+), +'
+            r'(?P<multicast_group>[a-zA-Z0-9\.\/\:]+)\), +uptime: +'
+            r'(?P<uptime>[0-9a-zA-Z\:\.]+), +'
+            r'(?P<client_counts>[a-zA-Z0-9\(\) ]+)$'
+        )
+
+        # nbm(5)
+        p7 = re.compile(r'(?P<client>[a-zA-Z]+)\((?P<count>[0-9]+)\)')
+
+        # Data Created: No
+        p8 = re.compile(r'^Data +Created: +(?P<data_created>\S+)$')
+
+        # Stats: 3122/159222 [Packets/Bytes], 27.200  bps
+        p9 = re.compile(
+            r'^Stats: +(?P<packets>[0-9]+)\/(?P<bytes>[0-9]+) +'
+            r'\[Packets\/Bytes\], +(?P<bitrate>[0-9\.]+) +'
+            r'(?P<bitrate_unit>[kKmMgGtT]?bps)$'
+        )
+
+        # Stats: Active Flow
+        p10 = re.compile(r'^Stats: +(?P<flow_status>[A-Za-z][A-Za-z ]+)$')
+
+        # Incoming interface: Ethernet1/51, uptime: 13:03:24, internal
+        p11 = re.compile(
+            r'^Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+), +'
+            r'uptime: +(?P<uptime>[0-9a-zA-Z\:\.]+)'
+            r'(?:, +(?P<internal>internal))?$'
+        )
+
+        # Outgoing interface list: (count: 5)
+        p12 = re.compile(
+            r'^Outgoing +interface +list: +\(count: +(?P<oil_count>[0-9]+)\)$'
+        )
+
+        # Ethernet1/39, uptime: 13:03:24, nbm
+        p13 = re.compile(
+            r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+), +uptime: +'
+            r'(?P<oil_uptime>[a-zA-Z0-9\:]+), +'
+            r'(?P<oil_flags>[a-zA-Z0-9\,\.\(\) ]+?)'
+            r'(?:, +\((?P<flag>[\S\s]+)\))?$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # IP Multicast Routing Table for VRF "default"
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                address_family = groups['address_family'].lower() + 'v4'
+                address_family_dict = ret_dict.setdefault('vrf', {}) \
+                    .setdefault(groups['vrf'], {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {})
+                route_dict = None
+                continue
+
+            # Total number of routes: 701
+            m = p2.match(line)
+            if m and address_family_dict is not None:
+                address_family_dict['count_multicast_total'] = int(m.group('count'))
+                continue
+
+            # Total number of (*,G) routes: 0
+            m = p3.match(line)
+            if m and address_family_dict is not None:
+                address_family_dict['count_multicast_starg'] = int(m.group('count'))
+                continue
+
+            # Total number of (S,G) routes: 700
+            m = p4.match(line)
+            if m and address_family_dict is not None:
+                address_family_dict['count_multicast_sg'] = int(m.group('count'))
+                continue
+
+            # Total number of (*,G-prefix) routes: 1
+            m = p5.match(line)
+            if m and address_family_dict is not None:
+                address_family_dict['count_multicast_starg_prefix'] = int(
+                    m.group('count')
+                )
+                continue
+
+            # (192.205.38.2/32, 224.1.24.0/32), uptime: 13:03:24, nbm(5) pim(0) ip(0)
+            m = p6.match(line)
+            if m and address_family_dict is not None:
+                groups = m.groupdict()
+                route_dict = address_family_dict.setdefault('multicast_group', {}) \
+                    .setdefault(groups['multicast_group'], {}) \
+                    .setdefault('source_address', {}) \
+                    .setdefault(groups['source_address'], {})
+                route_dict['uptime'] = groups['uptime']
+
+                client_count_dict = route_dict.setdefault('client_count', {})
+                # nbm(5)
+                for client_match in p7.finditer(groups['client_counts']):
+                    client_groups = client_match.groupdict()
+                    client_count_dict[client_groups['client']] = int(
+                        client_groups['count']
+                    )
+                continue
+
+            # Data Created: No
+            m = p8.match(line)
+            if m and route_dict is not None:
+                route_dict['data_created'] = m.group('data_created')
+                continue
+
+            # Stats: 3122/159222 [Packets/Bytes], 27.200  bps
+            m = p9.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                statistics_dict = route_dict.setdefault('statistics', {})
+                statistics_dict.update({
+                    'packets': int(groups['packets']),
+                    'bytes': int(groups['bytes']),
+                    'bitrate': float(groups['bitrate']),
+                    'bitrate_unit': groups['bitrate_unit'].lower(),
+                })
+                continue
+
+            # Stats: Active Flow
+            m = p10.match(line)
+            if m and route_dict is not None:
+                statistics_dict = route_dict.setdefault('statistics', {})
+                statistics_dict['flow_status'] = m.group('flow_status')
+                continue
+
+            # Incoming interface: Ethernet1/51, uptime: 13:03:24, internal
+            m = p11.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                incoming_dict = {
+                    'interface': Common.convert_intf_name(
+                        groups['incoming_interface']
+                    ),
+                    'uptime': groups['uptime'],
+                }
+                if groups.get('internal'):
+                    incoming_dict['internal'] = True
+                route_dict.setdefault('incoming_interface_list', []).append(
+                    incoming_dict
+                )
+                continue
+
+            # Outgoing interface list: (count: 5)
+            m = p12.match(line)
+            if m and route_dict is not None:
+                route_dict['oil_count'] = int(m.group('oil_count'))
+                continue
+
+            # Ethernet1/39, uptime: 13:03:24, nbm
+            m = p13.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                outgoing_dict = {
+                    'interface': Common.convert_intf_name(
+                        groups['outgoing_interface']
+                    ),
+                    'oil_uptime': groups['oil_uptime'],
+                    'oil_flags': ' '.join(sorted(groups['oil_flags'].split())),
+                }
+                if groups.get('flag'):
+                    outgoing_dict['flag'] = groups['flag']
+                route_dict.setdefault('outgoing_interface_list', []).append(
+                    outgoing_dict
+                )
+                continue
+
+        return ret_dict
 
 # ===================================
 # Parser for 'show ipv6 mroute summary vrf all'

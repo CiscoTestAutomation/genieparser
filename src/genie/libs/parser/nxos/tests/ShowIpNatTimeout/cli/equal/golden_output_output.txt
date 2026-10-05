@@ -1,0 +1,9 @@
+ IP NAT Timeout values (in sec)
+========================
+TCP:3600
+UDP:3600
+DYN:3600
+Sampling:43200
+SYN:60
+FINRST:60
+========================

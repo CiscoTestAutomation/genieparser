@@ -169,7 +169,8 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
 
         # L3 Multicast entries*:                               16384
         # L3 Multicast entries                                8192 (**)
-        p18 = re.compile(r'^L3 Multicast entries\*?\:?\s+(?P<l3_muticast_entries>[\d]+)[\s\(\*\)]*$')
+        # L3 Multicast entries (Stats)                         32768 (32768)
+        p18 = re.compile(r'^L3 Multicast entries(?:\s+\(Stats\))?\*?\:?\s+(?P<l3_muticast_entries>\d+)(?:\s+\(\d+\))?[\s\(\*\)]*$')
 
         # Overflow L3 Multicast entries*:                      768
         p19 = re.compile(r'^Overflow L3 Multicast entries\*?\:+\s+(?P<overflow_l3_muticast_entries>[\d]+)$')
@@ -426,6 +427,7 @@ class ShowSdmPrefer(ShowSdmPreferSchema):
                 continue
 
             # L3 Multicast entries*:                               16384
+            # L3 Multicast entries (Stats)                         32768 (32768)
             m = p18.match(line)
             if m:
                 groups = m.groupdict()

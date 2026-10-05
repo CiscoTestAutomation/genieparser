@@ -1,0 +1,60 @@
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     0
+
+Sensor List:  Environmental Monitoring
+Sensor           Location      State     Reading        Threshold(Minor,Major,Critical,Shutdown)
+---
+Temp: CPU board  R0            Normal    33    Celsius         ( 52, 57, 62, 67)(Celsius)
+Temp: FANIO      R0            Normal    35    Celsius         ( 53, 58, 63, 68)(Celsius)
+Temp: F_Left     R0            Normal    28    Celsius         ( 52, 57, 62, 67)(Celsius)
+Temp: E104       R0            Normal    34    Celsius         ( 65, 70, 75, 80)(Celsius)
+Temp: F_Right    R0            Normal    30    Celsius         ( 54, 59, 64, 69)(Celsius)
+Temp: S1_K0_00   R0            Normal    45    Celsius         ( 95,105,115,125)(Celsius)
+Temp: S1_K0_01   R0            Normal    45    Celsius         ( 95,105,115,125)(Celsius)
+Temp: S1_K0_02   R0            Normal    45    Celsius         ( 95,105,115,125)(Celsius)
+Temp: S1_K0_03   R0            Normal    47    Celsius         ( 95,105,115,125)(Celsius)
+Temp: S1_K0_04   R0            Normal    46    Celsius         ( 95,105,115,125)(Celsius)
+Temp: S1_K0_05   R0            Normal    46    Celsius         ( 95,105,115,125)(Celsius)
+Temp: S1_K0_06   R0            Normal    46    Celsius         ( 95,105,115,125)(Celsius)
+CPU_P3P3V_S0     R0            Normal    3297  mV              na
+CPU_P3P3V_S5     R0            Normal    3296  mV              na
+CPU_P0P78V_S0    R0            Normal    778   mV              na
+CPU_P1P8V_S5     R0            Normal    1799  mV              na
+CPU_P1P1V_S3     R0            Normal    1107  mV              na
+CPU_P1P8V_S0     R0            Normal    1795  mV              na
+CPU_P3V3_STBY    R0            Normal    3326  mV              na
+CPU_A2P5V        R0            Normal    2492  mV              na
+CPU_A1P2V        R0            Normal    1194  mV              na
+CPU_P12V         R0            Normal    12013 mV              na
+CPU_P0P75V_S5    R0            Normal    748   mV              na
+CPU_P0P75V_S0    R0            Normal    748   mV              na
+CPU_P5V          R0            Normal    4976  mV              na
+CPU_P5V_MGMIO    R0            Normal    4970  mV              na
+CPU_P3P3V_FRU_S  R0            Normal    3282  mV              na
+CPU_A3P3V_MGMIO  R0            Normal    3284  mV              na
+BB_A3P3          R0            Normal    3310  mV              na
+BB_PLL_1P8V      R0            Normal    1804  mV              na
+BB_PLL_3P3V      R0            Normal    3310  mV              na
+BB_P1VF          R0            Normal    1008  mV              na
+BB_1_8V          R0            Normal    1804  mV              na
+BB_P1_2VF        R0            Normal    1195  mV              na
+BB_NPU_AVDD_1P8  R0            Normal    1804  mV              na
+BB_VDDS_KR0_0P7  R0            Normal    748   mV              na
+BB_VDDA_KR0_P0V  R0            Normal    937   mV              na
+BB_VDDCK_KR0_1P  R0            Normal    1175  mV              na
+
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     1     2
+---
+PS1     C9K-PWR-750WAC        ac    n.a.      bad-input  n.a.  n.a.
+PS2     C9K-PWR-750WAC        ac    750 W     active     good  n.a.
+
+Fan                 Fan States
+Tray    Status       1     2
+---
+FT1     active       good  good
+FT2     active       good  good
+FT3     active       good  good
+FT4     active       good  good
+FT5     active       good  good

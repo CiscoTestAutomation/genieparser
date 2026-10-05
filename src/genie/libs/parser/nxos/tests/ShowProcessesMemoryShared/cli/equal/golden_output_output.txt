@@ -1,0 +1,36 @@
+Component                Shared Memory         Size                    Used     Available    Ref
+                               Address     (kbytes)                (kbytes)      (kbytes)  Count
+smm                     0x700000000000         1028                       5          1023     53
+cli                     0x700000101000       204804*                 132224         72580     12
+uxrib-rnh               0x70000c902000       131076*                     96        130980     34
+npacl                   0x700014903000         4100*                      4          4096      2
+urib                    0x700014d04000         3072+ (1572868)         2075           997     34
+urib-pib                0x700074d05000         1028*                    381           647     34
+urib-redist             0x700074e06000         5124*                    428          4696     34
+urib-ufdm               0x700075307000         8196*                    833          7363      1
+u6rib                   0x700075b08000         3072+  (786436)         1962          1110     26
+u6rib-pib               0x7000a5b09000         1028*                    445           583     26
+u6rib-notify            0x7000a5c0a000         4100*                   1022          3078     26
+am                      0x7000a600b000         1028*                      6          1022     12
+am_lim                  0x7000a610c000           68*                      2            66     12
+icmpv6                  0x7000a611d000        10244*                      9         10235     18
+arp                     0x7000a6b1e000        12292*                     77         12215      8
+ip                      0x7000a771f000        10244                     394          9850     31
+ipv6                    0x7000a8120000        16388*                    135         16253     19
+rpm                     0x7000a9121000         2048+   (61444)            2          2046     16
+mld                     0x7000acd22000           68                       0            68      2
+igmp                    0x7000acd33000         3076                       0          3076      2
+mrib                    0x7000ad034000         3072+   (59396)          810          2262      4
+m6rib                   0x7000b0a35000         3072+   (10244)          937          2135      4
+mrib-mfdm               0x7000b1436000         6148*                      0          6148      1
+m6rib-mfdm              0x7000b1a37000         6148*                      0          6148      1
+mcastfwdv6              0x7000b2038000        25604*                     22         25582      3
+pim                     0x7000b3939000        20484                      22         20462      4
+pim_ipc                 0x7000b4d3a000         2048+   (25604)            1          2047      2
+mcastfwd                0x7000b663b000        61444*                    657         60787      3
+pim6                    0x7000ba23c000         8196                      23          8173      4
+pim6_ipc                0x7000baa3d000         2048+   (25604)            1          2047      2
+
+Shared memory totals - Size: 3041 MB, Used: 162 MB, Available: 2888 MB
+'+' - Dynamic shared memory segment.
+'*' - Non-default sized share memory segment.

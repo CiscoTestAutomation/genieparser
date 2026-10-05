@@ -144,6 +144,19 @@ class ShowInventorySchema(MetaParser):
     """
 
     schema = {
+        Optional("member"): {
+            Any(): {
+                "inventory": {
+                    Any(): {
+                        Optional("name"): str,
+                        Optional("descr"): str,
+                        Optional("pid"): str,
+                        Optional("vid"): str,
+                        Optional("sn"): str,
+                    },
+                },
+            },
+        },
         Optional("main"): {
             Optional("swstack"): bool,
             Optional(Any()): {
@@ -451,6 +464,26 @@ class ShowInventory(ShowInventorySchema):
                     pid = ""
                 vid = group["vid"] or ""
                 sn = group["sn"] or ""
+
+                # Preserve every member-qualified record in a lossless,
+                # normalized view. The legacy slot/main trees intentionally
+                # remain unchanged for backward compatibility, but can flatten
+                # duplicate slot numbers across stack/SVL members.
+                member_match = re.match(r"^Switch\s+(?P<member>\d+)\b", name)
+                if member_match:
+                    member_record = (
+                        ret_dict.setdefault("member", {})
+                        .setdefault(member_match.group("member"), {})
+                        .setdefault("inventory", {})
+                        .setdefault(name, {})
+                    )
+                    member_record.update({
+                        "name": name,
+                        "descr": descr,
+                        "pid": pid,
+                        "vid": vid,
+                        "sn": sn,
+                    })
 
                 # NAME: "Chassis", DESCR: "Cisco ASR1006 Chassis"
                 # NAME: "c93xx Stack", DESCR: "c93xx Stack"

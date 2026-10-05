@@ -107,5 +107,30 @@ expected_output = {
                 }
             }
         }
-    }
+    },
+    "member": {'1': {'inventory': {'Switch 1': {'name': 'Switch 1',
+                                      'descr': 'C9300-48P',
+                                      'pid': 'C9300-48P',
+                                      'vid': 'V01',
+                                      'sn': 'FCW2124G09K'},
+                         'Switch 1 - Power Supply B': {'name': 'Switch 1 - Power Supply B',
+                                                       'descr': 'Switch 1 - Power Supply B',
+                                                       'pid': 'PWR-C1-350WAC',
+                                                       'vid': 'V02',
+                                                       'sn': 'ART2125F31T'},
+                         'Switch 1 FRU Uplink Module 1': {'name': 'Switch 1 FRU Uplink Module 1',
+                                                          'descr': '8x10G Uplink Module',
+                                                          'pid': 'C9300-NM-8X',
+                                                          'vid': 'V01',
+                                                          'sn': 'FOC21221RPP'}}},
+     '2': {'inventory': {'Switch 2': {'name': 'Switch 2',
+                                      'descr': 'C9300-48P',
+                                      'pid': 'C9300-48P',
+                                      'vid': 'V03',
+                                      'sn': 'FOC2723YDDJ'},
+                         'Switch 2 - Power Supply B': {'name': 'Switch 2 - Power Supply B',
+                                                       'descr': 'Switch 2 - Power Supply B',
+                                                       'pid': 'PWR-C1-350WAC',
+                                                       'vid': 'V02',
+                                                       'sn': 'ART2125F30R'}}}}
 }

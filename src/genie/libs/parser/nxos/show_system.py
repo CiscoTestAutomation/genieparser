@@ -4,6 +4,7 @@ NXOS parsers for the following show commands:
     * 'show system internal sysmgr service name <WORD>'
     * 'show system internal l2fwder Mac'
     * 'show system internal processes memory'
+    * 'show system routing mode'
 """
 
 # Python
@@ -810,3 +811,63 @@ class ShowSystemInternalFlash(ShowSystemInternalFlashSchema):
                 }
                 continue
         return result_dict
+
+
+# =======================================
+# Schema for 'show system routing mode'
+# =======================================
+class ShowSystemRoutingModeSchema(MetaParser):
+    """Schema for show system routing mode"""
+
+    schema = {
+        'configured_system_routing_mode': str,
+        'applied_system_routing_mode': str,
+    }
+
+
+# =======================================
+# Parser for 'show system routing mode'
+# =======================================
+class ShowSystemRoutingMode(ShowSystemRoutingModeSchema):
+    """Parser for show system routing mode"""
+
+    cli_command = 'show system routing mode'
+
+    def cli(self, command, output=None):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+
+        # Configured System Routing Mode: Multicast Extended Heavy Scale
+        p1 = re.compile(r'^Configured +System +Routing +Mode: +(?P<configured_system_routing_mode>[^\r\n]+)$')
+
+        # Applied System Routing Mode: Multicast Extended Heavy Scale
+        p2 = re.compile(r'^Applied +System +Routing +Mode: +(?P<applied_system_routing_mode>[^\r\n]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Configured System Routing Mode: Multicast Extended Heavy Scale
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict.update({
+                    'configured_system_routing_mode':
+                        groups['configured_system_routing_mode']
+                })
+                continue
+
+            # Applied System Routing Mode: Multicast Extended Heavy Scale
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ret_dict.update({
+                    'applied_system_routing_mode':
+                        groups['applied_system_routing_mode']
+                })
+                continue
+
+        return ret_dict

@@ -124,10 +124,14 @@ class ShowInventory(ShowInventorySchema_iosxe):
         parsed_output = {}
         flag_is_slot = False
         oc_key_values = ['power', 'fan', 'clock']
+        name = descr = ''
 
         # NAME: "CLK-7600 1", DESCR: "OSR-7600 Clock FRU 1"
         # NAME: "WS-C6504-E", DESCR: "Cisco Systems Cisco 6500 4-slot Chassis System"
-        r1 = re.compile(r'NAME\:\s*\"(?P<name>.+)\"\,\s*DESCR:\s*\"(?P<description>.+)\"')
+        r1 = re.compile(
+            r'^NAME\:\s*\"(?P<name>.*)\"\,\s*DESCR:\s*'
+            r'\"(?P<description>.*)\"$'
+        )
 
         # CISCO3945-CHASSIS
         # Cisco Systems Cisco 6500 4-slot Chassis

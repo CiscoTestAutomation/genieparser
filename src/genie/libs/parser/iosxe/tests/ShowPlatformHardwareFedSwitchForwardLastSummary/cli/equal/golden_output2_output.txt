@@ -1,0 +1,64 @@
+show platform hardware fed switch active forward last summary
+Input Packet Details:
+###[ Ethernet ]###
+  dst       = 6c:8b:d3:69:14:bf
+  src       = f8:b7:e2:4e:cd:ea
+  type      = 0x8100
+###[ 802.1Q ]###
+     prio      = 0
+     id        = 0
+     vlan      = 239
+     type      = 0x800
+###[ IP ]###
+        version   = 4
+        ihl       = 5
+        tos       = 0x0
+        len       = 100
+        id        = 12224
+        flags     =
+        frag      = 0
+        ttl       = 254
+        proto     = icmp
+        chksum    = 0xc20d
+        src       = 100.1.1.1
+        dst       = 100.1.1.200
+        options   = ''
+###[ ICMP ]###
+           type      = echo-request
+           code      = 0
+           chksum    = 0xcccd
+           id        = 0x12
+           seq       = 0xbfa
+###[ Raw ]###
+              load      = '00 00 00 00 3E E8 66 88 AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD AB CD'
+Ingress:
+   Port                      : TwentyFiveGigE1/0/24
+   Global Port Number        : 24
+   Local Port Number         : 24
+   Asic Port Number          : 15
+   Asic Instance             : 1
+   Vlan                      : 239
+   Mapped Vlan ID            : 254
+   STP Instance              : 253
+   BlockForward              : 0
+   BlockLearn                : 0
+   L3 Interface              : 38
+       IPv4 Routing          : enabled
+       IPv6 Routing          : enabled
+       Vrf Id                : 0
+   Adjacency:
+       Station Index         : 117    [SI_CPUQ_FORUS_TRAFFIC]
+       Destination Index     : 24120
+       Rewrite Index         : 1
+       Replication Bit Map   : 0x8    ['coreCpu']
+   Decision:
+       Destination Index     : 24120  [DI_CPUQ_FORUS_TRAFFIC]
+       Rewrite Index         : 1      [RI_CPU]
+       Dest Mod Index        : 0      [IGR_FIXED_DMI_NULL_VALUE]
+       CPU Map Index         : 0      [CMI_NULL]
+       Forwarding Mode       : 3      [Other or Tunnel]
+       Replication Bit Map   :        ['coreCpu']
+       Winner                :        L3FWDIPV4 LOOKUP
+       Qos Label             : 1
+       SGT                   : 0
+       DGTID                 : 0
