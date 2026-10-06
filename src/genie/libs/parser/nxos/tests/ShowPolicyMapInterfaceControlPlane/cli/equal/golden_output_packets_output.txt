@@ -1,0 +1,11 @@
+Control Plane
+
+  Service-policy  input: copp-system-p-policy-strict
+
+    class-map copp-system-p-class-l3uc-data (match-any)
+      match exception glean
+      set cos 1
+      police cir 800 kbps , bc 32000 bytes
+      module 1 :
+        transmitted 373977 packets;
+        dropped 0 packets;

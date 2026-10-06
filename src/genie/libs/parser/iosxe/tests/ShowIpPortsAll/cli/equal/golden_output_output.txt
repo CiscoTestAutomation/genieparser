@@ -1,0 +1,34 @@
+show ip ports all
+Proto Local Address               Foreign Address             State       PID/Program Name
+
+TCB       Local Address               Foreign Address             (state)
+tcp   192.168.1.3:646            192.168.1.10:48733          ESTAB      0/[IOS] Unknown
+tcp   192.168.1.3:37048          192.168.1.4:179             SYNSENT      0/[IOS] Unknown
+tcp   :::443                     :::*                        LISTEN      324/[IOS]HTTP CORE
+tcp   *:443                      *:*                         LISTEN      324/[IOS]HTTP CORE
+tcp   :::80                      :::*                        LISTEN      324/[IOS]HTTP CORE
+tcp   *:80                       *:*                         LISTEN      324/[IOS]HTTP CORE
+tcp   *:179                      192.168.1.9:*               LISTEN      625/[IOS]TCP Listener
+tcp   *:179                      192.168.1.8:*               LISTEN      625/[IOS]TCP Listener
+tcp   *:179                      192.168.1.7:*               LISTEN      625/[IOS]TCP Listener
+tcp   *:179                      192.168.1.4:*               LISTEN      625/[IOS]TCP Listener
+tcp   *:179                      192.168.1.1:*               LISTEN      625/[IOS]TCP Listener
+tcp   :::21111                   :::*                        LISTEN      324/[IOS]HTTP CORE
+tcp   *:21111                    *:*                         LISTEN      324/[IOS]HTTP CORE
+tcp   *:22                       *:*                         LISTEN      [IOS]SSH
+tcp   :::22                      :::*                        LISTEN      [IOS]SSH
+udp   FE80::1:547                 :::*                        	 	  616/[IOS]DHCPv6 Listener
+udp   1.7.1.1:646                 *:*                         	 	  624/[IOS]LDP Hello
+udp   1.7.1.1:3503                *:*                         	 	  609/[IOS]LSP Verification Manager
+
+tcp   0.0.0.0:80                 0.0.0.0:*                   LISTEN    10730/nginx:
+tcp   0.0.0.0:443                0.0.0.0:*                   LISTEN    10730/nginx:
+tcp6  :::80                      :::*                        LISTEN    10730/nginx:
+tcp6  :::443                     :::*                        LISTEN    10730/nginx:
+tcp   0.0.0.0:443                0.0.0.0:*                   LISTEN      915/sessmgrd
+tcp   0.0.0.0:80                 0.0.0.0:*                   LISTEN      915/sessmgrd
+tcp6  :::443                     :::*                        LISTEN      915/sessmgrd
+tcp6  :::80                      :::*                        LISTEN      915/sessmgrd
+
+
+interpid-9600X-SVL#

@@ -6,7 +6,7 @@ IOSXE parsers for the following show commands:
     * 'show route-map {name}'
     * 'show table-map {map}'
     * 'show table-map'
-    
+
 '''
 
 #Python
@@ -20,7 +20,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 class ShowRouteMapAllSchema(MetaParser):
     """
-    Schema for 
+    Schema for
     * show route-map all
     * show route-map {name}
     """
@@ -50,6 +50,8 @@ class ShowRouteMapAllSchema(MetaParser):
                         Optional('set_route_origin'): str,
                         Optional('set_distance'): int,
                         Optional('set_local_pref'): int,
+                        Optional('set_ip_tos'): int,
+                        Optional('set_ipv6_precedence'): int,
                         Optional('set_next_hop'): list,
                         Optional('set_next_hop_v6'): list,
                         Optional('set_next_hop_self'): bool,
@@ -104,7 +106,7 @@ class ShowRouteMapAllSchema(MetaParser):
 
 class ShowRouteMapAll(ShowRouteMapAllSchema):
     """
-    Parser for 
+    Parser for
     * show route-map all
     * show route-map {name}
     """
@@ -113,7 +115,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
     def cli(self, name="", output=None):
         if output is None:
             if name:
-                cmd = self.cli_command[1].format(name=name) 
+                cmd = self.cli_command[1].format(name=name)
             else:
                 cmd = self.cli_command[0]
             output = self.device.execute(cmd)
@@ -144,15 +146,15 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         # ip address prefix-lists: test-test
         p3 = re.compile(r'^\s*ip *address *prefix-lists:'
                         r' *(?P<match_prefix_list>.+)$')
-        
+
         #ip address (access-lists): pbr-acl
         p3_1 = re.compile(r'^\s*ip\saddress\s\(access\-lists\)\:\s(?P<match_access_list>.+)')
-       
+
         #ip next-hop prefix-lists: test
         #ip next-hop (access-lists): 1
         p4 =  re.compile(r'^\s*ip *next-hop *(?P<match_type>[a-zA-Z0-9\S\(\)]+):'
                          r' *(?P<match_nexthop_in>.+)$')
-        
+
         # ipv6 address prefix-list test-test
         p5 = re.compile(r'^\s*ipv6 *address *prefix-list(?:s\:)?'
                         r' *(?P<match_prefix_list_v6>.+)$')
@@ -185,12 +187,18 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         # ip next-hop self
         p12_1 = re.compile(r'^\s*ip *next-hop self$')
 
-        #ip default next-hop 100.0.0.2                                          
+        #ip default next-hop 100.0.0.2
         p12_2 = re.compile(r'^\s*ip\s(?P<match_type>\S+)\snext\-hop\s(?P<set_next_hop>.+)$')
-      
+
         # ipv6 next-hop 2001:db8:1::1
         # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
         p13 = re.compile(r'^\s*ipv6 *next-hop *(?P<set_next_hop_v6>[a-zA-Z0-9\:\s]+)$')
+
+        # ip tos 7
+        p13_1 = re.compile(r'^\s*ip +tos +(?P<set_ip_tos>[0-9]+)$')
+
+        # ipv6 precedence 7
+        p13_2 = re.compile(r'^\s*ipv6 +precedence +(?P<set_ipv6_precedence>[0-9]+)$')
 
         #tag 30
         p14 = re.compile(r'^\s*tag *(?P<set_tag>[0-9]+)$')
@@ -258,7 +266,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         #ipv6 vrf red next-hop verify-availability 2001:DB8:1::1 10 track 150  [down]
         p27_2 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *vrf *(?P<vrf>[a-zA-Z0-9\:\.\-\_]+) *next-hop verify-availability *(?P<set_verify_availability_next_hops>[a-zA-Z0-9\:\.]+) *(?P<seq_no>[0-9\.]+) *track *(?P<track>[0-9\.]+) *\[ *(?P<state>\w+)\]$')
 
-        
+
         #ip next-hop recursive vrf red 2.2.2.2 force
         #ipv6 next-hop recursive vrf red 2001:DB8:1::1 force
         p28_1 = re.compile(r'^\s*(?P<ip_version>[a-zA-Z0-9]+) *next-hop recursive *vrf *(?P<vrf>[a-zA-Z0-9\:\.\-\_]+) *(?P<set_recursive_next_hop>[a-zA-Z0-9\:\.]+) *force$')
@@ -275,7 +283,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
         for line in output.splitlines():
             line = line.rstrip()
-            
+
             # route-map test, permit, sequence 10
             m = p1.match(line)
             if m:
@@ -338,14 +346,14 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_prefix_list'] = str(m.groupdict()['match_prefix_list'])
                 continue
-            
+
             # ip address (access-lists): pbr-acl
             m = p3_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_access_list'] = m.groupdict()['match_access_list']
                 continue
-            
+
             #ip next-hop prefix-lists: test
             #ip next-hop (access-lists): 1
             m = p4.match(line)
@@ -353,7 +361,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_nexthop_in'] = m.groupdict()['match_nexthop_in'].split()
                 continue
-            
+
             # ipv6 address prefix-list test-test
             m = p5.match(line)
             if m:
@@ -430,12 +438,26 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['set_next_hop_self'] = True
                 continue
 
-            #ip default next-hop 100.0.0.2                                      
-            m = p12_2.match(line)                                                
-            if m:                                                               
+            #ip default next-hop 100.0.0.2
+            m = p12_2.match(line)
+            if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop'] = m.groupdict()['set_next_hop'].split()
-                continue 
+                continue
+
+            # ip tos 7
+            m = p13_1.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_ip_tos'] = int(m.groupdict()['set_ip_tos'])
+                continue
+
+            # ipv6 precedence 7
+            m = p13_2.match(line)
+            if m:
+                route_map_dict[name]['statements'][statements]['actions']\
+                ['set_ipv6_precedence'] = int(m.groupdict()['set_ipv6_precedence'])
+                continue
 
             #tag 30
             m = p14.match(line)
@@ -670,7 +692,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #ipv6 next-hop recursive 2001:DB8:1::1
-            #ip next-hop recursive 1.2.3.4           
+            #ip next-hop recursive 1.2.3.4
             m = p28_4.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']['recursive'] = True
@@ -706,12 +728,12 @@ class ShowTableMapSchema(MetaParser):
                 'index': {
                     Any():{
                         'from': int,
-                        'to': int 
+                        'to': int
                     }
                 }
-            }         
+            }
         }
-    } 
+    }
 # ==========================================================================================
 # Parser for 'show table-map {map}'
 # ==========================================================================================
@@ -719,19 +741,19 @@ class ShowTableMapSchema(MetaParser):
 class ShowTableMap(ShowTableMapSchema):
     """Parser for show table-map {map}"""
     cli_command = ['show table-map', 'show table-map {map}']
-    
+
     def cli(self, map=None, output=None):
         if output is None:
             if map:
                 cmd = self.cli_command[1].format(map=map)
             else:
                 cmd = self.cli_command[0]
-            
+
             output = self.device.execute(cmd)
-        
+
         # Table Map t1
         p1 = re.compile(r'^Table Map (?P<table_map>\S+)$')
-        
+
         # from 8 to 16
         # from 16 to 32
         p2 = re.compile(r'^(from (?P<from>\d+)\s+to\s+(?P<to>\d+))$')
@@ -741,18 +763,18 @@ class ShowTableMap(ShowTableMapSchema):
         p3 = re.compile(r'^default (?P<default>\w+)$')
 
         ret_dict = {}
-        
-        counter = 0 #counter for events 
+
+        counter = 0 #counter for events
         for line in output.splitlines():
             line = line.strip()
-            
+
             # Table Map t1
             m = p1.match(line)
             if m:
                 table_dict = ret_dict.setdefault('table_map', {}).setdefault(m.groupdict()['table_map'], {})
                 counter = 0
                 continue
-            
+
             # from 8 to 16
             # from 16 to 32
             m = p2.match(line)
@@ -763,7 +785,7 @@ class ShowTableMap(ShowTableMapSchema):
                 profile['to'] = int(group['to'])
                 counter += 1
                 continue
-            
+
             # default copy
             # default 8
             m = p3.match(line)

@@ -835,6 +835,8 @@ class ShowMonitorCaptureBufferDetailedSchema(MetaParser):
                 Optional('utc_arrival_time'): str,
                 Optional('epoch_arrival_time'): str,
                 Optional('data'): str,
+                Optional('request_frame'): str,
+                Optional('response_time'): str,
             }
         }
     }

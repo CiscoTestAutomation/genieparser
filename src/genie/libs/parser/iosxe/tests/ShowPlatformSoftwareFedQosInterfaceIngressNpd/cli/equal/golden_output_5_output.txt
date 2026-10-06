@@ -1,0 +1,276 @@
+***********************************************************************************
+
+ [FiftyGigE2/0/67, map1_table, Ingress]: CGID = 0x92B890 
+
+***********************************************************************************
+
+  cgid: 0x92B890
+
+  No of classes: 1
+
+  TCG ref count: 1
+
+  Filter state: UP TO DATE
+
+  VMR state: DIRTY
+
+
+  ============================================================
+
+   NPD: Ingress QOS Profile information
+
+  ============================================================
+
+  OID: 0x9AB
+
+  Ref Count: 1
+
+  No of  Counter: 0
+
+  No of meters: 1
+
+  Tunnel Mode: RE-EVALUATE
+
+  Need filter table update: UPTODATE
+
+
+  DSCP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+
+  ----      -----   -----   ---------   --  --  ----- --------
+  0          0       0         0       0   G     Y      0    
+
+   1          1       0         0       0   G     Y      0    
+
+   2          2       0         0       0   G     Y      0    
+
+   3          3       0         0       0   G     Y      0    
+
+   4          4       0         0       0   G     Y      0    
+
+   5          5       0         0       0   G     Y      0    
+
+   6          6       0         0       0   G     Y      0    
+
+   7          7       0         0       0   G     Y      0    
+
+   8          16      1         0       0   G     Y      0    
+
+   9          9       1         0       0   G     Y      0    
+
+   10         10      1         0       0   G     Y      0    
+
+   11         11      1         0       0   G     Y      0    
+
+   12         12      1         0       0   G     Y      0    
+
+   13         13      1         0       0   G     Y      0    
+
+   14         14      1         0       0   G     Y      0    
+
+   15         15      1         0       0   G     Y      0    
+
+   16         32      2         0       7   G     Y      0    
+
+   17         17      2         0       0   G     Y      0    
+
+   18         18      2         0       0   G     Y      0    
+
+   19         19      2         0       0   G     Y      0    
+
+   20         20      2         0       0   G     Y      0    
+
+   21         21      2         0       0   G     Y      0    
+
+   22         22      2         0       0   G     Y      0    
+
+   23         23      2         0       0   G     Y      0    
+   24         24      3         0       7   G     Y      0    
+
+   25         25      3         0       0   G     Y      0    
+
+   26         26      3         0       0   G     Y      0    
+
+   27         27      3         0       0   G     Y      0    
+
+   28         28      3         0       0   G     Y      0    
+
+   29         29      3         0       0   G     Y      0    
+
+   30         30      3         0       0   G     Y      0    
+
+   31         31      3         0       0   G     Y      0    
+
+   32         24      4         0       7   G     Y      0    
+
+   33         33      4         0       0   G     Y      0    
+
+   34         34      4         0       0   G     Y      0    
+
+   35         35      4         0       0   G     Y      0    
+
+   36         36      4         0       0   G     Y      0    
+
+   37         37      4         0       0   G     Y      0    
+
+   38         38      4         0       0   G     Y      0    
+
+   39         39      4         0       0   G     Y      0    
+
+   40         24      5         0       7   G     Y      0    
+
+   41         41      5         0       0   G     Y      0    
+
+   42         42      5         0       0   G     Y      0    
+
+   43         43      5         0       0   G     Y      0    
+
+   44         44      5         0       0   G     Y      0    
+
+   45         45      5         0       0   G     Y      0    
+
+   46         46      5         0       7   G     Y      0    
+
+   47         47      5         0       0   G     Y      0    
+
+   48         56      6         0       7   G     Y      0    
+
+   49         49      6         0       0   G     Y      0    
+
+   50         50      6         0       0   G     Y      0    
+   51         51      6         0       0   G     Y      0    
+
+   52         52      6         0       0   G     Y      0    
+
+   53         53      6         0       0   G     Y      0    
+
+   54         54      6         0       0   G     Y      0    
+
+   55         55      6         0       0   G     Y      0    
+
+   56         56      7         0       7   G     Y      0    
+
+   57         57      7         0       0   G     Y      0    
+
+   58         58      7         0       0   G     Y      0    
+
+   59         59      7         0       0   G     Y      0    
+
+   60         60      7         0       0   G     Y      0    
+
+   61         61      7         0       0   G     Y      0    
+
+   62         62      7         0       0   G     Y      0    
+
+   63         63      7         0       0   G     Y      0    
+
+
+   COS_DEI   Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+
+   -------   -----   -----   ---------   --  --  ----- --------
+
+   0          0       0         0       0   G     Y      0    
+
+   1          1       0         0       0   G     Y      0    
+
+   2          2       1         0       0   G     Y      0    
+
+   3          3       1         0       0   G     Y      0    
+
+   4          4       2         0       0   G     Y      0    
+
+   5          5       2         0       0   G     Y      0    
+
+   6          6       3         0       0   G     Y      0    
+
+   7          7       3         0       0   G     Y      0    
+
+   8          8       4         0       7   G     Y      0    
+
+   9          9       4         0       7   G     Y      0    
+
+   10         10      5         0       7   G     Y      0    
+
+   11         11      5         0       7   G     Y      0    
+   12         12      6         0       0   G     Y      0    
+
+   13         13      6         0       0   G     Y      0    
+
+   14         14      7         0       0   G     Y      0    
+
+   15         15      7         0       0   G     Y      0    
+
+
+   EXP      Remap   Encap   Qos Group   TC  DP  Meter MCOffset
+
+   ---      -----   -----   ---------   --  --  ----- --------
+
+   0          0       0         0       0   G     Y      0    
+
+   1          1       1         0       0   G     Y      0    
+
+   2          2       2         0       0   G     Y      0    
+
+   3          3       3         0       0   G     Y      0    
+
+   4          4       4         0       0   G     Y      0    
+
+   5          5       5         0       0   G     Y      0    
+
+   6          6       6         0       0   G     Y      0    
+
+   7          7       7         0       0   G     Y      0    
+
+
+
+  ---------------------------------------
+
+   IPV4 ACL (OID(L3/L2): 0x0/0x0, No of ACEs: 0)
+
+  ---------------------------------------
+
+
+  ---------------------------------------
+
+   IPV6 ACL (OID(L3/L2): 0x0/0x0, No of ACEs: 0)
+
+  ---------------------------------------
+
+  ============================================================
+
+   NPD: Interface Bind
+
+  ============================================================
+  Port Type: L3
+
+  Meter Type: EXACT
+
+  Meter set OID: 0x9AC
+
+  No of meters: 1
+
+    Meter Set info
+
+    ...............
+
+    CIR: 100000000
+
+    EIR: 100000000
+
+    Profile OID: 0xE8E
+
+    Action Profile OID: 0x11B
+
+
+  Port: OID 0x983, system port OID 0x988
+
+  State: Active, Speed: 1000000000 bps, Trust: DSCP
+
+  Scheduler
+
+    OID: 0x989, ASIC: Argon
+
+  VOQ Set
+
+    OID: 0x986, device 0, base VOQ ID 1392, size 8
+
+    State: Active, Flush: Flush not active, Empty: False

@@ -1,0 +1,18 @@
+IP Multicast Routing Table for VRF "default"
+
+Total number of routes: 701
+Total number of (*,G) routes: 0
+Total number of (S,G) routes: 700
+Total number of (*,G-prefix) routes: 1
+
+(192.205.38.2/32, 224.1.24.0/32), uptime: 13:03:24, nbm(5) pim(0) ip(0)
+  Data Created: No
+  Stats: 3122/159222 [Packets/Bytes], 27.200  bps
+  Stats: Active Flow
+  Incoming interface: Ethernet1/51, uptime: 13:03:24, internal
+  Outgoing interface list: (count: 5)
+    Ethernet1/39, uptime: 13:03:24, nbm
+    Ethernet1/40, uptime: 13:03:24, nbm
+    Ethernet1/38, uptime: 13:03:24, nbm
+    Ethernet1/37, uptime: 13:03:24, nbm
+    Ethernet1/36, uptime: 13:03:24, nbm

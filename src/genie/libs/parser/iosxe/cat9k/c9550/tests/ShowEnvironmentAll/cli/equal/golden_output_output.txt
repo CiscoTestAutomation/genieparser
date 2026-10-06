@@ -1,0 +1,124 @@
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     0
+
+
+Sensor List:  Environmental Monitoring 
+ Sensor           Location      State     Reading        Threshold(Minor,Major,Critical,Shutdown)
+ --------------   ----------    ------    ------------   ---------------------------------------
+ Temp: CPU board  Switch2-R0    Normal    19    Celsius         ( 50, 55, 60, 65)(Celsius)
+ Temp: FANIO      Switch2-R0    Normal    16    Celsius         ( 50, 55, 60, 65)(Celsius)
+ Temp: F_Left     Switch2-R0    Normal    14    Celsius         ( 51, 56, 61, 66)(Celsius)
+ Temp: E100       Switch2-R0    Normal    19    Celsius         ( 65, 70, 75, 80)(Celsius)
+ Temp: F_Right    Switch2-R0    Normal    17    Celsius         ( 55, 60, 65, 70)(Celsius)
+ Temp: S1_K0_00   Switch2-R0    Normal    31    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_01   Switch2-R0    Normal    27    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_02   Switch2-R0    Normal    29    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_03   Switch2-R0    Normal    32    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_04   Switch2-R0    Normal    31    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_05   Switch2-R0    Normal    36    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_06   Switch2-R0    Normal    35    Celsius         ( 95,105,115,125)(Celsius)
+ CPU_P3P3V_S0     Switch2-R0    Normal    3299  mV              na
+ CPU_P3P3V_S5     Switch2-R0    Normal    3297  mV              na
+ CPU_P0P78V_S0    Switch2-R0    Normal    780   mV              na
+ CPU_P1P8V_S5     Switch2-R0    Normal    1794  mV              na
+ CPU_P1P1V_S3     Switch2-R0    Normal    1097  mV              na
+ CPU_P1P8V_S0     Switch2-R0    Normal    1791  mV              na
+ CPU_P3V3_STBY    Switch2-R0    Normal    3325  mV              na
+ CPU_A2P5V        Switch2-R0    Normal    2496  mV              na
+ CPU_A1P2V        Switch2-R0    Normal    1196  mV              na
+ CPU_P12V         Switch2-R0    Normal    11991 mV              na
+ CPU_P0P75V_S5    Switch2-R0    Normal    748   mV              na
+ CPU_P0P75V_S0    Switch2-R0    Normal    748   mV              na
+ CPU_P5V          Switch2-R0    Normal    4994  mV              na
+ CPU_P5V_MGMIO    Switch2-R0    Normal    4991  mV              na
+ CPU_P3P3V_FRU_S  Switch2-R0    Normal    3284  mV              na
+ CPU_A3P3V_MGMIO  Switch2-R0    Normal    3287  mV              na
+ BB_A3P3          Switch2-R0    Normal    3297  mV              na
+ BB_P7V           Switch2-R0    Normal    7005  mV              na
+ BB_P5V           Switch2-R0    Normal    4996  mV              na
+ BB_PLL_1P8V      Switch2-R0    Normal    1801  mV              na
+ BB_PLL_3P3V      Switch2-R0    Normal    3306  mV              na
+ BB_P1VF          Switch2-R0    Normal    1006  mV              na
+ BB_1_8V          Switch2-R0    Normal    1801  mV              na
+ BB_P1_2VF        Switch2-R0    Normal    1201  mV              na
+ BB_NPU_AVDD_1P8  Switch2-R0    Normal    1801  mV              na
+ BB_HBMVPP_2P5V   Switch2-R0    Normal    2500  mV              na
+ BB_VDDS_KR0_0P7  Switch2-R0    Normal    746   mV              na
+ BB_VDDA_KR0_P0V  Switch2-R0    Normal    935   mV              na
+ BB_VDDCK_KR0_1P  Switch2-R0    Normal    1175  mV              na
+ MEZZ_3_3V_LEFT   Switch2-R0    Normal    3291  mV              na
+ MEZZ_3_3V_RIGHT  Switch2-R0    Normal    3291  mV              na
+ Temp: CPU board  Switch1-R0    Normal    18    Celsius         ( 50, 55, 60, 65)(Celsius)
+ Temp: FANIO      Switch1-R0    Normal    16    Celsius         ( 50, 55, 60, 65)(Celsius)
+ Temp: F_Left     Switch1-R0    Normal    14    Celsius         ( 51, 56, 61, 66)(Celsius)
+ Temp: E100       Switch1-R0    Normal    18    Celsius         ( 65, 70, 75, 80)(Celsius)
+ Temp: F_Right    Switch1-R0    Normal    16    Celsius         ( 55, 60, 65, 70)(Celsius)
+ Temp: S1_K0_00   Switch1-R0    Normal    28    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_01   Switch1-R0    Normal    30    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_02   Switch1-R0    Normal    26    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_03   Switch1-R0    Normal    28    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_04   Switch1-R0    Normal    31    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_05   Switch1-R0    Normal    31    Celsius         ( 95,105,115,125)(Celsius)
+ Temp: S1_K0_06   Switch1-R0    Normal    28    Celsius         ( 95,105,115,125)(Celsius)
+ CPU_P3P3V_S0     Switch1-R0    Normal    3298  mV              na
+ CPU_P3P3V_S5     Switch1-R0    Normal    3298  mV              na
+ CPU_P0P78V_S0    Switch1-R0    Normal    779   mV              na
+ CPU_P1P8V_S5     Switch1-R0    Normal    1796  mV              na
+ CPU_P1P1V_S3     Switch1-R0    Normal    1097  mV              na
+ CPU_P1P8V_S0     Switch1-R0    Normal    1793  mV              na
+ CPU_P3V3_STBY    Switch1-R0    Normal    3338  mV              na
+ CPU_A2P5V        Switch1-R0    Normal    2491  mV              na
+ CPU_A1P2V        Switch1-R0    Normal    1197  mV              na
+ CPU_P12V         Switch1-R0    Normal    12020 mV              na
+ CPU_P0P75V_S5    Switch1-R0    Normal    748   mV              na
+ CPU_P0P75V_S0    Switch1-R0    Normal    747   mV              na
+ CPU_P5V          Switch1-R0    Normal    4990  mV              na
+ CPU_P5V_MGMIO    Switch1-R0    Normal    4982  mV              na
+ CPU_P3P3V_FRU_S  Switch1-R0    Normal    3282  mV              na
+ CPU_A3P3V_MGMIO  Switch1-R0    Normal    3287  mV              na
+ BB_A3P3          Switch1-R0    Normal    3330  mV              na
+ BB_P7V           Switch1-R0    Normal    6994  mV              na
+ BB_P5V           Switch1-R0    Normal    5000  mV              na
+ BB_PLL_1P8V      Switch1-R0    Normal    1799  mV              na
+ BB_PLL_3P3V      Switch1-R0    Normal    3297  mV              na
+ BB_P1VF          Switch1-R0    Normal    1008  mV              na
+ BB_1_8V          Switch1-R0    Normal    1806  mV              na
+ BB_P1_2VF        Switch1-R0    Normal    1199  mV              na
+ BB_NPU_AVDD_1P8  Switch1-R0    Normal    1803  mV              na
+ BB_HBMVPP_2P5V   Switch1-R0    Normal    2492  mV              na
+ BB_VDDS_KR0_0P7  Switch1-R0    Normal    746   mV              na
+ BB_VDDA_KR0_P0V  Switch1-R0    Normal    935   mV              na
+ BB_VDDCK_KR0_1P  Switch1-R0    Normal    1175  mV              na
+ MEZZ_3_3V_LEFT   Switch1-R0    Normal    3285  mV              na
+ MEZZ_3_3V_RIGHT  Switch1-R0    Normal    3289  mV              na
+
+Switch:1
+
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     1     2
+------  --------------------  ----  --------  ---------  -----------
+PS1     C9K-PWR-1100WAC       ac    1100 W    active     good  n.a. 
+PS2     C9K-PWR-1100WAC       ac    1100 W    active     good  n.a. 
+
+Fan                 Fan States
+Tray    Status       1     2     
+------  ----------  ------------
+FT1     active       good  good 
+FT2     active       good  good 
+FT3     active       good  good 
+
+Switch:2
+
+Power                                                    Fan States
+Supply  Model No              Type  Capacity  Status     1     2
+------  --------------------  ----  --------  ---------  -----------
+PS1     C9K-PWR-1100WAC       ac    n.a.      bad-input  n.a.  n.a. 
+PS2     C9K-PWR-1100WAC       ac    1100 W    active     good  n.a. 
+
+Fan                 Fan States
+Tray    Status       1     2     
+------  ----------  ------------
+FT1     active       good  good 
+FT2     active       good  good 
+FT3     active       good  good 

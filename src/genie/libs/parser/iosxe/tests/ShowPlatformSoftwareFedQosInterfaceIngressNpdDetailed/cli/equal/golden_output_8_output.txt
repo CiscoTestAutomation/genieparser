@@ -1,0 +1,23 @@
+show platform software fed active qos interface TenGigabitEthernet1/0/1 ingress npd detailed
+***********************************************************************************
+ [TenGigabitEthernet1/0/1, cos1, Ingress]: CGID = 0x738310
+***********************************************************************************
+  cgid: 0x738310
+  No of classes: 1
+  TCG ref count: 1
+  Filter state: UP TO DATE
+  VMR state: UP TO DATE
+
+  ---------------------------------------
+   IPV4 ACL (OID: 0x908, No of ACEs: 1)
+  ---------------------------------------
+    Class id: 0x0
+    IPv4 Src/Mask: 0.0.0.0/0.0.0.0
+    IPv4 Dst/Mask: 0.0.0.0/0.0.0.0
+    Protocol/Mask: 0x0/0x0
+    DSCP/Mask: 0x0/0x0
+    TTL Start/End: 0x0/0x0
+    TCP Flags/Mask: 0x0/0x0
+    IP Flags/Mask: 0x0/0x0
+    Src Port Start/End: 0x0/0x0
+    Dst Port Start/End: 0x0/0x0

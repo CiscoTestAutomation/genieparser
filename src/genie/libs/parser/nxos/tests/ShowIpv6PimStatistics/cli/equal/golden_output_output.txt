@@ -1,0 +1,17 @@
+PIM Global Counter Statistics for VRF:default, last reset: never
+  Register processing (sent/received):
+    Registers: 0/0, Null registers: 0/0, Register-Stops: 0/0
+    Registers received and not RP: 0
+    Registers received for SSM/Bidir groups: 0/0
+  BSR processing (sent/received):
+    Bootstraps: 0/0, Candidate-RPs: 0/0
+    BSs from non-neighbors: 0, BSs from border interfaces: 0
+    BS length errors: 0, BSs which RPF failed: 0
+    BSs received but not listen configured: 0
+    Cand-RPs from border interfaces: 0
+    Cand-RPs received but not listen configured: 0
+  General errors:
+    Control-plane RPF failure due to no route found: 5
+    Data-plane RPF failure due to no route found: 0
+    Data-plane no multicast state found: 0
+    Data-plane create route state count: 0

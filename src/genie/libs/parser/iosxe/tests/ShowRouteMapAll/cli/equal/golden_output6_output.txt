@@ -1,0 +1,6 @@
+route-map rm1, permit, sequence 1
+  Match clauses:
+    ipv6 address prefix-list pl1
+  Set clauses:
+    ipv6 precedence 7
+  Policy routing matches: 0 packets, 0 bytes

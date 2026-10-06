@@ -1,0 +1,7 @@
+IP Multicast Routing Table for VRF "default"
+
+Total number of routes: 2
+Total number of (*,G) routes: 0
+Total number of (S,G) routes: 0
+Total number of (*,G-prefix) routes: 2
+Group count: 0, rough average sources per group: 0.0

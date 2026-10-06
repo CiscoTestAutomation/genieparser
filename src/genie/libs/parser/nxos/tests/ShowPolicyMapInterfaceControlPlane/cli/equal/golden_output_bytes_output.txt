@@ -1,0 +1,16 @@
+Control Plane
+
+  Service-policy  input: copp-system-p-policy-strict
+
+    class-map class-default (match-any)
+      set cos 0
+      police cir 400 kbps , bc 32000 bytes
+      module 23 :
+        transmitted 57928 bytes;
+        5-minute offered rate 0 bytes/sec
+        conformed 23 peak-rate bytes/sec
+          at Sat Sep 05 11:17:39 2026
+
+        dropped 0 bytes;
+        5-min violate rate 0 byte/sec
+        violated 0 peak-rate byte/sec

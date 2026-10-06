@@ -1,0 +1,7 @@
+===========================
+ forwarding-mode : normal
+===========================
+ unicast IPv4 size     = 24576
+ unicast IPv4 rpf size = 0
+ unicast IPv6 size     = 0
+ multicast size        = 8192

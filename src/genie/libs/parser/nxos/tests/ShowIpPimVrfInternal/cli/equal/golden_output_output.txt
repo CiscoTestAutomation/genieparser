@@ -1,0 +1,14 @@
+PIM Enabled VRFs
+VRF Name     VRF   Table       Interface   BFD         MVPN
+             ID    ID          Count       Enabled     Enabled
+default      1     0x00000001  8          no          no
+PIM RP change: no
+PIM VxLAN VNI ID: 0
+PIM pfm-sd : Enabled
+group range : 224.0.0.0/4
+originator interface : loopback0
+originator ip : 55.55.55.55
+announcement interval : 100 seconds
+announcement gap : 1200 milliseconds
+announcement rate : 10
+holdtime : 60 seconds

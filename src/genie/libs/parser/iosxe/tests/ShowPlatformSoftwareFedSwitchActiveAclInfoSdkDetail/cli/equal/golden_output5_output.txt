@@ -1,0 +1,230 @@
+--------------------------------------------------------------
+         ACLs info details (programmed in datapath)
+--------------------------------------------------------------
+
+Class Group Name: racl_ipv41
+   Direction: Ingress
+      Feature         : Racl
+      Protocol        : IPv4
+      CG ID           : 165
+      Pol Hdl         : 0xc4063438
+--------------------------------------------------------------
+ ACL (asic: 0, OID: 0xDB6, No of ACEs: 3)
+--------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: Y    Mir_Cum: 0x1f9   Mir_cmd: 0x0    Counter: 0xdb7 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 224.0.0.0       mask = 255.255.255.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0xe0b (0)
+-----------------------------------------------------------------------------------------------
+
+Class Group Name: racl_ipv42
+   Direction: Egress
+      Feature         : Racl
+      Protocol        : IPv4
+      CG ID           : 166
+      Pol Hdl         : 0xc40672e8
+--------------------------------------------------------------
+ ACL (asic: 0, OID: 0xE0F, No of ACEs: 3)
+--------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0xe10 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 224.0.0.0       mask = 255.255.255.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV4 ACE Key/Mask
+        ipv4_src: value = 0.0.0.0       mask = 0.0.0.0
+        ipv4_dst: value = 0.0.0.0       mask = 0.0.0.0
+            proto     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0xe13 (0)
+-----------------------------------------------------------------------------------------------
+
+Class Group Name: racl_ipv61
+   Direction: Ingress
+      Feature         : Racl
+      Protocol        : IPv6
+      CG ID           : 170
+      Pol Hdl         : 0xc405d588
+--------------------------------------------------------------
+ ACL (asic: 0, OID: 0xE15, No of ACEs: 6)
+--------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x3a       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0xff       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: Y    Mir_Cum: 0x1f9   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: Y    Mir_Cum: 0x1f9   Mir_cmd: 0x0    Counter: 0xe16 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x3a       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0xff       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x3a       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0xff       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ff02::       mask = ffff::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0xe17 (0)
+-----------------------------------------------------------------------------------------------
+
+Class Group Name: racl_ipv62
+   Direction: Egress
+      Feature         : Racl
+      Protocol        : IPv6
+      CG ID           : 171
+      Pol Hdl         : 0xc406cb98
+--------------------------------------------------------------
+ ACL (asic: 0, OID: 0xE18, No of ACEs: 5)
+--------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0xe19 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x3a       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0xff       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x3a       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0xff       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ff02::       mask = ffff::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: N    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0x0 (0)
+-----------------------------------------------------------------------------------------------
+
+    IPV6 ACE Key/Mask
+        ipv6_src: value = ::       mask = ::
+        ipv6_dst: value = ::       mask = ::
+            ext_h     tos      tcp_flg     ttl       ipv4_flags    src_port     dst_port
+        V:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+        M:  0x0       0x0      0x0         0x0       0x0           0x0          0x0
+
+    Result Action
+        Punt: Y    Drop: N    Mir: N    Mir_Cum: 0x0   Mir_cmd: 0x0    Counter: 0xe1a (0)
+-----------------------------------------------------------------------------------------------

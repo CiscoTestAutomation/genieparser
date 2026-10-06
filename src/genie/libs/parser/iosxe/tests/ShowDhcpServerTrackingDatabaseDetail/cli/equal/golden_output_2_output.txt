@@ -1,0 +1,6 @@
+# golden_output_2_output.txt
+#
+# Copyright (c) 2024 by Cisco Systems, Inc.
+# All rights reserved.
+
+DHCP Server Tracking Database contains 0 entries

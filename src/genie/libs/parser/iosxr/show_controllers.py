@@ -2306,9 +2306,13 @@ class ShowControllersOpticsAppselAdvertised(ShowControllersOpticsAppselAdvertise
         # Port:    Optics0/0/0/1
         p0 = re.compile(r'^Port:\s+Optics(?P<port>[\d/].*)$')
 
-        # Table row: 1 | 29 ETH 400G CR8... | 1 ETH 10GBASE-LW... | ETH | Yes | n/a |
+        # Table row:   1       |  29    ETH 400G CR8 (Ethernet T |  1     ETH 10GBASE-LW (Clause 5 |  ETH                      |  Yes      |  n/a             |
+        # Table row:   5       |  17    400GAUI-8 C2M (Annex 120 |  62    400ZR (0x01, 0x03), DWDM |  CMIS (OIF)               |  Yes      |  n/a             |
+        # Table row:   8       |  0                              |  0                              |                           |  No       |  n/a             |
         # Expecting: app-id | host-id | media-id | standard | host-supported | power-consumption
-        p1 = re.compile(r'^\s*(?P<app_id>\d+)\s+\|\s+(?P<host_id>[\d\w\s().-]+?)\s+\|\s+(?P<media_id>[\d\w\s().-]+?)\s+\|\s+(?P<standard>[\w/.-]+?)\s+\|\s+(?P<host_supported>\w+)\s+\|\s+(?P<power_consumption>[\w/.-]+?)\s+\|')
+        p1 = re.compile(r'^(?P<app_id>\d+)\s+\|\s+(?P<host_id>[^|]+?)\s+\|\s+'
+                r'(?P<media_id>[^|]+?)\s+\|\s+(?P<standard>[^|]+?)\s+\|\s+'
+                r'(?P<host_supported>[^|]+?)\s+\|\s+(?P<power_consumption>[^|]+?)\s+\|?$')
 
         # Application code information is not available on the optics
         p2 = re.compile(r'^(?P<not_available>Application\s+code\s+information\s+is\s+not\s+available\s+on\s+the\s+optics)$')

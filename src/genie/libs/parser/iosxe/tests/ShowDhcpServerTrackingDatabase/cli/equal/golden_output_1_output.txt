@@ -1,0 +1,10 @@
+# golden_output_1_output.txt
+#
+# Copyright (c) 2024 by Cisco Systems, Inc.
+# All rights reserved.
+
+DHCP Server Tracking Database contains 2 entries
+
+MAC Address          VLAN  IP Address
+dead.beef.0001       20    3002::31
+dead.beef.0002       20    3002::32

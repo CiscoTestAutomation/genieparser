@@ -1,0 +1,2 @@
+Configured System Routing Mode: Multicast Extended Heavy Scale
+Applied System Routing Mode: Multicast Extended Heavy Scale

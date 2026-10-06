@@ -1,0 +1,14 @@
+Port         VLAN Type      Status    MVR-VLAN
+----         ---- ----      ------    --------
+Po10         100  SOURCE    ACTIVE    100-101
+Po201        201  RECEIVER  ACTIVE    100-101,340
+Po202        202  RECEIVER  ACTIVE    100-101,340
+Po203        203  RECEIVER  ACTIVE    100-101,340
+Po204        204  RECEIVER  INACTIVE  100-101,340
+Eth1/9       340  SOURCE    ACTIVE    340
+Eth1/10      20   RECEIVER  ACTIVE    100-101,340
+
+Status INVALID indicates one of the following misconfiguration:
+a) Interface is not a switchport.
+b) MVR receiver is not in access mode.
+c) MVR source is in fex-fabric mode.

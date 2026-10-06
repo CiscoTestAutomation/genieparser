@@ -1,0 +1,23 @@
+show ip ports all
+Proto Local Address               Foreign Address             State       PID/Program Name
+
+TCB       Local Address               Foreign Address             (state)
+tcp   6.6.6.6:646                192.168.1.5:38540           ESTAB      0/[IOS] Unknown
+tcp   6.6.6.6:17024              192.168.1.6:179             ESTAB      0/[IOS] Unknown
+tcp   :::21111                   :::*                        LISTEN      318/[IOS]HTTP CORE
+tcp   *:21111                    *:*                         LISTEN      318/[IOS]HTTP CORE
+tcp   *:179                      192.168.1.6:*               LISTEN      612/[IOS]TCP Listener
+tcp   *:179                      192.168.1.1:*               LISTEN      612/[IOS]TCP Listener
+tcp   *:23                       *:*                         LISTEN      [IOS]Telnet
+tcp   :::23                      :::*                        LISTEN      [IOS]Telnet
+tcp   *:22                       *:*                         LISTEN      [IOS]SSH
+tcp   :::22                      :::*                        LISTEN      [IOS]SSH
+udp   1.2.43.1:646                *:*                         	 	  593/[IOS]LDP Hello
+udp   1.2.43.1:3503               *:*                         	 	  601/[IOS]LSP Verification Manager
+
+tcp   0.0.0.0:830                0.0.0.0:*                   LISTEN     3547/ncsshd
+tcp6  :::830                     :::*                        LISTEN     3547/ncsshd
+tcp   127.0.0.1:8281             0.0.0.0:*                   LISTEN     3547/ncsshd
+
+
+BigT-9550#

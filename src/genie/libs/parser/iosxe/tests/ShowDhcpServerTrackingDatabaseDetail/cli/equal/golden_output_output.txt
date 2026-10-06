@@ -1,0 +1,16 @@
+# golden_output_expected.txt
+#
+# Copyright (c) 2024 by Cisco Systems, Inc.
+# All rights reserved.
+
+DHCP Server Tracking Database contains 1 entries
+
+DHCP Server MAC: dead.beef.0008, VLAN 20
+  Address: 3002::30
+  DUID length: 1
+  DUID: 10
+  Interface: Twe1/0/1
+  Last packet received: 6s ago
+  Received 1 replies, last reply: 6s ago
+  Last address assigned: 2001:DB8::105
+  Last address preferred lifetime: 60s, valid lifetime: 60s

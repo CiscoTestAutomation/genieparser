@@ -1,0 +1,2 @@
+number of interfaces configured with dampening = 2
+number of interfaces in suppressed state = 0

@@ -1,3 +1,9 @@
+"""Parser for NXOS PIM show commands.
+
+Supported commands include:
+    * show ip pim vrf internal
+"""
+
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
@@ -670,6 +676,314 @@ class ShowIpv6PimInterface(ShowIpv6PimInterfaceSchema):
 
         return parsed_dict
 
+
+
+# ====================================================
+# schema Parser for 'show ipv6 pim statistics'
+# ====================================================
+class ShowIpv6PimStatisticsSchema(MetaParser):
+    """Schema for show ipv6 pim statistics"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('last_reset'): str,
+                Optional('register_processing'): {
+                    Optional('registers'): {
+                        'sent': int,
+                        'received': int,
+                    },
+                    Optional('null_registers'): {
+                        'sent': int,
+                        'received': int,
+                    },
+                    Optional('register_stops'): {
+                        'sent': int,
+                        'received': int,
+                    },
+                    Optional('registers_received_and_not_rp'): int,
+                    Optional('registers_received_for_ssm_groups'): int,
+                    Optional('registers_received_for_bidir_groups'): int,
+                },
+                Optional('bsr_processing'): {
+                    Optional('bootstraps'): {
+                        'sent': int,
+                        'received': int,
+                    },
+                    Optional('candidate_rps'): {
+                        'sent': int,
+                        'received': int,
+                    },
+                    Optional('bootstraps_from_non_neighbors'): int,
+                    Optional('bootstraps_from_border_interfaces'): int,
+                    Optional('bootstrap_length_errors'): int,
+                    Optional('bootstraps_which_rpf_failed'): int,
+                    Optional('bootstraps_received_but_not_listen_configured'): int,
+                    Optional('candidate_rps_from_border_interfaces'): int,
+                    Optional('candidate_rps_received_but_not_listen_configured'): int,
+                },
+                Optional('general_errors'): {
+                    Optional('control_plane_rpf_failure_due_to_no_route_found'): int,
+                    Optional('data_plane_rpf_failure_due_to_no_route_found'): int,
+                    Optional('data_plane_no_multicast_state_found'): int,
+                    Optional('data_plane_create_route_state_count'): int,
+                },
+            },
+        },
+    }
+
+
+class ShowIpv6PimStatistics(ShowIpv6PimStatisticsSchema):
+    """Parser for show ipv6 pim statistics"""
+
+    cli_command = 'show ipv6 pim statistics'
+
+    def cli(self, command, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        vrf_dict = None
+
+        # PIM Global Counter Statistics for VRF:default, last reset: never
+        p1 = re.compile(
+            r'^PIM +Global +Counter +Statistics +for +VRF:'
+            r'(?P<vrf>\S+), +last +reset: +(?P<last_reset>[^\r\n]+)$')
+
+        # Registers: 0/0, Null registers: 0/0, Register-Stops: 0/0
+        p2 = re.compile(
+            r'^Registers: +(?P<registers_sent>\d+)/'
+            r'(?P<registers_received>\d+), +Null +registers: +'
+            r'(?P<null_registers_sent>\d+)/'
+            r'(?P<null_registers_received>\d+), +Register-Stops: +'
+            r'(?P<register_stops_sent>\d+)/'
+            r'(?P<register_stops_received>\d+)$')
+
+        # Registers received and not RP: 0
+        p3 = re.compile(
+            r'^Registers +received +and +not +RP: +'
+            r'(?P<registers_received_and_not_rp>\d+)$')
+
+        # Registers received for SSM/Bidir groups: 0/0
+        p4 = re.compile(
+            r'^Registers +received +for +SSM/Bidir +groups: +'
+            r'(?P<registers_received_for_ssm_groups>\d+)/'
+            r'(?P<registers_received_for_bidir_groups>\d+)$')
+
+        # Bootstraps: 0/0, Candidate-RPs: 0/0
+        p5 = re.compile(
+            r'^Bootstraps: +(?P<bootstraps_sent>\d+)/'
+            r'(?P<bootstraps_received>\d+), +Candidate-RPs: +'
+            r'(?P<candidate_rps_sent>\d+)/'
+            r'(?P<candidate_rps_received>\d+)$')
+
+        # BSs from non-neighbors: 0, BSs from border interfaces: 0
+        p6 = re.compile(
+            r'^BSs +from +non-neighbors: +'
+            r'(?P<bootstraps_from_non_neighbors>\d+), +BSs +from +'
+            r'border +interfaces: +'
+            r'(?P<bootstraps_from_border_interfaces>\d+)$')
+
+        # BS length errors: 0, BSs which RPF failed: 0
+        p7 = re.compile(
+            r'^BS +length +errors: +(?P<bootstrap_length_errors>\d+), +'
+            r'BSs +which +RPF +failed: +'
+            r'(?P<bootstraps_which_rpf_failed>\d+)$')
+
+        # BSs received but not listen configured: 0
+        p8 = re.compile(
+            r'^BSs +received +but +not +listen +configured: +'
+            r'(?P<bootstraps_received_but_not_listen_configured>\d+)$')
+
+        # Cand-RPs from border interfaces: 0
+        p9 = re.compile(
+            r'^Cand-RPs +from +border +interfaces: +'
+            r'(?P<candidate_rps_from_border_interfaces>\d+)$')
+
+        # Cand-RPs received but not listen configured: 0
+        p10 = re.compile(
+            r'^Cand-RPs +received +but +not +listen +configured: +'
+            r'(?P<candidate_rps_received_but_not_listen_configured>\d+)$')
+
+        # Control-plane RPF failure due to no route found: 5
+        p11 = re.compile(
+            r'^Control-plane +RPF +failure +due +to +no +route +found: +'
+            r'(?P<control_plane_rpf_failure_due_to_no_route_found>\d+)$')
+
+        # Data-plane RPF failure due to no route found: 0
+        p12 = re.compile(
+            r'^Data-plane +RPF +failure +due +to +no +route +found: +'
+            r'(?P<data_plane_rpf_failure_due_to_no_route_found>\d+)$')
+
+        # Data-plane no multicast state found: 0
+        p13 = re.compile(
+            r'^Data-plane +no +multicast +state +found: +'
+            r'(?P<data_plane_no_multicast_state_found>\d+)$')
+
+        # Data-plane create route state count: 0
+        p14 = re.compile(
+            r'^Data-plane +create +route +state +count: +'
+            r'(?P<data_plane_create_route_state_count>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # PIM Global Counter Statistics for VRF:default, last reset: never
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(
+                    groups['vrf'], {})
+                vrf_dict['last_reset'] = groups['last_reset']
+                continue
+
+            # Registers: 0/0, Null registers: 0/0, Register-Stops: 0/0
+            m = p2.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                register_dict = vrf_dict.setdefault('register_processing', {})
+                register_dict['registers'] = {
+                    'sent': int(groups['registers_sent']),
+                    'received': int(groups['registers_received']),
+                }
+                register_dict['null_registers'] = {
+                    'sent': int(groups['null_registers_sent']),
+                    'received': int(groups['null_registers_received']),
+                }
+                register_dict['register_stops'] = {
+                    'sent': int(groups['register_stops_sent']),
+                    'received': int(groups['register_stops_received']),
+                }
+                continue
+
+            # Registers received and not RP: 0
+            m = p3.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                register_dict = vrf_dict.setdefault('register_processing', {})
+                register_dict['registers_received_and_not_rp'] = int(
+                    groups['registers_received_and_not_rp'])
+                continue
+
+            # Registers received for SSM/Bidir groups: 0/0
+            m = p4.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                register_dict = vrf_dict.setdefault('register_processing', {})
+                register_dict['registers_received_for_ssm_groups'] = int(
+                    groups['registers_received_for_ssm_groups'])
+                register_dict['registers_received_for_bidir_groups'] = int(
+                    groups['registers_received_for_bidir_groups'])
+                continue
+
+            # Bootstraps: 0/0, Candidate-RPs: 0/0
+            m = p5.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                bsr_dict = vrf_dict.setdefault('bsr_processing', {})
+                bsr_dict['bootstraps'] = {
+                    'sent': int(groups['bootstraps_sent']),
+                    'received': int(groups['bootstraps_received']),
+                }
+                bsr_dict['candidate_rps'] = {
+                    'sent': int(groups['candidate_rps_sent']),
+                    'received': int(groups['candidate_rps_received']),
+                }
+                continue
+
+            # BSs from non-neighbors: 0, BSs from border interfaces: 0
+            m = p6.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                bsr_dict = vrf_dict.setdefault('bsr_processing', {})
+                bsr_dict['bootstraps_from_non_neighbors'] = int(
+                    groups['bootstraps_from_non_neighbors'])
+                bsr_dict['bootstraps_from_border_interfaces'] = int(
+                    groups['bootstraps_from_border_interfaces'])
+                continue
+
+            # BS length errors: 0, BSs which RPF failed: 0
+            m = p7.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                bsr_dict = vrf_dict.setdefault('bsr_processing', {})
+                bsr_dict['bootstrap_length_errors'] = int(
+                    groups['bootstrap_length_errors'])
+                bsr_dict['bootstraps_which_rpf_failed'] = int(
+                    groups['bootstraps_which_rpf_failed'])
+                continue
+
+            # BSs received but not listen configured: 0
+            m = p8.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                bsr_dict = vrf_dict.setdefault('bsr_processing', {})
+                bsr_dict[
+                    'bootstraps_received_but_not_listen_configured'] = int(
+                    groups['bootstraps_received_but_not_listen_configured'])
+                continue
+
+            # Cand-RPs from border interfaces: 0
+            m = p9.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                bsr_dict = vrf_dict.setdefault('bsr_processing', {})
+                bsr_dict['candidate_rps_from_border_interfaces'] = int(
+                    groups['candidate_rps_from_border_interfaces'])
+                continue
+
+            # Cand-RPs received but not listen configured: 0
+            m = p10.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                bsr_dict = vrf_dict.setdefault('bsr_processing', {})
+                bsr_dict[
+                    'candidate_rps_received_but_not_listen_configured'] = int(
+                    groups[
+                        'candidate_rps_received_but_not_listen_configured'])
+                continue
+
+            # Control-plane RPF failure due to no route found: 5
+            m = p11.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                errors_dict = vrf_dict.setdefault('general_errors', {})
+                errors_dict[
+                    'control_plane_rpf_failure_due_to_no_route_found'] = int(
+                    groups['control_plane_rpf_failure_due_to_no_route_found'])
+                continue
+
+            # Data-plane RPF failure due to no route found: 0
+            m = p12.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                errors_dict = vrf_dict.setdefault('general_errors', {})
+                errors_dict[
+                    'data_plane_rpf_failure_due_to_no_route_found'] = int(
+                    groups['data_plane_rpf_failure_due_to_no_route_found'])
+                continue
+
+            # Data-plane no multicast state found: 0
+            m = p13.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                errors_dict = vrf_dict.setdefault('general_errors', {})
+                errors_dict['data_plane_no_multicast_state_found'] = int(
+                    groups['data_plane_no_multicast_state_found'])
+                continue
+
+            # Data-plane create route state count: 0
+            m = p14.match(line)
+            if m and vrf_dict is not None:
+                groups = m.groupdict()
+                errors_dict = vrf_dict.setdefault('general_errors', {})
+                errors_dict['data_plane_create_route_state_count'] = int(
+                    groups['data_plane_create_route_state_count'])
+                continue
+
+        return ret_dict
 
 
 # =====================================================
@@ -3088,6 +3402,253 @@ class ShowIpPimVrfDetail(ShowIpPimVrfDetailSchema):
             if m:
                 vxlan_vni_id = int(m.groupdict()['vxvlan_vni_id'])
                 parsed_dict['vrf'][vrf_name]['address_family'][af_name]['vxlan_vni_id'] = vxlan_vni_id
+                continue
+
+        return parsed_dict
+
+
+# ================================================
+# schema Parser for 'show ip pim vrf internal'
+# ================================================
+class ShowIpPimVrfInternalSchema(MetaParser):
+    """Schema for show ip pim vrf internal"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'vrf_id': int,
+                        'table_id': str,
+                        'interface_count': int,
+                        'bfd': {
+                            'enable': bool,
+                        },
+                        'mvpn': {
+                            'enable': bool,
+                        },
+                        Optional('rp_change'): bool,
+                        Optional('vxlan_vni_id'): int,
+                        Optional('pfm_sd'): {
+                            Optional('state'): bool,
+                            Optional('group_range'): str,
+                            Optional('originator_interface'): str,
+                            Optional('originator_ip'): str,
+                            Optional('announcement_interval'): {
+                                'value': int,
+                                'unit': str,
+                            },
+                            Optional('announcement_gap'): {
+                                'value': int,
+                                'unit': str,
+                            },
+                            Optional('announcement_rate'): int,
+                            Optional('holdtime'): {
+                                'value': int,
+                                'unit': str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ==================================================
+#  parser for show ip pim vrf internal
+# ==================================================
+class ShowIpPimVrfInternal(ShowIpPimVrfInternalSchema):
+    """Parser for:
+        show ip pim vrf internal"""
+
+    cli_command = 'show ip pim vrf internal'
+
+    def cli(self, command='', output=None):
+        if output is None:
+            command = command or self.cli_command
+            output = self.device.execute(command)
+
+        parsed_dict = {}
+        af_name = 'ipv4'
+        current_af_dict = None
+
+        # PIM Enabled VRFs
+        p1 = re.compile(r'^PIM +Enabled +VRFs$')
+
+        # VRF Name     VRF   Table       Interface   BFD         MVPN
+        p2 = re.compile(r'^VRF +Name +VRF +Table +Interface +BFD +MVPN$')
+
+        # ID    ID          Count       Enabled     Enabled
+        p3 = re.compile(r'^ID +ID +Count +Enabled +Enabled$')
+
+        # default      1     0x00000001  8          no          no
+        p4 = re.compile(r'^(?P<vrf>\S+) +(?P<vrf_id>\d+) +(?P<table_id>0x[0-9a-fA-F]+) +(?P<interface_count>\d+) +(?P<bfd>\S+) +(?P<mvpn>\S+)$')
+
+        # PIM RP change: no
+        p5 = re.compile(r'^PIM +RP +change: +(?P<rp_change>\S+)$')
+
+        # PIM VxLAN VNI ID: 0
+        p6 = re.compile(r'^PIM +VxLAN +VNI +ID: +(?P<vxlan_vni_id>\d+)$')
+
+        # PIM pfm-sd : Enabled
+        p7 = re.compile(r'^PIM +pfm-sd +: +(?P<state>\S+)$')
+
+        # group range : 224.0.0.0/4
+        p8 = re.compile(r'^group +range +: +(?P<group_range>\S+)$')
+
+        # originator interface : loopback0
+        p9 = re.compile(r'^originator +interface +: +(?P<originator_interface>[\w\/\.\-:]+)$')
+
+        # originator ip : 55.55.55.55
+        p10 = re.compile(r'^originator +ip +: +(?P<originator_ip>\S+)$')
+
+        # announcement interval : 100 seconds
+        p11 = re.compile(r'^announcement +interval +: +(?P<value>\d+) +(?P<unit>\S+)$')
+
+        # announcement gap : 1200 milliseconds
+        p12 = re.compile(r'^announcement +gap +: +(?P<value>\d+) +(?P<unit>\S+)$')
+
+        # announcement rate : 10
+        p13 = re.compile(r'^announcement +rate +: +(?P<announcement_rate>\d+)$')
+
+        # holdtime : 60 seconds
+        p14 = re.compile(r'^holdtime +: +(?P<value>\d+) +(?P<unit>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # PIM Enabled VRFs
+            m = p1.match(line)
+            if m:
+                continue
+
+            # VRF Name     VRF   Table       Interface   BFD         MVPN
+            m = p2.match(line)
+            if m:
+                continue
+
+            # ID    ID          Count       Enabled     Enabled
+            m = p3.match(line)
+            if m:
+                continue
+
+            # default      1     0x00000001  8          no          no
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                current_af_dict = parsed_dict.setdefault('vrf', {}) \
+                    .setdefault(groups['vrf'], {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(af_name, {})
+                current_af_dict.update({
+                    'vrf_id': int(groups['vrf_id']),
+                    'table_id': groups['table_id'],
+                    'interface_count': int(groups['interface_count']),
+                    'bfd': {
+                        'enable': groups['bfd'].lower() in ['yes', 'enabled'],
+                    },
+                    'mvpn': {
+                        'enable': groups['mvpn'].lower() in ['yes', 'enabled'],
+                    },
+                })
+                continue
+
+            # PIM RP change: no
+            m = p5.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                current_af_dict['rp_change'] = (
+                    groups['rp_change'].lower() in ['yes', 'enabled']
+                )
+                continue
+
+            # PIM VxLAN VNI ID: 0
+            m = p6.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                current_af_dict['vxlan_vni_id'] = int(groups['vxlan_vni_id'])
+                continue
+
+            # PIM pfm-sd : Enabled
+            m = p7.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['state'] = (
+                    groups['state'].lower() in ['yes', 'enabled']
+                )
+                continue
+
+            # group range : 224.0.0.0/4
+            m = p8.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['group_range'] = groups['group_range']
+                continue
+
+            # originator interface : loopback0
+            m = p9.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['originator_interface'] = (
+                    groups['originator_interface']
+                )
+                continue
+
+            # originator ip : 55.55.55.55
+            m = p10.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['originator_ip'] = groups['originator_ip']
+                continue
+
+            # announcement interval : 100 seconds
+            m = p11.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['announcement_interval'] = {
+                    'value': int(groups['value']),
+                    'unit': groups['unit'],
+                }
+                continue
+
+            # announcement gap : 1200 milliseconds
+            m = p12.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['announcement_gap'] = {
+                    'value': int(groups['value']),
+                    'unit': groups['unit'],
+                }
+                continue
+
+            # announcement rate : 10
+            m = p13.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['announcement_rate'] = int(
+                    groups['announcement_rate']
+                )
+                continue
+
+            # holdtime : 60 seconds
+            m = p14.match(line)
+            if m and current_af_dict is not None:
+                groups = m.groupdict()
+                pfm_sd_dict = current_af_dict.setdefault('pfm_sd', {})
+                pfm_sd_dict['holdtime'] = {
+                    'value': int(groups['value']),
+                    'unit': groups['unit'],
+                }
                 continue
 
         return parsed_dict

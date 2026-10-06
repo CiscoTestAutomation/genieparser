@@ -17,6 +17,8 @@ IOSXE C9400 parsers for the following show commands:
     * 'show platform hardware fed active fwd-asic resource tcam utilization {asic}'
     * 'show platform hardware fed standby fwd-asic resource tcam utilization'
     * 'show platform hardware fed standby fwd-asic resource tcam utilization {asic}'
+    * 'show platform hardware fed active qos queue stats interface {interface}'
+    * 'show platform hardware fed switch {switch_num} qos queue stats interface {interface}'
 '''
 
 # Python
@@ -33,6 +35,9 @@ from genie.libs.parser.iosxe.cat9k.c9610.show_platform import ShowPlatformHardwa
 from genie.libs.parser.iosxe.cat9k.c9600.show_platform import (
     ShowPlatformFedActiveTcamUtilization as ShowPlatformFedActiveTcamUtilization_c9600,
     ShowPlatformFedStandbyTcamUtilization as ShowPlatformFedStandbyTcamUtilization_c9600,
+)
+from genie.libs.parser.iosxe.cat9k.c9610.show_platform import (
+    ShowPlatformHardwareFedSwitchQosQueueStatsInterface as ShowPlatformHardwareFedSwitchQosQueueStatsInterface_c9610,
 )
 
 log = logging.getLogger(__name__)
@@ -200,19 +205,27 @@ class ShowEnvironmentAllSchema(MetaParser):
                     'fan_2_state': str,
                 }
             },
-            'current_configuration_mode': str,
-            'current_operating_state': str,
-            'currently_active': int,
-            'currently_available': int,
+            Optional('current_configuration_mode'): str,
+            Optional('current_operating_state'): str,
+            Optional('currently_active'): int,
+            Optional('currently_available'): int,
         },
-        'fantray': {
+        'fantray': Or({
             'status': str,
             'power_consumed_by_fantray_watts': int,
             'fantray_airflow_direction': str,
             'fantray_beacon_led': str,
             'fantray_status_led': str,
             'system': str,
-        }
+        }, {
+            'slot': {
+                Any(): {
+                    'status': str,
+                    'fan_1_state': str,
+                    'fan_2_state': str,
+                }
+            },
+        })
     }
 
 
@@ -258,8 +271,9 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # V1: VX5          Chassis1-R0       Normal            1507 mV                   na
         # V1: VX6          Chassis1-R0       Normal            1301 mV                   na
         # V1: VX7          Chassis1-R0       Normal            1005 mV                   na
+        # Temp: Inlt       1/0               Normal            40 Celsius                ( 48, 58,105,107)(Celsius)
         p5 = re.compile(
-            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>\S+[0-9])\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?'
+            r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>\S+[0-9])\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\(\s*(?P<minor>\d+)\s*,\s*(?P<major>\d+)\s*,\s*(?P<critical>\d+)\s*,\s*(?P<shutdown>\d+)\s*\)\((?P<unit>\S+)\))?'
         )
 
         # Power                                                       Fan States
@@ -287,6 +301,10 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p8 = re.compile(
             r'(?P<fantray_key>((.+)?Fantray(.+)?)|SYSTEM)(\s+)?:\s+(?P<fantray_value>(\S+)|(\d+\s+Watts))'
         )
+
+        # FT1     active       good  good
+        # FT2     N/A          N/A   N/A
+        p9 = re.compile(r'^(?P<fantray_slot>FT\d+)\s+(?P<status>\S+)\s+(?P<fan_1_state>\S+)\s+(?P<fan_2_state>\S+)$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -326,6 +344,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
             #  Temp: UADP       R0                Normal            56 Celsius          	(107,117,123,125)(Celsius)
             #  V1: VX1          R0                Normal            869 mV               	na
             #  Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
+            #  Temp: Inlt       1/0               Normal            40 Celsius           ( 48, 58,105,107)(Celsius)
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -335,7 +354,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                     setdefault('sensor', {}).setdefault(sensor_name, {})
 
                 fin_dict['state'] = group['state']
-                fin_dict['reading'] = group['reading']
+                fin_dict['reading'] = ' '.join(group['reading'].split())
                 if group['minor']:
                     fin_dict.setdefault('threshold', {})
                     for key in [
@@ -396,6 +415,18 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                     ret_dict.setdefault('fantray',
                                         {}).setdefault(fantray_key,
                                                        fantray_value)
+                continue
+
+            # FT1     active       good  good
+            # FT2     N/A          N/A   N/A
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                fantray_slot = group.pop('fantray_slot')
+                fantray_slot_dict = ret_dict.setdefault('fantray', {}).setdefault(
+                    'slot', {}).setdefault(fantray_slot, {})
+                fantray_slot_dict.update(group)
+                continue
 
         return ret_dict
 
@@ -1421,4 +1452,10 @@ class ShowPlatformFedActiveTcamUtilization(ShowPlatformFedActiveTcamUtilization_
 
 class ShowPlatformFedStandbyTcamUtilization(ShowPlatformFedStandbyTcamUtilization_c9600):
     """Parser for show platform hardware fed standby fwd-asic resource tcam utilization"""
+    pass
+
+class ShowPlatformHardwareFedSwitchQosQueueStatsInterface(
+    ShowPlatformHardwareFedSwitchQosQueueStatsInterface_c9610
+):
+    """Parser for the C9400 FED QoS interface queue statistics."""
     pass

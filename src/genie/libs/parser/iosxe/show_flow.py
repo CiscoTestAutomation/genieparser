@@ -338,13 +338,13 @@ class ShowFlowMonitorCache(ShowFlowMonitorCacheSchema):
         'show flow monitor {name} cache filter ipv4 {address_direction1} address {address1} ipv4 {address_direction2} address {address2}'
         ]
 
-    def cli(self, name, address_direction1=None,address1=None,address_direction2=None,address2=None,target='active',output=None):
+    def cli(self, name, address_direction1=None,address1=None,address_direction2=None,address2=None,target='active',output=None, timeout=300):
         if output is None:
             if address_direction1 and address1 and address_direction2 and address2:
                 cmd = self.cli_command[1].format(name=name, address_direction1=address_direction1, address_direction2=address_direction2, address1=address1, address2=address2)
-                output = self.device.execute(cmd,target=target)
+                output = self.device.execute(cmd,target=target, timeout=timeout)
             else:                
-                output = self.device.execute(self.cli_command[0].format(name=name))
+                output = self.device.execute(self.cli_command[0].format(name=name), timeout=timeout)
 
         # Init vars
         ret_dict = {}
