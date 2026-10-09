@@ -1,0 +1,14 @@
+Number of neighbors: 149
+
+AP Name                          AP IP                                     Neighbor Name                              Neighbor IP        Neighbor Port
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+0221-cap22                       10.8.33.106                               a02-21-sd-sw1.cisco.com                    10.8.32.1          TenGigabitEthernet3/0/47
+0232-cap15                       10.8.32.46                                a02-32-sd-sw1.cisco.com                    10.8.32.1          TenGigabitEthernet9/0/47
+0211-cap27                       10.8.32.188                               a02-11-sd-sw1.cisco.com                    10.8.32.1          TenGigabitEthernet4/0/46
+0212-cap11                       10.8.33.160                               a02-12-sd-sw2.cisco.com                    10.8.32.1          TenGigabitEthernet1/0/40
+0212-cap10                       10.8.33.102                               a02-12-sd-sw1.cisco.com                    10.8.32.1          TenGigabitEthernet1/0/43
+0212-cap17                       10.8.32.203                               a02-12-sd-sw2.cisco.com                    10.8.32.1          TenGigabitEthernet1/0/47
+0212-ca.4                        10.8.32.202                               a02-12-sd-sw1.cisco.com                    10.8.32.1          TenGigabitEthernet1/0/48
+0222-cap09                       10.8.33.33                                a02-22-sd-sw2.cisco.com                    10.8.32.1          TenGigabitEthernet8/0/48
+0231-cap43                       10.8.33.93                                a02-31-sd-sw1.cisco.com                    10.8.32.1          TenGigabitEthernet4/0/47
+0222-cap08                       10.8.32.166                               a02-22-sd-sw2.cisco.com                    10.8.32.1          TenGigabitEthernet4/0/47
