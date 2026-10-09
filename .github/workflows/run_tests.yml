@@ -4,6 +4,7 @@
 name: Run Tests
 
 on:
+  - workflow_dispatch
   - push
   - pull_request
 
@@ -32,7 +33,6 @@ jobs:
     - name: Make develop
       run: |
         make develop
-        make json
         git status
         git diff
 
