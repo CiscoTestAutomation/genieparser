@@ -1,5 +1,4 @@
 expected_output = {
-    "target": "",
     "diff": [
         "!",
         "hostname Router",

@@ -12,7 +12,7 @@ IOSXE parsers for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, ListOf, Optional
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # ====================
@@ -895,8 +895,7 @@ class AcmReplaceDiffSchema(MetaParser):
     """Schema for 'acm replace <configlet_file> diff'."""
 
     schema = {
-        'target': str,
-        'diff': list,
+        'diff': ListOf(str),
     }
 
 
@@ -915,7 +914,6 @@ class AcmReplaceDiff(AcmReplaceDiffSchema):
             raise SchemaEmptyParserError("Parser output is empty")
 
         ret_dict = {
-            'target': configlet_file,
             'diff': [],
         }
 
