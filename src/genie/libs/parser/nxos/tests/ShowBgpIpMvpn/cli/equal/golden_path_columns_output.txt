@@ -1,0 +1,6 @@
+BGP routing table information for VRF default, address family IPv4 MVPN
+BGP table version is 26, Local Router ID is 10.2.0.1
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 65002:30001
+*>e[5][10.111.1.3][238.8.4.101]/64
+                      10.10.0.1                                      0 65003 65002 i
