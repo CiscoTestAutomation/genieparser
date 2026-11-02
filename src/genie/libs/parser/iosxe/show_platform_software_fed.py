@@ -21622,9 +21622,11 @@ class ShowPlatformSoftwareFedSwitchActivePbrInfoRouteMap(
         )
 
         # Adj_id: 0xf8004836 Vrf_id: 0     Table_id: 0     IP_addr: 10.1.1.2
+        # Adj_id: 0x0       Vrf_id: 0     Table_id: 0     IPv6_addr: ::
+        # Adj_id: 0x0       Vrf_id: 0     Table_id: 0     IP_addr:
         p5 = re.compile(
             r"^Adj_id:\s*(?P<adj_id>\S+)\s+Vrf_id:\s*(?P<vrf_id>\d+)\s+"
-            r"Table_id:\s*(?P<table_id>\d+)\s+IP_addr:\s*(?P<ip_addr>\S+)$"
+            r"Table_id:\s*(?P<table_id>\d+)\s+(IP_addr|IPv6_addr):(\s*(?P<ip_addr>\S+))?$"
         )
 
         for line in output.splitlines():
@@ -21669,7 +21671,7 @@ class ShowPlatformSoftwareFedSwitchActivePbrInfoRouteMap(
                 sequence_dict["adj_id"] = m.group("adj_id")
                 sequence_dict["vrf_id"] = int(m.group("vrf_id"))
                 sequence_dict["table_id"] = int(m.group("table_id"))
-                sequence_dict["ip_addr"] = m.group("ip_addr")
+                sequence_dict["ip_addr"] = m.group("ip_addr") or ""
                 continue
 
         return ret_dict

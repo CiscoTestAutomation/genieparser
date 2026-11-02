@@ -214,6 +214,7 @@ Data Synchronization: Expired Not Rescheduled
 External Event: Aug 17 08:52:18 2026 UTC (2 minutes, 30 seconds remaining)
 Operational Model: Expired Not Rescheduled
 Integrity Reporting: Aug 18 08:42:08 2026 UTC (23 hours, 52 minutes, 20 seconds remaining)
+PLA Reporting: Oct 09 19:18:09 2026 UTC (9 days, 23 hours, 59 minutes, 45 seconds remaining)
 
 Communication Statistics:
 =======================

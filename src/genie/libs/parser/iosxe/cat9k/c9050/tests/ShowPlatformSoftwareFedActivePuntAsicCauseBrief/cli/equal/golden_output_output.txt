@@ -1,0 +1,23 @@
+ASIC Cause Statistics Brief
+
++-----------------------------------------------------------------------------------+
+| Source |         Cause        |           Rx            |           Drop          |
+|        |                      |     cur    |    delta   |     cur    |    delta   |
++-----------------------------------------------------------------------------------+
+   UKNWN   UNKNOWN                        10           10           10           10
+   INMIR   DHCP MIRROR                   745          745            0            0
+    LPTS   ICMP IPv4                       3            3            0            0
+    LPTS   Meraki NT IPv4 firs            74           74            0            0
+    LPTS   Meraki NT IPv4 Seco             4            4            0            0
+    LPTS   TCP default IPv4              364          364            0            0
+    LPTS   UDP default IPv4               19           19            0            0
+    LPTS   IPv6 UC                        15           15            0            0
+   ITRAP   CISCO Protocols              1948         1948            0            0
+   ITRAP   LLDP                         1184         1184            0            0
+   ITRAP   STP(IEEE)                    9005         9005            0            0
+   ITRAP   GLEAN-SUBNET                    2            2            0            0
+   ITRAP   IGMP l2 lpts                43908        43908        22127        22127
+   ITRAP   MDNS                            6            6            0            0
+   ITRAP   ARP Snooping                42741        42741            0            0
+   ITRAP   DHCP Snooping                1910         1910            0            0
+   ITRAP   SISF                          446          446            0            0

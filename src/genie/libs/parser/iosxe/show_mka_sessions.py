@@ -58,7 +58,9 @@ class ShowMkaSessionsSchema(MetaParser):
                 'peer-rxsci': str,
                 'macsec-peers': str,
                 'status': str,
-                'ckn': str
+                'ckn': str,
+                Optional('probe-count'): str,
+                Optional('ca-type'): str
             },
         Optional('total-mka-sessions'): int,
         Optional('secured-mka-sessions'): int,
@@ -94,9 +96,10 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
         #Hu2/6/0/39     70b3.171e.b282/0103 *DEFAULT POLICY* NO                NO
         p4 = re.compile(r'(?P<interface>\S+\/\S+) +'
                     r'(?P<local_txsci>\w+\.\w+\.\w+\/\w+) +'
-                    r'(?P<policy_name>\S+(?: +\S+)?) +'
+                    r'(?P<policy_name>\*DEFAULT POLICY\*|\S+) +'
                     r'(?P<inherited>\w+) +'
-                    r'(?P<key_server>\w+(?: +\w+)?)')
+                    r'(?P<key_server>\w+)'
+                    r'(?: +(?P<probe_count>\S+))?$')
 
         # Matching patterns
         #259            00a7.42ce.d57f/0074 1                Secured           10
@@ -104,8 +107,9 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
         p5 = re.compile(r'(?P<port_id>\d+) +'
                         r'(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
                         r'(?P<macsec_peers>\w+) +'
-                        r'(?P<status>.*) '
-                        r'(?P<ckn>\S+)')
+                        r'(?P<status>.*?) +'
+                        r'(?P<ckn>[0-9A-Fa-f]+)'
+                        r'(?: +(?P<ca_type>\S+))?$')
 
         session_count = 0
         for line in out.splitlines():
@@ -134,6 +138,8 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
                   sess_dict['policy-name'] = group['policy_name']
                   sess_dict['inherited'] = group['inherited']
                   sess_dict['key-server'] = group['key_server']
+                  if group['probe_count'] is not None:
+                      sess_dict['probe-count'] = group['probe_count']
 
             m5=p5.match(line)
             if m5:
@@ -144,6 +150,8 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
                   sess_dict['macsec-peers'] = group['macsec_peers']
                   sess_dict['status'] = group['status'].strip()
                   sess_dict['ckn'] = group['ckn']
+                  if group['ca_type'] is not None:
+                      sess_dict['ca-type'] = group['ca_type']
         return ret_dict
 
 
@@ -185,6 +193,8 @@ class ShowMkaSessionsInterfaceDetailsSchema(MetaParser):
                'sak-rekey-on-live-peer-loss': str,
                'send-secure-announcement': str,
                'sci-based-ssci-computation': str,
+               Optional('psk-probing'): str,
+               Optional('probe-count'): str,
                'sak-cipher-suite': str,
                'macsec-capability': str,
                'macsec-desired': str,
@@ -314,6 +324,11 @@ class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
         p33 = re.compile(r'^\# of MACsec Capable Live Peers Responded\.+ (?P<macsec_capable_live_peers_responded>\w+)$')
         p34 = re.compile(r'^Delay Protection Timer\.+ (?P<delay_protection_timer>(.*))')
         p35 = re.compile(r'^Key Server Priority\.+ (?P<key_server_priority>\S+)')
+
+        # PSK Probing.............. DISABLED
+        p_psk_probing = re.compile(r'^PSK Probing\.+ +(?P<psk_probing>\S+)$')
+        # Probe Count.............. -
+        p_probe_count = re.compile(r'^Probe Count\.+ +(?P<probe_count>\d+|-)$')
 
         #Matching the below peer list line by line
         '''
@@ -487,6 +502,18 @@ class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
             if m35:
                 group = m35.groupdict()
                 out_dict['key-server-priority'] = group['key_server_priority']
+
+            # PSK Probing.............. DISABLED
+            m = p_psk_probing.match(line)
+            if m:
+                out_dict['psk-probing'] = m.groupdict()['psk_probing']
+                continue
+
+            # Probe Count.............. -
+            m = p_probe_count.match(line)
+            if m:
+                out_dict['probe-count'] = m.groupdict()['probe_count']
+                continue
 
             m36 = p36.match(line)
             if m36:
@@ -2171,6 +2198,7 @@ class ShowMkaPolicySchema(MetaParser):
                 'sak_rey_key_on_live_peer_loss': str,
                 'include_icv_indicator': str,
                 'cipher': str,
+                Optional('probe_count'): str,
                 Optional('interfaces'): list
             }
         }
@@ -2186,17 +2214,22 @@ class ShowMkaPolicy(ShowMkaPolicySchema):
             output = self.device.execute(self.cli_command)
         # initial return dictionary
         ret_dict = {}
+        policy_dict = None
         #Send-Secure-Announcements: DISABLED
         p = re.compile(r'^Send-Secure-Announcements:\s+(?P<send_secure_announcements>\w+)')
 
         # DEFAULT POLICY  0    FALSE 0  FALSE TRUE   GCM-AES-128
         # macsec            0    FALSE 30 FALSE TRUE   GCM-AES-128     Te1/0/48       Fo1/1/2
         p2 = re.compile(r'^(?P<policy>[\w\s]+)\s+(?P<key_server_priority>\d+)\s+(?P<delay_protect>\S+)\s+(?P<confidentiality_offset>\d+)\s+(?P<sak_rey_key_on_live_peer_loss>\S+)\s+(?P<include_icv_indicator>\S+)\s+(?P<cipher>\S+)(\s+(?P<interfaces>[\S\s]*))?$')
-        
+
+        # Newer policy rows include Probe Count before Cipher.
+        p_new = re.compile(r'^(?P<policy>.+?)\s{2,}(?P<key_server_priority>\d+)\s+(?P<delay_protect>\S+)\s+(?P<confidentiality_offset>\d+)\s+(?P<sak_rey_key_on_live_peer_loss>\S+)\s+(?P<include_icv_indicator>\S+)\s+(?P<probe_count>\d+|-)\s+(?P<cipher>\S+)(?:\s+(?P<interfaces>.*))?$')
+
         # Gi2/0/12       Gi2/0/22
         # Te3/0/46       Te3/0/48
-        p3 = re.compile(r'^(?P<interfaces>(\w+\d+\/\d+\/\d+)\s+.*)$') 
-       
+        # Fif2/0/3
+        p3 = re.compile(r'^(?P<interfaces>\w+(?:/\d+)+(?:\.\d+)?(?: +\w+(?:/\d+)+(?:\.\d+)?)*)$')
+
         for line in output.splitlines():
             line = line.strip()
             m = p.match(line)
@@ -2205,24 +2238,34 @@ class ShowMkaPolicy(ShowMkaPolicySchema):
                 send_secure_announcements = group["send_secure_announcements"]
                 ret_dict['send_secure_announcements'] = send_secure_announcements
                 continue
-            m2 = p2.match(line)
-            if m2:
-                group = m2.groupdict()  
-                policy_dict = ret_dict.setdefault('policy', {}).setdefault(group["policy"].strip(), {})
-                policy_dict['key_server_priority'] = int(group["key_server_priority"])
-                policy_dict["delay_protect"] = group["delay_protect"]
-                policy_dict["confidentiality_offset"] = int(group["confidentiality_offset"])
-                policy_dict["sak_rey_key_on_live_peer_loss"] = group["sak_rey_key_on_live_peer_loss"]
-                policy_dict["include_icv_indicator"] = group["include_icv_indicator"]
-                policy_dict["cipher"] = group["cipher"]
-                if group["interfaces"]:
-                    int_list = policy_dict.setdefault("interfaces", group["interfaces"].split())
+            # Parse policy rows with and without Probe Count.
+            m_row = p_new.match(line) or p2.match(line)
+            if m_row:
+                group = m_row.groupdict()
+                policy_dict = ret_dict.setdefault('policy', {}).setdefault(
+                    group['policy'].strip(), {})
+                policy_dict['key_server_priority'] = int(
+                    group['key_server_priority'])
+                policy_dict['delay_protect'] = group['delay_protect']
+                policy_dict['confidentiality_offset'] = int(
+                    group['confidentiality_offset'])
+                policy_dict['sak_rey_key_on_live_peer_loss'] = (
+                    group['sak_rey_key_on_live_peer_loss'])
+                policy_dict['include_icv_indicator'] = (
+                    group['include_icv_indicator'])
+                if 'probe_count' in group:
+                    policy_dict['probe_count'] = group['probe_count']
+                policy_dict['cipher'] = group['cipher']
+                if group['interfaces']:
+                    policy_dict['interfaces'] = group['interfaces'].split()
                 continue
-
+            # Gi2/0/12       Gi2/0/22
+            # Fif2/0/3
             m3 = p3.match(line)
-            if m3:
+            if m3 and policy_dict is not None:
                 group = m3.groupdict()
-                int_list.extend(group["interfaces"].split())
+                policy_dict.setdefault('interfaces', []).extend(
+                    group['interfaces'].split())
                 continue
         return ret_dict
 

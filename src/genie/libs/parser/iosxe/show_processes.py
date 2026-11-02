@@ -7,6 +7,10 @@ IOSXE parser for the following show command:
     * show processes cpu platform DP
     * show processes cpu platform CP
     * show processes cpu platform SP
+    * 'show processes cpu platform profile {profile_name}'
+    * 'show processes cpu platform sorted profile {profile_name}'
+    * 'show processes cpu platform sorted {sort_interval} '
+      'profile {profile_name}'
 '''
 
 import re
@@ -260,18 +264,38 @@ class ShowProcessesCpuPlatformPorfileSchema(MetaParser):
 
 
 class ShowProcessesCpuPlatformProfile(ShowProcessesCpuPlatformPorfileSchema):
-    """Parser for show processes cpu platform profile {profile_name}"""
+    """Parser for sorted and unsorted CPU platform profiles."""
 
-    cli_command = 'show processes cpu platform profile {profile_name}'
+    cli_command = [
+        'show processes cpu platform profile {profile_name}',
+        'show processes cpu platform sorted profile {profile_name}',
+        'show processes cpu platform sorted {sort_interval} '
+        'profile {profile_name}',
+    ]
 
-    def cli(self, profile_name, output=None):
+    def cli(self, profile_name, sort_interval=None, command=None, output=None):
 
         assert profile_name in ['DP', 'CP',
                                 'SP'], "Not one from 'DP' 'CP' 'SP'"
+        default_sorted = sort_interval == 'default'
+        if default_sorted:
+            sort_interval = None
+        if sort_interval not in (None, '5sec', '1min', '5min'):
+            raise ValueError('Unsupported CPU profile sort interval')
 
         if output is None:
-            cmd = self.cli_command.format(profile_name=profile_name)
-            out = self.device.execute(cmd, timeout=300)
+            if command is None:
+                if default_sorted:
+                    command = self.cli_command[1].format(
+                        profile_name=profile_name)
+                elif sort_interval:
+                    command = self.cli_command[2].format(
+                        sort_interval=sort_interval,
+                        profile_name=profile_name)
+                else:
+                    command = self.cli_command[0].format(
+                        profile_name=profile_name)
+            out = self.device.execute(command, timeout=300)
         else:
             out = output
 

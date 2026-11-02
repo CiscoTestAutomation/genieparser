@@ -62,6 +62,7 @@ class ShowRomvarSchema(MetaParser):
             Optional("device_managed_mode"): str,
             Optional("default_gateway"): str,
             Optional("ip_address"): str,
+            Optional("tftp_server"): str,
             Optional("crashinfo"): str,
             Optional("subnet_mask"): str,
             Optional("abnormal_reset_count"): int,
@@ -202,6 +203,11 @@ class ShowRomvar(ShowRomvarSchema):
 
         # IP_SUBNET_MASK = 255.255.255.0
         p_mask = re.compile(r"^IP_SUBNET_MASK\s*=\s*(?P<ip_mask>\S+)$")
+
+        # TFTP_SERVER = 192.0.2.1
+        p_tftp_server = re.compile(
+            r"^TFTP_SERVER\s*=\s*(?P<tftp_server>\S+)$"
+        )
 
         # DEV_MODE0 = FM5R95WUO0WUATJTQX5I5ZQHLWIT6CWKD513RVT9Q5UQKJVKPDSNU7NR1EDU4QWO
         p_dev_mode_0 = re.compile(r"^DEV_MODE0\s*=\s*(?P<mode_0>\S+)$")
@@ -399,6 +405,13 @@ class ShowRomvar(ShowRomvarSchema):
             if p_mask.match(line):
                 match = p_mask.match(line)
                 romvar_dict["rommon_variables"]["subnet_mask"] = match.group("ip_mask")
+                continue
+            # TFTP_SERVER = 192.0.2.1
+            if p_tftp_server.match(line):
+                match = p_tftp_server.match(line)
+                romvar_dict["rommon_variables"]["tftp_server"] = match.group(
+                    "tftp_server"
+                )
                 continue
             # DEV_MODE0 = FM5R95WUO0WUATJTQX5I5ZQHLWIT6CWKD513RVT9Q5UQKJVKPDSNU7NR1EDU4QWO
             if p_dev_mode_0.match(line):

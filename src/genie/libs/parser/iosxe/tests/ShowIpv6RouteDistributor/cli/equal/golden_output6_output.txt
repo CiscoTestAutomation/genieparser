@@ -1,0 +1,7 @@
+IPv6 Routing Table - default - 1 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, R - RIP, H - NHRP, I1 - ISIS L1, I2 - ISIS L2
+       IA - ISIS interarea, D - EIGRP, EX - EIGRP external, o - ODR
+       la - LISP alt
+I1  2001:db8:2::/64 [115/20]
+     via FE80::2, Ethernet0/1

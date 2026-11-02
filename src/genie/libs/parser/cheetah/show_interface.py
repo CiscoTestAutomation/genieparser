@@ -1,6 +1,7 @@
 """
 CHEETAH parsers for the following show commands:
 
+    * show ip interface brief
     * show interfaces wired {ifnum}
 
 """
@@ -8,7 +9,98 @@ CHEETAH parsers for the following show commands:
 import re
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, ListOf, Or
+
+
+class ShowIpInterfaceBriefSchema(MetaParser):
+    """Schema for show ip interface brief."""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                'ip_address': str,
+                'method': str,
+                'status': str,
+                'protocol': str,
+                'speed': Or(int, str),
+                'duplex': str,
+                Optional('active'): bool,
+            }
+        }
+    }
+
+
+class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
+    """Parser for show ip interface brief."""
+
+    cli_command = 'show ip interface brief'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        interface_dict = None
+
+        # *wired0  192.0.2.196  DHCP  up  up
+        # *wired0  192.0.2.196  DHCP  up  up  10000  full
+        # wifi1    n/a          n/a   administatively down  down  n/a  n/a
+        p1 = re.compile(
+            r'^(?P<active>\*)?(?P<interface>[\w.-]+)\s+'
+            r'(?P<ip_address>(?:\d{1,3}\.){3}\d{1,3}|n/a|unassigned)\s+'
+            r'(?P<method>[A-Za-z]+|n/a)\s+'
+            r'(?P<status>up|down|administatively down|administratively down)\s+'
+            r'(?P<protocol>up|down)'
+            r'(?:\s+(?P<speed>\d+|n/a)\s+'
+            r'(?P<duplex>full|half|n/a))?$'
+        )
+
+        # 1000       full
+        # n/a        n/a
+        p2 = re.compile(r'^(?P<speed>\d+|n/a)\s+(?P<duplex>full|half|n/a)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # *wired0  192.0.2.196  DHCP  up  up
+            # *wired0  192.0.2.196  DHCP  up  up  10000  full
+            # wifi1    n/a          n/a   administatively down  down  n/a  n/a
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(
+                    groups['interface'], {}
+                )
+                interface_dict.update({
+                    'ip_address': groups['ip_address'],
+                    'method': groups['method'],
+                    'status': groups['status'],
+                    'protocol': groups['protocol'],
+                })
+                if groups['active']:
+                    interface_dict['active'] = True
+                if groups['speed'] is not None:
+                    speed = groups['speed']
+                    interface_dict['speed'] = (
+                        int(speed) if speed.isdigit() else speed
+                    )
+                    interface_dict['duplex'] = groups['duplex']
+                    interface_dict = None
+                continue
+
+            # 1000       full
+            # n/a        n/a
+            m = p2.match(line)
+            if m and interface_dict is not None:
+                groups = m.groupdict()
+                speed = groups['speed']
+                interface_dict['speed'] = int(speed) if speed.isdigit() else speed
+                interface_dict['duplex'] = groups['duplex']
+                interface_dict = None
+
+        return ret_dict
 
 class ShowInterfacesWiredSchema(MetaParser):
 
@@ -272,28 +364,30 @@ class ShowInterfacesDot11radioSchema(MetaParser):
                 'hardware': str,
                 'channel': str,
                 'radio_mac_address': str,
-                'mac_address': str,
-                'attributes': str,
-                'mtu': int,
-                'metric': int,
-                'rx': {
+                # Some APs expose the radio MAC without the Linux-style
+                # HWaddr line.
+                Optional('mac_address'): str,
+                Optional('attributes'): str,
+                Optional('mtu'): int,
+                Optional('metric'): int,
+                Optional('rx'): {
                     'packets': int,
                     'errors': int,
                     'drop': int,
                     'overrun': int,
                     'frame': int
                 },
-                'tx': {
+                Optional('tx'): {
                     'packets': int,
                     'errors': int,
                     'drop': int,
                     'overrun': int,
                     'carrier': int
                 },
-                'collisions': int,
-                'txqueuelen':int,
-                'rx_bytes': int,
-                'tx_bytes': int,
+                Optional('collisions'): int,
+                Optional('txqueuelen'): int,
+                Optional('rx_bytes'): int,
+                Optional('tx_bytes'): int,
                 Optional('interrupt'): int,
                 Optional('memory'): str,
                 'ml_type': {

@@ -1,0 +1,15 @@
+show platform hardware fed switch active fwd-asic resource tcam utilization
+-------------------------------------------------------------------------------------------------------------------
+***Number of TCAM entries shown under Free is for unidimensional scale. Using the TCAM for one of the feature will
+***change the available TCAM for other features in the same slice
+-------------------------------------------------------------------------------------------------------------------
+                                         Slice0       Slice1       Slice2       Slice3       Slice4       Slice5
+-------------------------------------------------------------------------------------------------------------------
+       Resource                        Used  Free   Used  Free   Used  Free   Used  Free   Used  Free   Used  Free
+-------------------------------------------------------------------------------------------------------------------
+Ingress Wide TCAM entries                24 17600      0     0      0     0      0     0      0     0      0     0
+Ingress Narrow_Pool_0 TCAM entries       38 20456      0     0      0     0      0     0      0     0      0     0
+Egress Wide TCAM entries                  0 17600      0     0      0     0      0     0      0     0      0     0
+Egress Narrow_Pool_0 TCAM entries         3 20456      0     0      0     0      0     0      0     0      0     0
+IPv4 LPTS TCAM entries                   41 20456      0     0      0     0      0     0      0     0      0     0
+IPv6 LPTS TCAM entries                   37 17600      0     0      0     0      0     0      0     0      0     0

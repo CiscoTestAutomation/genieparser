@@ -1,0 +1,30 @@
+expected_output = {
+    'peer': {
+        '1.1.1.4': {
+            'tenant_id': 0,
+            'type': 'vsmart',
+            'domain_id': 1,
+            'site_id': 4294937943,
+            'overlay_id': 1,
+            'region_id': 'None',
+            'state': 'up',
+            'version': '1',
+            'uptime': '23:20:01:31',
+            'routes_received_ipv6': 12,
+            'services_sent_ipv6': 6,
+        },
+        '1.1.1.5': {
+            'tenant_id': 7,
+            'type': 'vsmart',
+            'domain_id': 1,
+            'site_id': 4294937944,
+            'overlay_id': 1,
+            'region_id': 'None',
+            'state': 'up',
+            'version': '1',
+            'uptime': '23:20:01:29',
+            'routes_received_ipv6': 34,
+            'services_sent_ipv6': 8,
+        },
+    },
+}

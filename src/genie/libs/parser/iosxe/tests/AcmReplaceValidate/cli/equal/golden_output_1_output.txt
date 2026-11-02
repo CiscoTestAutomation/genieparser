@@ -1,2 +1,0 @@
-Config Validation to Target: flash:acm_n1_day1_test.cfg
-    Config diff empty. No Diff to Validate/Apply

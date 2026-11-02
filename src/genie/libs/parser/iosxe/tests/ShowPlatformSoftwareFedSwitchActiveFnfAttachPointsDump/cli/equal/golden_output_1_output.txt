@@ -1,0 +1,10 @@
+| 0                |  0                     |  1465773614       |  Output           | Po4              | DATALINK TRAFFIC  |  SUCCESS         |
+Asic:    0
+fp_oid:  4856
+acl_oid: 4909
+rh_oid:  4911
+| 0                |  0                     |  1938805939       |  Input            | Po4              | DATALINK TRAFFIC  |  SUCCESS         |
+Asic:    0
+fp_oid:  4856
+acl_oid: 4860
+rh_oid:  4907

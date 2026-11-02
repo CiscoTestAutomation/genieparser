@@ -1,0 +1,16 @@
+LISP ETR MAC Mapping Database for LISP 0 EID-table Vlan 1023 (IID 1023), LSBs: 0x1
+Entries total 2, no-route 0, inactive 0, do-not-register 0
+
+aaaa.0011.0001/48, dynamic-eid Auto-L2-group-1023, inherited from default locator-set RLOC
+  Uptime: 00:00:02, Last-change: 00:00:02
+  Domain-ID: local
+  Multihoming Site ID: 100
+  Service-Insertion: N/A
+  Locator       Pri/Wgt  Source     State
+  10.10.10.10    10/10   cfg-intf   site-self, reachable
+aaaa.0011.0002/48, dynamic-eid Auto-L2-group-1023, inherited from default locator-set RLOC
+  Uptime: 00:00:01, Last-change: 00:00:01
+  Domain-ID: local
+  Service-Insertion: N/A
+  Locator       Pri/Wgt  Source     State
+  10.10.10.10    10/10   cfg-intf   site-self, reachable

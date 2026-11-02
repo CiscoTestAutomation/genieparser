@@ -27,6 +27,7 @@ expected_output = {
             'switch_number': 2,
             'switch_priority': 14,
             'system_serial_num': 'FCW2323L0JB',
+            'tftp_server': '223.255.254.254',
             'version_id': 'V02',
         },
     },

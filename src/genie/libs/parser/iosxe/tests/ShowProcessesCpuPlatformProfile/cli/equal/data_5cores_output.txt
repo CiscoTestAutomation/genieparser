@@ -1,0 +1,11 @@
+CPU utilization for five seconds: 10%, one minute: 20%, five minutes: 18%
+Core 3: CPU utilization for five seconds:  0%, one minute:  0%, five minutes:  0%
+Core 4: CPU utilization for five seconds: 16%, one minute: 28%, five minutes: 30%
+Core 5: CPU utilization for five seconds:  2%, one minute: 14%, five minutes: 12%
+Core 6: CPU utilization for five seconds: 30%, one minute: 51%, five minutes: 43%
+Core 7: CPU utilization for five seconds:  6%, one minute:  7%, five minutes:  7%
+Data plane process utilization for five seconds: 42%, one minute: 86%, five minutes: 78%
+   Pid    PPid    5Sec    1Min    5Min  Status        Size  Name
+--------------------------------------------------------------------------------
+ 19590   19580    149%    149%    146%  S           290944  ucode_pkt_PPE0
+ 19580   18844      0%      0%      0%  S             2824  pman

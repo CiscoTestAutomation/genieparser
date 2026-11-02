@@ -1,0 +1,5 @@
+Prefix 123.1.1.0/24, No of paths: 1, Update time: Wed Jul 11 19:00:12 2018
+Vobj id: 141   orig_as: 65002   peer_as: 65100  rnh: 10.3.0.2
+10.4.0.2           Ethernet8/4         DMAC: 0018.bad8.4dfd
+packets: 2  bytes: 3484   Repair path  10.3.0.2   Ethernet8/3 DMAC: 0018.bad8.4dfd packets: 0  
+bytes: 1

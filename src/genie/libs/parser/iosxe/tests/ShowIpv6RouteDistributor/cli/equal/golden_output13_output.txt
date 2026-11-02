@@ -1,0 +1,6 @@
+Routing entry for 2001:db8:1::/64
+  Known via "bgp 65001", distance 200, metric 0
+  Route count is 1/1, share count 0
+  Routing paths:
+    FE80::1, Ethernet0/0
+      Last updated 00:00:12 ago

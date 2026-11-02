@@ -18,6 +18,7 @@ expected_output = {
         "rommon_autoboot_attempt": 3,
         "switch_number": 1,
         "system_serial_num": "FOC2224U0RY",
+        "tftp_server": "5.39.26.26",
         "version_id": "V02"
     }
 }

@@ -1,0 +1,2 @@
+CPU utilization for five seconds:  6%, one minute:  6%, five minutes:  6%
+Core 0: CPU utilization for five seconds:  6%, one minute:  6%, five minutes:  6%

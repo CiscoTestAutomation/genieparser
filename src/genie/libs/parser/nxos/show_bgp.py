@@ -30,6 +30,7 @@ NXOS parsers for the following show commands:
     * 'show bgp l2vpn evpn route-type <route-type>'
     * 'show bgp l2vpn evpn route-type <route-type> vrf <vrf>'
     * 'show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>'
+    * 'show bgp ipv4 unicast <prefix>'
 
 """
 
@@ -8055,6 +8056,325 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
 
         return result_dict
 
+
+class ShowBgpIpv4UnicastPrefixSchema(MetaParser):
+    """Schema for:
+        show bgp ipv4 unicast {prefix}
+    """
+
+    schema = {
+        'instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'prefix': {
+                                    Any(): {
+                                        'prefix': str,
+                                        'prefixversion': int,
+                                        'totalpaths': int,
+                                        'bestpathnr': int,
+                                        Optional('flag_code'): str,
+                                        Optional('on_xmitlist'): bool,
+                                        Optional('in_urib'): bool,
+                                        Optional('best_urib_route'): bool,
+                                        Optional('in_hw'): bool,
+                                        'path': {
+                                            Any(): {
+                                                'pathnr': int,
+                                                Optional('advertised_path_id'): int,
+                                                'pathtype': str,
+                                                'pathvalid': bool,
+                                                'pathbest': bool,
+                                                Optional('in_rib'): bool,
+                                                Optional('imported_from'): str,
+                                                Optional('imported_from_vrf'): str,
+                                                Optional('as_path'): str,
+                                                Optional('as_path_source'): str,
+                                                'ipnexthop': str,
+                                                'nexthopmetric': int,
+                                                'neighbor': str,
+                                                'neighborid': str,
+                                                'origin': str,
+                                                Optional('med'): Or(int, str),
+                                                'localpref': int,
+                                                'weight': int,
+                                                Optional('inlabel'): int,
+                                                Optional('extcommunity'): ListOf(str),
+                                                Optional('originatorid'): str,
+                                                Optional('clusterlist'): ListOf(str),
+                                                Optional('advertisedto'): ListOf(str),
+                                                Optional('not_advertised'): bool,
+                                            }
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===================================================
+#  Parser for show bgp ipv4 unicast <prefix>
+# ===================================================
+class ShowBgpIpv4UnicastPrefix(ShowBgpIpv4UnicastPrefixSchema):
+    """Parser for:
+        show bgp ipv4 unicast {prefix}
+    """
+
+    cli_command = 'show bgp ipv4 unicast {prefix}'
+
+    def cli(self, command, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        af_dict = None
+        prefix_dict = None
+        path_dict = None
+        section = None
+        index = 0
+        current_path_id = None
+
+        # BGP routing table information for VRF default, address family IPv4 Unicast
+        p1 = re.compile(r'^BGP +routing +table +information +for +VRF +(?P<vrf>\S+), +address +family +(?P<address_family>[A-Za-z0-9 ]+)$')
+
+        # BGP routing table entry for 192.168.11.11/32, version 14
+        p2 = re.compile(r'^BGP +routing +table +entry +for +(?P<prefix>\S+), +version +(?P<prefixversion>\d+)$')
+
+        # Paths: (1 available, best #1)
+        p3 = re.compile(r'^Paths: +\((?P<totalpaths>\d+) +available, +best +#(?P<bestpathnr>\d+)\)$')
+
+        # Flags: (0x08041a) on xmit-list, is in urib, is best urib route, is in HW
+        p4 = re.compile(r'^Flags: +\((?P<flag_code>0x[0-9A-Fa-f]+)\) +(?P<flags>[^\r\n]+)$')
+
+        # Advertised path-id 1
+        p5 = re.compile(r'^Advertised +path-id +(?P<path_id>\d+)$')
+
+        # Path type: internal, path is valid, is best path, in rib
+        p6 = re.compile(r'^Path +type: +(?P<path_type>[^,]+), +(?P<path_attrs>[^\r\n]+)$')
+
+        # Imported from 192.168.3.3:3:192.168.11.11/32 (VRF vni100)
+        p7 = re.compile(r'^Imported +from +(?P<imported_from>\S+)(?: +\(VRF +(?P<imported_from_vrf>[^\)]+)\))?$')
+
+        # AS-Path: 150 , path sourced external to AS
+        p8 = re.compile(r'^AS-Path: +(?P<as_path>[^,]+?)(?: *, +path +sourced +(?P<as_path_source>\S+) +to +AS)?$')
+
+        # 192.168.1.0 (metric 81) from 192.168.101.101 (192.168.101.101)
+        p9 = re.compile(r'^(?P<ipnexthop>\d{1,3}(?:\.\d{1,3}){3}) +\(metric +(?P<nexthopmetric>\d+)\) +from +(?P<neighbor>\d{1,3}(?:\.\d{1,3}){3}) +\((?P<neighborid>\d{1,3}(?:\.\d{1,3}){3})\)$')
+
+        # Origin incomplete, MED 0, localpref 100, weight 0
+        p10 = re.compile(r'^Origin +(?P<origin>\S+), +MED +(?P<med>\S+), +localpref +(?P<localpref>\d+), +weight +(?P<weight>\d+)$')
+
+        # Received label 100
+        p11 = re.compile(r'^Received +label +(?P<inlabel>\d+)$')
+
+        # Extcommunity:
+        p12 = re.compile(r'^Extcommunity:$')
+
+        # RT:100:100
+        # ENCAP:8
+        # Router MAC:5254.004e.a437
+        p13 = re.compile(r'^(?P<extcommunity>(?:RT|ENCAP|Router +MAC):[^\r\n]+)$')
+
+        # Originator: 192.168.1.0 Cluster list: 192.168.101.101
+        p14 = re.compile(r'^Originator: +(?P<originatorid>\d{1,3}(?:\.\d{1,3}){3}) +Cluster +list: +(?P<clusterlist>[^\r\n]+)$')
+
+        # Path-id 1 advertised to peers:
+        p15 = re.compile(r'^Path-id +(?P<path_id>\d+) +advertised +to +peers:$')
+
+        # 192.168.30.2
+        p16 = re.compile(r'^(?P<advertisedto>\d{1,3}(?:\.\d{1,3}){3}(?: +\d{1,3}(?:\.\d{1,3}){3})*)$')
+
+        # Path-id 1 not advertised to any peer
+        p17 = re.compile(r'^Path-id +(?P<path_id>\d+) +not +advertised +to +any +peer$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # BGP routing table information for VRF default, address family IPv4 Unicast
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf = groups['vrf']
+                address_family = groups['address_family'].lower()
+                vrf_dict = ret_dict.setdefault('instance', {}).\
+                    setdefault('default', {}).setdefault('vrf', {}).\
+                    setdefault(vrf, {})
+                af_dict = vrf_dict.setdefault('address_family', {}).\
+                    setdefault(address_family, {})
+                continue
+
+            # BGP routing table entry for 192.168.11.11/32, version 14
+            m = p2.match(line)
+            if m and af_dict is not None:
+                groups = m.groupdict()
+                prefix = groups['prefix']
+                prefix_dict = af_dict.setdefault('prefix', {}).\
+                    setdefault(prefix, {})
+                prefix_dict.update({
+                    'prefix': prefix,
+                    'prefixversion': int(groups['prefixversion']),
+                })
+                index = 0
+                continue
+
+            # Paths: (1 available, best #1)
+            m = p3.match(line)
+            if m and prefix_dict is not None:
+                groups = m.groupdict()
+                prefix_dict.update({
+                    'totalpaths': int(groups['totalpaths']),
+                    'bestpathnr': int(groups['bestpathnr']),
+                })
+                continue
+
+            # Flags: (0x08041a) on xmit-list, is in urib, is best urib route, is in HW
+            m = p4.match(line)
+            if m and prefix_dict is not None:
+                groups = m.groupdict()
+                flags = groups['flags']
+                prefix_dict['flag_code'] = groups['flag_code']
+                if 'on xmit-list' in flags:
+                    prefix_dict['on_xmitlist'] = True
+                if 'is in urib' in flags:
+                    prefix_dict['in_urib'] = True
+                if 'is best urib route' in flags:
+                    prefix_dict['best_urib_route'] = True
+                if 'is in HW' in flags:
+                    prefix_dict['in_hw'] = True
+                continue
+
+            # Advertised path-id 1
+            m = p5.match(line)
+            if m:
+                current_path_id = int(m.groupdict()['path_id'])
+                continue
+
+            # Path type: internal, path is valid, is best path, in rib
+            m = p6.match(line)
+            if m and prefix_dict is not None:
+                groups = m.groupdict()
+                index += 1
+                path_attrs = groups['path_attrs']
+                path_dict = prefix_dict.setdefault('path', {}).setdefault(index, {})
+                path_dict.update({
+                    'pathnr': index - 1,
+                    'pathtype': groups['path_type'],
+                    'pathvalid': 'path is valid' in path_attrs,
+                    'pathbest': 'is best path' in path_attrs,
+                })
+                if current_path_id is not None:
+                    path_dict['advertised_path_id'] = current_path_id
+                if 'in rib' in path_attrs:
+                    path_dict['in_rib'] = True
+                section = None
+                continue
+
+            # Imported from 192.168.3.3:3:192.168.11.11/32 (VRF vni100)
+            m = p7.match(line)
+            if m and path_dict is not None:
+                groups = m.groupdict()
+                path_dict['imported_from'] = groups['imported_from']
+                if groups['imported_from_vrf']:
+                    path_dict['imported_from_vrf'] = groups['imported_from_vrf']
+                continue
+
+            # AS-Path: 150 , path sourced external to AS
+            m = p8.match(line)
+            if m and path_dict is not None:
+                groups = m.groupdict()
+                path_dict['as_path'] = groups['as_path'].strip()
+                if groups['as_path_source']:
+                    path_dict['as_path_source'] = groups['as_path_source']
+                continue
+
+            # 192.168.1.0 (metric 81) from 192.168.101.101 (192.168.101.101)
+            m = p9.match(line)
+            if m and path_dict is not None:
+                groups = m.groupdict()
+                path_dict.update({
+                    'ipnexthop': groups['ipnexthop'],
+                    'nexthopmetric': int(groups['nexthopmetric']),
+                    'neighbor': groups['neighbor'],
+                    'neighborid': groups['neighborid'],
+                })
+                continue
+
+            # Origin incomplete, MED 0, localpref 100, weight 0
+            m = p10.match(line)
+            if m and path_dict is not None:
+                groups = m.groupdict()
+                med = int(groups['med']) if groups['med'].isdigit() else \
+                    groups['med']
+                path_dict.update({
+                    'origin': groups['origin'].lower(),
+                    'med': med,
+                    'localpref': int(groups['localpref']),
+                    'weight': int(groups['weight']),
+                })
+                continue
+
+            # Received label 100
+            m = p11.match(line)
+            if m and path_dict is not None:
+                path_dict['inlabel'] = int(m.groupdict()['inlabel'])
+                continue
+
+            # Extcommunity:
+            m = p12.match(line)
+            if m and path_dict is not None:
+                section = 'extcommunity'
+                continue
+
+            # RT:100:100
+            # ENCAP:8
+            # Router MAC:5254.004e.a437
+            m = p13.match(line)
+            if m and path_dict is not None and section == 'extcommunity':
+                path_dict.setdefault('extcommunity', []).\
+                    append(m.groupdict()['extcommunity'])
+                continue
+
+            # Originator: 192.168.1.0 Cluster list: 192.168.101.101
+            m = p14.match(line)
+            if m and path_dict is not None:
+                groups = m.groupdict()
+                path_dict['originatorid'] = groups['originatorid']
+                path_dict['clusterlist'] = groups['clusterlist'].split()
+                section = None
+                continue
+
+            # Path-id 1 advertised to peers:
+            m = p15.match(line)
+            if m and prefix_dict is not None:
+                current_path_id = int(m.groupdict()['path_id'])
+                section = 'advertisedto'
+                continue
+
+            # 192.168.30.2
+            m = p16.match(line)
+            if m and path_dict is not None and section == 'advertisedto':
+                peers = m.groupdict()['advertisedto'].split()
+                path_dict.setdefault('advertisedto', []).extend(peers)
+                continue
+
+            # Path-id 1 not advertised to any peer
+            m = p17.match(line)
+            if m and path_dict is not None:
+                path_dict['not_advertised'] = True
+                section = None
+                continue
+
+        return ret_dict
+
 # ==================================================================
 #  Parser for show bgp l2vpn evpn vrf <vrf>
 # ==================================================================
@@ -8093,5 +8413,3 @@ class ShowBgpIpMvpn(ShowBgpIpMvpnRouteType):
             cmd = ""
 
         return super().cli(cmd=cmd,output=output)
-
-

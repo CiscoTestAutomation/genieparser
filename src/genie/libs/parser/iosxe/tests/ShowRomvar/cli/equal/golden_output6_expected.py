@@ -16,6 +16,7 @@ expected_output = {
                       'subnet_mask': '255.255.255.0',
                       'switch_number': 1,
                       'system_serial_num': 'FDO25200FU2',
+                      'tftp_server': '172.27.74.9',
                       'boot_param': 'root=/dev/ram console=ttyS0,9600'
                       }
                     }

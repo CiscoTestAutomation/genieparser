@@ -1,0 +1,29 @@
+            Interface:  GigabitEthernet3/0/27
+               IIF-ID:  0x1F2CB7AA
+          MAC Address:  0057.0100.0001
+         IPv6 Address:  Unknown
+         IPv4 Address:  177.10.0.1
+            User-Name:  user_dot1x_btemplate
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  multi-auth
+     Oper control dir:  both
+      Session timeout:  120s (server), Remaining: 78s
+       Timeout action:  Reauthenticate
+    Common Session ID:  EE01060A000000E3F9F77577
+      Acct Session ID:  0x000000bf
+               Handle:  0xed0000d9
+       Current Policy:  POLICY_Gi3/0/24
+
+
+Server Policies:
+	Service Template: edge_dot1x_btemplate (priority 100)
+      Session-Timeout: 120 sec
+           Vlan Group:  Vlan: 177
+              ACS ACL: xACSACLx-IP-permit_edge_dot1x_btemplate-65774576
+
+
+Method status list:
+       Method           State
+        dot1x           Authc Success
+

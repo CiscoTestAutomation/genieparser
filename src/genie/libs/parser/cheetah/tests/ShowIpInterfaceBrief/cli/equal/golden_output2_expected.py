@@ -1,0 +1,61 @@
+expected_output = {
+    'interfaces': {
+        'wired0': {
+            'ip_address': '192.0.2.196',
+            'method': 'DHCP',
+            'status': 'up',
+            'protocol': 'up',
+            'speed': 10000,
+            'duplex': 'full',
+            'active': True,
+        },
+        'wired1': {
+            'ip_address': 'n/a',
+            'method': 'n/a',
+            'status': 'down',
+            'protocol': 'down',
+            'speed': 'n/a',
+            'duplex': 'n/a',
+        },
+        'auxiliary-client': {
+            'ip_address': 'unassigned',
+            'method': 'unset',
+            'status': 'up',
+            'protocol': 'up',
+            'speed': 'n/a',
+            'duplex': 'n/a',
+        },
+        'wifi0': {
+            'ip_address': 'n/a',
+            'method': 'n/a',
+            'status': 'up',
+            'protocol': 'up',
+            'speed': 'n/a',
+            'duplex': 'n/a',
+        },
+        'wifi1': {
+            'ip_address': 'n/a',
+            'method': 'n/a',
+            'status': 'administatively down',
+            'protocol': 'down',
+            'speed': 'n/a',
+            'duplex': 'n/a',
+        },
+        'wifi2': {
+            'ip_address': 'n/a',
+            'method': 'n/a',
+            'status': 'administatively down',
+            'protocol': 'down',
+            'speed': 'n/a',
+            'duplex': 'n/a',
+        },
+        'wifi3': {
+            'ip_address': 'n/a',
+            'method': 'n/a',
+            'status': 'administatively down',
+            'protocol': 'down',
+            'speed': 'n/a',
+            'duplex': 'n/a',
+        },
+    }
+}

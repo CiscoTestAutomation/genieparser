@@ -11,6 +11,7 @@ NXOS parsers for the following show commands:
     * show ip ospf sham-links vrf <WORD>
     * show ip ospf interface
     * show ip ospf interface vrf <WORD>
+    * show ip ospf neighbors vrf all
     * show ip ospf neighbors detail
     * show ip ospf neighbors detail vrf <WORD>
     * show ip ospf database external detail
@@ -3813,3 +3814,148 @@ class ShowIpOspfDatabaseOpaqueAreaDetail(ShowIpOspfDatabaseOpaqueAreaDetailSchem
             cmd = self.cli_command[1]
 
         return super().cli(cmd=cmd, db_type='opaque',output=output)
+
+
+class ShowIpOspfNeighborSchema(MetaParser):
+    """Schema for:
+        show ip ospf neighbors vrf all
+        show ip ospf neighbors vrf <vrf>
+        show ip ospf neighbors
+    """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'instance': {
+                            Any(): {
+                                Optional('total_neighbors'): int,
+                                Optional('interfaces'): {
+                                    Any(): {
+                                        'neighbors': {
+                                            Any(): {
+                                                'neighbor_router_id': str,
+                                                'priority': int,
+                                                'state': str,
+                                                'up_time': str,
+                                                'address': str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpOspfNeighbor(ShowIpOspfNeighborSchema):
+    """Parser for:
+        show ip ospf neighbors vrf all
+        show ip ospf neighbors vrf <vrf>
+        show ip ospf neighbors
+    """
+
+    cli_command = [
+        'show ip ospf neighbors vrf {vrf}',
+        'show ip ospf neighbors',
+    ]
+
+    exclude = ['up_time']
+
+    def cli(self, vrf='', output=None):
+        if vrf:
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            cmd = self.cli_command[1]
+
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        ret_dict = {}
+        address_family = 'ipv4'
+        instance_dict = None
+
+        # OSPF Process ID 100 VRF blue
+        p1 = re.compile(
+            r'^\s*OSPF +Process +ID +(?P<instance>\S+) +'
+            r'VRF +(?P<vrf>\S+)\s*$'
+        )
+
+        # Total number of neighbors: 5
+        p2 = re.compile(
+            r'^\s*Total +number +of +neighbors: +'
+            r'(?P<total_neighbors>\d+)\s*$'
+        )
+
+        # Neighbor ID     Pri State            Up Time  Address         Interface
+        p3 = re.compile(
+            r'^\s*Neighbor +ID +Pri +State +Up +Time +'
+            r'Address +Interface\s*$'
+        )
+
+        # 3.3.3.3           1 FULL/DR          02:18:00 40.1.1.2        Eth1/49
+        p4 = re.compile(
+            r'^\s*(?P<neighbor_router_id>\S+) +(?P<priority>\d+) +'
+            r'(?P<state>\S+(?: +\S+)?) +(?P<up_time>\S+) +'
+            r'(?P<address>\S+) +(?P<interface>\S+)\s*$'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # OSPF Process ID 100 VRF blue
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                instance = groups['instance']
+                vrf = groups['vrf']
+                instance_dict = ret_dict.setdefault('vrf', {}).setdefault(
+                    vrf, {}
+                ).setdefault('address_family', {}).setdefault(
+                    address_family, {}
+                ).setdefault('instance', {}).setdefault(instance, {})
+                continue
+
+            # Total number of neighbors: 5
+            m = p2.match(line)
+            if m and instance_dict is not None:
+                groups = m.groupdict()
+                instance_dict['total_neighbors'] = int(
+                    groups['total_neighbors']
+                )
+                continue
+
+            # Neighbor ID     Pri State            Up Time  Address         Interface
+            m = p3.match(line)
+            if m:
+                continue
+
+            # 3.3.3.3           1 FULL/DR          02:18:00 40.1.1.2        Eth1/49
+            m = p4.match(line)
+            if m and instance_dict is not None:
+                groups = m.groupdict()
+                interface = Common.convert_intf_name(groups['interface'])
+                neighbor = groups['neighbor_router_id']
+                neighbor_dict = instance_dict.setdefault(
+                    'interfaces', {}
+                ).setdefault(interface, {}).setdefault(
+                    'neighbors', {}
+                ).setdefault(neighbor, {})
+
+                neighbor_dict['neighbor_router_id'] = neighbor
+                neighbor_dict['priority'] = int(groups['priority'])
+                neighbor_dict['state'] = groups['state']
+                neighbor_dict['up_time'] = groups['up_time']
+                neighbor_dict['address'] = groups['address']
+                continue
+
+        return ret_dict

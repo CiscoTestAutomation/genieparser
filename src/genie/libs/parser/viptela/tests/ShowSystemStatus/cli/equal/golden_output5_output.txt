@@ -1,0 +1,40 @@
+ce1#show sdwan system status
+Viptela (tm) vEdge Operating System Software
+Copyright (c) 2013-2026 by Viptela, Inc.
+Controller Compatibility: 27.1
+Version: 27.01.01.0.255187
+
+System logging to host  is disabled
+System logging to disk is enabled
+
+System state:            GREEN. All daemons up
+System FIPS state:       Disabled
+
+Last reboot:             Unknown reason.
+CPU-reported reboot:     Initiated by other
+Boot loader version:
+System uptime:           2 hours 29 minutes 11 seconds
+Current time:            Thu Sep 24 17:40:13 UTC 2026
+
+Hypervisor Type:         KVM
+Cloud Hosted Instance:   false
+
+Load average:            1 minute: 2.21, 5 minutes: 2.06, 15 minutes: 1.92
+Processes:               350 total
+CPU allocation:          4 total,   1 control,   3 data
+CPU states:              8.65% user,   8.33% system,   83.01% idle
+Memory usage:            3952848K total,    3091636K used,   861212K free
+                         6240K buffers,  1111416K cache
+
+Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
+                         /dev/disk/by-label/fs-bootflash   11063M  1135M    9348M   11%   /bootflash
+                                    374M   144M     226M   39%   /bootflash/.sdwaninstaller
+
+Personality:             vEdge
+Model name:              C8000V
+Device role:             cEdge-SDWAN
+Services:
+vManaged:                false
+Commit pending:          false
+Configuration template:
+Chassis serial number:   SSI130300YK

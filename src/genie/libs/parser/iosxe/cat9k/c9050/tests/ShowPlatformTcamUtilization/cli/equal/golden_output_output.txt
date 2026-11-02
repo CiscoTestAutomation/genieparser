@@ -1,0 +1,29 @@
+-------------------------------------------------------------------------------------------------------------------
+
+***Number of TCAM entries shown under Free is for unidimensional scale. Using the TCAM for one of the feature will
+
+***change the available TCAM for other features in the same slice
+
+-------------------------------------------------------------------------------------------------------------------
+
+                                         Slice0       Slice1       Slice2       Slice3       Slice4       Slice5
+
+-------------------------------------------------------------------------------------------------------------------
+
+       Resource                        Used  Free   Used  Free   Used  Free   Used  Free   Used  Free   Used  Free
+
+-------------------------------------------------------------------------------------------------------------------
+
+IPv4 LPTS TCAM entries                   35  8634     35  8634     35  8634     35  8634     35  8628     35  8634
+
+IPv6 LPTS TCAM entries                   30  4538     30  4538     30  4538     30  4538     30  4532     30  4538
+
+Egress Narrow_Pool_0 TCAM entries         1  8702      1  8702      1  8702      1  8702      1  8702      1  8702
+
+Egress Wide TCAM entries                  1  4606      1  4606      1  4606      1  4606      1  4606      1  4606
+
+Ingress Narrow_Pool_0 TCAM entries        1  8634      1  8634      1  8634      1  8634      4  8628      1  8634
+
+Ingress Narrow_Pool_1 TCAM entries        0  8672      0  8672      0  8672      0  8672      0  8669      0  8672
+
+Ingress Wide TCAM entries                 1  4538      1  4538      1  4538      1  4538      4  4532      1  4538

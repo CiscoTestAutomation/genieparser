@@ -1,0 +1,10 @@
+CPU alloc information:
+
+  Control plane cpu alloc: 0
+
+  Data plane cpu alloc: 0,6-11
+
+  Service plane cpu alloc: 1-5
+
+  Slow control plane cpu alloc: 
+  Template used: default-service_plane_heavy

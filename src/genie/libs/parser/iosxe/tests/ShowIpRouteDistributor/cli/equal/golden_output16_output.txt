@@ -1,0 +1,5 @@
+Routing entry for 10.0.0.0/8
+  Known via "static", distance 1, metric 0
+  Routing Descriptor Blocks:
+  * 192.0.2.1
+      Route metric is 0, traffic share count is 1

@@ -1,0 +1,26 @@
+IPv6 Multicast Routing Table for VRF "default"
+
+(*, ff05::2/128), uptime: 2d18h, mld ipv6 pim6
+  Incoming interface: Null, RPF nbr: 0::
+  Outgoing interface list: (count: 1)
+    Ethernet1/8, uptime: 2d18h, mld
+
+
+(*, ff1e::/64), bidir, uptime: 2d19h, pim6 ipv6
+  Incoming interface: Ethernet1/1, RPF nbr: fe80::4e71:dff:fe56:1143
+  Outgoing interface list: (count: 1)
+    Ethernet1/1, uptime: 2d18h, pim6, (RPF)
+
+
+(*, ff1e::1:1:12/128), bidir, uptime: 12:45:01, mld ipv6 pim6
+  Incoming interface: Ethernet1/1, RPF nbr: fe80::4e71:dff:fe56:1143
+  Outgoing interface list: (count: 2) (Fabric OIF)
+    Ethernet1/1, uptime: 12:45:01, pim6, (RPF)
+    Ethernet1/8, uptime: 12:45:01, mld
+
+
+(*, ff1e::1:1:13/128), bidir, uptime: 12:45:01, mld ipv6 pim6
+  Incoming interface: Ethernet1/1, RPF nbr: fe80::4e71:dff:fe56:1143
+  Outgoing interface list: (count: 2)
+    Ethernet1/1, uptime: 12:45:01, pim6, (RPF)
+    Ethernet1/8, uptime: 12:45:01, mld

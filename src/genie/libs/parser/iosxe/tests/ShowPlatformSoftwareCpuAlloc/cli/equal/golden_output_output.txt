@@ -1,0 +1,10 @@
+CPU alloc information:
+
+  Control plane cpu alloc: 0-1
+
+  Data plane cpu alloc: 0,11-23
+
+  Service plane cpu alloc: 2-10
+
+  Slow control plane cpu alloc:
+  Template used: CLI-service_plane_heavy

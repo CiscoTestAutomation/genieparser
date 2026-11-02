@@ -30,6 +30,15 @@
     * 'show platform software object-manager switch {switch} F0 object {object}'
     * 'show platform software memory database fed {switch} {switch_var} callsite'
     * 'show platform software memory database fed {switch_var} callsite'
+    * 'show platform software memory {process} {hw} active {slot}
+       alloc callsite brief'
+    * 'show platform software memory {process} {hw} active alloc callsite brief'
+    * 'show platform software memory {process} {hw} {switch_type}
+       alloc callsite brief'
+    * 'show platform software memory {process} switch active {slot}
+       alloc backtrace'
+    * 'show platform software memory {process} switch {switch_type}
+       alloc backtrace'
     * 'show platform software memory database forwarding-manager {slot} active brief | include {options}'
     * 'show platform soft infra bipc | inc buffer'
     * 'show platform software infractructure inject'
@@ -63,6 +72,7 @@
     * 'show platform software audit ruleset'
     * show platform software firewall qfp active runtime
     * show platform software ip FP active cef summary
+    * 'show platform software cpu alloc'
     * show platform software adjacency nexthop-ipfrr
     * show platform software adj fp active
     * 'show platform software selinux'
@@ -100,6 +110,73 @@ except (ImportError, OSError):
 from pyats.utils.exceptions import SchemaTypeError
 
 log = logging.getLogger(__name__)
+
+
+class ShowPlatformSoftwareCpuAllocSchema(MetaParser):
+    """Schema for 'show platform software cpu alloc'."""
+
+    schema = {
+        'control_plane_cpu_alloc': str,
+        'control_plane_cpu_alloc_core_ids': ListOf(int),
+        'data_plane_cpu_alloc': str,
+        'data_plane_cpu_alloc_core_ids': ListOf(int),
+        'service_plane_cpu_alloc': str,
+        'service_plane_cpu_alloc_core_ids': ListOf(int),
+        Optional('slow_control_plane_cpu_alloc'): str,
+        Optional('slow_control_plane_cpu_alloc_core_ids'): ListOf(int),
+        'template_used': str,
+    }
+
+
+class ShowPlatformSoftwareCpuAlloc(ShowPlatformSoftwareCpuAllocSchema):
+    """Parser for 'show platform software cpu alloc'."""
+
+    cli_command = 'show platform software cpu alloc'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        plane_fields = {
+            'control': 'control',
+            'data': 'data',
+            'service': 'service',
+            'slow control': 'slow_control',
+        }
+        # Example: Data plane cpu alloc: 0,11-23
+        allocation_pattern = re.compile(
+            r'^(?P<plane>Control|Data|Service|Slow control) plane cpu alloc:'
+            r'\s*(?P<allocation>[\d, -]*)$', re.IGNORECASE)
+        template_pattern = re.compile(r'^Template used:\s*(?P<template>.*)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Control plane cpu alloc: 0-1
+            match = allocation_pattern.match(line)
+            if match:
+                plane = plane_fields[match.group('plane').lower()]
+                allocation = match.group('allocation').strip()
+                ret_dict[f'{plane}_plane_cpu_alloc'] = allocation
+                core_ids = set()
+                for item in allocation.replace(' ', '').split(','):
+                    if not item:
+                        continue
+                    if '-' in item:
+                        start, end = item.split('-', 1)
+                        core_ids.update(
+                            range(int(start), int(end) + 1))
+                    else:
+                        core_ids.add(int(item))
+                ret_dict[f'{plane}_plane_cpu_alloc_core_ids'] = (
+                    sorted(core_ids))
+                continue
+
+            match = template_pattern.match(line)
+            if match:
+                ret_dict['template_used'] = match.group('template').strip()
+
+        return ret_dict
 
 
 class ShowPlatformSoftwareSlotActiveMonitorMemSchema(MetaParser):
@@ -303,32 +380,71 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
 
 
 class ShowPlatformSoftwareMemoryCallsiteSchema(MetaParser):
-    """Schema for show platform software memory <process> switch active <R0> alloc callsite brief"""
+    """Schema for slotted and slotless memory allocation callsite tables.
+
+    Commands:
+        * show platform software memory {process} {hw} active {slot}
+          alloc callsite brief
+        * show platform software memory {process} {hw} active
+          alloc callsite brief
+        * show platform software memory {process} {hw} {switch_type}
+          alloc callsite brief
+    """
 
     schema = {
-        "tracekey": str,
-        "callsites": {Any(): {"thread": int, "diff_byte": int, "diff_call": int}},
+        Optional("tracekey"): str,
+        "callsites": {
+            Any(): {"thread": int, "diff_byte": int, "diff_call": int}
+        },
     }
 
 
-class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchema):
-    """Parser for show platform software memory <process> <hw> active <R0> alloc callsite brief"""
+class ShowPlatformSoftwareMemoryCallsite(
+    ShowPlatformSoftwareMemoryCallsiteSchema
+):
+    """Parser for memory allocation callsite tables.
+
+    Commands:
+        * show platform software memory {process} {hw} active {slot}
+          alloc callsite brief
+        * show platform software memory {process} {hw} active
+          alloc callsite brief
+        * show platform software memory {process} {hw} {switch_type}
+          alloc callsite brief
+
+    hw defaults to 'switch'. With slot supplied, the active slotted command
+    is used; otherwise switch_type selects 'active' (default) or 'standby'.
+    switch_type is keyword-only; positional output remains supported.
+    """
 
     cli_command = [
-        "show platform software memory {process} {hw} active {slot} alloc callsite brief",
-        "show platform software memory {process} {hw} active alloc callsite brief",
+        "show platform software memory {process} {hw} active {slot} "
+        "alloc callsite brief",
+        "show platform software memory {process} {hw} active "
+        "alloc callsite brief",
+        "show platform software memory {process} {hw} {switch_type} "
+        "alloc callsite brief",
     ]
 
-    def cli(self, process, slot=None, hw="switch", output=None):
+    def cli(
+        self, process, slot=None, hw="switch", output=None, *,
+        switch_type="active"
+    ):
         if output is None:
             if slot is not None:
                 out = self.device.execute(
-                    self.cli_command[0].format(process=process, hw=hw, slot=slot)
+                    self.cli_command[0].format(
+                        process=process, hw=hw, slot=slot
+                    )
                 )
             else:
                 out = self.device.execute(
-                    self.cli_command[1].format(process=process, hw=hw)
+                    self.cli_command[2].format(
+                        process=process, hw=hw, switch_type=switch_type
+                    )
                 )
+        else:
+            out = output
 
         # Init vars
         parsed_dict = {}
@@ -374,7 +490,14 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
 
 
 class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
-    """Schema for show platform software memory <process> switch active <R0> alloc backtrace"""
+    """Schema for slotted and slotless memory allocation backtraces.
+
+    Commands:
+        * show platform software memory {process} switch active {slot}
+          alloc backtrace
+        * show platform software memory {process} switch {switch_type}
+          alloc backtrace
+    """
 
     schema = {
         "backtraces": {
@@ -389,18 +512,38 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
     }
 
 
-class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
-    """Parser for show platform software memory <process> switch active <R0> alloc backtrace"""
+class ShowPlatformSoftwareMemoryBacktrace(
+    ShowPlatformSoftwareMemoryBacktraceSchema
+):
+    """Parser for memory allocation backtraces on switch hardware.
 
-    cli_command = (
-        "show platform software memory {process} switch active {slot} alloc backtrace"
-    )
+    Commands:
+        * show platform software memory {process} switch active {slot}
+          alloc backtrace
+        * show platform software memory {process} switch {switch_type}
+          alloc backtrace
 
-    def cli(self, process, slot, output=None):
+    With slot supplied, the active slotted command is used; otherwise
+    switch_type selects 'active' (default) or 'standby'. switch_type is
+    keyword-only; positional output remains supported.
+    """
+
+    cli_command = [
+        "show platform software memory {process} switch active {slot} "
+        "alloc backtrace",
+        "show platform software memory {process} switch {switch_type} "
+        "alloc backtrace",
+    ]
+
+    def cli(self, process, slot=None, output=None, *, switch_type="active"):
         if output is None:
-            out = self.device.execute(
-                self.cli_command.format(process=process, slot=slot)
-            )
+            if slot is not None:
+                command = self.cli_command[0].format(process=process, slot=slot)
+            else:
+                command = self.cli_command[1].format(
+                    process=process, switch_type=switch_type
+                )
+            out = self.device.execute(command)
         else:
             out = output
 
@@ -412,9 +555,9 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
         # backtrace: 1#2315ece11e07bc883d89421df58e37b6   maroon:7F740DEDC000+61F6 tdllib:7F7474D05000+B2B46 ui:7F74770E4000+4639A ui:7F74770E4000+4718C cdlcore:7F7466A6B000+37C95 cdlcore:7F7466A6B000+37957 uipeer:7F747A7A8000+24F2A evutil:7F747864E000+7966 evutil:7F747864E000+7745
         p1 = re.compile(r"backtrace: (?P<backtrace>[\w#\d\s:+]+)$")
 
-        #   callsite: 2150603778, thread_id: 31884
+        #   callsite: A5FA73E0E8DFC000, thread_id: 31884
         p2 = re.compile(
-            r"callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)"
+            r"callsite: +(?P<callsite>[0-9a-fA-F]+), +thread_id: +(?P<thread_id>\d+)"
         )
 
         #   allocs: 1, frees: 0, call_diff: 1
@@ -8501,12 +8644,15 @@ class ShowPlatSwObjectManagerF0ErrorObject(ShowPlatSwObjectManagerF0ErrorObjectS
     cli_command = [
         "show platform software object-manager F0 error-object",
         "show platform software object-manager {switch} {switch_type} F0 error-object",
+        "show platform software object-manager switch {switch} fp active error",
     ]
 
     def cli(self, switch=None, switch_type=None, output=None):
         if output is None:
             if switch and switch_type:
                 cmd = self.cli_command[1].format(switch=switch, switch_type=switch_type)
+            elif switch:
+                cmd = self.cli_command[2].format(switch=switch)
             else:
                 cmd = self.cli_command[0]
             out = self.device.execute(cmd)

@@ -1,0 +1,20 @@
+AP0011.2233.4455#show ip interface brief
+Interface            IP-Address      Method   Status                 Protocol
+Speed      Duplex
+*wired0              192.0.2.196     DHCP     up                     up
+1000       full
+wired1               n/a             n/a      down                   down
+n/a        n/a
+auxiliary-client     unassigned      unset    up                     up
+n/a        n/a
+wifi0                n/a             n/a      up                     up
+n/a        n/a
+wifi1                n/a             n/a      administatively down   down
+n/a        n/a
+wifi2                n/a             n/a      administatively down   down
+n/a        n/a
+wifi3                n/a             n/a      administatively down   down
+n/a        n/a
+
+* : Active Interface
+AP0011.2233.4455#

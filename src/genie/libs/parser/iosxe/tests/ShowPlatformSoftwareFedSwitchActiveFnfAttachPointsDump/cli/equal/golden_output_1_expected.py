@@ -1,0 +1,30 @@
+expected_output = {
+    "attach_points": {
+        1: {
+            "sampler_type": 0,
+            "sampler_window_size": 0,
+            "fnf_mon_id": 1465773614,
+            "direction": "Output",
+            "interface_id": "Po4",
+            "traffic_type": "DATALINK TRAFFIC",
+            "status": "SUCCESS",
+            "asic": 0,
+            "fp_oid": 4856,
+            "acl_oid": 4909,
+            "rh_oid": 4911,
+        },
+        2: {
+            "sampler_type": 0,
+            "sampler_window_size": 0,
+            "fnf_mon_id": 1938805939,
+            "direction": "Input",
+            "interface_id": "Po4",
+            "traffic_type": "DATALINK TRAFFIC",
+            "status": "SUCCESS",
+            "asic": 0,
+            "fp_oid": 4856,
+            "acl_oid": 4860,
+            "rh_oid": 4907,
+        },
+    },
+}

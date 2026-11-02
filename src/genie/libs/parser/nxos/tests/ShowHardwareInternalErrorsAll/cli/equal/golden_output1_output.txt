@@ -1,0 +1,22 @@
+A11-EK-64# show hardware internal errors all
+
+slot  1
+=======
+
+|------------------------------------------------------------------------|
+| Device:ARARAT                   Role:MAC                     Mod: 1    |
+| Last cleared @ Thu Oct  1 14:59:35 2026
+| Device Statistics Category :: ERROR
+|------------------------------------------------------------------------|
+Instance:0
+ID       Name                                           Value              Ports
+--       ----                                           -----              -----
+196616      Interface Inbound Errors (CRC,len,Algn Err)   0000000000030003  8:0
+196617      Interface Inbound Errors (CRC,len,Algn Err)   0000000000030003  9:0
+1048584     Interface Inbound CRC Error Stomped           0000000000030003  8:0
+1048585     Interface Inbound CRC Error Stomped           0000000000030003  9:0
+196623      Interface Inbound Errors (CRC,len,Algn Err)   0000000000000013  1,17,61 -
+963792      Interface Outbound Frame Error                0000000001930289  1,17 -
+
+
+A11-EK-64#

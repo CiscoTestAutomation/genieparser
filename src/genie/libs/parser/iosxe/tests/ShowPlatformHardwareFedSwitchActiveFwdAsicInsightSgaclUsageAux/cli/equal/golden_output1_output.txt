@@ -1,0 +1,2 @@
+------------------------ SG-ACL Usage for Device ID 1 ------------------------
+Policy Entries : Used = 7, Max = 538

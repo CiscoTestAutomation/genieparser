@@ -1,0 +1,52 @@
+--------------------------------------------------------------
+         ACLs details (programmed in datapath)
+--------------------------------------------------------------
+
+[CG ID: 8]    CG Name: racl_ingress
+              Feature: Racl    Prot: IPv4
+              Region grp: 0x2c0603d8    Dir: Ingress
+              SDK-handle(asic: 0, OID: 0x44D)
+              SDK-handle(asic: 1, OID: 0x4BC)
+              SDK-handle(asic: 2, OID: 0x49A)
+              SDK-handle(asic: 3, OID: 0x470)
+
+    Seq Num:10
+        ipv4_src: value = 0x78010500       mask = 0xffffff00
+        ipv4_dst: value = 0x7a010502       mask = 0xffffffff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0x577 (0))
+    Counter handle: (asic: 1 , OID: 0x5D2 (0))
+    Counter handle: (asic: 2 , OID: 0x5D2 (0))
+    Counter handle: (asic: 3 , OID: 0x570 (0))
+    Result  action: DENY    Logging: NO_LOG
+
+    Seq Num:20
+        ipv4_src: value = 0x78010100       mask = 0xffffff00
+        ipv4_dst: value = 0x7a010100       mask = 0xffffff00
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: PERMIT    Logging: NO_LOG
+
+    Seq Num:4294967295
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0x578 (0))
+    Counter handle: (asic: 1 , OID: 0x5D3 (0))
+    Counter handle: (asic: 2 , OID: 0x5D3 (0))
+    Counter handle: (asic: 3 , OID: 0x571 (0))
+    Result  action: DENY    Logging: NONE

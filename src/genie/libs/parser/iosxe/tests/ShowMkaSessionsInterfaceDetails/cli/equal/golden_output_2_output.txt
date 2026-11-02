@@ -1,0 +1,109 @@
+MKA Detailed Status for MKA Session
+===================================
+Status: INITIALIZING - Searching for Peer (Waiting to receive first Peer MKPDU)
+
+Local Tx-SCI............. 7885.170e.b405/000c
+Interface MAC Address.... 7885.170e.b405
+MKA Port Identifier...... 12
+Interface Name........... TwentyFiveGigE1/0/5
+Audit Session ID.........
+CAK Name (CKN)........... 20
+Member Identifier (MI)... 9A5A37902853EB5E9C90C15D
+Message Number (MN)...... 119
+EAP Role................. NA
+Key Server............... YES
+MKA Cipher Suite......... AES-256-CMAC
+
+Latest SAK Status........ Rx & Tx
+Latest SAK AN............ 0
+Latest SAK KI (KN)....... A09C58F440CB1CD8A2AE252900000001 (1)
+Old SAK Status........... FIRST-SAK
+Old SAK AN............... 0
+Old SAK KI (KN).......... FIRST-SAK (0)
+
+SAK Transmit Wait Time... 0s (Not waiting for any peers to respond)
+SAK Retire Time.......... 0s (No Old SAK to retire)
+SAK Rekey Time........... 0s (SAK Rekey interval not applicable)
+
+MKA Policy Name.......... *DEFAULT POLICY*
+Key Server Priority...... 0
+Delay Protection......... NO
+Delay Protection Timer.......... 0s (Not enabled)
+
+Confidentiality Offset... 0
+Algorithm Agility........ 80C201
+SAK Rekey On Live Peer Loss........ NO
+Send Secure Announcement.. DISABLED
+SCI Based SSCI Computation.... NO
+SAK Cipher Suite......... 0080C20001000001 (GCM-AES-128)
+MACsec Capability........ 3 (MACsec Integrity, Confidentiality, & Offset)
+MACsec Desired........... YES
+
+# of MACsec Capable Live Peers............ 0
+# of MACsec Capable Live Peers Responded.. 0
+
+Live Peers List:
+  MI                        MN          Rx-SCI (Peer)        KS        RxSA          SSCI
+                                                             Priority  Installed
+  ---------------------------------------------------------------------------------------
+
+Potential Peers List:
+  MI                        MN          Rx-SCI (Peer)        KS        RxSA          SSCI
+                                                             Priority  Installed
+  ---------------------------------------------------------------------------------------
+
+
+MKA Detailed Status for MKA Session
+===================================
+Status: SECURED - Secured MKA Session with MACsec
+
+Local Tx-SCI............. 7885.170e.b405/000c
+Interface MAC Address.... 7885.170e.b405
+MKA Port Identifier...... 12
+Interface Name........... TwentyFiveGigE1/0/5
+Audit Session ID.........
+CAK Name (CKN)........... 10
+Member Identifier (MI)... A09C58F440CB1CD8A2AE2529
+Message Number (MN)...... 119
+EAP Role................. NA
+Key Server............... YES
+MKA Cipher Suite......... AES-256-CMAC
+
+Latest SAK Status........ Rx & Tx
+Latest SAK AN............ 0
+Latest SAK KI (KN)....... A09C58F440CB1CD8A2AE252900000001 (1)
+Old SAK Status........... FIRST-SAK
+Old SAK AN............... 0
+Old SAK KI (KN).......... FIRST-SAK (0)
+
+SAK Transmit Wait Time... 0s (Not waiting for any peers to respond)
+SAK Retire Time.......... 0s (No Old SAK to retire)
+SAK Rekey Time........... 0s (SAK Rekey interval not applicable)
+
+MKA Policy Name.......... *DEFAULT POLICY*
+Key Server Priority...... 0
+Delay Protection......... NO
+Delay Protection Timer.......... 0s (Not enabled)
+
+Confidentiality Offset... 0
+Algorithm Agility........ 80C201
+SAK Rekey On Live Peer Loss........ NO
+Send Secure Announcement.. DISABLED
+SCI Based SSCI Computation.... NO
+SAK Cipher Suite......... 0080C20001000001 (GCM-AES-128)
+MACsec Capability........ 3 (MACsec Integrity, Confidentiality, & Offset)
+MACsec Desired........... YES
+
+# of MACsec Capable Live Peers............ 1
+# of MACsec Capable Live Peers Responded.. 1
+
+Live Peers List:
+  MI                        MN          Rx-SCI (Peer)        KS        RxSA          SSCI
+                                                             Priority  Installed
+  ---------------------------------------------------------------------------------------
+  DA48D1C9881C0131A910471C  119         ecdd.240f.d805/040a  0         YES            0
+
+Potential Peers List:
+  MI                        MN          Rx-SCI (Peer)        KS        RxSA          SSCI
+                                                             Priority  Installed
+  ---------------------------------------------------------------------------------------

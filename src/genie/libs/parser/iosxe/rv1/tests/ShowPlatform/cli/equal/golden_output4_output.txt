@@ -1,0 +1,19 @@
+Chassis type: C8375-E-G2
+
+Slot      Type                State                 Insert time (ago)
+--------- ------------------- --------------------- -----------------
+0         C8375-E-G2          ok                    1d20h
+ 0/0      4M-2xSFP+           ok                    1d20h
+1         C8375-E-G2          ok                    1d20h
+R0        C8375-E-G2          ok, active            1d20h
+F0        C8375-E-G2          ok, active            1d20h
+P0        PWR-CC1-400WAC      ok                    1d20h
+P1        PWR-CC1-400WAC      fail, badinput        1d20h
+P2        C8300-FAN-1R        ok                    1d20h
+
+Slot      CPLD Version        Firmware Version
+--------- ------------------- ---------------------------------------
+0         25071533            v17.18(3r).s2.cp
+1         25071533            v17.18(3r).s2.cp
+R0        25071533            v17.18(3r).s2.cp
+F0        25071533            v17.18(3r).s2.cp

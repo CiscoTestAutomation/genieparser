@@ -52,14 +52,16 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             out = output
             
         result_dict = {}
-        # FiveGigabitEthernet1/0/6
-        p1 = re.compile(r'^(?P<interface>Gig.+|Ten.+|Fast.+|Five.+|Port.+ |Vlan.+)$')
+        # TwoGigabitEthernet1/0/6
+        p1 = re.compile(r'^(?P<interface>Gig.+|Two.+|Ten.+|Fast.+|Five.+|Port.+|Vlan.+)$')
         p2 = re.compile(r'^(?P<protocol>[\w\-]+) +(?P<In_Packet_Count>[\d]+) +(?P<Out_Packet_Count>[\d]+)')
-        p3 = re.compile(r'^(?P<In_Byte_Count>[\d]+) +(?P<Out_Byte_Count>[\d]+)')
-        p4 = re.compile(r'^(?P<In_Bitrate>[\d]+) +(?P<Out_Bitrate>[\d]+)')
-        p5 = re.compile(r'^(?P<In_Bitrate_Max>[\d]+) +(?P<Out_Bitrate_Max>[\d]+)')
-
-        
+        # 46100                    0
+        p3 = re.compile(r'^(?P<in_count>\d+) +(?P<out_count>\d+)$')
+        continuation_fields = (
+            'byte_count',
+            '5min_bit_rate_bps',
+            '5min_max_bit_rate_bps',
+        )
 
         for line in out.splitlines():
             if line:
@@ -67,6 +69,7 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
             else:
                 continue
 
+            # TwoGigabitEthernet1/0/6
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -84,34 +87,19 @@ class ShowIpNbarDiscovery(ShowIpNbarDiscoverySchema):
                 interface['protocol'][protocol]={}
                 interface['protocol'][protocol].update({'in_packet_count': int(group['In_Packet_Count'])})
                 interface['protocol'][protocol].update({'out_packet_count': int(group['Out_Packet_Count'])})
+                continuation_row = 0
                 continue
             
+            # 46100                    0
             m = p3.match(line)
-            
             if m:
                 group = m.groupdict()
-                interface['protocol'][protocol].update({'in_byte_count': int(group['In_Byte_Count'])})
-                interface['protocol'][protocol].update({'out_byte_count': int(group['Out_Byte_Count'])})
-                
-    
-                   
-            m = p4.match(line)
-            
-            if m:
-                
-                group = m.groupdict()
-                interface['protocol'][protocol].update({'in_5min_bit_rate_bps': int(group['In_Bitrate'])})
-                interface['protocol'][protocol].update({'out_5min_bit_rate_bps': int(group['Out_Bitrate'])})
-                
-                
-            
-            m = p5.match(line)
-            
-            if m:
-                group = m.groupdict()
-                interface['protocol'][protocol].update({'in_5min_max_bit_rate_bps': int(group['In_Bitrate_Max'])})
-                interface['protocol'][protocol].update({'out_5min_max_bit_rate_bps': int(group['Out_Bitrate_Max'])})
-                
+                field = continuation_fields[continuation_row]
+                counters = interface['protocol'][protocol]
+                counters['in_' + field] = int(group['in_count'])
+                counters['out_' + field] = int(group['out_count'])
+                continuation_row += 1
+                continue
 
         
 

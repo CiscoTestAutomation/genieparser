@@ -1,0 +1,90 @@
+--------------------------------------------------------------
+         ACLs details (programmed in datapath)
+--------------------------------------------------------------
+
+[CG ID: 21]    CG Name: racl_permitv4_egress
+              Feature: Racl    Prot: IPv4
+              Region grp: 0x1006c0b8    Dir: Egress
+              SDK-handle(asic: 0, OID: 0xA62)
+
+    Seq Num:10
+        ipv4_src: value = 0x00000002       mask = 0x000000ff
+        ipv4_dst: value = 0x00000002       mask = 0x000000ff
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: PERMIT    Logging: NO_LOG
+
+    Seq Num:4294967295
+        ipv4_src: value = 0x00000000       mask = 0x00000000
+        ipv4_dst: value = 0x00000000       mask = 0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      v4_opt    src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0xA63 (0))
+    Result  action: DENY    Logging: NONE
+
+[CG ID: 22]    CG Name: racl_permitv6_egress
+              Feature: Racl    Prot: IPv6
+              Region grp: 0x1005b4f8    Dir: Egress
+              SDK-handle(asic: 0, OID: 0xA55)
+
+    Seq Num:50
+        ipv6_src: value = 0x00100000.0x00000000.0x00000000.0x00000000
+                   mask = 0xffffffff.0xffffffff.0xffffffff.0xffffff00
+        ipv6_dst: value = 0x00300000.0x00000000.0x00000000.0x00000000
+                   mask = 0xffffffff.0xffffffff.0xffffffff.0xffffff00
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      ext_hdr   src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: PERMIT    Logging: NO_LOG
+
+    Seq Num:60
+        ipv6_src: value = 0x00100000.0x00000000.0x00000000.0x00010000
+                   mask = 0xffffffff.0xffffffff.0xffffffff.0xffffff00
+        ipv6_dst: value = 0x00300000.0x00000000.0x00000000.0x00010000
+                   mask = 0xffffffff.0xffffffff.0xffffffff.0xffffff00
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      ext_hdr   src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0xA5D (0))
+    Result  action: DENY    Logging: NO_LOG
+
+    Seq Num:70
+        ipv6_src: value = 0x00000000.0x00000000.0x00000000.0x00000000
+                   mask = 0x00000000.0x00000000.0x00000000.0x00000000
+        ipv6_dst: value = 0x00000000.0x00000000.0x00000000.0x00000000
+                   mask = 0x00000000.0x00000000.0x00000000.0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x59       0x0      0x0         0x0        0x0          0x0
+        M:  0xff       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      ext_hdr   src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Result  action: PERMIT    Logging: NO_LOG
+
+    Seq Num:4294967295
+        ipv6_src: value = 0x00000000.0x00000000.0x00000000.0x00000000
+                   mask = 0x00000000.0x00000000.0x00000000.0x00000000
+        ipv6_dst: value = 0x00000000.0x00000000.0x00000000.0x00000000
+                   mask = 0x00000000.0x00000000.0x00000000.0x00000000
+            proto    frag    tcp_flg    tcp_op    src_port    dst_port
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+            tos      ttl       cos      ext_hdr   src_obj     dst_obj
+        V:  0x0       0x0      0x0         0x0        0x0          0x0
+        M:  0x0       0x0      0x0         0x0        0x0          0x0
+    Counter handle: (asic: 0 , OID: 0xA60 (0))
+    Result  action: DENY    Logging: NONE

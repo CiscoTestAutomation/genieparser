@@ -451,6 +451,7 @@ expected_output = {
         'init_flag_check': 'Expired Not Rescheduled',
         'integrity_reporting': 'Aug 18 08:42:08 2026 UTC (23 hours, 52 minutes, 20 seconds remaining)',
         'operational_model': 'Expired Not Rescheduled',
+        'pla_reporting': 'Oct 09 19:18:09 2026 UTC (9 days, 23 hours, 59 minutes, 45 seconds remaining)',
         'process_utility_rum_reports': 'Aug 17 08:52:29 2026 UTC (2 minutes, 41 seconds remaining)',
         'register_period_expiration_check': 'Expired Not Rescheduled',
         'reservation_configuration_mismatch_between_nodes_in_ha_mode': 'Expired Not Rescheduled',

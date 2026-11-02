@@ -1,4 +1,5 @@
 expected_output = {
+    "critical_alarms": 1,
     "critical_larams": 1,
     "major_alarms": 4,
     "minor_alarms": 0,

@@ -1,0 +1,6 @@
+FNF  record count statistics
+
+Asic: 0
+Total_current flows:        1493
+Total_flows_added:          1538
+Total_flows_removed:        45

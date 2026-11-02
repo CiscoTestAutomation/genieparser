@@ -44,6 +44,8 @@
     * 'show platform hardware fed {switch_var} fwd-asic resource feature-id-mapping'
     * 'show platform hardware fed {switch} {switch_var} fwd-asic resource utilization feature {feature_id}'
     * 'show platform hardware fed {switch_var} fwd-asic resource utilization feature {feature_id}'
+    * 'show platform hardware fed {switch} {switch_var} fwd-asic insight sgacl_usage_aux({device_id})'
+    * 'show platform hardware fed {switch_var} fwd-asic insight sgacl_usage_aux({device_id})'
 """
 # Python
 import re
@@ -12794,6 +12796,82 @@ class ShowPlatformHardwareFedSwitchActiveFwdAsicResourceUtilizationFeature(ShowP
                 group = m.groupdict()
                 resource_dict = asic_dict.setdefault('resources', {})
                 resource_dict[group['resource_name']] = int(group['allocated'])
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSgaclUsageAuxSchema(
+    MetaParser):
+    """
+    Schema for
+    show platform hardware fed {switch} {switch_var} fwd-asic insight sgacl_usage_aux({device_id})
+    show platform hardware fed {switch_var} fwd-asic insight sgacl_usage_aux({device_id})
+    """
+
+    schema = {
+        'device_id': {
+            Any(): {
+                'policy_entries': {
+                    'used': int,
+                    'max': int
+                }
+            }
+        }
+    }
+
+class ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSgaclUsageAux(
+    ShowPlatformHardwareFedSwitchActiveFwdAsicInsightSgaclUsageAuxSchema):
+    """
+    Parser for
+    show platform hardware fed {switch} {switch_var} fwd-asic insight sgacl_usage_aux({device_id})
+    show platform hardware fed {switch_var} fwd-asic insight sgacl_usage_aux({device_id})
+    """
+
+    cli_command = [
+        'show platform hardware fed {switch} {switch_var} fwd-asic insight sgacl_usage_aux({device_id})',
+        'show platform hardware fed {switch_var} fwd-asic insight sgacl_usage_aux({device_id})'
+        ]
+
+    def cli(self, switch_var, device_id, switch=None, output=None):
+        if output is None:
+            if switch:
+                cmd = self.cli_command[0].format(
+                    switch=switch, switch_var=switch_var, device_id=device_id)
+            else:
+                cmd = self.cli_command[1].format(
+                    switch_var=switch_var, device_id=device_id)
+            output = self.device.execute(cmd)
+
+        ret_dict = {}
+
+        # ------------ SG-ACL Usage for Device ID 0 ------------------------
+        p0 = re.compile(r'^-+\s+SG-ACL Usage for Device ID\s+'
+                        r'(?P<device_id>\d+)\s+-+$')
+
+        # Policy Entries : Used = 6, Max = 508
+        p1 = re.compile(r'^Policy Entries\s+:\s+Used\s+=\s+(?P<used>\d+),\s+'
+                        r'Max\s+=\s+(?P<max>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # SG-ACL Usage for Device ID 0
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                current_device_id = group['device_id']
+                device_dict = ret_dict.setdefault(
+                    'device_id', {}).setdefault(current_device_id, {})
+                continue
+
+            # Policy Entries : Used = 6, Max = 508
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                policy_entries = device_dict.setdefault('policy_entries', {})
+                policy_entries['used'] = int(group['used'])
+                policy_entries['max'] = int(group['max'])
                 continue
 
         return ret_dict
