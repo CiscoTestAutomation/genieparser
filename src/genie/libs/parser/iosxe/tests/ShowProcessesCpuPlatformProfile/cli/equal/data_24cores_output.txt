@@ -1,0 +1,29 @@
+CPU utilization for five seconds: 33%, one minute: 33%, five minutes: 33%
+Core 0: CPU utilization for five seconds:  5%, one minute:  6%, five minutes:  6%
+Core 2: CPU utilization for five seconds: 37%, one minute: 35%, five minutes: 35%
+Core 3: CPU utilization for five seconds: 36%, one minute: 35%, five minutes: 35%
+Core 4: CPU utilization for five seconds: 29%, one minute: 28%, five minutes: 29%
+Core 5: CPU utilization for five seconds: 29%, one minute: 30%, five minutes: 29%
+Core 6: CPU utilization for five seconds: 27%, one minute: 29%, five minutes: 29%
+Core 7: CPU utilization for five seconds: 30%, one minute: 31%, five minutes: 31%
+Core 8: CPU utilization for five seconds: 30%, one minute: 31%, five minutes: 31%
+Core 9: CPU utilization for five seconds: 32%, one minute: 29%, five minutes: 29%
+Core 10: CPU utilization for five seconds: 31%, one minute: 33%, five minutes: 31%
+Core 11: CPU utilization for five seconds: 30%, one minute: 27%, five minutes: 27%
+Core 12: CPU utilization for five seconds: 31%, one minute: 30%, five minutes: 28%
+Core 13: CPU utilization for five seconds: 29%, one minute: 30%, five minutes: 30%
+Core 14: CPU utilization for five seconds: 31%, one minute: 31%, five minutes: 32%
+Core 15: CPU utilization for five seconds: 30%, one minute: 30%, five minutes: 30%
+Core 16: CPU utilization for five seconds: 27%, one minute: 28%, five minutes: 27%
+Core 17: CPU utilization for five seconds: 30%, one minute: 29%, five minutes: 29%
+Core 18: CPU utilization for five seconds: 31%, one minute: 31%, five minutes: 31%
+Core 19: CPU utilization for five seconds: 29%, one minute: 30%, five minutes: 30%
+Core 20: CPU utilization for five seconds: 30%, one minute: 30%, five minutes: 29%
+Core 21: CPU utilization for five seconds: 53%, one minute: 54%, five minutes: 55%
+Core 22: CPU utilization for five seconds: 52%, one minute: 53%, five minutes: 52%
+Core 23: CPU utilization for five seconds: 87%, one minute: 87%, five minutes: 87%
+Data plane process utilization for five seconds: 732%, one minute: 731%, five minutes: 729%
+   Pid    PPid    5Sec    1Min    5Min  Status        Size  Name
+--------------------------------------------------------------------------------
+ 15838   15829    644%    644%    644%  S           340820  ucode_pkt_PPE0
+ 15829   15306      0%      0%      0%  S             2832  pman

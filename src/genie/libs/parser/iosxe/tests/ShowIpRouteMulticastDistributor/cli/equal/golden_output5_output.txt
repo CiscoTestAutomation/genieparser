@@ -1,0 +1,6 @@
+Routing Table: multicast:test
+Routing entry for 10.0.0.0/8
+  Known via "static", distance 1, metric 0
+  Routing Descriptor Blocks:
+  * 5.5.5.2
+      Route metric is 0, traffic share count is 1

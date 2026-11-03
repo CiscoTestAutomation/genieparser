@@ -901,7 +901,8 @@ class ShowPlatform(ShowPlatformSchema):
         p6 = re.compile(
             r"^(?P<slot>[\w]+)(\/)?(?P<subslot>\d+)?\s*(?P<name>[\w\-_+\/]+)?\s*"
             r"(?P<state>(ok|unknown|admin down|ok, active|N\/A|ok, standby|init, active|out of service"
-            r"|ps, fail|empty|incompatible|inserted|fail|disabled|booting|init, standby))\s*"
+            r"|ps, fail|empty|incompatible|inserted|fail, badinput|fail, badoutput|fail, badcookie|fail"
+            r"|disabled|booting|init, standby))\s*"
             r"(?P<insert_time>([\w\.\:]+|N\/A))$"
         )
 

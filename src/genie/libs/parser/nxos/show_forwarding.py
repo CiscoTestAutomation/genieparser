@@ -7,6 +7,7 @@ NXOS parsers for the following commands
     * 'show forwarding ipv4 vrf {vrf}'
     * 'show forwarding ipv4 recursive'
     * 'show forwarding ipv4 recursive vrf {vrf}'
+    * 'show forwarding route {prefix} detail module {module}'
 """
 # Python
 import re 
@@ -209,5 +210,138 @@ class ShowForwardingIpv4Recursive(ShowForwardingIpv4, ShowForwardingIpv4Schema):
                 output = self.device.execute(self.cli_command[0])
     
         ret_dict = super().cli(output=output)
+
+        return ret_dict
+
+
+# ============================================
+# Parser for 'show forwarding route {prefix} detail module {module}'
+# ============================================
+class ShowForwardingRouteDetailSchema(MetaParser):
+    """Schema for show forwarding route {prefix} detail module {module}"""
+
+    schema = {
+        'prefix': {
+            Any(): {
+                'number_of_paths': int,
+                'update_time': str,
+                'vobj_id': int,
+                'orig_as': int,
+                'peer_as': int,
+                'rnh': str,
+                'paths': {
+                    Any(): {
+                        'interface': str,
+                        'dmac': str,
+                        Optional('packets'): int,
+                        Optional('bytes'): int,
+                        Optional('repair_path'): {
+                            'next_hop': str,
+                            'interface': str,
+                            'dmac': str,
+                            'packets': int,
+                            Optional('bytes'): int,
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowForwardingRouteDetail(ShowForwardingRouteDetailSchema):
+    """Parser for show forwarding route {prefix} detail module {module}"""
+
+    cli_command = 'show forwarding route {prefix} detail module {module}'
+
+    def cli(self, command, output=None):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        prefix_dict = None
+        path_dict = None
+        repair_path_dict = None
+
+        # Prefix 123.1.1.0/24, No of paths: 1, Update time: Wed Jul 11 19:00:12 2018
+        p1 = re.compile(r'^Prefix +(?P<prefix>\S+), +No +of +paths: +(?P<number_of_paths>\d+), +Update +time: +(?P<update_time>[A-Za-z]{3} +[A-Za-z]{3} +\d+ +\d{2}:\d{2}:\d{2} +\d{4})$')
+
+        # Vobj id: 141   orig_as: 65002   peer_as: 65100  rnh: 10.3.0.2
+        p2 = re.compile(r'^Vobj +id: +(?P<vobj_id>\d+) +orig_as: +(?P<orig_as>\d+) +peer_as: +(?P<peer_as>\d+) +rnh: +(?P<rnh>[\da-fA-F:.]+)$')
+
+        # 10.4.0.2           Ethernet8/4         DMAC: 0018.bad8.4dfd
+        p3 = re.compile(r'^(?P<next_hop>[\da-fA-F:.]+) +(?P<interface>\S+) +DMAC: +(?P<dmac>[0-9a-fA-F.]+)$')
+
+        # packets: 2  bytes: 3484   Repair path  10.3.0.2   Ethernet8/3 DMAC: 0018.bad8.4dfd packets: 0
+        p4 = re.compile(r'^packets: +(?P<packets>\d+) +bytes: +(?P<bytes>\d+) +Repair +path +(?P<repair_next_hop>[\da-fA-F:.]+) +(?P<repair_interface>\S+) +DMAC: +(?P<repair_dmac>[0-9a-fA-F.]+) +packets: +(?P<repair_packets>\d+)$')
+
+        # bytes: 1
+        p5 = re.compile(r'^bytes: +(?P<repair_bytes>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Prefix 123.1.1.0/24, No of paths: 1, Update time: Wed Jul 11 19:00:12 2018
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                prefix_dict = ret_dict.setdefault('prefix', {}) \
+                    .setdefault(groups['prefix'], {})
+                prefix_dict.update({
+                    'number_of_paths': int(groups['number_of_paths']),
+                    'update_time': groups['update_time'],
+                })
+                continue
+
+            # Vobj id: 141   orig_as: 65002   peer_as: 65100  rnh: 10.3.0.2
+            m = p2.match(line)
+            if m and prefix_dict is not None:
+                groups = m.groupdict()
+                prefix_dict.update({
+                    'vobj_id': int(groups['vobj_id']),
+                    'orig_as': int(groups['orig_as']),
+                    'peer_as': int(groups['peer_as']),
+                    'rnh': groups['rnh'],
+                })
+                continue
+
+            # 10.4.0.2           Ethernet8/4         DMAC: 0018.bad8.4dfd
+            m = p3.match(line)
+            if m and prefix_dict is not None:
+                groups = m.groupdict()
+                path_dict = prefix_dict.setdefault('paths', {}) \
+                    .setdefault(groups['next_hop'], {})
+                path_dict.update({
+                    'interface': groups['interface'],
+                    'dmac': groups['dmac'],
+                })
+                repair_path_dict = None
+                continue
+
+            # packets: 2  bytes: 3484   Repair path  10.3.0.2   Ethernet8/3 DMAC: 0018.bad8.4dfd packets: 0
+            m = p4.match(line)
+            if m and path_dict is not None:
+                groups = m.groupdict()
+                path_dict.update({
+                    'packets': int(groups['packets']),
+                    'bytes': int(groups['bytes']),
+                })
+                repair_path_dict = path_dict.setdefault('repair_path', {})
+                repair_path_dict.update({
+                    'next_hop': groups['repair_next_hop'],
+                    'interface': groups['repair_interface'],
+                    'dmac': groups['repair_dmac'],
+                    'packets': int(groups['repair_packets']),
+                })
+                continue
+
+            # bytes: 1
+            m = p5.match(line)
+            if m and repair_path_dict is not None:
+                groups = m.groupdict()
+                repair_path_dict['bytes'] = int(groups['repair_bytes'])
+                continue
 
         return ret_dict

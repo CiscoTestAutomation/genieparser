@@ -1,0 +1,4 @@
+{
+    "process": "chassis-manager",
+    "switch_type": "standby"
+}

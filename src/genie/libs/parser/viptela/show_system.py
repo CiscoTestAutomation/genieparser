@@ -17,7 +17,7 @@ class ShowSystemStatusSchema(MetaParser):
 
     schema = {
         'boot_loader_version': str,
-        'build': str,
+        Optional('build'): str,
         'chassis_serial_number': str,
         'commit_pending': str,
         'configuration_template': str,
@@ -151,6 +151,7 @@ class ShowSystemStatus(ShowSystemStatusSchema):
         # Configuration template:  CLItemplate_srp_vedge
         # Chassis serial number:   None
         p10 = re.compile(r'^(?P<key>.*?):\s+(?P<value>.*)$')
+        p10_empty = re.compile(r'^(?P<key>Boot loader version|Services|Configuration template):$')
 
         for line in output.splitlines():
             line = line.strip()
@@ -259,8 +260,11 @@ class ShowSystemStatus(ShowSystemStatusSchema):
             # Configuration template:  CLItemplate_srp_vedge
             # Chassis serial number:   None
             m10 = p10.match(line)
+            if not m10:
+                m10 = p10_empty.match(line)
             if m10:
                 group = m10.groupdict()
+                group.setdefault('value', '')
                 key = group['key'].replace('-', '_').replace(' ','_').replace(':','').lower()
                 if key == 'processes':
                     group['value'] = int(group['value'].replace('total',''))

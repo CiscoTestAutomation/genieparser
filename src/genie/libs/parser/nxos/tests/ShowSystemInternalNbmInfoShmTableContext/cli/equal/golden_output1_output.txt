@@ -1,0 +1,10 @@
+
+ ------------------------------------------------------------------
+ NBM SHM context information for VRF 'default'
+ ------------------------------------------------------------------
+
+  Context ID                            : 1            Context Name        : default
+  Default Flow BW (Kbps)                : 100000       Default Policer     : Enabled
+  Unicast Fabric bandwidth (percentage) : 1            Mode                : PIM Active
+  NUM ASM group range                   : 0            ResBwRxOnly         : Disabled
+  Impact Low Priority Flows             : Disabled     Immediate BW Recovery  : Enabled

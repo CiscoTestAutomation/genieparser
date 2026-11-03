@@ -1,0 +1,54 @@
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     2
+
+ Slot        Sensor          Current State   Reading        Threshold(Minor,Major,Critical,Shutdown)
+ ----------  --------------  --------------- ------------   ---------------------------------------
+ R0          Temp: Inlet 1   Normal          27     Celsius     (40 ,na ,42 ,na )(Celsius)
+ R0          Temp: Inlet 2   Normal          28     Celsius     (90 ,na ,100,na )(Celsius)
+ R0          Temp: Outlet 1  Normal          29     Celsius     (70 ,na ,75 ,na )(Celsius)
+ R0          Temp: Outlet 2  Normal          28     Celsius     (70 ,na ,75 ,na )(Celsius)
+ R0          Temp: CPU       Normal          37     Celsius     (na ,na ,95 ,na )(Celsius)
+ R0          Temp: Working   Normal          27     Celsius     (na ,na ,na ,na )(Celsius)
+ R0          V: 12V          Normal          11980  mV          na
+ R0          V: 5V           Normal          5000   mV          na
+ R0          V: 3.3V_STBY    Normal          3327   mV          na
+ R0          V: 3.3V         Normal          3308   mV          na
+ R0          V: 3.3V_USB     Normal          3306   mV          na
+ R0          V: 2.5V         Normal          2505   mV          na
+ R0          V: 1.8V         Normal          1796   mV          na
+ R0          V: 1.2V_CPU     Normal          1197   mV          na
+ R0          V: 1.2V         Normal          1206   mV          na
+ R0          V: 1.1V         Normal          1097   mV          na
+ R0          V: 1.0V         Normal          996    mV          na
+ R0          V: 0.85V_DDR    Normal          849    mV          na
+ R0          V: 0.8V_SW      Normal          830    mV          na
+ R0          V: 0.8V_SYS     Normal          847    mV          na
+ R0          V: 0.8V_CORE    Normal          798    mV          na
+ R0          V: 0.8V_PHY     Normal          798    mV          na
+ R0          V: 0.75V        Normal          746    mV          na
+ R0          P: Power        Normal          30     Watts       na
+ P0          Temp: Temp 1    Normal          35     Celsius     (na ,na ,na ,na )(Celsius)
+ P0          Temp: Temp 2    Normal          38     Celsius     (na ,na ,na ,na )(Celsius)
+ P0          Temp: Temp 3    Normal          38     Celsius     (na ,na ,na ,na )(Celsius)
+ P0          V: PEM In       Normal          204502 mV          na
+ P0          V: PEM Out      Normal          12000  mV          na
+ P0          I: PEM In       Normal          234    mA          na
+ P0          I: PEM Out      Normal          2500   mA          na
+ P0          P: In power     Normal          40     Watts       na
+ P0          P: Out power    Normal          28     Watts       na
+ P0          RPM: fan0       Normal          4672   RPM         na
+ P1          Temp: Temp 1    Normal          0      Celsius     (na ,na ,na ,na )(Celsius)
+ P1          Temp: Temp 2    Normal          0      Celsius     (na ,na ,na ,na )(Celsius)
+ P1          Temp: Temp 3    Normal          0      Celsius     (na ,na ,na ,na )(Celsius)
+ P1          V: PEM In       Normal          0      mV          na
+ P1          V: PEM Out      Minor_Low       0      mV          na
+ P1          I: PEM In       Normal          0      mA          na
+ P1          I: PEM Out      Normal          0      mA          na
+ P1          P: In power     Normal          0      Watts       na
+ P1          P: Out power    Normal          0      Watts       na
+ P1          RPM: fan0       Minor_Low       0      RPM         na
+ P2          P: Power        Normal          0      Watts       na
+ P2          RPM: fan0       Normal          5220   RPM         na
+ P2          RPM: fan1       Normal          5280   RPM         na
+ P2          RPM: fan2       Normal          5040   RPM         na

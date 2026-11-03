@@ -1,0 +1,9 @@
+IP Multicast Routing Table for VRF "default"
+
+(172.16.1.10/32, 229.0.0.1/32), uptime: 00:38:00, pim ip
+  NAT Mode: Egress
+  NAT Route Type: Pre
+  Incoming interface: Ethernet1/1, RPF nbr: 172.16.1.10, internal
+  Outgoing interface list: (count: 0)
+    Translation list: (count: 1)
+       SR: (172.16.1.10, 2.0.0.10) udp src: 3000 udp dst: 3000

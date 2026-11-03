@@ -8,7 +8,6 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Any, \
                                          Optional
 
-
 # ====================================================
 #  distributor class for show ip route
 # ====================================================
@@ -22,11 +21,59 @@ class ShowIpRouteDistributor(MetaParser):
                    'show ip route {protocol}']
 
     protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp', 'multicast'}
+                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+    protocol_with_instance_set = {'ospf', 'bgp'}
+    allow_hostname_route = True
+    route_re = None
 
     exclude = ['updated']
 
+    def _is_protocol_selector(self, selector):
+        parts = selector.split()
+
+        if len(parts) == 1:
+            return parts[0] in self.protocol_set
+
+        if len(parts) == 2:
+            return (parts[0] in self.protocol_with_instance_set and
+                    parts[1].isdigit())
+
+        return False
+
+    def _is_route_selector(self, selector):
+        if self.allow_hostname_route:
+            return bool(selector and len(selector.split()) == 1)
+
+        return bool(self.route_re and re.match(self.route_re, selector))
+
+    def _normalize_route_protocol(self, route, protocol):
+        if route and protocol:
+            if route != protocol:
+                raise ValueError(
+                    'Only one route selector can be specified: route, protocol')
+            selector = route
+        else:
+            selector = route or protocol
+
+        if not selector:
+            return None, None
+
+        if self._is_protocol_selector(selector):
+            return None, selector
+
+        if self._is_route_selector(selector):
+            return selector, None
+
+        raise ValueError('Unsupported route selector: {0}'.format(selector))
+
     def cli(self, vrf=None, route=None, protocol=None, output=None, timeout=60):
+        route, protocol = self._normalize_route_protocol(route, protocol)
+
+        if not vrf and route == 'multicast':
+            parser = ShowIpRouteMulticastDistributor(self.device)
+            parsed = parser.cli(output=output, timeout=timeout)
+            self.schema = parser.schema
+            return parsed
 
         if output is None:
             if vrf and protocol:
@@ -45,7 +92,7 @@ class ShowIpRouteDistributor(MetaParser):
         else:
             out = output
 
-        if (route or protocol) in self.protocol_set or (not route and not protocol):
+        if protocol or (not route and not protocol):
             parser = ShowIpRoute(self.device)
             self.schema = parser.schema
             return parser.parse(output=out)
@@ -55,10 +102,83 @@ class ShowIpRouteDistributor(MetaParser):
             self.schema=parser.schema
             return parser.parse(output=out)
 
+
+class ShowIpRouteMulticastDistributor(ShowIpRouteDistributor):
+    """Distributor class for:
+        show ip route multicast vrf {vrf} topology {topology} {protocol}
+        show ip route multicast vrf {vrf} topology {topology} {route}
+        show ip route multicast vrf {vrf} topology {topology}
+        show ip route multicast topology {topology} {protocol}
+        show ip route multicast topology {topology} {route}
+        show ip route multicast topology {topology}
+        show ip route multicast vrf {vrf}
+        show ip route multicast {route}
+        show ip route multicast {protocol}
+        show ip route multicast
+    """
+    cli_command = ['show ip route multicast vrf {vrf} topology {topology} '
+                   '{protocol}',
+                   'show ip route multicast vrf {vrf} topology {topology} '
+                   '{route}',
+                   'show ip route multicast vrf {vrf} topology {topology}',
+                   'show ip route multicast topology {topology} {protocol}',
+                   'show ip route multicast topology {topology} {route}',
+                   'show ip route multicast topology {topology}',
+                   'show ip route multicast vrf {vrf}',
+                   'show ip route multicast {route}',
+                   'show ip route multicast {protocol}',
+                   'show ip route multicast']
+
+    protocol_with_instance_set = set()
+    allow_hostname_route = False
+    route_re = r'^\d{1,3}(?:\.\d{1,3}){3}(?:/\d{1,2})?$'
+
+    exclude = ['updated']
+
+    def cli(self, topology=None, vrf=None, route=None, protocol=None,
+            output=None, timeout=60):
+        route, protocol = self._normalize_route_protocol(route, protocol)
+        if not topology and vrf and (route or protocol):
+            raise ValueError(
+                'vrf can only be combined with route or protocol when '
+                'topology is specified')
+
+        if output is None:
+            if vrf and topology and protocol:
+                cmd = self.cli_command[0].format(
+                    vrf=vrf, topology=topology, protocol=protocol)
+            elif vrf and topology and route:
+                cmd = self.cli_command[1].format(
+                    vrf=vrf, topology=topology, route=route)
+            elif vrf and topology:
+                cmd = self.cli_command[2].format(vrf=vrf, topology=topology)
+            elif topology and protocol:
+                cmd = self.cli_command[3].format(
+                    topology=topology, protocol=protocol)
+            elif topology and route:
+                cmd = self.cli_command[4].format(topology=topology, route=route)
+            elif topology:
+                cmd = self.cli_command[5].format(topology=topology)
+            elif vrf:
+                cmd = self.cli_command[6].format(vrf=vrf)
+            elif protocol:
+                cmd = self.cli_command[8].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[7].format(route=route)
+            else:
+                cmd = self.cli_command[9]
+            out = self.device.execute(cmd, timeout=timeout)
+        else:
+            out = output
+
+        return super().cli(
+            vrf=vrf, route=route, protocol=protocol, output=out)
+
+
 # ====================================================
 #  distributor class for show ipv6 route
 # ====================================================
-class ShowIpv6RouteDistributor(MetaParser):
+class ShowIpv6RouteDistributor(ShowIpRouteDistributor):
     """distributor class for show ipv6 route"""
     cli_command = ['show ipv6 route vrf {vrf}',
                    'show ipv6 route vrf {vrf} {route}',
@@ -69,12 +189,22 @@ class ShowIpv6RouteDistributor(MetaParser):
                    'show ipv6 route interface {interface}',
                    'show ipv6 route vrf {vrf} interface {interface}']
 
-    protocol_set = {'ospf', 'odr', 'isis', 'eigrp', 'static', 'mobile',
-                    'rip', 'lisp', 'nhrp', 'local', 'connected', 'bgp'}
+    protocol_with_instance_set = set()
 
     exclude = ['updated']
 
     def cli(self, vrf=None, route=None, protocol=None, interface=None, output=None):
+        route, protocol = self._normalize_route_protocol(route, protocol)
+        if interface and (route or protocol):
+            raise ValueError(
+                'Only one route selector can be specified: route, protocol, '
+                'interface')
+
+        if not vrf and route == 'multicast':
+            parser = ShowIpv6RouteMulticastDistributor(self.device)
+            parsed = parser.cli(output=output)
+            self.schema = parser.schema
+            return parsed
 
         if output is None:
 
@@ -101,7 +231,7 @@ class ShowIpv6RouteDistributor(MetaParser):
         if not vrf:
             vrf = 'default'
 
-        if (route or protocol) in self.protocol_set or (not route and not protocol):
+        if protocol or (not route and not protocol):
             parser = ShowIpv6Route(self.device)
             self.schema = parser.schema
             return parser.parse(vrf=vrf, protocol=protocol, output=out)
@@ -110,6 +240,51 @@ class ShowIpv6RouteDistributor(MetaParser):
             parser = ShowIpv6RouteWord(self.device)
             self.schema=parser.schema
             return parser.parse(vrf=vrf, route=route, output=out)
+
+
+class ShowIpv6RouteMulticastDistributor(ShowIpv6RouteDistributor):
+    """Distributor class for:
+        show ipv6 route multicast vrf {vrf}
+        show ipv6 route multicast {route}
+        show ipv6 route multicast {protocol}
+        show ipv6 route multicast
+    """
+    cli_command = ['show ipv6 route multicast vrf {vrf}',
+                   'show ipv6 route multicast {route}',
+                   'show ipv6 route multicast {protocol}',
+                   'show ipv6 route multicast']
+
+    allow_hostname_route = False
+    route_re = r'^[0-9a-fA-F:.]*:[0-9a-fA-F:.]*(?:/\d{1,3})?$'
+
+    exclude = ['updated']
+
+    def cli(self, vrf=None, route=None, protocol=None, output=None):
+        route, protocol = self._normalize_route_protocol(route, protocol)
+        if vrf and (route or protocol):
+            raise ValueError(
+                'Only one route selector can be specified: route, protocol, '
+                'vrf')
+
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            elif protocol:
+                cmd = self.cli_command[2].format(protocol=protocol)
+            elif route:
+                cmd = self.cli_command[1].format(route=route)
+            else:
+                cmd = self.cli_command[3]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = 'default'
+
+        return super().cli(
+            vrf=vrf, route=route, protocol=protocol, output=out)
+
 
 # ====================================================
 #  schema for show ip route
@@ -125,6 +300,7 @@ class ShowIpRouteSchema(MetaParser):
                             Any(): {
                                 Optional('route'): str,
                                 Optional('active'): bool,
+                                Optional('possibly_down'): bool,
                                 Optional('route_preference'): int,
                                 Optional('metric'): int,
                                 Optional('source_protocol'): str,
@@ -281,7 +457,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
         # Routing Table: VRF1
         # Routing Table: VRF-infra
-        p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
+        # Routing Table: foo:multicast:test
+        p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?:-]+)$')
 
         # 10.1.0.0/32 is subnetted, 1 subnets
         # 10.0.0.0/8 is variably subnetted, 5 subnets, 2 masks
@@ -306,9 +483,12 @@ class ShowIpRoute(ShowIpRouteSchema):
         # ND  ::/0 [2/0]
         # NDp 2001:103::/64 [2/0]
         if self.IP_VER == 'ipv4':
+            # R 172.16.0.0/16 is possibly down, routing via 10.1.1.2
             p3 = re.compile(
                 r'^(?P<code>[A-Za-z]{0,2}[0-9]*(\*[A-Za-z]{0,2}[0-9]*)?) +(?P<code1>(?:[A-Z][a-z]|[A-Z][\d]|[a-z]{2}|[A-Z]{2})(?:[+%&p])?|[+%&p])?\s*(?P<network>[0-9\.\:\/]+)?( '
-                r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
+                r'+is +(?:directly +connected,|'
+                r'(?P<possibly_down>possibly +down), +routing))?'
+                r' *\[?(?P<route_preference>[\d\/]+)?\]?,?(\s+tag\s(?P<tag_id>\d+))?( *('
                 r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+\-]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             # B        192.168.1.20/32 [200/0] via 2109:1::2 (red:ipv6), 00:03:46, Vlan500
@@ -408,7 +588,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # NDp 2001:103::/64 [2/0]
             m = p3.match(line)
             if m:
-                active = True
+                active = not bool(m.groupdict().get('possibly_down'))
                 if m.groupdict()['code']:
                     source_protocol_codes = m.groupdict()['code'].strip()
                     for key,val in source_protocol_dict.items():
@@ -452,6 +632,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 route_dict['route'] = route
                 route_dict['active'] = active
+                if m.groupdict().get('possibly_down'):
+                    route_dict['possibly_down'] = True
 
                 if metrics:
                     route_dict['metric'] = int(metrics)
@@ -924,6 +1106,9 @@ class ShowIpv6Route(ShowIpRoute):
 
     IP_VER = 'ipv6'
     def cli(self, vrf=None, protocol=None, interface=None, output=None):
+        if protocol and interface:
+            raise ValueError(
+                'Only one of protocol or interface can be specified')
 
         if output is None:
             if vrf and protocol:
@@ -1035,7 +1220,8 @@ class ShowIpv6RouteUpdated(ShowIpv6RouteUpdatedSchema):
         result_dict = {}
         # IPv6 Routing Table - default - 23 entries
         # IPv6 Routing Table - VRF1 - 104 entries
-        p1 = re.compile(r'^\s*IPv6 +Routing +Table +\- +(?P<vrf>[\w]+) +\- +(?P<entries>[\d]+) +entries$')
+        # IPv6 Multicast Routing Table - default - 2 entries
+        p1 = re.compile(r'^\s*IPv6 +(Multicast +)?Routing +Table +\- +(?P<vrf>[\w:-]+) +\- +(?P<entries>[\d]+) +entries$')
 
         # LC  2001:1:1:1::1/128 [0/0]
         p2 = re.compile(r'^\s*(?P<code>[\w]+) +(?P<route>[\w\/\:]+)?'

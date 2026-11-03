@@ -1,0 +1,8 @@
+Routing Table: default
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+Gateway of last resort is not set
+
+M        10.5.5.0/24 [1/0] via 10.5.5.2, 00:00:12, Ethernet0/4

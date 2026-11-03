@@ -1,0 +1,16 @@
+IP Multicast Routing Table for VRF "default"
+(21.1.1.1/32, 1.2.3.4/32)
+Translation:
+SR: (57.1.1.51/32, 227.1.1.1/32) udp src: 1000, udp dst : 500
+Outgoing interface list: (count: 1)
+loopback100, uptime: 1d01h, static
+Chained translations:
+SR: (21.1.1.2, 229.1.1.1) OIF: Ethernet1/7
+
+(21.1.1.1/32, 1.2.3.5/32)
+Translation:
+SR: (57.1.1.51/32, 227.1.1.1/32) udp src: 0, udp dst : 0
+Outgoing interface list: (count: 1)
+loopback100, uptime: 1d01h, static
+Chained translations:
+SR: (21.1.1.2, 229.1.1.1) OIF: Ethernet1/7

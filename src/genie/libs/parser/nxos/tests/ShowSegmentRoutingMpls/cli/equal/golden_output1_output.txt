@@ -1,0 +1,9 @@
+            Segment-Routing Mpls Global info
+Service Name: segment-routing
+State: Enabled
+Process Id: 27015
+Configured SRGB: 16000 - 40000
+SRGB Allocation status: Alloc-Successful
+Current SRGB: 16000 - 40000
+Cleanup Interval: 60
+Retry Interval: 180

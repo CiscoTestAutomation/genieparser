@@ -4591,6 +4591,8 @@ class ShowEnvironmentSchema(MetaParser):
                   show environment | include {include} """
 
     schema = {
+        Optional('critical_alarms'): int,
+        # Typo "critical_larams" retained for backward compatibility
         Optional('critical_larams'): int,
         Optional('major_alarms'): int,
         Optional('minor_alarms'): int,
@@ -4634,7 +4636,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
         ret_dict = {}
 
         # Number of Critical alarms:  0
-        p1 = re.compile(r'^Number +of +Critical +alarms: +(?P<critic_larams>\d+)$')
+        p1 = re.compile(r'^Number +of +Critical +alarms: +(?P<critic_alarms>\d+)$')
 
         # Number of Major alarms:     0
         p2 = re.compile(r'^Number +of +Major +alarms: +(?P<maj_alarms>\d+)$')
@@ -4657,7 +4659,11 @@ class ShowEnvironment(ShowEnvironmentSchema):
 
         #R0 Temp: Inlet Critical 47 Celsius (na ,na ,47 ,na )(Celsius)
         #R0 Temp: Internal Normal 47 Celsius (na ,na ,na ,na )(Celsius)
-        p4 = re.compile(r'^(?P<slot>\S+) +(?P<sensor_name>.+?)\s+(?P<state>Normal|Critical|Warning|Fan +Speed +\d+%)\s+(?P<reading>\d+\s*\S+\s*?\S*?)(\s*?(?P<threshold>na|\([\d|na,\s]+\)(\(Celsius\))?))?$')
+        p4 = re.compile(
+            r'^(?P<slot>\S+) +(?P<sensor_name>.+?)\s+'
+            r'(?P<state>Normal|Critical|Warning|Fan +Speed +\d+%|(?:Minor|Major|Critical)_(?:Low|High))\s+'
+            r'(?P<reading>\d+\s*\S+\s*?\S*?)(\s*?(?P<threshold>na|\([\d|na,\s]+\)(\(Celsius\))?))?$'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -4665,7 +4671,8 @@ class ShowEnvironment(ShowEnvironmentSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['critical_larams'] = int(group['critic_larams'])
+                ret_dict['critical_alarms'] = int(group['critic_alarms'])
+                ret_dict['critical_larams'] = ret_dict['critical_alarms']
                 continue
 
             # Number of Major alarms:     0
@@ -5657,7 +5664,17 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
 class ShowPlatformTcamUtilizationSchema(MetaParser):
     """Schema for show platform hardware fed sw active fwd-asic resource tcam utilization """
     schema = {
-        'asic': {
+        Optional('resource'): {
+            Any(): {
+                'slice': {
+                    Any(): {
+                        'used': int,
+                        'free': int
+                    }
+                }
+            }
+        },
+        Optional('asic'): {
             Any(): {
                 'table': {
                     Any(): {
@@ -5703,6 +5720,16 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
         # initial return dictionary
         ret_dict = {}
 
+        # Slice-based TCAM utilization table used on C9050/C9350 platforms.
+        # Resource                        Used  Free   Used  Free ...
+        # Ingress Wide TCAM entries        24 17600      0     0 ...
+        p0 = re.compile(r'(?P<resource>.+?)\s+(?P<slice0_used>\d+)\s+(?P<slice0_free>\d+)\s+'
+                        r'(?P<slice1_used>\d+)\s+(?P<slice1_free>\d+)\s+'
+                        r'(?P<slice2_used>\d+)\s+(?P<slice2_free>\d+)\s+'
+                        r'(?P<slice3_used>\d+)\s+(?P<slice3_free>\d+)\s+'
+                        r'(?P<slice4_used>\d+)\s+(?P<slice4_free>\d+)\s+'
+                        r'(?P<slice5_used>\d+)\s+(?P<slice5_free>\d+)$')
+
         # initial regexp pattern
         # CAM Utilization for ASIC  [0]
         p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
@@ -5718,6 +5745,18 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
 
         for line in output.splitlines():
             line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                resource_name = group['resource'].strip().lower().replace(' ', '_')
+                slice_dict = ret_dict.setdefault('resource', {}).setdefault(resource_name, {}).setdefault('slice', {})
+                for i in range(6):
+                    slice_dict[i] = {
+                        'used': int(group[f'slice{i}_used']),
+                        'free': int(group[f'slice{i}_free']),
+                    }
+                continue
 
             # CAM Utilization for ASIC  [0]
             m = p1.match(line)
@@ -5878,6 +5917,19 @@ class ShowPlatformResourcesSchema(MetaParser):
                 }
             }
         },
+        Optional('sp'): {
+            Any(): {
+                'state': str,
+                'role': str,
+                'service_processor': {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                }
+            }
+        },
         Optional('control_processer'): {
                 'usage_perc': float,
                 'max_perc': int,
@@ -5915,7 +5967,7 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
 
         # if the user does not provide output to the parser
         # we need to get it from the device
-        if not output:
+        if output is None:
             output = self.device.execute(self.cli_command[0])
 
 
@@ -5923,13 +5975,22 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
         #RP1 (ok, standby)                                                                               H
         #ESP0(ok, active)                                                                               H
         #ESP1(ok, standby)                                                                               H
-        p1 = re.compile(r'^(?P<type>RP|ESP)(?P<key>[0-9]) ?\((?P<status>\S+)\, +(?P<role>\S+)\) +(?P<state>\S)$')
+        p1 = re.compile(
+            r'^(?P<type>RP|ESP|SP)(?P<key>[0-9]) ?'
+            r'\((?P<status>\S+)\, +(?P<role>\S+)\) +(?P<state>\S)$')
 
         #SIP0                                                                                           H
         p2 = re.compile(r'^SIP(?P<key>[0-9]) +(?P<state>\S)$')
 
         # Control Processor       0.51%                 100%            80%             90%             H
-        p3 = re.compile(r'^Control Processor +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+        # Service Processor 0.03% 100% 80% 90% H
+        p3 = re.compile(
+            r'^(?P<processor>Control|Service) Processor +'
+            r'(?P<usage>(\d*\.?\d+))\S+'
+            r' +(?P<max>\d+)\S+'
+            r' +(?P<warning>\d+)\S+'
+            r' +(?P<critical>\d+)\S+'
+            r' +(?P<state>\S)$')
 
         #QFP                                                                                           H
         p4 = re.compile(r'^QFP +(?P<state>\S)$')
@@ -5974,10 +6035,15 @@ class ShowPlatformResources(ShowPlatformResourcesSchema):
                 continue
 
             # Control Processor       0.51%                 100%            80%             90%             H
+            # Service Processor 0.03% 100% 80% 90% H
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                feature_dict = feature_dict.setdefault('control_processer', {})
+                processor = {
+                    'Control': 'control_processer',
+                    'Service': 'service_processor',
+                }[groups['processor']]
+                feature_dict = feature_dict.setdefault(processor, {})
                 feature_dict.update({'usage_perc': float(groups['usage'])})
                 feature_dict.update({'max_perc': int(groups['max'])})
                 feature_dict.update({'warning_perc': int(groups['warning'])})

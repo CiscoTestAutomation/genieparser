@@ -1,6 +1,8 @@
-# ========================================================
-# Parser for 'show hardware internal tctrl_usd dpll state'
-# ========================================================
+"""NXOS parsers for the following show commands:
+
+    * 'show hardware internal tctrl_usd dpll state'
+    * 'show hardware internal errors all'
+"""
 
 # Python
 import re
@@ -9,7 +11,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
     Any, \
+    ListOf, \
     Optional
+
 
 class ShowHardwareInternalTctrlUsdDpllStateSchema(MetaParser):
     """Schema for show hardware internal tctrl_usd dpll state"""
@@ -204,3 +208,189 @@ class ShowHardwareInternalTctrlUsdDpllState(ShowHardwareInternalTctrlUsdDpllStat
                   
         return ret_dict
     
+class ShowHardwareInternalErrorsAllSchema(MetaParser):
+    """Schema for show hardware internal errors all"""
+
+    schema = {
+        'slot': {
+            Any(): {
+                'device_records': ListOf({
+                    'device': str,
+                    'role': str,
+                    'mod': int,
+                    Optional('last_cleared'): str,
+                    Optional('category'): str,
+                    'instance': {
+                        Any(): {
+                            'counter': {
+                                Any(): {
+                                    'name': str,
+                                    'value': int,
+                                    'ports': str,
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+
+class ShowHardwareInternalErrorsAll(ShowHardwareInternalErrorsAllSchema):
+    """Parser for show hardware internal errors all"""
+
+    cli_command = 'show hardware internal errors all'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        ret_dict = {}
+        slot = None
+        device_record = None
+        instance = None
+
+        # slot  1
+        p1 = re.compile(r'^slot\s+(?P<slot>\d+)$')
+
+        # A11-EK-64# show hardware internal errors all
+        # A11-EK-64#
+        p2 = re.compile(
+            r'^\S+#(?:\s+(?:sh|show) hardware internal errors all)?$'
+        )
+
+        # | Device:Sacramento Xbar ASIC   Role:MAC                     Mod: 1    |
+        p3 = re.compile(
+            r'^\|\s*Device:(?P<device>[^\r\n]+?)\s{2,}Role:'
+            r'(?P<role>\S+)\s+Mod:\s*(?P<mod>\d+)\s*\|$'
+        )
+
+        # | Last cleared @ Thu Oct  1 14:59:35 2026
+        p4 = re.compile(
+            r'^\|\s*Last cleared @ (?P<last_cleared>[^\r\n]+)$'
+        )
+
+        # | Device Statistics Category :: ERROR
+        p5 = re.compile(
+            r'^\|\s*Device Statistics Category\s*::\s*'
+            r'(?P<category>\S+)$'
+        )
+
+        # Instance:0
+        p6 = re.compile(r'^Instance:(?P<instance>\d+)$')
+
+        # |------------------------------------------------------------------------|
+        p7 = re.compile(r'^\|[-]+\|$')
+
+        # ID       Name       Value       Ports
+        p8 = re.compile(r'^ID\s+Name\s+Value\s+Ports$')
+
+        # --       ----       -----       -----
+        p9 = re.compile(r'^--\s+----+\s+----+\s+----+$')
+
+        # 196623      Interface Inbound Errors (CRC,len,Algn Err)   0000000000000013  1,17,61 -
+        p10 = re.compile(
+            r'^(?P<id>\d+)\s+(?P<name>[^\r\n]+?)\s{2,}'
+            r'(?P<value>\d{16})\s+(?P<ports>\S[^\r\n]*)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # slot  1
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                slot = int(groups['slot'])
+                ret_dict.setdefault('slot', {}).setdefault(
+                    slot, {'device_records': []}
+                )
+                device_record = None
+                instance = None
+                continue
+
+            # A11-EK-64# show hardware internal errors all
+            m = p2.match(line)
+            if m:
+                continue
+
+            if slot is None:
+                continue
+
+            slot_dict = ret_dict['slot'][slot]
+
+            # | Device:Sacramento Xbar ASIC   Role:MAC                     Mod: 1    |
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                device_record = {
+                    'device': groups['device'].strip(),
+                    'role': groups['role'],
+                    'mod': int(groups['mod']),
+                    'instance': {},
+                }
+                slot_dict['device_records'].append(device_record)
+                instance = None
+                continue
+
+            # | Last cleared @ Thu Oct  1 14:59:35 2026
+            m = p4.match(line)
+            if m and device_record is not None:
+                groups = m.groupdict()
+                device_record['last_cleared'] = groups['last_cleared']
+                continue
+
+            # | Device Statistics Category :: ERROR
+            m = p5.match(line)
+            if m and device_record is not None:
+                groups = m.groupdict()
+                device_record['category'] = groups['category']
+                continue
+
+            # Instance:0
+            m = p6.match(line)
+            if m and device_record is not None:
+                groups = m.groupdict()
+                instance = int(groups['instance'])
+                device_record['instance'].setdefault(
+                    instance, {'counter': {}}
+                )
+                continue
+
+            # |------------------------------------------------------------------------|
+            m = p7.match(line)
+            if m:
+                continue
+
+            # ID       Name       Value       Ports
+            m = p8.match(line)
+            if m:
+                continue
+
+            # --       ----       -----       -----
+            m = p9.match(line)
+            if m:
+                continue
+
+            if instance is None:
+                continue
+
+            # 196623      Interface Inbound Errors (CRC,len,Algn Err)   0000000000000013  1,17,61 -
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                entry_id = int(groups['id'])
+                entry_dict = device_record['instance'][instance][
+                    'counter'
+                ].setdefault(
+                    entry_id, {}
+                )
+                entry_dict['name'] = groups['name'].strip()
+                entry_dict['value'] = int(groups['value'])
+                entry_dict['ports'] = groups['ports']
+                continue
+
+        return ret_dict

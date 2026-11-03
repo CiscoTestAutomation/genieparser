@@ -150,6 +150,7 @@ class ShowLispDatabaseSuperParserSchema(MetaParser):
                                     Optional('proxy'): bool,
                                     Optional('sgt'): str,
                                     Optional('domain_id'): str,
+                                    Optional('multihoming_site_id'): int,
                                     Optional('service_insertion'): str,
                                     Optional('service_insertion_id'): int,
                                     Optional('auto_discover_rlocs'): bool,
@@ -220,6 +221,9 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
 
         # Domain-ID: local
         p5 = re.compile(r'^Domain-ID:\s+(?P<domain_id>\S+)$')
+
+        # Multihoming Site ID: 100
+        p5_1 = re.compile(r'^Multihoming\s+Site\s+ID:\s+(?P<multihoming_site_id>\d+)$')
 
         # Service-Insertion: N/A
         # Service-Insertion: N/A (0)
@@ -328,6 +332,14 @@ class ShowLispDatabaseSuperParser(ShowLispDatabaseSuperParserSchema):
                 group = m.groupdict()
                 domain_id = group['domain_id']
                 eid_dict.update({'domain_id':domain_id})
+                continue
+
+            # Multihoming Site ID: 100
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                multihoming_site_id = int(group['multihoming_site_id'])
+                eid_dict.update({'multihoming_site_id':multihoming_site_id})
                 continue
 
             # Service-Insertion: N/A
@@ -2393,6 +2405,7 @@ class ShowLispSiteDetailSuperParserSchema(MetaParser):
                                                 Optional('nonce'): str,
                                                 'state': str,
                                                 'xtr_id': str,
+                                                Optional('l2_multihoming_site_id'): int,
                                                 Optional('domain_id'): str,
                                                 Optional('multihoming_id'): str,
                                                 Optional('affinity_id_x'): int,
@@ -2521,6 +2534,9 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
 
         # xTR-ID 0xE52CBAD5-0x38D3485F-0x97DC3A75-0xC27B2130
         p20 = re.compile(r"^xTR-ID\s+(?P<xtr_id>\S+)$")
+
+        # L2 Multihoming Site ID 100
+        p20_1 = re.compile(r"^L2\s+Multihoming\s+Site\s+ID\s+(?P<site_id>\d+)$")
 
         # Domain-ID local
         p21 = re.compile(r"^Domain-ID\s+(?P<domain_id>local)$")
@@ -2789,6 +2805,13 @@ class ShowLispSiteDetailSuperParser(ShowLispSiteDetailSuperParserSchema):
                 groups = m.groupdict()
                 xtr_id = groups['xtr_id']
                 etr_dict.update({'xtr_id':xtr_id})
+                continue
+
+            # L2 Multihoming Site ID 100
+            m = p20_1.match(line)
+            if m:
+                site_id = int(m.groupdict()['site_id'])
+                etr_dict.update({'l2_multihoming_site_id':site_id})
                 continue
 
             # Domain-ID local

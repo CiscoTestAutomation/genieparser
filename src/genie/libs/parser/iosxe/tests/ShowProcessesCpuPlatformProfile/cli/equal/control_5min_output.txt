@@ -1,0 +1,4 @@
+CPU utilization for five seconds:  7%, one minute:  4%, five minutes:  4%
+Core 0: CPU utilization for five seconds:  8%, one minute:  6%, five minutes:  6%
+Core 1: CPU utilization for five seconds:  7%, one minute:  3%, five minutes:  2%
+Control plane process utilization for five seconds: 10%, one minute:  4%, five minutes:  3%

@@ -17,7 +17,8 @@ from genie.metaparser.util.schemaengine import Schema, \
     Or, \
     And, \
     Default, \
-    Use
+    Use, \
+    ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -206,6 +207,7 @@ class ShowAuthenticationSessionsDetailsSuperSchema(MetaParser):
                         'handle': str,
                         Optional('idle_timeout'): str,
                         Optional('current_policy'): str,
+                        Optional('blocked_on'): ListOf(str),
                         Optional('server_policies'): {
                             Any(): {  # 1, 2, 3
                                 Optional('name'): str,
@@ -348,10 +350,26 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
         intf_dict = {}
         policies_flag = False
         index = 1
+        blocked_on = None
 
         out = output
         for line in out.splitlines():
             line = line.strip()
+
+            # Blocked On: Pending Deletion
+            #             SM Accounting Feature
+            if line.startswith('Blocked On:') and mac_dict:
+                blocked_on = mac_dict.setdefault('blocked_on', [])
+                reason = line.partition(':')[2].strip()
+                if reason:
+                    blocked_on.append(reason)
+                continue
+            if blocked_on is not None:
+                if not line or ':' in line or line.startswith('-'):
+                    blocked_on = None
+                else:
+                    blocked_on.append(line)
+                    continue
 
             if p2.match(line):
                 policies_flag = False
@@ -537,10 +555,17 @@ class ShowAuthenticationSessionsDetailsSuperParser(ShowAuthenticationSessionsDet
                 if policies_flag:
                     policies_dict = mac_dict.setdefault(
                         'server_policies', {})
-                    index_dict = policies_dict.setdefault(index, {})
+                    previous_policy = policies_dict.get(index - 1, {})
+                    if (previous_policy.get('name') == 'Session-Timeout'
+                            and 'vlan_group' not in previous_policy):
+                        # Preserve the legacy Session-Timeout/VLAN grouping
+                        # without consuming the next policy's index.
+                        index_dict = previous_policy
+                    else:
+                        index_dict = policies_dict.setdefault(index, {})
+                        index += 1
                     vlan_dict = index_dict.setdefault('vlan_group', {})
                     vlan_dict.update({'vlan': int(group['vlan_value'])})
-                    index += 1
                 else:
                     local_policies = mac_dict.setdefault('local_policies', {})
                     vlan_dict = local_policies.setdefault('vlan_group', {})

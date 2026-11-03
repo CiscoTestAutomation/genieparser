@@ -3,14 +3,18 @@
 NXOS parsers for the following show commands:
 
     * show ip mroute vrf all
-    * Show ipv6 mroute vrf all
+    * show ipv6 mroute
+    * show ipv6 mroute vrf all
     * Show ipv6 mroute summary vrf all
     * Show ip mroute summary vrf all
     * Show ip mroute summary count
     * Show ip mroute detail
+    * Show ip mroute sr umnat
     * Show ip static-route multicast
     * Show ipv6 static-route multicast
+    * Show ip mroute sr {group}
     * Show ip mroute <group> <source> source-tree vrf all
+    * show forwarding distribution ipv6 multicast route
 
 """
 
@@ -230,32 +234,36 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
 
 # =====================================
+# Schema for 'show ipv6 mroute'
 # Schema for 'show ipv6 mroute vrf all'
 # =====================================
 
 class ShowIpv6MrouteVrfAllSchema(MetaParser):
-    """Schema for show ipv6 mroute vrf all"""
-    schema = {'vrf': 
+    """Schema for:
+        show ipv6 mroute
+        show ipv6 mroute vrf all"""
+
+    schema = {'vrf':
                 {Any():
                     {'address_family':
-                        {Any(): 
-                            {Optional('multicast_group'): 
-                                {Any(): 
-                                    {Optional('source_address'): 
-                                        {Any(): 
+                        {Any():
+                            {Optional('multicast_group'):
+                                {Any():
+                                    {Optional('source_address'):
+                                        {Any():
                                             {Optional('uptime'): str,
                                              Optional('flags'): str,
                                              Optional('oil_count'): str,
                                              Optional('bidir'): bool,
                                              Optional('incoming_interface_list'):
-                                                {Any(): 
+                                                {Any():
                                                     {Optional('rpf_nbr'): str,
                                                      Optional('internal'): bool,
                                                      Optional('router_id'): str
                                                     },
                                                 },
-                                             Optional('outgoing_interface_list'): 
-                                                {Any(): 
+                                             Optional('outgoing_interface_list'):
+                                                {Any():
                                                     {Optional('oil_uptime'): str,
                                                      Optional('oil_flags'): str,
                                                      Optional('oif_rpf'): str
@@ -272,185 +280,144 @@ class ShowIpv6MrouteVrfAllSchema(MetaParser):
             }
 
 class ShowIpv6MrouteVrfAll(ShowIpv6MrouteVrfAllSchema):
-    """Parser for show ipv6 mroute vrf all"""
+    """Parser for:
+        show ipv6 mroute
+        show ipv6 mroute vrf all"""
 
-    cli_command = 'show ipv6 mroute vrf all'
+    cli_command = ['show ipv6 mroute', 'show ipv6 mroute vrf all']
     exclude = [
         'last_reported',
         'uptime',
         'oil_uptime',
         'incoming_interface_list']
 
-    def cli(self, output=None):
+    def cli(self, command, output=None, **kwargs):
+        # Parser for show ipv6 mroute
         # Parser for show ipv6 mroute vrf all
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(command)
 
         ipv6_mroute_vrf_all_dict = {}
-        # IPv6 Multicast Routing Table for VRF "default
-        # IPv6 Multicast Routing Table for VRF " vxlan-1001"
-        p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                            r' +[rR]outing +[tT]able +for +VRF'
-                            r' +(?P<vrf>\S+)$')
+        route_dict = None
+        vrf = None
+        address_family = None
+
+        # IPv6 Multicast Routing Table for VRF "default"
+        # IPv6 Multicast Routing Table for VRF "vxlan-1001"
+        p1 = re.compile(
+            r'^(?P<address_family>\S+) +[mM]ulticast +[rR]outing +'
+            r'[tT]able +for +VRF +"(?P<vrf>[^"]+)"$'
+        )
+
         # (*, ff30::/12), uptime: 3d11h, pim6 ipv6
-        # (*, ff03:3::/64), bidir, uptime: 10w5d, pim6 
-        p2 = re.compile(r'^\s*\((?P<source_address>(\S+)),'
-                            r' +(?P<multicast_group>(\S+))\),'
-                            r' *(?P<bidir>(\S+),)? *uptime:'
-                            r' +(?P<uptime>[0-9a-zA-Z\:\.]+)(,)?(?:'
-                            r' *(?P<flag>[a-zA-Z0-9\s]+))?$')
+        # (*, ff03:3::/64), bidir, uptime: 10w5d, pim6
+        p2 = re.compile(
+            r'^\((?P<source_address>[^,\s]+), +'
+            r'(?P<multicast_group>[^)\s]+)\), +'
+            r'(?:(?P<bidir>bidir), +)?uptime: +'
+            r'(?P<uptime>[0-9a-zA-Z:\.]+)'
+            r'(?:, +(?P<flag>[a-zA-Z0-9 ]+))?$'
+        )
+
         # Incoming interface: Null, RPF nbr: 0::
         # Incoming interface: Vlan71, RPF nbr: 2001:1:1:4d::1, internal (Router-Id: 2.2.2.2)
-        p3 = re.compile(r'^\s*Incoming +interface: +(?P<incoming_interface>[a-zA-Z0-9\/\.]+), +'
-                            r'RPF +nbr: +(?P<rpf_nbr>[a-zA-Z0-9\:\.]+)'
-                            r'(?: *, *(?P<internal>internal))?'
-                            r'(?: +\(Router-Id: +(?P<router_id>[0-9\.]+)\))?$')
+        p3 = re.compile(
+            r'^Incoming +interface: +'
+            r'(?P<incoming_interface>[a-zA-Z0-9/\.\-]+), +'
+            r'RPF +nbr: +(?P<rpf_nbr>[^,\s]+)'
+            r'(?: *, *(?P<internal>internal))?'
+            r'(?: +\(Router-Id: +(?P<router_id>[0-9\.]+)\))?$'
+        )
+
         # Outgoing interface list: (count: 0)
         # Outgoing interface list: (count: 2) (Fabric OIF)
-        p4 =  re.compile(r'^\s*Outgoing +interface +list: +\(count:'
-                             r' +(?P<oil_count>[0-9]+)\) *(?P<fabric_oif>\(Fabric +OIF\))?$')
+        p4 = re.compile(
+            r'^Outgoing +interface +list: +\(count: +'
+            r'(?P<oil_count>[0-9]+)\)(?: +\(Fabric +OIF\))?$'
+        )
+
         # loopback2, uptime: 3d11h, igmp
         # port-channel80, uptime: 3d23h, pim6
-        p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
-                            r')? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                            r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)$')
-        #Vlan71, uptime: 06:53:02, m6rib, (RPF)
-        #Vlan71, uptime: 06:53:02, m6rib, (bridge-only)
-        p5_1 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)'
-                            r',)? +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                            r' +(?:(?P<rpf>[a-zA-Z0-9\s]+),)?(?P<oil_flags>\w+)'
-                            r'(, +\((?P<oif_rpf>RPF|bridge-only)\))?$')
+        # Vlan71, uptime: 06:53:02, m6rib, (RPF)
+        # Vlan71, uptime: 06:53:02, m6rib, (bridge-only)
+        p5 = re.compile(
+            r'^(?P<outgoing_interface>[a-zA-Z0-9/\.\-]+), +'
+            r'uptime: +(?P<oil_uptime>[a-zA-Z0-9:]+), +'
+            r'(?P<oil_flags>\w+)(?:, +\((?P<oif_rpf>RPF|bridge-only)\))?$'
+        )
 
-        for line in out.splitlines():
-            line = line.rstrip()
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # IPv6 Multicast Routing Table for VRF "default"
             m = p1.match(line)
             if m:
-                vrf = m.groupdict()['vrf']
-                vrf = vrf.replace('"',"")
-                address_family = m.groupdict()['address_family'].lower()
-                if 'vrf' not in ipv6_mroute_vrf_all_dict:
-                    ipv6_mroute_vrf_all_dict['vrf'] = {}
-                if vrf not in ipv6_mroute_vrf_all_dict['vrf']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf] = {}
-                if 'address_family' not in ipv6_mroute_vrf_all_dict['vrf'][vrf]:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'] = {}
-                if address_family not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family] = {}
+                group = m.groupdict()
+                vrf = group['vrf']
+                address_family = group['address_family'].lower()
+                address_family_dict = ipv6_mroute_vrf_all_dict.setdefault(
+                    'vrf', {}
+                ).setdefault(vrf, {}).setdefault(
+                    'address_family', {}
+                ).setdefault(address_family, {})
+                route_dict = None
                 continue
+
+            # (*, ff30::/12), uptime: 3d11h, pim6 ipv6
             m = p2.match(line)
-            if m:
-                source_address = m.groupdict()['source_address']
-                multicast_group = m.groupdict()['multicast_group']
-                uptime = m.groupdict()['uptime']
-                flag = m.groupdict()['flag']
-                bidir = m.groupdict()['bidir']
-                if flag:
-                    flag = ' '.join(sorted(flag.split()))
-
-                if 'multicast_group' not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'] = {}
-                if multicast_group not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                    [multicast_group] = {}
-                if 'source_address' not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group'][multicast_group]:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                    [multicast_group]['source_address'] = {}
-                if source_address not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]\
-                    ['multicast_group'][multicast_group]['source_address']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                        [multicast_group]['source_address'][source_address] = {}
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                    [multicast_group]['source_address'][source_address]['uptime'] = uptime
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                    [multicast_group]['source_address'][source_address]['flags'] = flag
-                if bidir:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                    [multicast_group]['source_address'][source_address]['bidir'] = True
+            if m and vrf is not None and address_family is not None:
+                group = m.groupdict()
+                route_dict = address_family_dict.setdefault(
+                    'multicast_group', {}
+                ).setdefault(
+                    group['multicast_group'], {}
+                ).setdefault(
+                    'source_address', {}
+                ).setdefault(group['source_address'], {})
+                route_dict['uptime'] = group['uptime']
+                if group.get('flag'):
+                    route_dict['flags'] = ' '.join(
+                        sorted(group['flag'].split())
+                    )
+                if group.get('bidir'):
+                    route_dict['bidir'] = True
                 continue
+
+            # Incoming interface: Null, RPF nbr: 0::
             m = p3.match(line)
-            if m:
-                incoming_interface = m.groupdict()['incoming_interface']
-                rpf_nbr = m.groupdict()['rpf_nbr']
-                internal = m.groupdict().get('internal')
-                router_id = m.groupdict().get('router_id')
-                if 'incoming_interface_list' not in ipv6_mroute_vrf_all_dict['vrf']\
-                [vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['incoming_interface_list'] = {}
-                if incoming_interface not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group'][multicast_group]['source_address']\
-                [source_address]['incoming_interface_list']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                    [multicast_group]['source_address'][source_address]\
-                    ['incoming_interface_list'][incoming_interface] = {}
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group']\
-                [multicast_group]['source_address'][source_address]\
-                ['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
-                if internal:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]['incoming_interface_list'][incoming_interface]['internal'] = True
-                if router_id:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]['incoming_interface_list'][incoming_interface]['router_id'] = router_id
+            if m and route_dict is not None:
+                group = m.groupdict()
+                incoming_dict = route_dict.setdefault(
+                    'incoming_interface_list', {}
+                ).setdefault(group['incoming_interface'], {})
+                incoming_dict['rpf_nbr'] = group['rpf_nbr']
+                if group.get('internal'):
+                    incoming_dict['internal'] = True
+                if group.get('router_id'):
+                    incoming_dict['router_id'] = group['router_id']
                 continue
+
+            # Outgoing interface list: (count: 0)
             m = p4.match(line)
-            if m:
-                oil_count = str(m.groupdict()['oil_count'])
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['oil_count'] = oil_count
+            if m and route_dict is not None:
+                route_dict['oil_count'] = m.groupdict()['oil_count']
                 continue
+
+            # loopback2, uptime: 3d11h, igmp
             m = p5.match(line)
-
-            if m:
-                outgoing_interface = m.groupdict()['outgoing_interface']
-                oil_uptime = m.groupdict()['oil_uptime']
-                oil_flags = m.groupdict()['oil_flags']
-
-                if 'outgoing_interface_list' not in ipv6_mroute_vrf_all_dict['vrf']\
-                [vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['outgoing_interface_list'] = {}
-                if outgoing_interface not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group'][multicast_group]['source_address']\
-                [source_address]['outgoing_interface_list']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['outgoing_interface_list'][outgoing_interface] = {}
-
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oil_uptime'] = oil_uptime
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oil_flags'] = oil_flags
+            if m and route_dict is not None:
+                group = m.groupdict()
+                outgoing_dict = route_dict.setdefault(
+                    'outgoing_interface_list', {}
+                ).setdefault(group['outgoing_interface'], {})
+                outgoing_dict['oil_uptime'] = group['oil_uptime']
+                outgoing_dict['oil_flags'] = group['oil_flags']
+                if group.get('oif_rpf'):
+                    outgoing_dict['oif_rpf'] = group['oif_rpf']
                 continue
-            m = p5_1.match(line)
-            if m:
-                outgoing_interface = m.groupdict()['outgoing_interface']
-                oil_uptime = m.groupdict()['oil_uptime']
-                oil_flags = m.groupdict()['oil_flags']
-                oif_rpf = m.groupdict()['oif_rpf']
 
-                if 'outgoing_interface_list' not in ipv6_mroute_vrf_all_dict['vrf']\
-                [vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address'][source_address]:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['outgoing_interface_list'] = {}
-                if outgoing_interface not in ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]\
-                ['multicast_group'][multicast_group]['source_address'][source_address]['outgoing_interface_list']:
-                    ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                    ['source_address'][source_address]['outgoing_interface_list'][outgoing_interface] = {}
-
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oil_uptime'] = oil_uptime
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oil_flags'] = oil_flags
-                ipv6_mroute_vrf_all_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
-                ['source_address'][source_address]['outgoing_interface_list']\
-                [outgoing_interface]['oif_rpf'] = oif_rpf
-            
         return ipv6_mroute_vrf_all_dict
 
 
@@ -1012,6 +979,219 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
         return result_dict
 
 
+# ========================================================================
+#  Schema for show forwarding distribution ipv6 multicast route
+# ========================================================================
+class ShowForwardingDistributionIpv6MulticastRouteSchema(MetaParser):
+    """Schema for show forwarding distribution ipv6 multicast route"""
+
+    schema = {
+        'distribution': {
+            'multicast': {
+                'route': {
+                    'vrf': {
+                        Any(): {
+                            'address_family': {
+                                Any(): {
+                                    'table_id': str,
+                                    'num_groups': int,
+                                    Optional('legend'): {
+                                        Any(): str,
+                                    },
+                                    Optional('gaddr'): {
+                                        Any(): {
+                                            'grp_len': int,
+                                            'saddr': {
+                                                Any(): {
+                                                    Optional('src_len'): int,
+                                                    Optional('rpf_ifname'): str,
+                                                    Optional(
+                                                        'bidir_rp_ordinal'
+                                                    ): int,
+                                                    Optional('flags'): str,
+                                                    'rcv_packets': int,
+                                                    'rcv_bytes': int,
+                                                    'num_of_oifs': int,
+                                                    Optional('oifs'): {
+                                                        'oif_index': int,
+                                                        Any(): {
+                                                            Optional(
+                                                                'oif'
+                                                            ): str,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+# ========================================================================
+#  Parser for show forwarding distribution ipv6 multicast route
+# ========================================================================
+class ShowForwardingDistributionIpv6MulticastRoute(
+    ShowForwardingDistributionIpv6MulticastRouteSchema
+):
+    """Parser for show forwarding distribution ipv6 multicast route"""
+
+    cli_command = 'show forwarding distribution ipv6 multicast route'
+
+    def cli(self, command, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        vrf = 'default'
+        address_family = 'ipv6'
+        address_family_dict = None
+        saddr_dict = None
+        oif_dict = None
+
+        # IPv6 Multicast Routing table table-id:0x80000001
+        p1 = re.compile(r'^IPv6 +Multicast +Routing +table +table-id:(?P<table_id>\S+)$')
+
+        # Total number of groups: 17
+        p2 = re.compile(r'^Total +number +of +groups: +(?P<num_groups>\d+)$')
+
+        # C = Control Route
+        # Nf = VPC None-Forwarder
+        p3 = re.compile(r'^(?P<flag>\S+) += +(?P<description>[^\r\n]+)$')
+
+        # (*, ff05::2/128), RPF Interface: NULL, flags: DG
+        # (*, ff1e::/64), Bidir RP-Ordinal: 9, flags:
+        p4 = re.compile(
+            r'^\((?P<saddr>\*|[0-9a-fA-F:]+/(?P<src_len>\d+)), +'
+            r'(?P<gaddr>[0-9a-fA-F:]+/(?P<grp_len>\d+))\), +'
+            r'(?:(?:RPF +Interface: +(?P<rpf_ifname>\S+))|'
+            r'(?:Bidir +RP-Ordinal: +(?P<bidir_rp_ordinal>\d+))), +'
+            r'flags: *(?P<flags>\S*)$'
+        )
+
+        # Received Packets: 0 Bytes: 0
+        p5 = re.compile(
+            r'^Received +Packets: +(?P<rcv_packets>\d+) +'
+            r'Bytes: +(?P<rcv_bytes>\d+)$'
+        )
+
+        # Number of Outgoing Interfaces: 1
+        p6 = re.compile(r'^Number +of +Outgoing +Interfaces: +(?P<num_of_oifs>\d+)$')
+
+        # Null Outgoing Interface List
+        p7 = re.compile(r'^Null +Outgoing +Interface +List$')
+
+        # Outgoing Interface List Index: 1
+        p8 = re.compile(r'^Outgoing +Interface +List +Index: +(?P<oif_index>\d+)$')
+
+        # Ethernet1/8
+        p9 = re.compile(r'^(?P<oif>[\w\/\.\-:]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # IPv6 Multicast Routing table table-id:0x80000001
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                address_family_dict = ret_dict.setdefault('distribution', {}) \
+                    .setdefault('multicast', {}) \
+                    .setdefault('route', {}) \
+                    .setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {})
+                address_family_dict['table_id'] = groups['table_id']
+                continue
+
+            # Total number of groups: 17
+            m = p2.match(line)
+            if m and address_family_dict is not None:
+                groups = m.groupdict()
+                address_family_dict['num_groups'] = int(groups['num_groups'])
+                continue
+
+            # C = Control Route
+            # Nf = VPC None-Forwarder
+            m = p3.match(line)
+            if m and address_family_dict is not None:
+                groups = m.groupdict()
+                address_family_dict.setdefault('legend', {})[
+                    groups['flag']
+                ] = groups['description']
+                continue
+
+            # (*, ff05::2/128), RPF Interface: NULL, flags: DG
+            # (*, ff1e::/64), Bidir RP-Ordinal: 9, flags:
+            m = p4.match(line)
+            if m and address_family_dict is not None:
+                groups = m.groupdict()
+                oif_dict = None
+                gaddr_dict = address_family_dict.setdefault('gaddr', {}) \
+                    .setdefault(groups['gaddr'], {})
+                gaddr_dict['grp_len'] = int(groups['grp_len'])
+
+                saddr_dict = gaddr_dict.setdefault('saddr', {}) \
+                    .setdefault(groups['saddr'], {})
+                if groups['src_len']:
+                    saddr_dict['src_len'] = int(groups['src_len'])
+                if groups['rpf_ifname']:
+                    saddr_dict['rpf_ifname'] = groups['rpf_ifname']
+                if groups['bidir_rp_ordinal']:
+                    saddr_dict['bidir_rp_ordinal'] = int(
+                        groups['bidir_rp_ordinal']
+                    )
+                if groups['flags']:
+                    saddr_dict['flags'] = groups['flags']
+                continue
+
+            # Received Packets: 0 Bytes: 0
+            m = p5.match(line)
+            if m and saddr_dict is not None:
+                groups = m.groupdict()
+                saddr_dict['rcv_packets'] = int(groups['rcv_packets'])
+                saddr_dict['rcv_bytes'] = int(groups['rcv_bytes'])
+                continue
+
+            # Number of Outgoing Interfaces: 1
+            m = p6.match(line)
+            if m and saddr_dict is not None:
+                groups = m.groupdict()
+                saddr_dict['num_of_oifs'] = int(groups['num_of_oifs'])
+                continue
+
+            # Null Outgoing Interface List
+            m = p7.match(line)
+            if m:
+                oif_dict = None
+                continue
+
+            # Outgoing Interface List Index: 1
+            m = p8.match(line)
+            if m and saddr_dict is not None:
+                groups = m.groupdict()
+                oif_dict = saddr_dict.setdefault('oifs', {})
+                oif_dict['oif_index'] = int(groups['oif_index'])
+                continue
+
+            # Ethernet1/8
+            m = p9.match(line)
+            if m and oif_dict is not None:
+                groups = m.groupdict()
+                oif_dict.setdefault(groups['oif'], {})['oif'] = groups['oif']
+                continue
+
+        return ret_dict
+
+
 # ===================================
 # Parser for 'show ip mroute summary vrf all'
 # ===================================
@@ -1494,6 +1674,199 @@ class ShowIpMrouteDetail(ShowIpMrouteDetailSchema):
                     outgoing_dict['flag'] = groups['flag']
                 route_dict.setdefault('outgoing_interface_list', []).append(
                     outgoing_dict
+                )
+                continue
+
+        return ret_dict
+
+
+# ======================================
+# Parser for 'show ip mroute sr umnat'
+# ======================================
+
+class ShowIpMrouteSrUmnatSchema(MetaParser):
+    """Schema for show ip mroute sr umnat"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('multicast_group'): {
+                            Any(): {
+                                Optional('source_address'): {
+                                    Any(): {
+                                        'translation': {
+                                            'source_address': str,
+                                            'multicast_group': str,
+                                            'protocol': str,
+                                            'udp_source_port': int,
+                                            'udp_destination_port': int,
+                                        },
+                                        'oil_count': int,
+                                        Optional('outgoing_interface_list'): ListOf(
+                                            {
+                                                'interface': str,
+                                                'oil_uptime': str,
+                                                'oil_flags': str,
+                                            }
+                                        ),
+                                        Optional('chained_translations'): ListOf(
+                                            {
+                                                'source_address': str,
+                                                'multicast_group': str,
+                                                'outgoing_interface': str,
+                                            }
+                                        ),
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpMrouteSrUmnat(ShowIpMrouteSrUmnatSchema):
+    """Parser for show ip mroute sr umnat"""
+
+    cli_command = 'show ip mroute sr umnat'
+
+    exclude = [
+        'oil_count',
+        'oil_uptime',
+    ]
+
+    def cli(self, command, output=None):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        route_dict = None
+        vrf = None
+        address_family = None
+
+        # IP Multicast Routing Table for VRF "default"
+        p1 = re.compile(
+            r'^(?P<address_family>\S+) +[mM]ulticast +[rR]outing +'
+            r'[tT]able +for +VRF +"(?P<vrf>[^"]+)"$'
+        )
+
+        # (21.1.1.1/32, 1.2.3.4/32)
+        p2 = re.compile(
+            r'^\((?P<source_address>[0-9\.\*\/]+), +'
+            r'(?P<multicast_group>[0-9\.\/]+)\)$'
+        )
+
+        # SR: (57.1.1.51/32, 227.1.1.1/32) udp src: 1000, udp dst : 500
+        p3 = re.compile(
+            r'^SR: +\((?P<source_address>[0-9\.\*\/]+), +'
+            r'(?P<multicast_group>[0-9\.\/]+)\) +(?P<protocol>udp) +'
+            r'src: +(?P<udp_source_port>[0-9]+), +udp +dst *: +'
+            r'(?P<udp_destination_port>[0-9]+)$'
+        )
+
+        # Outgoing interface list: (count: 1)
+        p4 = re.compile(
+            r'^Outgoing +interface +list: +\(count: +(?P<oil_count>[0-9]+)\)$'
+        )
+
+        # loopback100, uptime: 1d01h, static
+        p5 = re.compile(
+            r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+), +'
+            r'uptime: +(?P<oil_uptime>[0-9a-zA-Z\:\.]+), +'
+            r'(?P<oil_flags>[a-zA-Z0-9\(\)\. ]+)$'
+        )
+
+        # SR: (21.1.1.2, 229.1.1.1) OIF: Ethernet1/7
+        p6 = re.compile(
+            r'^SR: +\((?P<source_address>[0-9\.\*\/]+), +'
+            r'(?P<multicast_group>[0-9\.\/]+)\) +OIF: +'
+            r'(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # IP Multicast Routing Table for VRF "default"
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf = groups['vrf']
+                address_family = groups['address_family'].lower() + 'v4'
+                route_dict = None
+                continue
+
+            # (21.1.1.1/32, 1.2.3.4/32)
+            m = p2.match(line)
+            if m and vrf is not None and address_family is not None:
+                groups = m.groupdict()
+                route_dict = ret_dict.setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {}) \
+                    .setdefault('multicast_group', {}) \
+                    .setdefault(groups['multicast_group'], {}) \
+                    .setdefault('source_address', {}) \
+                    .setdefault(groups['source_address'], {})
+                continue
+
+            if line in ('Translation:', 'Chained translations:'):
+                continue
+
+            # SR: (57.1.1.51/32, 227.1.1.1/32) udp src: 1000, udp dst : 500
+            m = p3.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                route_dict['translation'] = {
+                    'source_address': groups['source_address'],
+                    'multicast_group': groups['multicast_group'],
+                    'protocol': groups['protocol'],
+                    'udp_source_port': int(groups['udp_source_port']),
+                    'udp_destination_port': int(groups['udp_destination_port']),
+                }
+                continue
+
+            # Outgoing interface list: (count: 1)
+            m = p4.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                route_dict['oil_count'] = int(groups['oil_count'])
+                continue
+
+            # loopback100, uptime: 1d01h, static
+            m = p5.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                outgoing_dict = {
+                    'interface': Common.convert_intf_name(
+                        groups['outgoing_interface']
+                    ),
+                    'oil_uptime': groups['oil_uptime'],
+                    'oil_flags': ' '.join(sorted(groups['oil_flags'].split())),
+                }
+                route_dict.setdefault('outgoing_interface_list', []).append(
+                    outgoing_dict
+                )
+                continue
+
+            # SR: (21.1.1.2, 229.1.1.1) OIF: Ethernet1/7
+            m = p6.match(line)
+            if m and route_dict is not None:
+                groups = m.groupdict()
+                chained_dict = {
+                    'source_address': groups['source_address'],
+                    'multicast_group': groups['multicast_group'],
+                    'outgoing_interface': Common.convert_intf_name(
+                        groups['outgoing_interface']
+                    ),
+                }
+                route_dict.setdefault('chained_translations', []).append(
+                    chained_dict
                 )
                 continue
 
@@ -1988,6 +2361,253 @@ class MroutepdL3Show(MroutepdL3ShowSchema):
                 continue
 
         return parsed_dict
+
+
+class ShowIpMrouteSrSchema(MetaParser):
+    """Schema for:
+        show ip mroute sr {group}
+        show ip mroute sr 229.0.0.1"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        Optional('multicast_group'): {
+                            Any(): {
+                                Optional('source_address'): {
+                                    Any(): {
+                                        'uptime': str,
+                                        'flags': str,
+                                        'nat_mode': str,
+                                        'nat_route_type': str,
+                                        'incoming_interface_list': {
+                                            Any(): {
+                                                'rpf_nbr': str,
+                                                Optional('internal'): bool,
+                                                Optional('router_id'): str,
+                                            },
+                                        },
+                                        Optional('oil_count_label'): str,
+                                        Optional('oil_count'): int,
+                                        'translation_list': {
+                                            Optional('count_label'): str,
+                                            'count': int,
+                                            Optional('sr'): ListOf({
+                                                'source_address': str,
+                                                'multicast_group': str,
+                                                'source_protocol': str,
+                                                Optional('src_label'): str,
+                                                'src_port': int,
+                                                'destination_protocol': str,
+                                                Optional('dst_label'): str,
+                                                'dst_port': int,
+                                                Optional('oif'): str,
+                                            }),
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowIpMrouteSr(ShowIpMrouteSrSchema):
+    """Parser for:
+        show ip mroute sr {group}
+        show ip mroute sr 229.0.0.1"""
+
+    cli_command = 'show ip mroute sr {group}'
+
+    exclude = [
+        'flags',
+        'incoming_interface_list',
+        'oil_count',
+        'translation_list',
+        'uptime',
+    ]
+
+    def cli(self, command, output=None):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        route_dict = None
+        vrf = None
+        address_family = None
+
+        # IP Multicast Routing Table for VRF "default"
+        p1 = re.compile(
+            r'^(?P<address_family>\S+) +[mM]ulticast +[rR]outing +'
+            r'[tT]able +for +VRF +"(?P<vrf>[^"]+)"$'
+        )
+
+        # (172.16.1.10/32, 229.0.0.1/32), uptime: 00:38:00, pim ip
+        p2 = re.compile(
+            r'^\((?P<source_address>[0-9\.\*\/]+), +'
+            r'(?P<multicast_group>[a-zA-Z0-9\.\:\/]+)\), +'
+            r'uptime: +(?P<uptime>[0-9a-zA-Z\:\.]+), +'
+            r'(?P<flags>[a-zA-Z0-9 ]+)$'
+        )
+
+        # NAT Mode: Egress
+        p3 = re.compile(r'^NAT +Mode: +(?P<nat_mode>\S+)$')
+
+        # NAT Route Type: Pre
+        p4 = re.compile(r'^NAT +Route +Type: +(?P<nat_route_type>\S+)$')
+
+        # Incoming interface: Ethernet1/1, RPF nbr: 172.16.1.10, internal
+        p5 = re.compile(
+            r'^Incoming +interface: +'
+            r'(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+), +'
+            r'RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)'
+            r'(?:, +(?P<internal>internal))?'
+            r'(?: +\(Router-Id: +(?P<router_id>[0-9\.]+)\))?$'
+        )
+
+        # Outgoing interface list: (count: 0)
+        p6 = re.compile(
+            r'^Outgoing +interface +list: +\((?P<oil_count_label>count:) +'
+            r'(?P<oil_count>[0-9]+)\)$'
+        )
+
+        # Translation list: (count: 1)
+        p7 = re.compile(
+            r'^Translation +list: +\((?P<count_label>count:) +'
+            r'(?P<translation_count>[0-9]+)\)$'
+        )
+
+        # SR: (172.16.1.10, 2.0.0.10) udp src: 3000 udp dst: 3000
+        p8 = re.compile(
+            r'^SR: +\((?P<sr_source_address>[0-9\.\*\/]+), +'
+            r'(?P<sr_multicast_group>[a-zA-Z0-9\.\:\/]+)\) +'
+            r'(?P<source_protocol>\S+) +(?P<src_label>src:) +'
+            r'(?P<src_port>[0-9]+) +(?P<destination_protocol>\S+) +'
+            r'(?P<dst_label>dst:) +'
+            r'(?P<dst_port>[0-9]+)(?: +OIF: +'
+            r'(?P<oif>[a-zA-Z0-9\/\-\.]+))?$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # IP Multicast Routing Table for VRF "default"
+            m = p1.match(line)
+            if m:
+                group_dict = m.groupdict()
+                vrf = group_dict['vrf']
+                address_family = group_dict['address_family'].lower()
+                if address_family == 'ip':
+                    address_family = 'ipv4'
+                route_dict = None
+                continue
+
+            # (172.16.1.10/32, 229.0.0.1/32), uptime: 00:38:00, pim ip
+            m = p2.match(line)
+            if m and vrf is not None and address_family is not None:
+                group_dict = m.groupdict()
+                source_address = group_dict['source_address']
+                multicast_group = group_dict['multicast_group']
+                route_dict = ret_dict.setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {}) \
+                    .setdefault('multicast_group', {}) \
+                    .setdefault(multicast_group, {}) \
+                    .setdefault('source_address', {}) \
+                    .setdefault(source_address, {})
+                route_dict.update({
+                    'uptime': group_dict['uptime'],
+                    'flags': ' '.join(sorted(group_dict['flags'].split())),
+                })
+                continue
+
+            # NAT Mode: Egress
+            m = p3.match(line)
+            if m and route_dict is not None:
+                route_dict['nat_mode'] = m.groupdict()['nat_mode']
+                continue
+
+            # NAT Route Type: Pre
+            m = p4.match(line)
+            if m and route_dict is not None:
+                route_dict['nat_route_type'] = m.groupdict()['nat_route_type']
+                continue
+
+            # Incoming interface: Ethernet1/1, RPF nbr: 172.16.1.10, internal
+            m = p5.match(line)
+            if m and route_dict is not None:
+                group_dict = m.groupdict()
+                incoming_interface = Common.convert_intf_name(
+                    group_dict['incoming_interface']
+                )
+                incoming_dict = route_dict.setdefault(
+                    'incoming_interface_list', {}
+                ).setdefault(incoming_interface, {})
+                incoming_dict['rpf_nbr'] = group_dict['rpf_nbr']
+                if group_dict.get('internal'):
+                    incoming_dict['internal'] = True
+                if group_dict.get('router_id'):
+                    incoming_dict['router_id'] = group_dict['router_id']
+                continue
+
+            # Outgoing interface list: (count: 0)
+            m = p6.match(line)
+            if m and route_dict is not None:
+                group_dict = m.groupdict()
+                route_dict['oil_count_label'] = (
+                    group_dict['oil_count_label'].rstrip(':')
+                )
+                route_dict['oil_count'] = int(group_dict['oil_count'])
+                continue
+
+            # Translation list: (count: 1)
+            m = p7.match(line)
+            if m and route_dict is not None:
+                group_dict = m.groupdict()
+                translation_dict = route_dict.setdefault(
+                    'translation_list', {}
+                )
+                translation_dict['count_label'] = (
+                    group_dict['count_label'].rstrip(':')
+                )
+                translation_dict['count'] = int(
+                    group_dict['translation_count']
+                )
+                continue
+
+            # SR: (172.16.1.10, 2.0.0.10) udp src: 3000 udp dst: 3000
+            m = p8.match(line)
+            if m and route_dict is not None:
+                group_dict = m.groupdict()
+                sr_dict = {
+                    'source_address': group_dict['sr_source_address'],
+                    'multicast_group': group_dict['sr_multicast_group'],
+                    'source_protocol': group_dict['source_protocol'],
+                    'src_label': group_dict['src_label'].rstrip(':'),
+                    'src_port': int(group_dict['src_port']),
+                    'destination_protocol': group_dict['destination_protocol'],
+                    'dst_label': group_dict['dst_label'].rstrip(':'),
+                    'dst_port': int(group_dict['dst_port']),
+                }
+                if group_dict.get('oif'):
+                    sr_dict['oif'] = Common.convert_intf_name(
+                        group_dict['oif']
+                    )
+
+                route_dict.setdefault(
+                    'translation_list', {}
+                ).setdefault('sr', []).append(sr_dict)
+                continue
+
+        return ret_dict
+
 
 class ShowIpMrouteSourceTreeVrfAllSchema(MetaParser):
     """Schema for:

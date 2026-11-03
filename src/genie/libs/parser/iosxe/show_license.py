@@ -2658,6 +2658,7 @@ class ShowLicenseTechSupportSchema(MetaParser):
             Optional('operational_model'):str,
             Optional('hello_message'):str,
             Optional('integrity_reporting'):str,
+            Optional('pla_reporting'):str,
         },
         Optional('communication_statistics'):{
             'communication_level_allowed':str,

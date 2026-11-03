@@ -1,0 +1,20 @@
+BGP routing table information for VRF default, address family IPv4 Unicast
+BGP routing table entry for 192.168.11.11/32, version 14
+Paths: (1 available, best #1)
+Flags: (0x08041a) on xmit-list, is in urib, is best urib route, is in HW
+
+  Advertised path-id 1
+  Path type: internal, path is valid, is best path, in rib
+             Imported from 192.168.3.3:3:192.168.11.11/32 (VRF vni100)
+  AS-Path: 150 , path sourced external to AS
+    192.168.1.0 (metric 81) from 192.168.101.101 (192.168.101.101)
+      Origin incomplete, MED 0, localpref 100, weight 0
+      Received label 100
+      Extcommunity:
+          RT:100:100
+          ENCAP:8
+          Router MAC:5254.004e.a437
+      Originator: 192.168.1.0 Cluster list: 192.168.101.101
+
+  Path-id 1 advertised to peers:
+    192.168.30.2

@@ -1,0 +1,3 @@
+A11-EK-64# sh clock
+05:00:53.034 IST Sat Jan 01 2000
+Time source is Hardware Calendar

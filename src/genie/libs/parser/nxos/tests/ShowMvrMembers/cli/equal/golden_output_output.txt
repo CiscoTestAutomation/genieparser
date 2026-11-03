@@ -1,0 +1,7 @@
+MVR-VLAN  Group Address  Status   Members
+--------  -------------  -------  -------
+100       230.1.1.1     ACTIVE    Po201 Po202 Po203 Po205 Po206
+100       230.1.1.2     ACTIVE    Po205 Po206 Po207 Po208
+340       235.1.1.6     ACTIVE    Eth102/1/1
+101       225.1.3.1     ACTIVE    Eth1/10 Eth2/2
+101       228.1.2.241   ACTIVE    Eth103/1/1 Eth103/1/2

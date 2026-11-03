@@ -1,0 +1,13 @@
+show ip nbar protocol-discovery protocol
+
+ TwoGigabitEthernet1/0/6
+ Total                            461                      0
+                                  46100                    0
+                                  1000                     0
+                                  2000                     0
+
+ GigabitEthernet2/0/29
+ Total                            471                      0
+                                  47100                    0
+                                  1000                     0
+                                  2000                     0

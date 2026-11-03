@@ -1,0 +1,7 @@
+AP0011.2233.4455#show ip dhcp lease
+Interface wired0
+ DHCP lease server: 192.0.2.1
+
+vlan added_by active state disc_ago offer_ago req_ago ack_delay renew_at exp_at               ip          gw         bcast     dns mtu
+   0        C   true bound   240       238       90       0.0014    60     120 192.0.2.196/24 192.0.2.1 192.0.2.255 0.0.0.0   0
+AP0011.2233.4455#

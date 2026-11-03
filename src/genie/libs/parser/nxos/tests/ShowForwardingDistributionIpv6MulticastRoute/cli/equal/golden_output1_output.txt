@@ -1,0 +1,105 @@
+IPv6 Multicast Routing table table-id:0x80000001
+Total number of groups: 17
+Legend:
+   C = Control Route
+   D = Drop Route
+   G = Local Group (directly connected receivers)
+   O = Drop on RPF Fail
+   P = Punt to supervisor
+   L = SRC behind L3
+   d = Decap Route
+   Nf = VPC None-Forwarder
+   dm = MVPN Decap Route
+   em = Encap Route
+   rm = Source is DCI Remote
+
+  (*, ff05::2/128), RPF Interface: NULL, flags: DG
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 1
+      Ethernet1/8
+
+  (*, ff1e::/64), Bidir RP-Ordinal: 9, flags:
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 1
+    Outgoing Interface List Index: 3
+      Ethernet1/1
+
+  (*, ff1e::1:1:12/128), Bidir RP-Ordinal: 9, flags:
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 2
+    Outgoing Interface List Index: 26
+      Ethernet1/1
+      Ethernet1/8
+
+  (*, ff1e::1:1:13/128), Bidir RP-Ordinal: 9, flags:
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 2
+    Outgoing Interface List Index: 26
+      Ethernet1/1
+      Ethernet1/8
+
+  (*, ff32::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff33::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff34::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff35::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff36::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff37::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff38::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff39::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff3a::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff3b::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff3c::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff3d::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List
+
+  (*, ff3e::/32), RPF Interface: NULL, flags: D
+    Received Packets: 0 Bytes: 0
+    Number of Outgoing Interfaces: 0
+    Null Outgoing Interface List

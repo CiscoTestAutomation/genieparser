@@ -1,0 +1,19 @@
+expected_output = {
+    "identifier": {
+        1990: {
+            "identifier": 1990,
+            "description": "[FNF Object] type:IF_BIND name:IS51329_L2_IN_MON-0-fnf_l2_all_input-858113454-3-1-1147 fnf-id:2000054 real-id:54 info:ifh =1147 mon-id:2000007 samp-id:0 dir:1 traffic:3 sub_traffic:0x0 efp_id:7",
+            "status": "Create-failed",
+        },
+        1994: {
+            "identifier": 1994,
+            "description": "[FNF Object] type:IF_BIND name:fnf_l2_all_input_mon-0-fnf_l2_all_input-858113454-3-1-1148 fnf-id:2000058 real-id:58 info:ifh =1148 mon-id:2000005 samp-id:0 dir:1 traffic:3 sub_traffic:0x0 efp_id:7",
+            "status": "Create-failed",
+        },
+        1997: {
+            "identifier": 1997,
+            "description": "[FNF Object] type:IF_BIND name:fnf_l2_all_output_mon-0-fnf_l2_all_output-2968624485-3-2-1148 fnf-id:2000061 real-id:61 info:ifh =1148 mon-id:2000006 samp-id:0 dir:2 traffic:3 sub_traffic:0x0 efp_id:7",
+            "status": "Create-failed",
+        },
+    },
+}

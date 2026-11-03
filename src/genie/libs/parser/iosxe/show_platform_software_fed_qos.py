@@ -544,6 +544,34 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParserSchema(MetaParser):
             Optional("l3_oid"): str,
             Optional("l2_oid"): str,
             "number_of_aces": int,
+            Optional("ace"): {
+                Any(): {
+                    "class_id": str,
+                    "mac_src_address": str,
+                    "mac_src_mask": str,
+                    "mac_dst_address": str,
+                    "mac_dst_mask": str,
+                    "ethertype": str,
+                    "ethertype_mask": str,
+                    "cos": str,
+                    "cos_mask": str,
+                    "vlan_start": str,
+                    "vlan_end": str,
+                    Optional("result_action"): {
+                        "remark_value": str,
+                        "encap_value": str,
+                        "qos_group": str,
+                        "traffic_class": str,
+                        "drop_precedence": str,
+                        "overwrite_phb": str,
+                        "overwrite_qos_group": str,
+                        "overwrite_encap": str,
+                        "overwrite_fwd_tag": str,
+                        "meter_enabled": str,
+                        "meter_counter_offset": str,
+                    },
+                }
+            },
         },
         Optional("bind_information"): {
             "port_type": str,
@@ -705,7 +733,8 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
         # IPV4 ACE Key/Mask
         # IPV6 ACE Key/Mask
-        p5_0 = re.compile(r"^(IPV4|IPV6) ACE Key/Mask$")
+        # MAC ACE Key/Mask
+        p5_0 = re.compile(r"^(IPV4|IPV6|MAC) ACE Key/Mask$")
 
         # Class id: 0x0
         p5_1 = re.compile(r"^Class id: (?P<class_id>\w+)$")
@@ -748,6 +777,15 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
         p5_10 = re.compile(
             r"^Dst Port Start\/End:\s(?P<dst_port_start>\w+)\/(?P<dst_port_end>\w+)$"
         )
+
+        # Ethertype/Mask: 0x0/0x0
+        p5_11 = re.compile(r"^Ethertype/Mask:\s+(?P<ethertype>\w+)/(?P<ethertype_mask>\w+)$")
+
+        # COS/Mask: 0x5/0xff
+        p5_12 = re.compile(r"^COS/Mask:\s+(?P<cos>\w+)/(?P<cos_mask>\w+)$")
+
+        # Vlan Start/End: 0x0/0x0
+        p5_13 = re.compile(r"^Vlan Start/End:\s+(?P<vlan_start>\w+)/(?P<vlan_end>\w+)$")
 
         # Result Action
         p6 = re.compile(r"^Result Action$")
@@ -894,6 +932,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
         ret_dict = {}
         meter_set_count = 0
         ace_count = 0
+        acl_name = None
         acl_dict = None
         ace_dict = None
 
@@ -1081,6 +1120,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
             # IPV4 ACE Key/Mask
             # IPV6 ACE Key/Mask
+            # MAC ACE Key/Mask
             m = p5_0.match(line)
             if m and acl_dict is not None:
                 ace_dict = acl_dict.setdefault("ace", {}).setdefault(ace_count, {})
@@ -1104,6 +1144,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
             # IPv4 Src/Mask: 0.0.0.0/0.0.0.0
             # IPv6 Src/Mask: ::/::
+            # MAC Src/Mask: 0000.0000.0000/0000.0000.0000
             m = p5_2.match(line)
             if m:
                 values = m.groupdict()
@@ -1114,6 +1155,7 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
 
             # IPv4 Dst/Mask: 0.0.0.0/0.0.0.0
             # IPv6 Dst/Mask: ::/::
+            # MAC Dst/Mask: 0000.0000.0000/0000.0000.0000
             m = p5_3.match(line)
             if m:
                 values = m.groupdict()
@@ -1169,6 +1211,24 @@ class ShowPlatformSoftwareFedQosInterfaceSuperParser(
             if m:
                 ace_dict["dst_port_start"] = m.groupdict()["dst_port_start"]
                 ace_dict["dst_port_end"] = m.groupdict()["dst_port_end"]
+                continue
+
+            # Ethertype/Mask: 0x0/0x0
+            m = p5_11.match(line)
+            if m and acl_name == "mac_acl" and ace_dict is not None:
+                ace_dict.update(m.groupdict())
+                continue
+
+            # COS/Mask: 0x5/0xff
+            m = p5_12.match(line)
+            if m and acl_name == "mac_acl" and ace_dict is not None:
+                ace_dict.update(m.groupdict())
+                continue
+
+            # Vlan Start/End: 0x0/0x0
+            m = p5_13.match(line)
+            if m and acl_name == "mac_acl" and ace_dict is not None:
+                ace_dict.update(m.groupdict())
                 continue
 
             # Result Action

@@ -2,6 +2,7 @@
 
     * "show platform software fed switch active ifm mappings lpn",
     * "sh platform software fed switch {switch_num} ifm mappings lpn"
+    * "show platform software fed switch {switch_type} fnf record-count all-asic"
 """
 # Python
 import re
@@ -924,6 +925,68 @@ class ShowPlatformSoftwareFedSwitchFnfFlowTableMonId(
 
         return ret_dict
 
+
+class ShowPlatformSoftwareFedSwitchActiveFnfRecordCountAllAsicSchema(
+    MetaParser
+):
+    """Schema for the following command:
+
+    show platform software fed switch {switch_type} fnf record-count all-asic
+    """
+
+    schema = {
+        "asics": {
+            Any(): {
+                "current_flow_count": int,
+                "total_flows_added": int,
+                "total_flows_removed": int,
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareFedSwitchActiveFnfRecordCountAllAsic(
+    ShowPlatformSoftwareFedSwitchActiveFnfRecordCountAllAsicSchema
+):
+    """Parser for the following command:
+
+    show platform software fed switch {switch_type} fnf record-count all-asic
+    """
+
+    cli_command = (
+        "show platform software fed switch {switch_type} "
+        "fnf record-count all-asic"
+    )
+
+    def cli(self, switch_type=None, output=None):
+        """Execute and parse the all-ASIC record-count command."""
+        if output is None:
+            output = self.device.execute(
+                self.cli_command.format(switch_type=switch_type)
+            )
+
+        parsed = {}
+        current_asic = None
+        field_names = {
+            "Total_current flows": "current_flow_count",
+            "Total_flows_added": "total_flows_added",
+            "Total_flows_removed": "total_flows_removed",
+        }
+        for line in output.splitlines():
+            line = line.strip()
+            if line.startswith("Asic:"):
+                current_asic = int(line.split(":", 1)[1].strip())
+                parsed.setdefault("asics", {})[current_asic] = {}
+                continue
+            if current_asic is None or ":" not in line:
+                continue
+            label, value = (part.strip() for part in line.split(":", 1))
+            field_name = field_names.get(label)
+            if field_name:
+                parsed["asics"][current_asic][field_name] = int(value)
+
+        return parsed
+
 class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDumpSchema(MetaParser):
     """Schema for show platform software fed switch active fnf attach-points-dump"""
 
@@ -973,10 +1036,12 @@ class ShowPlatformSoftwareFedSwitchActiveFnfAttachPointsDump(
         current_entry = None
 
         # | 0 | 0 | 3208064872 | Input | Gi2/0/6 | IPV4 TRAFFIC | SUCCESS |
+        # | 0 | 0 | 1938805939 | Input | Po4 | DATALINK TRAFFIC | SUCCESS |
         p1 = re.compile(
             r'^\|\s*(?P<sampler_type>\d+)\s*\|\s*(?P<sampler_window_size>\d+)\s*\|'
             r'\s*(?P<fnf_mon_id>\d+)\s*\|\s*(?P<direction>\S+)\s*\|'
-            r'\s*(?P<interface_id>\S+)\s*\|\s*(?P<traffic_type>IPV[46]\s+TRAFFIC)\s*\|'
+            r'\s*(?P<interface_id>\S+)\s*\|\s*'
+            r'(?P<traffic_type>(?:IPV[46]|DATALINK)\s+TRAFFIC)\s*\|'
             r'\s*(?P<status>\S+)\s*\|$'
         )
 

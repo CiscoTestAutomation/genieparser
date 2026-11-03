@@ -1,0 +1,15 @@
+ OSPF Process ID 100 VRF blue
+
+ Total number of neighbors: 5
+
+ Neighbor ID     Pri State            Up Time  Address         Interface
+
+ 3.3.3.3           1 FULL/DR          02:18:00 40.1.1.2        Eth1/49
+
+ 3.3.3.3           1 FULL/DR          02:17:39 41.1.1.2        Vlan13
+
+ 3.3.3.3           1 FULL/DR          02:17:40 42.1.1.2        Eth1/30.7
+
+ 3.3.3.3           1 FULL/DR          02:17:26 43.1.1.2        Po8
+
+ 3.3.3.3           1 FULL/DR          02:17:27 44.1.1.2        Po9.9

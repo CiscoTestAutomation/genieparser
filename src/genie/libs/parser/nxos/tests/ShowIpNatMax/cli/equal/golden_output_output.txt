@@ -1,0 +1,8 @@
+ IP NAT Max values
+====================
+Max Dyn Translations:80
+Max all-host:0
+No.Static:650
+No.Dyn:0
+No.Dyn-ICMP:0
+====================

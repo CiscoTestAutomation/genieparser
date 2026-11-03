@@ -1,0 +1,11 @@
+List of Route-Map Entries: 
+  Route-map Name: TC4-PBR-V6-A    
+    CG_ID: 5     Protocol: IPv6 Is_CGM_Attach: Yes
+    Ref Cnt: 3   
+    Route-Map Sequence List
+      Class ID: 13    Seq Num: 10   
+        Adj_id: 0xf8004827 Vrf_id: 0     Table_id: 0     IPv6_addr: 2001:db8:10::2 
+      Class ID: 14    Seq Num: 20   
+        Adj_id: 0xf8004837 Vrf_id: 0     Table_id: 0     IPv6_addr: 2001:db8:20::2 
+      Class ID: 15    Seq Num: 30   
+        Adj_id: 0x0       Vrf_id: 0     Table_id: 0     IPv6_addr: ::             

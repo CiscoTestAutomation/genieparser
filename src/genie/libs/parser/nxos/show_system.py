@@ -4,6 +4,7 @@ NXOS parsers for the following show commands:
     * 'show system internal sysmgr service name <WORD>'
     * 'show system internal l2fwder Mac'
     * 'show system internal processes memory'
+    * 'show system internal nbm info shm table context'
     * 'show system routing mode'
 """
 
@@ -811,6 +812,135 @@ class ShowSystemInternalFlash(ShowSystemInternalFlashSchema):
                 }
                 continue
         return result_dict
+
+
+# ====================================================================
+# Schema for 'show system internal nbm info shm table context'
+# ====================================================================
+class ShowSystemInternalNbmInfoShmTableContextSchema(MetaParser):
+    """Schema for show system internal nbm info shm table context"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'context_id': int,
+                'context_name': str,
+                'default_flow_bw_kbps': int,
+                'default_policer': str,
+                'unicast_fabric_bandwidth_percentage': int,
+                'mode': str,
+                'num_asm_group_range': int,
+                'res_bw_rx_only': str,
+                'impact_low_priority_flows': str,
+                'immediate_bw_recovery': str,
+            },
+        },
+    }
+
+
+# ====================================================================
+# Parser for 'show system internal nbm info shm table context'
+# ====================================================================
+class ShowSystemInternalNbmInfoShmTableContext(
+        ShowSystemInternalNbmInfoShmTableContextSchema):
+    """Parser for show system internal nbm info shm table context"""
+
+    cli_command = 'show system internal nbm info shm table context'
+
+    def cli(self, command, output=None, **kwargs):
+        if output is None:
+            output = self.device.execute(command)
+
+        ret_dict = {}
+        current_vrf_dict = None
+
+        # NBM SHM context information for VRF 'default'
+        p1 = re.compile(r"^NBM +SHM +context +information +for +VRF +'(?P<vrf>[^']+)'$")
+
+        # Context ID : 1 Context Name : default
+        p2 = re.compile(r'^Context +ID +: +(?P<context_id>\d+) +Context +Name +: +(?P<context_name>.+)$')
+
+        # Default Flow BW (Kbps) : 1 Default Policer : Enabled
+        p3 = re.compile(r'^Default +Flow +BW +\(Kbps\) +: +(?P<default_flow_bw_kbps>\d+) +Default +Policer +: +(?P<default_policer>\S+)$')
+
+        # Unicast Fabric bandwidth (percentage) : 1 Mode : PIM Active
+        p4 = re.compile(r'^Unicast +Fabric +bandwidth +\(percentage\) +: +(?P<unicast_fabric_bandwidth_percentage>\d+) +Mode +: +(?P<mode>.+)$')
+
+        # NUM ASM group range : 0 ResBwRxOnly : Disabled
+        p5 = re.compile(r'^NUM +ASM +group +range +: +(?P<num_asm_group_range>\d+) +ResBwRxOnly +: +(?P<res_bw_rx_only>\S+)$')
+
+        # Impact Low Priority Flows : Enabled Immediate BW Recovery : On
+        p6 = re.compile(r'^Impact +Low +Priority +Flows +: +(?P<impact_low_priority_flows>\S+) +Immediate +BW +Recovery +: +(?P<immediate_bw_recovery>\S+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # NBM SHM context information for VRF 'default'
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                current_vrf_dict = ret_dict.setdefault('vrf', {}) \
+                    .setdefault(groups['vrf'], {})
+                continue
+
+            # Context ID : 1 Context Name : default
+            m = p2.match(line)
+            if m and current_vrf_dict is not None:
+                groups = m.groupdict()
+                current_vrf_dict.update({
+                    'context_id': int(groups['context_id']),
+                    'context_name': groups['context_name'].strip(),
+                })
+                continue
+
+            # Default Flow BW (Kbps) : 1 Default Policer : Enabled
+            m = p3.match(line)
+            if m and current_vrf_dict is not None:
+                groups = m.groupdict()
+                current_vrf_dict.update({
+                    'default_flow_bw_kbps':
+                        int(groups['default_flow_bw_kbps']),
+                    'default_policer': groups['default_policer'],
+                })
+                continue
+
+            # Unicast Fabric bandwidth (percentage) : 1 Mode : PIM Active
+            m = p4.match(line)
+            if m and current_vrf_dict is not None:
+                groups = m.groupdict()
+                current_vrf_dict.update({
+                    'unicast_fabric_bandwidth_percentage':
+                        int(groups['unicast_fabric_bandwidth_percentage']),
+                    'mode': groups['mode'].strip(),
+                })
+                continue
+
+            # NUM ASM group range : 0 ResBwRxOnly : Disabled
+            m = p5.match(line)
+            if m and current_vrf_dict is not None:
+                groups = m.groupdict()
+                current_vrf_dict.update({
+                    'num_asm_group_range':
+                        int(groups['num_asm_group_range']),
+                    'res_bw_rx_only': groups['res_bw_rx_only'],
+                })
+                continue
+
+            # Impact Low Priority Flows : Enabled Immediate BW Recovery : On
+            m = p6.match(line)
+            if m and current_vrf_dict is not None:
+                groups = m.groupdict()
+                current_vrf_dict.update({
+                    'impact_low_priority_flows':
+                        groups['impact_low_priority_flows'],
+                    'immediate_bw_recovery':
+                        groups['immediate_bw_recovery'],
+                })
+                continue
+
+        return ret_dict
 
 
 # =======================================

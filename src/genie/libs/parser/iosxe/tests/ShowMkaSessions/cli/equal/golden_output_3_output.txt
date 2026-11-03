@@ -1,0 +1,13 @@
+show mka sessions
+
+Total MKA Sessions....... 1
+      Secured Sessions... 1
+      Pending Sessions... 0
+
+=======================================================================================================================
+Interface       Local-TxSCI          Policy-Name       Inherited          Key-Server       Probe Count
+Port-ID         Peer-RxSCI           MACsec-Peers      Status             CKN              CA-Type
+=======================================================================================================================
+Fif1/0/5        ecdd.240f.d805/0002  mka_128           NO                 NO               -
+2               7885.170e.b405/0002  1                 Secured            9A40C0B6419FB1F7 Previously-Secured
+

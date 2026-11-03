@@ -1,0 +1,25 @@
+tenant-id 0
+peer 1.1.1.4
+type vsmart
+domain-id 1
+site-id 4294937943
+overlay-id 1
+region-id None
+state up
+version 1
+uptime 23:20:01:31
+routes-received-ipv6 12
+services-sent-ipv6 6
+
+tenant-id 7
+peer 1.1.1.5
+type vsmart
+domain-id 1
+site-id 4294937944
+overlay-id 1
+region-id None
+state up
+version 1
+uptime 23:20:01:29
+routes-received-ipv6 34
+services-sent-ipv6 8

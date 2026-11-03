@@ -1,0 +1,13 @@
+Policy Id       : lp00003
+Policy Name     : infra-2-ptrace
+Policy Severity : INFO
+Policy Event    : Process attempted to perform ptrace operations without sufficient privileges
+Policy Event History(last 20 events):
+SNo         Time                               Mode          Process
+1        07:40:51.318 UTC Thu Sep 17 2026    monitor       /usr/bin/strace
+2        07:40:51.318 UTC Thu Sep 17 2026    monitor       /usr/bin/strace
+3        07:40:51.319 UTC Thu Sep 17 2026    monitor       /usr/bin/strace
+4        10:03:09.479 UTC Fri Sep 18 2026    enforce       /usr/bin/strace
+5        10:03:09.479 UTC Fri Sep 18 2026    enforce       /usr/bin/strace
+6        10:03:09.480 UTC Fri Sep 18 2026    enforce       /usr/bin/strace
+7        10:03:09.481 UTC Fri Sep 18 2026    monitor       /usr/bin/my process

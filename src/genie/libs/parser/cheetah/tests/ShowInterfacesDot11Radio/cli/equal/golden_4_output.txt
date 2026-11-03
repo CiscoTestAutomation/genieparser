@@ -1,0 +1,61 @@
+show interfaces dot11Radio 0
+Dot11Radio0 is UP, line protocol is DOWN
+Hardware is 802.11 2.4G Radio, channel is 1
+Radio MAC is 00:11:22:33:44:55
+
+
+ML_TYPE: NON_ML	DOT11 Statistics (Cumulative Total/Last 5 Seconds):
+RECEIVER                                TRANSMITTER
+Host Rx K Bytes:             0/0        Host Tx K Bytes:             0/0
+Unicasts Rx:                 0/0        Unicasts Tx:                 0/0
+Broadcasts Rx:               0/0        Broadcasts Tx:               0/0
+Beacons Rx:                  0/0        Beacons Tx:                  0/0
+Probes Rx:                   0/0        Probes Tx:                   0/0
+Multicasts Rx:               0/0        Multicasts Tx:               0/0
+Mgmt Packets Rx:             0/0        Mgmt Packets Tx:              0/0
+Ctrl Frames Rx:              0/0        Ctrl Frames Tx:              0/0
+RTS received:                0/0        RTS transmitted:             0/0
+Duplicate frames:            0/0        CTS not received:            0/0
+MIC errors:                  0/0        WEP errors:                  0/0
+FCS errors:                  0/0        Retries:                     0/0
+Key Index errors:            0/0        Tx Failures:                 0/0
+                                        Tx Drops:                    0/0
+Rate Statistics for Radio::
+ML_TYPE: ML	DOT11 Statistics (Cumulative Total/Last 5 Seconds):
+RECEIVER                                TRANSMITTER
+Host Rx K Bytes:             0/0        Host Tx K Bytes:             0/0
+Unicasts Rx:                 0/0        Unicasts Tx:                 0/0
+Broadcasts Rx:               0/0        Broadcasts Tx:               0/0
+Beacons Rx:                  0/0        Beacons Tx:                  0/0
+Probes Rx:                   0/0        Probes Tx:                   0/0
+Multicasts Rx:               0/0        Multicasts Tx:               0/0
+Mgmt Packets Rx:             0/0        Mgmt Packets Tx:              0/0
+Ctrl Frames Rx:              0/0        Ctrl Frames Tx:              0/0
+RTS received:                0/0        RTS transmitted:             0/0
+Duplicate frames:            0/0        CTS not received:            0/0
+MIC errors:                  0/0        WEP errors:                  0/0
+FCS errors:                  0/0        Retries:                     0/0
+Key Index errors:            0/0        Tx Failures:                 0/0
+                                        Tx Drops:                    0/0
+Rate Statistics for Radio::
+
+
+Beacons missed: 0-30s 31-60s 61-90s 90s+
+                     0      0      0    0
+
+NON_ML:
+Vap TX statistics:
+vap ssid MGMT DATA [BK BE VI VO] Bytes(Data) QosRetries AMDPU-SubFrameRetries
+
+Vap RX statistics:
+vap ssid MGMT DATA [BK BE VI VO] Bytes(Data)
+
+
+
+ML:
+Vap TX statistics:
+vap ssid MGMT DATA [BK BE VI VO] Bytes(Data) QosRetries AMDPU-SubFrameRetries
+
+Vap RX statistics:
+vap ssid MGMT DATA [BK BE VI VO] Bytes(Data)
+AP_TEST#

@@ -1,6 +1,7 @@
 """show_access_seesion.py
    supported commands:
      * show access-session
+     * show access-session | count {match}
      * show access-session interface {interface} details
      * show access-session brief
      * show access-session event-logging mac <mac>
@@ -19,7 +20,8 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Or, \
                                          And, \
                                          Default, \
-                                         Use
+                                         Use, \
+                                         ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -121,6 +123,29 @@ class ShowAccessSession(ShowAccessSessionSchema):
                 continue
 
         return ret_dict
+
+class ShowAccessSessionCountSchema(MetaParser):
+    """Schema for show access-session | count {match}."""
+    schema = {'session_count': int}
+
+
+class ShowAccessSessionCount(ShowAccessSessionCountSchema):
+    """Parser for show access-session | count {match}."""
+    cli_command = 'show access-session | count {match}'
+
+    def cli(self, match, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(match=match))
+        result = {}
+        for line in output.splitlines():
+            label, separator, value = line.strip().partition('=')
+            if (
+                separator
+                and label.strip() == 'Number of lines which match regexp'
+            ):
+                result['session_count'] = int(value.strip())
+        return result
+
 
 class ShowAccessSessionInterfaceDetails(ShowAuthenticationSessionsInterfaceDetails):
     '''
@@ -366,13 +391,14 @@ class ShowAccessSessionMacDetailsSchema(MetaParser):
                 'acct_session_id': str,
                 'handle': str,
                 'current_policy': str,
+                Optional('blocked_on'): ListOf(str),
                 Optional('local_policies'): {
                     Optional('url_redirect_acl_v6'): str,
                     Optional('preauth_acl_v6'): str,
                     Optional('url_redirect_acl_v4'): str,
                     Optional('preauth_acl_v4'): str,
                 },
-                'server_policies': {
+                Optional('server_policies'): {
                     Optional('filter_id'): str,
                     Optional('session_timeout'): int,
                     Optional('vlan_group'): int,
@@ -480,8 +506,25 @@ class ShowAccessSessionMacDetails(ShowAccessSessionMacDetailsSchema):
         p12 = re.compile(r'^(?P<method>\S+)           (?P<state>[\S\s]+)$')
 
         ret_dict = {}
+        blocked_on = None
+        mac_dict = {}
         for line in output.splitlines():
             line = line.strip()
+
+            # Blocked On: Pending Deletion
+            #             SM Accounting Feature
+            if line.startswith('Blocked On:') and mac_dict:
+                blocked_on = mac_dict.setdefault('blocked_on', [])
+                reason = line.partition(':')[2].strip()
+                if reason:
+                    blocked_on.append(reason)
+                continue
+            if blocked_on is not None:
+                if not line or ':' in line or line.startswith('-'):
+                    blocked_on = None
+                else:
+                    blocked_on.append(line)
+                    continue
 
             # Interface:  GigabitEthernet1/0/12
             m = p1.match(line)

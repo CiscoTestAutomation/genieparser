@@ -19,6 +19,7 @@
 * 'show sdwan ipsec local-sa <WORD>'
 * 'show sdwan omp summary'
 * 'show sdwan omp peers'
+* 'show sdwan omp peers detail'
 * 'show sdwan omp tlocs'
 * 'show sdwan omp tloc-paths'
 * 'show sdwan omp routes'
@@ -1215,6 +1216,174 @@ class ShowSdwanOmpPeers(ShowOmpPeers_viptela):
             show_output = self.device.execute(self.cli_command)
 
         return super().cli(output = show_output)
+
+# ===============================================
+# Parser for 'show sdwan omp peers detail'
+# ===============================================
+class ShowSdwanOmpPeersDetailSchema(MetaParser):
+
+    schema = {
+        'peer': {
+            Any(): {
+                'type': str,
+                'region_id': str,
+                Optional('peer_region_list'): str,
+                'site_id': int,
+                'domain_id': int,
+                'overlay_id': int,
+                'state': str,
+                'uptime': str,
+                Optional('capabilities'): str,
+                'version': str,
+                Optional('legacy_version'): str,
+                Optional('holdtime'): int,
+                Optional('keepalive_time'): int,
+                Optional('hello_time'): int,
+                Optional('hello_time_holdtime'): int,
+                Optional('update_ts'): int,
+                Optional('install_ts'): int,
+                Optional('send_prefixes'): int,
+                Optional('recv_prefixes'): int,
+                Optional('send_tlocs'): int,
+                Optional('recv_tlocs'): int,
+                Optional('send_services'): int,
+                Optional('recv_services'): int,
+                Optional('received_tokens'): int,
+                Optional('sent_tokens'): int,
+                Optional('received_token_holdtime'): int,
+                Optional('sent_token_holdtime'): int,
+                Optional('tenant_id'): int,
+                Optional('legit'): str,
+                Optional('control_up'): str,
+                Optional('staging'): str,
+                Optional('upcount'): int,
+                Optional('downcount'): int,
+                Optional('last_uptime'): str,
+                Optional('last_downtime'): str,
+                Optional('hold_time'): int,
+                Optional('graceful_restart'): str,
+                Optional('graceful_restart_interval'): int,
+                Optional('refresh'): str,
+                Optional('hello_sent'): int,
+                Optional('hello_send_failures'): int,
+                Optional('hello_received'): int,
+                Optional('handshake_sent'): int,
+                Optional('handshake_received'): int,
+                Optional('alert_sent'): int,
+                Optional('alert_send_failures'): int,
+                Optional('alert_received'): int,
+                Optional('inform_sent'): int,
+                Optional('inform_received'): int,
+                Optional('update_sent'): int,
+                Optional('update_received'): int,
+                Optional('policy_sent'): int,
+                Optional('policy_received'): int,
+                Optional('total_packets_sent'): int,
+                Optional('total_packets_received'): int,
+                Optional('routes_received'): int,
+                Optional('routes_installed'): int,
+                Optional('routes_sent'): int,
+                Optional('routes_received_ipv6'): int,
+                Optional('routes_installed_ipv6'): int,
+                Optional('routes_sent_ipv6'): int,
+                Optional('tlocs_received'): int,
+                Optional('tlocs_installed'): int,
+                Optional('tlocs_sent'): int,
+                Optional('services_received'): int,
+                Optional('services_installed'): int,
+                Optional('services_sent'): int,
+                Optional('services_received_ipv6'): int,
+                Optional('services_installed_ipv6'): int,
+                Optional('services_sent_ipv6'): int,
+                Optional('mcast_routes_received'): int,
+                Optional('mcast_routes_installed'): int,
+                Optional('mcast_routes_sent'): int,
+            }
+        }
+    }
+
+
+class ShowSdwanOmpPeersDetail(ShowSdwanOmpPeersDetailSchema):
+
+    """Parser for "show sdwan omp peers detail"."""
+
+    cli_command = 'show sdwan omp peers detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+
+        parsed_dict = {}
+        current_peer = None
+        tenant_id = None
+        integer_fields = {
+            'site_id', 'domain_id', 'overlay_id', 'holdtime',
+            'keepalive_time', 'hello_time', 'hello_time_holdtime',
+            'update_ts', 'install_ts', 'send_prefixes', 'recv_prefixes',
+            'send_tlocs', 'recv_tlocs', 'send_services', 'recv_services',
+            'received_tokens', 'sent_tokens',
+            'received_token_holdtime', 'sent_token_holdtime',
+            'tenant_id', 'upcount', 'downcount', 'hold_time',
+            'graceful_restart_interval', 'hello_sent', 'hello_send_failures',
+            'hello_received', 'handshake_sent', 'handshake_received',
+            'alert_sent', 'alert_send_failures', 'alert_received',
+            'inform_sent', 'inform_received', 'update_sent', 'update_received',
+            'policy_sent', 'policy_received', 'total_packets_sent',
+            'total_packets_received', 'routes_received', 'routes_installed',
+            'routes_sent', 'routes_received_ipv6', 'routes_installed_ipv6',
+            'routes_sent_ipv6', 'tlocs_received', 'tlocs_installed',
+            'tlocs_sent', 'services_received', 'services_installed',
+            'services_sent', 'services_received_ipv6',
+            'services_installed_ipv6', 'services_sent_ipv6',
+            'mcast_routes_received', 'mcast_routes_installed',
+            'mcast_routes_sent',
+        }
+
+        # Peer                  : 10.255.0.1
+        # peer 1.1.1.4
+        # routes-received-ipv6 0
+        p_field = re.compile(
+            r'^(?P<field>[A-Za-z][A-Za-z0-9-]*)(?:\s*:\s*|\s+)(?P<value>.+)$'
+        )
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Peer                  : 10.255.0.1
+            match = p_field.match(line)
+            if not match:
+                continue
+
+            groups = match.groupdict()
+            field = groups['field'].lower().replace('-', '_')
+            if field == 'up_time':
+                field = 'uptime'
+            value = groups['value'].strip()
+
+            # The tenant header precedes its peer, including between peers.
+            if field == 'tenant_id':
+                tenant_id = int(value)
+                current_peer = None
+                continue
+
+            if field == 'peer':
+                current_peer = parsed_dict.setdefault(
+                    'peer', {}
+                ).setdefault(value, {})
+                if tenant_id is not None:
+                    current_peer['tenant_id'] = tenant_id
+                    tenant_id = None
+                continue
+
+            if current_peer is None:
+                continue
+
+            if field in integer_fields:
+                current_peer[field] = int(value)
+            else:
+                current_peer[field] = value
+
+        return parsed_dict
 
 # ===============================================
 # Parser for 'show sdwan omp tlocs'

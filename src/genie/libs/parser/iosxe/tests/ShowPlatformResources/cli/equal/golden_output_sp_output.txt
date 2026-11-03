@@ -1,0 +1,26 @@
+**State Acronym: H - Healthy, W - Warning, C - Critical
+Resource                 Usage                 Max             Warning         Critical        State
+----------------------------------------------------------------------------------------------------
+RP0 (ok, active)                                                                               H
+ Control Processor       4.27%                 100%            80%             90%             H
+  DRAM                   4786MB(7%)            63970MB         88%             93%             H
+  bootflash              2592MB(6%)            39513MB         70%             95%             H
+  harddisk               0MB(0%)               0MB             88%             95%             H
+ESP0(ok, active)                                                                               H
+ QFP                                                                                           H
+  DRAM                   48566KB(0%)           5636096KB       85%             95%             H
+  IRAM                   413KB(10%)            4096KB          85%             95%             H
+  CPU Utilization        0.00%                 100%            60%             80%             H
+  B4Q Pool 124           0KB(0%)               4047KB          75%             85%             H
+  B4Q Pool 128           0KB(0%)               4874KB          75%             85%             H
+  B4Q Pool 256           0KB(0%)               9947KB          75%             85%             H
+  B4Q Pool 512           0KB(0%)               13926KB         75%             85%             H
+  B4Q Pool 1024          0KB(0%)               20523KB         75%             85%             H
+  B4Q Pool 1536          0KB(0%)               24757KB         75%             85%             H
+  B4Q Pool 2048          0KB(0%)               20690KB         75%             85%             H
+  B4Q Pool 4096          0KB(0%)               19952KB         75%             85%             H
+  B4Q Pool 10240         0KB(0%)               10250KB         75%             85%             H
+  B4Q Pool 16384         0KB(0%)               8592KB          75%             85%             H
+  B4Q PMD                1214KB(0%)            405504KB        75%             85%             H
+SP0 (ok, active)                                                                               H
+ Service Processor       4.64%                 100%            80%             90%             H
