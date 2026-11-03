@@ -3746,11 +3746,11 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
         p12 = re.compile(r'^Route +Distinguisher: *(?P<route_distinguisher>\S+) *'
                             r'(\(default +for +vrf +(?P<default_vrf>[a-zA-Z0-9]+)\))?$')
         p13 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)? *'
-                            r'(?P<prefix>(?P<ip>[\w\.\:\/\[\]]+)\/(?P<mask>\d+))?( +'
-                            r'(?P<next_hop>[\w\.\:]+) *(?P<number>[\d\.\s\{\}]+)?'
-                            r'(?: *(?P<origin_codes>(i|e|\?)))?)?$')
-        p13_1 = re.compile(r'(?P<path>[\d\.\s]+)'
-                        r' *(?P<origin_codes>(i|e|\?))?$')
+                            '(?P<prefix>(?P<ip>[\w\.\:\/\[\]]+)\/(?P<mask>\d+))?( +'
+                            '(?P<next_hop>[\w\.\:]+) *(?P<number>[()\d\.\s\{\}]+)?'
+                            '(?: *(?P<origin_codes>(i|e|\?)))?)?$')      
+        p13_1 = re.compile(r'(?P<path>[()\d\.\s]+)'
+                        ' *(?P<origin_codes>(i|e|\?))?$')
 
         p14 = re.compile(r'^Processed *(?P<processed_prefixes>[0-9]+) *'
                             r'prefixes, *(?P<processed_paths>[0-9]+) *paths$')
@@ -4117,25 +4117,29 @@ class ShowBgpInstanceNeighborsReceivedRoutes(ShowBgpInstanceNeighborsReceivedRou
                 if group_num:
                     # metric   locprf  weight path
                     # 2219      211       0 200 33299 51178 47751 {27016}
-                    m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
-                                 r'(?P<locprf>[0-9]+)  +'
-                                 r'(?P<weight>[0-9]+) '
-                                 r'(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
+                    # 0         120     500  (64630 64601) 39935
 
+                    m1 = re.compile(r'^(?P<metric>[0-9]+)  +'
+                                 '(?P<locprf>[0-9]+)  +'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[()0-9\.\{\}\s]+)$').match(group_num)
+    
                     # metric   locprf  weight path
                     # 2219                0 200 33299 51178 47751 {27016}
                     # locprf   weight path
                     # 211         0 200 33299 51178 47751 {27016} 65000.65000
-
+                    # 100         0 (64630 64609) 6762 4445 3209 21334
+    
                     m2 = re.compile(r'^(?P<value>[0-9]+)'
-                                r'(?P<space>\s{2,20})'
-                                 r'(?P<weight>[0-9]+) '
-                                 r'(?P<path>[0-9\.\{\}\s]+)$').match(group_num)
-
+                                 '(?P<space>\s{2,20})'
+                                 '(?P<weight>[0-9]+) '
+                                 '(?P<path>[()0-9\.\{\}\s]+)$').match(group_num)
+    
                     # weight path
                     # 0 200 33299 51178 47751 {27016} 65000.65000
+                    # 0 (64629 64601 64630 64609) 6762 4445 3209 21334
                     m3 = re.compile(r'^(?P<weight>[0-9]+) '
-                                 r'(?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$')\
+                                 '(?P<path>(([()\d\.]+\s)|(\{[\d\.]+\}\s))+)$')\
                                .match(group_num)
 
                     if m1:
@@ -4314,8 +4318,8 @@ class ShowBgpInstanceNeighborsAdvertisedRoutes(ShowBgpInstanceNeighborsAdvertise
         p4 = re.compile(
             r'^(?P<prefix>(?P<ip>[\w\.\:\[\]]+)/(?P<mask>\d+)) *(?P<next_hop>[\w\.\:]+) *('
             r'?P<froms>[\w\.\:]+) *'
-            r'(?P<path>[\d\.\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
-        p5_1 = re.compile(r'(?P<path>[\d\.\{\}\s]+)(?P<origin_code>e|i)?$')
+            r'(?P<path>[()\d\.\{\}\s]+)?(?P<origin_code>[e|i\?])?$')
+        p5_1 = re.compile(r'(?P<path>[()\d\.\{\}\s]+)(?P<origin_code>e|i)?$')
         p6 = re.compile(
             r'^Processed *(?P<processed_prefixes>[0-9]+) *prefixes, *(?P<processed_paths>[0-9]+) *paths$')
 
@@ -5262,8 +5266,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
         # 2219             0 200 33299 51178 47751 {27016} e
         # 2219             0 200 33299 51178 47751 {27016} 65107.65107 e
+        # 0                500 (64630 64601) 39935 i
         p16_2 = re.compile(r'^\s*(?P<metric>[0-9]+) +(?P<weight>[0-9]+)'
-                           r' +(?P<path>[0-9\.\{\}\s]+) '
+                           r' +(?P<path>[()0-9\.\{\}\s]+) '
                            r'+(?P<origin_codes>(i|e|\?))$')
 
         # Network            Next Hop   Metric LocPrf Weight Path
@@ -5280,13 +5285,14 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
         # *>i10.169.1.0/24      10.64.4.4               2219    100      0 300 33299 51178 47751 {27016} e
         # *>i192.168.111.0/24       10.189.99.98                                                    0       0 i
         # *> 10.7.7.7/32        10.10.10.107             0             0 65107.65107 ?
+        # *> 195.95.138.0/24    213.140.196.60           0      120    500 (64630 64601) 39935 i
         p16 = re.compile(r'^(?P<status_codes>(i|s|x|S|d|h|\*|\>|\s)+)'
-                         r' *(?P<prefix>(?P<ip>[0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
-                         r' +(?P<next_hop>\S+) +(?P<number>[\d\.\s\{\}]+)'
+                         r' *(?P<prefix>(?P<ip>[a-z0-9\.\:\[\]]+)\/(?P<mask>\d+))?'
+                         r' +(?P<next_hop>\S+) +(?P<number>[()\d\.\s\{\}]+)'
                          r'(?: *(?P<origin_codes>(i|e|\?)))?$')
 
         #                                                                 65107.65107 ?
-        p17 = re.compile(r'(?P<path>[\d\.\s]+)'
+        p17 = re.compile(r'(?P<path>[()\d\.\s]+)'
                          r' *(?P<origin_codes>(i|e|\?))?$')
 
         # Processed 40 prefixes, 50 paths
@@ -5513,9 +5519,9 @@ class ShowBgpInstanceAllAll(ShowBgpInstanceAllAllSchema):
 
                 # Parse and set the numbers
                 group_num = group['number']
-                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
-                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[0-9\.\{\}\s]+)$').match(group_num)
-                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>(([\d\.]+\s)|(\{[\d\.]+\}\s))+)$').match(group_num)
+                m1 = re.compile(r'^(?P<metric>[0-9]+)  +(?P<locprf>[0-9]+)  +(?P<weight>[0-9]+) (?P<path>[()0-9\.\{\}\s]+)$').match(group_num)
+                m2 = re.compile(r'^(?P<value>[0-9]+)(?P<space>\s{2,20})(?P<weight>[0-9]+) (?P<path>[()0-9\.\{\}\s]+)$').match(group_num)
+                m3 = re.compile(r'^(?P<weight>[0-9]+) (?P<path>(([()\d\.]+\s)|(\{[\d\.]+\}\s))+)$').match(group_num)
                 m4 = re.compile(r'^(?P<locprf>(\d+)) +(?P<weight>(\d+))$').match(group_num.strip())
                 if m1:
                     pfx_dict['metric'] = m1.groupdict()['metric']
