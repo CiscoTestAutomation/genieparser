@@ -1,0 +1,6 @@
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 26, Local Router ID is 10.2.0.1
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 65002:30001
+*>e[2]:[0]:[0]:[48]:[0050.0000.0e00]:[0]:[0.0.0.0]/216
+                      10.10.0.1                                      0 65003 65002 i
