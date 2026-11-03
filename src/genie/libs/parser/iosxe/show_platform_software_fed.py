@@ -21673,5 +21673,4 @@ class ShowPlatformSoftwareFedSwitchActivePbrInfoRouteMap(
                 sequence_dict["table_id"] = int(m.group("table_id"))
                 sequence_dict["ip_addr"] = m.group("ip_addr") or ""
                 continue
-
         return ret_dict
