@@ -1,0 +1,11 @@
+Status:
+  Ignition management: Enabled
+  Input voltage:       12.372 V
+  Ignition status:     Timing ignition off shut down
+  Shutdown timer:      6257.7 s to off [will begin power down at ~100 sec]
+Thresholds:
+  Undervoltage:        9.000 V
+  Overvoltage:         37.000 V
+  Undervoltage timer:  20.0 s
+  Overvoltage timer:   1.0 s
+  Ignition-Off timer:  7200.0 s
