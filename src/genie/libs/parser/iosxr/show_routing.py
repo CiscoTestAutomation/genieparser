@@ -716,7 +716,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # B    10.100.3.160/31 [200/0] via 172.23.6.198 (nexthop in vrf default), 5d13h
         p2 = re.compile(r'^(?P<code1>[\w](\*)*)\s*(?P<code2>\S+)? +(?P<network>\S+) +'
                         r'\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +via +'
-                        r'(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                        r'(?P<next_hop>\S+)( +\(nexthop +in +vrf +[^\s)]+\))?,'
                         r'( +(?P<date>[\w:]+),?)?( +(?P<interface>[\w\/\.\-]+))?'
                         r'( +(?P<code3>[\w\*\(\>\)\!]+))?$')
 
@@ -724,7 +724,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # [110/2] via 10.1.2.1, 01:50:49, GigabitEthernet0/0/0/3
         # [110/2] via 10.1.3.1, 3w3d
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
-                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +[^\s)]+\))?,'
                         r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # L    10.16.2.2/32 is directly connected, 3w5d, Loopback0
@@ -1320,7 +1320,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # [0/0] via ::ffff:0.0.0.0 (nexthop in vrf SRV6_L3VPN_BE), 23:09:19
         # [0/0] via :: (nexthop in vrf SRV6_L3VPN_BE), 23:09:19
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
-                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +(?P<nexthop_in_vrf>\w+)\))?,'
+                        r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +(?P<nexthop_in_vrf>[^\s)]+)\))?,'
                         r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # 01:52:24, Loopback0
