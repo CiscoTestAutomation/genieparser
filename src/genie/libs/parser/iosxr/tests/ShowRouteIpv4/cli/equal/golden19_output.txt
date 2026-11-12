@@ -1,0 +1,20 @@
+RP/0/RP0/CPU0:Router#show route vrf venise ipv4 unicast
+Mon Sep 14 20:18:17.007 GMT
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+       i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+       U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+       A - access/subscriber, a - Application route
+       M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is not set
+
+B    10.76.130.0/24 [200/0] via 172.28.224.129 (nexthop in vrf default), 17w3d
+B    10.168.1.0/26 [20/0] via 10.168.2.186, 1w1d
+B    10.168.4.0/24 [200/0] via 172.28.224.129 (nexthop in vrf ENS-PROD), 2d01h
+                   [200/0] via 172.28.224.130 (nexthop in vrf ENS-PROD), 2d01h
+B    10.168.5.0/24 [200/0] via 172.28.224.131 (nexthop in vrf ens.mgmt), 05:12:40
